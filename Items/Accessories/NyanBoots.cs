@@ -12,7 +12,6 @@ namespace ElementsAwoken.Items.Accessories
     [AutoloadEquip(EquipType.Wings)]
     public class NyanBoots : ModItem
     {
-        bool hideTrail = false;
         public override void SetDefaults()
         {
             item.width = 36;

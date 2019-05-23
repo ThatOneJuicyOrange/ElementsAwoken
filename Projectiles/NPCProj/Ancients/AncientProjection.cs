@@ -10,7 +10,6 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients
 {
     public class AncientProjection : ModProjectile
     {
-        int distance = 200;
         public override void SetDefaults()
         {
             projectile.width = 88;

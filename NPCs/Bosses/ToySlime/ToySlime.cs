@@ -16,7 +16,6 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
         bool reset = false;
         int projectileBaseDamage = 15;
         int brickTimer = 0;
-        int prevLife = 0;
 
         float despawnTimer = 0;
         public override void SetDefaults()

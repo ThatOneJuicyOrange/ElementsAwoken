@@ -22,7 +22,6 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
         public float tpCooldown1 = 300f;
         public float tpDustCooldown = 10f;
 
-        int moveAi = 0;
         int projectileBaseDamage = 90;
 
         bool runTPAlphaChange = false;

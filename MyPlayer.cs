@@ -1141,15 +1141,15 @@ namespace ElementsAwoken
                 encounterTextAlpha = 0;
                 if (MyWorld.encounter1)
                 {
-                    encounterText = "I see it now."​;
+                    encounterText = "I see it now.";
                 }
                 if (MyWorld.encounter2)
                 {
-                    encounterText = "Who are you really?"​;
+                    encounterText = "Who are you really?";
                 }
                 if (MyWorld.encounter3)
                 {
-                    encounterText = "You seek power..."​;
+                    encounterText = "You seek power...";
                 }
             }
             else if (MyWorld.encounterTimer == 2700)
@@ -1158,15 +1158,15 @@ namespace ElementsAwoken
                 encounterTextAlpha = 0;
                 if (MyWorld.encounter1)
                 {
-                    encounterText = "A new challenger rises."​;
+                    encounterText = "A new challenger rises.";
                 }
                 if (MyWorld.encounter2)
                 {
-                    encounterText = "A simple lost soul?"​;
+                    encounterText = "A simple lost soul?";
                 }
                 if (MyWorld.encounter3)
                 {
-                    encounterText = "But you haven't asked why."​;
+                    encounterText = "But you haven't asked why.";
                 }
             }
             else if (MyWorld.encounterTimer == 2200)
@@ -1175,15 +1175,15 @@ namespace ElementsAwoken
                 encounterTextAlpha = 0;
                 if (MyWorld.encounter1)
                 {
-                    encounterText = "You have a long way to go."​;
+                    encounterText = "You have a long way to go.";
                 }
                 if (MyWorld.encounter2)
                 {
-                    encounterText = "The path ahead is long."​;
+                    encounterText = "The path ahead is long.";
                 }
                 if (MyWorld.encounter3)
                 {
-                    encounterText = "Does it matter?"​;
+                    encounterText = "Does it matter?";
                 }
             }
             else if (MyWorld.encounterTimer == 1700)
@@ -1195,11 +1195,11 @@ namespace ElementsAwoken
                 }
                 if (MyWorld.encounter2)
                 {
-                    encounterText = "You are getting closer."​;
+                    encounterText = "You are getting closer.";
                 }
                 if (MyWorld.encounter3)
                 {
-                    encounterText = "You are almost there."​;
+                    encounterText = "You are almost there.";
                     Main.PlaySound(29, (int)player.position.X, (int)player.position.Y, 105, 1f, 0f);
                     finalText = true;
                 }

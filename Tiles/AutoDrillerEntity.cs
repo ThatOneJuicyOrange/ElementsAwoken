@@ -186,7 +186,7 @@ namespace ElementsAwoken.Tiles
 
             if (Main.netMode == 1)
             {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);
+                NetMessage.SendTileSquare(Main.myPlayer, i + 2, j + 2, 5);
                 NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
                 return -1;
             }
