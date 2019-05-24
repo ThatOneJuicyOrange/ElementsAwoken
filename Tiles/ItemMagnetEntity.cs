@@ -12,7 +12,6 @@ namespace ElementsAwoken.Tiles
 {
     public class ItemMagnetEntity : ModTileEntity
     {
-
         public override void Update()
         {
             Vector2 tileCenter = new Vector2(Position.X * 16, Position.Y * 16);

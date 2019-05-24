@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Placeable
         public override bool CanUseItem(Player player)
         {
             PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>(mod);
-            modPlayer.placingAutoDriller = 2;
+            modPlayer.placingAutoDriller = 4;
             return base.CanUseItem(player);
         }
         /*public override void AddRecipes()

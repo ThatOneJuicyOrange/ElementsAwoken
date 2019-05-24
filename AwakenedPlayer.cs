@@ -420,7 +420,16 @@ namespace ElementsAwoken
         {
             sanity = tag.GetInt("sanity");
         }
-
+        public override void clientClone(ModPlayer clientClone)
+        {
+            MyPlayer clone = clientClone as MyPlayer;
+        }
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            ModPacket packet = mod.GetPacket();
+            packet.Write(sanity);
+            packet.Send(toWho, fromWho);
+        }
         public void AddSanityDrain(int amount, string type)
         {
             sanityDrains.Add(amount);

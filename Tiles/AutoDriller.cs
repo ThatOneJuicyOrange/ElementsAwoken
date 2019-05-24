@@ -11,6 +11,8 @@ namespace ElementsAwoken.Tiles
 {
     public class AutoDriller : ModTile
     {
+        public Point16 tilePoint = new Point16();
+        public AutoDrillerEntity myEntity = null;
         public override void SetDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -29,8 +31,41 @@ namespace ElementsAwoken.Tiles
             TileObjectData.newTile.Origin = new Point16(2, 3);
             TileObjectData.newTile.UsesCustomCanPlace = true;
             AddMapEntry(new Color(154, 214, 213));
-            
+            animationFrameHeight = 90;
+
             TileObjectData.addTile(Type);
+        }
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            tilePoint = new Point16(i - 4, j - 4); // it finds the bottom right while we want top left
+        }
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            if (myEntity == null)
+            {
+                foreach (TileEntity current in TileEntity.ByID.Values)
+                {
+                    if (current.type == mod.TileEntityType<AutoDrillerEntity>())
+                    {
+                        if (current.Position == tilePoint)
+                        {
+                            myEntity = (AutoDrillerEntity)current;
+                        }
+                    }
+                }
+            }
+            else
+            {
+
+                if (myEntity.enabled)
+                {
+                    frame = 1;
+                }
+                else
+                {
+                    frame = 0;
+                }
+            }
         }
         public override bool CanPlace(int i, int j)
         {
@@ -50,7 +85,7 @@ namespace ElementsAwoken.Tiles
 
             if (Main.tileSolid[anchorLeft.type] && anchorLeft.active() && Main.tileSolid[anchorRight.type] && anchorRight.active())
             {
-                return true;
+                return base.CanPlace(i, j);
             }
             return false;
         }

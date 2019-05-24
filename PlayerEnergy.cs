@@ -56,6 +56,16 @@ namespace ElementsAwoken
         {
             energy = tag.GetInt("energy");
         }
+        public override void clientClone(ModPlayer clientClone)
+        {
+            MyPlayer clone = clientClone as MyPlayer;
+        }
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            ModPacket packet = mod.GetPacket();
+            packet.Write(energy);
+            packet.Send(toWho, fromWho);
+        }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
             if (kineticConverter && energy < maxEnergy)

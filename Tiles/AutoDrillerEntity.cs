@@ -29,8 +29,15 @@ namespace ElementsAwoken.Tiles
             Vector2 tileBottomCenter = new Vector2((Position.X + 2) * 16 + 8, (Position.Y + 5) * 16 + 8);
 
             Rectangle mouse = new Rectangle((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y, 2, 2);
-            Rectangle tileRect = new Rectangle(Position.X * 16, Position.X * 16, 5 * 16, 5 * 16);
-            if (Main.mouseRightRelease && mouse.Intersects(tileRect))
+            Rectangle tileRect = new Rectangle(Position.X * 16, Position.Y * 16, 5 * 16, 5 * 16);
+            /*for (int d = 0; d < 3; d++)
+            {
+                int dust = Dust.NewDust(mouse.TopLeft(), mouse.Width, mouse.Height, 57, 0f, 0f, 100);
+                Main.dust[dust].velocity *= 0.01f;
+                int dust2 = Dust.NewDust(tileRect.TopLeft(), tileRect.Width, tileRect.Height, 57, 0f, 0f, 100);
+                Main.dust[dust2].velocity *= 0.01f;
+            }*/
+            if (Main.mouseRight && Main.mouseRightRelease && mouse.Intersects(tileRect))
             {
                 if (enabled)
                 {
@@ -40,8 +47,8 @@ namespace ElementsAwoken.Tiles
                 {
                     enabled = true;
                 }
+                Main.PlaySound(SoundID.MenuTick);
             }
-
             Tile anchorLeft = Framing.GetTileSafely(Position.X, Position.Y + 5);
             Tile anchorRight = Framing.GetTileSafely(Position.X + 4, Position.Y + 5);
             if (!(Main.tileSolid[anchorLeft.type] && anchorLeft.active()) || !Main.tileSolid[anchorRight.type])
@@ -51,26 +58,26 @@ namespace ElementsAwoken.Tiles
 
             Player player = null;
             bool isPlayerActive = false;
-            if (player == null)
+            for (int k = 0; k < Main.player.Length; k++)
             {
-                for (int k = 0; k < Main.player.Length; k++)
+                Player temp = Main.player[k];
+                if (temp.name == tileOwner && temp.active)
                 {
-                    Player temp = Main.player[k];
-                    if (temp.name == tileOwner && temp.active)
-                    {
-                        player = temp;
-                        isPlayerActive = true;
-                        break;
-                    }
+                    player = temp;
+                    isPlayerActive = true;
+                    break;
                 }
             }
-            if (Main.time % 100 == 0) ElementsAwoken.DebugModeText(tileOwner);
-            //if (Main.time % 500 == 0) tileOwner = "Mod Testing";
+            /*if (Main.time % 100 == 0)
+            {
+                ElementsAwoken.DebugModeText(tileOwner);
+                Console.WriteLine(player.name);
+            }*/
 
             if (isPlayerActive)
             {
                 PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
-
+                Console.WriteLine(modPlayer.energy);
                 if (enabled && modPlayer.energy >= 3)
                 {
                     Point digLeft = new Point(Position.X + 1, Position.Y + 5);
@@ -149,11 +156,7 @@ namespace ElementsAwoken.Tiles
                     if(modPlayer.placingAutoDriller > 0)
                     {
                         tileOwner = player.name;
-                        NetworkText f = NetworkText.FromLiteral(tileOwner);
-                        NetMessage.BroadcastChatMessage(f, new Color(255, 255, 255));
                     }
-                    NetworkText text = NetworkText.FromLiteral("numpty");
-                    NetMessage.BroadcastChatMessage(text, new Color(255, 255, 255));
                 }
             }
         }
@@ -183,16 +186,18 @@ namespace ElementsAwoken.Tiles
         {
             //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             //tileOwner = Main.LocalPlayer.name; // Hook_AfterPlacement is called on the client that places it, so LocalPlayer will be the owner
-
+            int placedEntity = Place(i, j);
             if (Main.netMode == 1)
             {
                 NetMessage.SendTileSquare(Main.myPlayer, i + 2, j + 2, 5);
                 NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
                 return -1;
             }
-            int placedEntity = Place(i, j);
-            AutoDrillerEntity AutoDrillTE = (AutoDrillerEntity)ByID[placedEntity];
-            AutoDrillTE.tileOwner = Main.LocalPlayer.name;
+            else if (Main.netMode == 0)
+            {              
+                AutoDrillerEntity AutoDrillTE = (AutoDrillerEntity)ByID[placedEntity];
+                AutoDrillTE.tileOwner = Main.LocalPlayer.name;
+            }
             return placedEntity;
         }
     }
