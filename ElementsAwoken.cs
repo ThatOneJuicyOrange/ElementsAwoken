@@ -996,10 +996,11 @@ namespace ElementsAwoken
 
         public void DrawSanityBook()
         {
-            //var background = GetTexture("Extra/ComputerText");
             Player player = Main.player[Main.myPlayer];
             AwakenedPlayer awakenedPlayer = player.GetModPlayer<AwakenedPlayer>(this);
-            //Main.spriteBatch.Draw(background, new Rectangle(Main.screenWidth / 2, 150, background.Width, background.Height), null, Color.White, 0f, new Vector2(background.Width / 2, background.Height / 2), SpriteEffects.None, 0f);
+
+            var background = GetTexture("Extra/InsanityBookUI");
+            Main.spriteBatch.Draw(background, new Rectangle(Main.screenWidth - 350, Main.screenHeight - 250, background.Width, background.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
             // draw the positive
             Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, "Regens:", Main.screenWidth - 330, Main.screenHeight - 220, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
             for (int i = 0; i < awakenedPlayer.sanityRegens.Count; i++)

@@ -58,29 +58,17 @@ namespace ElementsAwoken.Projectiles.Pets.Wyvern
                 parCenter = parent.Center;
                 parRot = parent.rotation;
                 scaleFactor17 = MathHelper.Clamp(parent.scale, 0f, 50f);
-                scaleFactor16 = 16f;
+                scaleFactor16 = 20f;
+                if (parent.type == mod.ProjectileType("WyvernHead"))
+                {
+                    scaleFactor16 = 28;
+                }
                 parent.localAI[0] = projectile.localAI[0] + 1f;
             }
             else
             {
                 projectile.Kill();
                 return;
-            }
-            if (projectile.alpha > 0)
-            {
-                int num3;
-                for (int num1068 = 0; num1068 < 2; num1068 = num3 + 1)
-                {
-                    int num1069 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 135, 0f, 0f, 100, default(Color), 2f);
-                    Main.dust[num1069].noGravity = true;
-                    Main.dust[num1069].noLight = true;
-                    num3 = num1068;
-                }
-            }
-            projectile.alpha -= 42;
-            if (projectile.alpha < 0)
-            {
-                projectile.alpha = 0;
             }
             projectile.velocity = Vector2.Zero;
             Vector2 vector151 = parCenter - projectile.Center;
@@ -96,12 +84,12 @@ namespace ElementsAwoken.Projectiles.Pets.Wyvern
             projectile.Center = projectile.position;
             if (vector151 != Vector2.Zero)
             {
-                float multiplier = 1.3f;
+                Vector2 originCenter = parCenter;
                 if (parent.type == mod.ProjectileType("WyvernHead"))
                 {
-                    multiplier = 3.2f; // becasue the head is long
+                    originCenter = parCenter + new Vector2(0,20).RotatedBy(parRot, default(Vector2));
                 }
-                projectile.Center = parCenter - Vector2.Normalize(vector151) * multiplier* scaleFactor16 * scaleFactor17;
+                projectile.Center = originCenter - Vector2.Normalize(vector151) * scaleFactor16 * scaleFactor17;
             }
             projectile.spriteDirection = ((vector151.X > 0f) ? 1 : -1);
             return;

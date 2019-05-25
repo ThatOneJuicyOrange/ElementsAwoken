@@ -338,19 +338,29 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
                     }
                 }
             }
-            
+
+
             // dusts
+            Vector2 dustPos = new Vector2(0f, 32);
+            if (npc.direction == -1)
+            {
+                dustPos.X = -4f;
+            }
+            dustPos = dustPos.RotatedBy((double)npc.rotation, default(Vector2));
             for (int i = 0; i < 2; i++)
             {
-                int width = 16;
-                int dust = Dust.NewDust(new Vector2(npc.Center.X - width / 2, npc.Center.Y - width / 2), width, width, DustID.PinkFlame, 0f, 0f, 100, default(Color), 1);
-                Main.dust[dust].scale *= 2f + (float)Main.rand.Next(10) * 0.1f;
-                Main.dust[dust].velocity *= 0.2f;
-                Main.dust[dust].noGravity = true;
+                Dust fire = Main.dust[Dust.NewDust(npc.Center + dustPos - Vector2.One * 5f, 16, 16, DustID.PinkFlame, 0f, 0f, 0, default(Color), 1f)];
+                fire.scale *= 2f + (float)Main.rand.Next(10) * 0.1f;
+                fire.noGravity = true;
+                fire.velocity = fire.velocity * 0.2f + Vector2.Normalize(dustPos) * 1f;
+                fire.velocity = fire.velocity.RotatedBy((double)(-1.57079637f * (float)npc.direction), default(Vector2));
 
-                dust = Dust.NewDust(new Vector2(npc.Center.X - width / 2, npc.Center.Y - width / 2), width, width, 31, 0f, 0f, 100, default(Color), 0.5f);
-                Main.dust[dust].fadeIn = 1f + (float)Main.rand.Next(5) * 0.1f;
-                Main.dust[dust].velocity *= 0.05f;
+                Dust smoke = Main.dust[Dust.NewDust(npc.Center + dustPos - Vector2.One * 5f, 16, 16, DustID.PinkFlame, 0f, 0f, 0, default(Color), 1f)];
+                smoke.scale *= 2f + (float)Main.rand.Next(10) * 0.1f;
+                smoke.noGravity = true;
+                smoke.fadeIn = 1f + Main.rand.NextFloat(0, 0.5f);
+                smoke.velocity = smoke.velocity * 0.05f + Vector2.Normalize(dustPos) * 1f;
+                smoke.velocity = smoke.velocity.RotatedBy((double)(-1.57079637f * (float)npc.direction), default(Vector2));
             }
         }
         private void Move(Player P, float moveSpeed)

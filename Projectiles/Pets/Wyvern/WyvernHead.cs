@@ -140,16 +140,7 @@ namespace ElementsAwoken.Projectiles.Pets.Wyvern
             projectile.position = projectile.Center;
             projectile.scale = 1f + num1062 * 0.01f;
             projectile.width = (projectile.height = (int)((float)num1049 * projectile.scale));
-            projectile.Center = projectile.position;
-            if (projectile.alpha > 0)
-            {
-                projectile.alpha -= 42;
-                if (projectile.alpha < 0)
-                {
-                    projectile.alpha = 0;
-                    return;
-                }
-            }         
+            projectile.Center = projectile.position;      
         }
     }
 }

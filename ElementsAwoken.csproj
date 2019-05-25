@@ -54,6 +54,10 @@
   <ItemGroup>
     <Compile Include="Buffs\EldritchHorror.cs" />
     <Compile Include="Buffs\PotionBuffs\SanityRegenerationBuff.cs" />
+    <Compile Include="Items\Ancient\Xernon\LamentIV.cs" />
+    <Compile Include="Items\Ancient\Xernon\LamentIII.cs" />
+    <Compile Include="Items\Ancient\Xernon\LamentII.cs" />
+    <Compile Include="Items\Ancient\Xernon\LamentI.cs" />
     <Compile Include="Items\Consumable\ElementalCapsule.cs" />
     <Compile Include="Items\Consumable\Potions\SanityRegenerationPotion.cs" />
     <Compile Include="Items\Other\SanityBook.cs" />
@@ -62,6 +66,7 @@
     <Compile Include="Items\Tech\Tools\AutoMinerMKIII.cs" />
     <Compile Include="Items\Tech\Tools\AutoMinerMKII.cs" />
     <Compile Include="Items\Testing\HealthChanger.cs" />
+    <Compile Include="Items\Weapons\Melee\FistsOfFury.cs" />
     <Compile Include="NPCs\AwakenedModeNPC.cs" />
     <Compile Include="PlayerUtils.cs" />
     <Compile Include="Buffs\DeathwarpCooldown.cs" />
@@ -1144,6 +1149,11 @@
     <Compile Include="Projectiles\EscapedChlorobyte.cs" />
     <Compile Include="Projectiles\BlightfireSpawner.cs" />
     <Compile Include="Projectiles\Explosions\LightsAfflictionExplosion.cs" />
+    <Compile Include="Projectiles\Gauntlets\FistsOfFuryP.cs" />
+    <Compile Include="Projectiles\LamentSuperPierce.cs" />
+    <Compile Include="Projectiles\LamentPierce.cs" />
+    <Compile Include="Projectiles\LamentWave.cs" />
+    <Compile Include="Projectiles\LamentBallExplosive.cs" />
     <Compile Include="Projectiles\Minions\BreathOfDarkness\VleviBody.cs" />
     <Compile Include="Projectiles\Minions\BreathOfDarkness\VleviHead.cs" />
     <Compile Include="Projectiles\Minions\BreathOfDarkness\VleviTail.cs" />
@@ -1558,6 +1568,8 @@
     <Compile Include="Projectiles\InfernoLightning.cs" />
     <Compile Include="Projectiles\ElementalBolt.cs" />
     <Compile Include="Projectiles\Thrown\CosmicusP.cs" />
+    <Compile Include="Projectiles\LamentBall.cs" />
+    <Compile Include="Projectiles\LamentExplosion.cs" />
     <Compile Include="Projectiles\Yoyos\AnarchyP.cs" />
     <Compile Include="Projectiles\Yoyos\SolP.cs" />
     <Compile Include="Projectiles\Yoyos\NeptuneP.cs" />
@@ -1824,7 +1836,6 @@
     <Compile Include="Projectiles\SpinalEye.cs" />
     <Compile Include="Projectiles\HomingRocket.cs" />
     <Compile Include="Projectiles\IcicleShot.cs" />
-    <Compile Include="Projectiles\LamentBurst.cs" />
     <Compile Include="Projectiles\Minions\AqueousMinion\AqueousMinionFriendly4.cs" />
     <Compile Include="Projectiles\Minions\AqueousMinion\AqueousMinionFriendly3.cs" />
     <Compile Include="Projectiles\Minions\AqueousMinion\AqueousMinionFriendly2.cs" />
@@ -2081,7 +2092,6 @@
     <Folder Include="Items\Ancient\Izaris\" />
     <Folder Include="Items\Ancient\Kirvein\" />
     <Folder Include="Items\Ancient\Krecheus\" />
-    <Folder Include="Items\Ancient\Xernon\" />
     <Folder Include="Items\Donator\Badas\" />
     <Folder Include="Items\GemLasers\Tier5\" />
     <Folder Include="Projectiles\Minions\VoidLeviathan\" />

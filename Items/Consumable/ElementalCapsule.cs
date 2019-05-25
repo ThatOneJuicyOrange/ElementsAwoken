@@ -39,6 +39,7 @@ namespace ElementsAwoken.Items.Consumable
             {
                 Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
                 MyWorld.awakenedMode = true;
+                item.stack--;
                 return true;
             }
             return false;

@@ -66,22 +66,7 @@ namespace ElementsAwoken.Projectiles.Pets.Wyvern
                 projectile.Kill();
                 return;
             }
-            if (projectile.alpha > 0)
-            {
-                int num3;
-                for (int num1068 = 0; num1068 < 2; num1068 = num3 + 1)
-                {
-                    int num1069 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 135, 0f, 0f, 100, default(Color), 2f);
-                    Main.dust[num1069].noGravity = true;
-                    Main.dust[num1069].noLight = true;
-                    num3 = num1068;
-                }
-            }
-            projectile.alpha -= 42;
-            if (projectile.alpha < 0)
-            {
-                projectile.alpha = 0;
-            }
+
             projectile.velocity = Vector2.Zero;
             Vector2 vector151 = parCenter - projectile.Center;
             if (parRot != projectile.rotation)

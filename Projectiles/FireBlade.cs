@@ -13,15 +13,12 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 12;
             projectile.height = 24;
-            projectile.scale = 1.0f;
-            projectile.magic = true;
-            projectile.penetrate = 1;
-            projectile.hostile = false;
+
             projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.alpha = 0;
+            projectile.melee = true;
+
             projectile.timeLeft = 600;
+
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
