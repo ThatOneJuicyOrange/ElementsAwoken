@@ -84,6 +84,7 @@ namespace ElementsAwoken
         public static int encounterTimer = 0;
         public static int encounterShakeTimer = 0;
         // has obtained the computer drives
+        public static bool ancientsDrive = false;
         public static bool aqueousDrive = false;
         public static bool azanaDrive = false;
         public static bool celestialDrive = false;
@@ -710,7 +711,7 @@ namespace ElementsAwoken
             int structX = xO - 225 * sizeMult + Main.rand.Next(225 * sizeMult * 2);
             int structY = yO - 275 * sizeMult + Main.rand.Next(275 * sizeMult / 2);
             generatedLabs = true;
-            for (int q = 0; q < 12; q++) // 12 different labs. dont try generating above 200, it runs out of space and crashes(might be fixed)
+            for (int q = 0; q < 13; q++) // 13 different labs. dont try generating above 200, it runs out of space and crashes(might be fixed)
             {
                 int border = 300 * sizeMult;
                 int xMin = border;
@@ -739,7 +740,7 @@ namespace ElementsAwoken
 
                         PickLab(s, structX, structY, mirrored);
                         s++;
-                        if (s > 11)
+                        if (s > 12)
                         {
                             s = 0; // this should never happen but just to be safe
                         }
@@ -756,7 +757,11 @@ namespace ElementsAwoken
                 WastelandLabPlatforms.StructureGen(structX, structY, mirrored); // then create the platforms (on top of the walls)
                 WastelandLabFurniture.StructureGen(structX, structY, mirrored); // then the furniture
             }
-            else if (s >= 1 && s < 11)
+            else if (s == 12)
+            {
+                AncientsLab.Generate(structX, structY, mirrored);
+            }
+            else
             {
                 Lab.StructureGen(structX, structY, mirrored); // create the structure first
                 LabPlatforms.StructureGen(structX, structY, mirrored); // create the structure first

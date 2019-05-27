@@ -26,6 +26,8 @@ using ReLogic.Graphics;
 using System.Reflection;
 using Terraria.UI.Chat;
 using ElementsAwoken.ScreenEffects;
+using Terraria.UI.Gamepad;
+using Terraria.GameInput;
 
 namespace ElementsAwoken
 {
@@ -623,8 +625,20 @@ namespace ElementsAwoken
                     InterfaceScaleType.UI);
                 layers.Insert(bookLayer, bookState);
             }
-                // make rain black
-                if (MyWorld.encounter3)
+            if (!Main.player[Main.myPlayer].ghost && !Main.gameMenu)
+            {
+                var bdpsLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                var bdpsState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                    delegate
+                    {
+                        DrawBuffDPS();
+                        return true;
+                    },
+                    InterfaceScaleType.UI);
+                layers.Insert(bdpsLayer, bdpsState);
+            }
+            // make rain black
+            if (MyWorld.encounter3)
             {
                 Main.rainTexture = GetTexture("Extra/Rain3");
             }
@@ -892,7 +906,7 @@ namespace ElementsAwoken
                 int screenAnchorX = (int)info.GetValue(null);
 
                 Texture2D backgroundTexture = mod.GetTexture("Extra/EnergyUI");
-                int barPosLeft = 415 + screenAnchorX + (MyWorld.awakenedMode ? - 134 : 0);
+                int barPosLeft = 415 + screenAnchorX + (MyWorld.awakenedMode ? -134 : 0);
                 Main.spriteBatch.Draw(backgroundTexture, new Rectangle(barPosLeft, 48, backgroundTexture.Width, backgroundTexture.Height), null, Color.White, 0f, new Vector2(backgroundTexture.Width / 2, backgroundTexture.Height / 2), SpriteEffects.None, 0f);
 
                 Texture2D barTexture = mod.GetTexture("Extra/EnergyBar");
@@ -1017,6 +1031,284 @@ namespace ElementsAwoken
                 int yPos = Main.screenHeight - 200 + 25 * i;
                 Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, Main.screenWidth - 150, yPos, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
             }
+        }
+
+        public void DrawBuffDPS()
+        {
+            Player player = Main.player[Main.myPlayer];
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
+            if (modPlayer.alchemistTimer)
+            {
+                int mH = (int)((typeof(Main).GetField("mH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)).GetValue(null));
+                if ((Main.npcChatText == null || Main.npcChatText == "") && player.sign < 0)
+                {
+                    int amountOfInfoActive = CountAvailableInfo();
+                    int amountOfInfoEquipped = CountEquippedInfo();
+
+                    int distBetweenInfo = 22;
+                    if (Main.screenHeight < 650)
+                    {
+                        distBetweenInfo = 20;
+                    }
+                    string text = "";
+                    string hoverText = "Buff Damage Per Second";
+                    float num4 = 215f;
+
+                    int iconPosX;
+                    int iconPosY;
+                    if (!Main.playerInventory)
+                    {
+                        iconPosX = Main.screenWidth - 280;
+                        iconPosY = -32;
+                        if (Main.mapStyle == 1 && Main.mapEnabled)
+                        {
+                            iconPosY += 254;
+                        }
+                    }
+                    else if (Main.ShouldDrawInfoIconsHorizontally)
+                    {
+                        iconPosX = Main.screenWidth - 280 + 20 * amountOfInfoEquipped - 10;
+                        iconPosY = 94;
+                        if (Main.mapStyle == 1 && Main.mapEnabled)
+                        {
+                            iconPosY += 254;
+                        }
+                    }
+                    else
+                    {
+                        int num28 = (int)(52f * Main.inventoryScale);
+                        iconPosX = 697 - num28 * 4 + Main.screenWidth - 800 + 20 * (amountOfInfoEquipped % 2);
+                        iconPosY = 114 + mH + num28 * 7 + num28 / 2 + 20 * (amountOfInfoEquipped / 2) + 8 * (amountOfInfoEquipped / 4) - 20;
+                        if (Main.EquipPage == 2)
+                        {
+                            iconPosX += num28 + num28 / 2;
+                            iconPosY -= num28;
+                        }
+                    }
+
+                    Texture2D tex = GetTexture("Extra/BuffDPSInfo");
+                    Vector2 vector = new Vector2((float)iconPosX, (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + 52));
+                    Color white = Color.White;
+                    bool flag14 = false;
+                    if (Main.playerInventory)
+                    {
+                        vector = new Vector2((float)iconPosX, (float)iconPosY);
+                        if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !PlayerInput.IgnoreMouseInterface)
+                        {
+                            flag14 = true;
+                            player.mouseInterface = true;
+                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                Main.PlaySound(12, -1, -1, 1, 1f, 0f);
+                                Main.mouseLeftRelease = false;
+                                modPlayer.hideBDPS = !modPlayer.hideBDPS;
+                            }
+                            if (!Main.mouseText)
+                            {
+                                text = hoverText;
+                                Main.mouseText = true;
+                            }
+                        }
+                        if (modPlayer.hideBDPS)
+                        {
+                            white = new Color(80, 80, 80, 70);
+                        }
+
+                    }
+                    else if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !Main.mouseText)
+                    {
+                        Main.mouseText = true;
+                        text = hoverText;
+                    }
+                    UILinkPointNavigator.SetPosition(1558 + amountOfInfoEquipped - 1, vector + tex.Size() * 0.75f);
+                    if (!Main.playerInventory && modPlayer.hideBDPS)
+                    {
+                        white = Color.Transparent;
+                    }
+                    Main.spriteBatch.Draw(tex, vector, new Rectangle?(new Rectangle(0, 0, tex.Width, tex.Height)), white, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);                         
+                    if (flag14)
+                    {
+                        Texture2D outline = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "UI" + Path.DirectorySeparatorChar.ToString() + "InfoIcon_13");
+                        Main.spriteBatch.Draw(outline, vector - Vector2.One * 2f, null, Main.OurFavoriteColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+                        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, hoverText, new Vector2(Main.mouseX, Main.mouseX), new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+                    }
+                    iconPosX += 20;
+
+                    if (!Main.playerInventory && !modPlayer.hideBDPS)
+                    {
+                        Vector2 vector2 = new Vector2(1f);
+                        string text2 = modPlayer.buffDPS + " buff damage per second";
+                        if (modPlayer.buffDPS <= 0)
+                        {
+                            text2 = Language.GetTextValue("GameUI.NoDPS");
+                        }
+                        Vector2 vector3 = Main.fontMouseText.MeasureString(text2);
+                        if (vector3.X > num4)
+                        {
+                            vector2.X = num4 / vector3.X;
+                        }
+                        if (vector2.X < 0.58f)
+                        {
+                            vector2.Y = 1f - vector2.X / 3f;
+                        }
+                        for (int num31 = 0; num31 < 5; num31++)
+                        {
+                            int num32 = 0;
+                            int num33 = 0;
+                            Color black = Color.Black;
+                            if (num31 == 0)
+                            {
+                                num32 = -2;
+                            }
+                            if (num31 == 1)
+                            {
+                                num32 = 2;
+                            }
+                            if (num31 == 2)
+                            {
+                                num33 = -2;
+                            }
+                            if (num31 == 3)
+                            {
+                                num33 = 2;
+                            }
+                            if (num31 == 4)
+                            {
+                                black = new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor);
+                            }
+                            /*if (i > num2 && i < num2 + 2)
+                            {
+                                black = new Color((int)(black.R / 3), (int)(black.G / 3), (int)(black.B / 3), (int)(black.A / 3));
+                            }*/
+
+                            DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, Main.fontMouseText, text2, new Vector2((float)(iconPosX + num32), (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + num33 + 48)), black, 0f, default(Vector2), vector2, SpriteEffects.None, 0f);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        if (Main.playerInventory)
+                        {
+                            Main.player[Main.myPlayer].mouseInterface = true;
+                        }
+                        Vector2 drawTextPos = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16.0f);
+                        if (drawTextPos.X + Main.fontMouseText.MeasureString(text).X > Main.screenWidth)
+                        {
+                            drawTextPos.X -= Main.fontMouseText.MeasureString(text).X; // to stop it drawing off the side
+                        }
+
+                        Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, drawTextPos.X, drawTextPos.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, new Vector2());
+                    }
+                }
+            }
+        }
+        private int CountAvailableInfo()
+        {
+            Player player = Main.player[Main.myPlayer];
+            int num = 0;
+            if (!player.hideInfo[0] && player.accWatch > 0)
+            {
+                num++;
+            }
+            if (!player.hideInfo[1] && player.accWeatherRadio)
+            {
+                num++;
+            }
+            if (!player.hideInfo[2] && player.accFishFinder)
+            {
+                num++;
+            }
+            if (!player.hideInfo[3] && player.accCompass > 0)
+            {
+                num++;
+            }
+            if (!player.hideInfo[4] && player.accDepthMeter > 0)
+            {
+                num++;
+            }
+            if (!player.hideInfo[5] && player.accThirdEye)
+            {
+                num++;
+            }
+            if (!player.hideInfo[6] && player.accJarOfSouls)
+            {
+                num++;
+            }
+            if (!player.hideInfo[7] && player.accCalendar)
+            {
+                num++;
+            }
+            // where tf is 8?
+            if (!player.hideInfo[9] && player.accStopwatch)
+            {
+                num++;
+            }
+            if (!player.hideInfo[10] && player.accOreFinder)
+            {
+                num++;
+            }
+            if (!player.hideInfo[11] && player.accCritterGuide)
+            {
+                num++;
+            }
+            if (!player.hideInfo[12] && player.accDreamCatcher)
+            {
+                num++;
+            }
+            return num;
+        }
+        private int CountEquippedInfo()
+        {
+            Player player = Main.player[Main.myPlayer];
+            int num = 0;
+            if (player.accWatch > 0)
+            {
+                num++;
+            }
+            if (player.accWeatherRadio)
+            {
+                num++;
+            }
+            if (player.accFishFinder)
+            {
+                num++;
+            }
+            if (player.accCompass > 0)
+            {
+                num++;
+            }
+            if (player.accDepthMeter > 0)
+            {
+                num++;
+            }
+            if (player.accThirdEye)
+            {
+                num++;
+            }
+            if (player.accJarOfSouls)
+            {
+                num++;
+            }
+            if (player.accCalendar)
+            {
+                num++;
+            }
+            if (player.accStopwatch)
+            {
+                num++;
+            }
+            if (player.accOreFinder)
+            {
+                num++;
+            }
+            if (player.accCritterGuide)
+            {
+                num++;
+            }
+            if (player.accDreamCatcher)
+            {
+                num++;
+            }
+            return num;
         }
 
         public void DrawEncounterText(SpriteBatch spriteBatch)

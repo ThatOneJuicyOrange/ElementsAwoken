@@ -54,14 +54,7 @@ namespace ElementsAwoken.Items.Testing
                 bool mirrored = false;
                 if (Main.rand.Next(2) == 0)
                     mirrored = true;
-                /*
-                WastelandLab.StructureGen(structX, structY, mirrored); // create the structure first
-                WastelandLabPlatforms.StructureGen(structX, structY, mirrored); // then create the platforms (on top of the walls)
-                WastelandLabFurniture.StructureGen(structX, structY, mirrored); // then the furniture
-                */
-                Lab.StructureGen(structX, structY, mirrored); // create the structure first
-                LabPlatforms.StructureGen(structX, structY, mirrored); // create the structure first
-                LabFurniture.StructureGen(structX, structY, mirrored, 0); // then the furniture
+                AncientsLab.Generate(structX, structY, mirrored);
             }
         }
         private static bool TileCheckSafe(int i, int j)

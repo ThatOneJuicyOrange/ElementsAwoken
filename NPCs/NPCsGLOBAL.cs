@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace ElementsAwoken.NPCs
 {
@@ -306,7 +307,6 @@ namespace ElementsAwoken.NPCs
             }
             if (delete)
             {
-                Main.NewText("fff");
                 npc.active = false;
                 if (npc.active)
                 {
@@ -314,6 +314,9 @@ namespace ElementsAwoken.NPCs
                 }
                 npc.netUpdate = true;
             }
+            Player player = Main.LocalPlayer;
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            modPlayer.buffDPS += Math.Abs(npc.lifeRegen / 2);
         }
 
         public override void DrawEffects(NPC npc, ref Color drawColor)
@@ -607,6 +610,12 @@ namespace ElementsAwoken.NPCs
             {
                 shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("ThrowableBook"));
                 shop.item[nextSlot].shopCustomPrice = 80;
+                nextSlot++;
+            }
+            if (type == NPCID.Dryad)
+            {
+                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("AlchemistsTimer"));
+                nextSlot++;
             }
             if (type == NPCID.Wizard)
             {
@@ -614,11 +623,13 @@ namespace ElementsAwoken.NPCs
                 {
                     shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("ThrowableDictionary"));
                     shop.item[nextSlot].shopCustomPrice = 800;
+                    nextSlot++;
                 }
                 if (MyWorld.downedAncients)
                 {
                     shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CrystalAmalgamate"));
                     shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 25, 0, 0);
+                    nextSlot++;
                 }
             }
             if (type == NPCID.Steampunker)
@@ -639,6 +650,7 @@ namespace ElementsAwoken.NPCs
                 nextSlot++;
                 shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("LabLightFunctional"));
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 1, 50, 0);
+                nextSlot++;
             }
         }
 

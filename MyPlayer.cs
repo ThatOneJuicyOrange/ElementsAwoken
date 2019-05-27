@@ -163,11 +163,11 @@ namespace ElementsAwoken
         public int aegisDashDir = 1;
         // computer
         public bool inComputer = false;
-        public int computerX = 0;
-        public int computerY = 0;
+        public Vector2 computerPos = new Vector2();
         public int computerTextNo = 0;
         public int guardianEntryNo = 0;
         public int azanaEntryNo = 0;
+        public int ancientsEntryNo = 0;
         public string computerText = "";
         // toy slime
         public bool increasedToySlimeChance = false;
@@ -195,6 +195,16 @@ namespace ElementsAwoken
         // oinite statue
         public bool oiniteStatue = false;
         public bool[] doubledBuff = new bool[22];
+        // buff dps
+        //public DateTime bdpsStart;
+        //public DateTime bdpsEnd;
+        //public DateTime bdpsLastHit;
+        //public int bdpsDamage;
+        // public bool bdpsStarted;
+        public int buffDPSCount = 0;
+        public int buffDPS = 0;
+        public bool hideBDPS = false;
+        public bool alchemistTimer = false;
 
         //encounters
         public int encounterTextTimer = 0;
@@ -314,6 +324,8 @@ namespace ElementsAwoken
 
             oiniteStatue = false;
 
+            alchemistTimer = false;
+
             damageTaken = 1f;
             if (!calamityEnabled)
             {
@@ -333,13 +345,15 @@ namespace ElementsAwoken
             }
             shieldHearts = shieldLife / 5;
             player.statLifeMax2 += shieldLife;
+
+            buffDPS = buffDPSCount;
+            buffDPSCount = 0;
         }
         // for the bonus life
         public override void clientClone(ModPlayer clientClone)
         {
             MyPlayer clone = clientClone as MyPlayer;
         }
-
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
             ModPacket packet = mod.GetPacket();
@@ -1134,6 +1148,7 @@ namespace ElementsAwoken
                 voidWalkerRegen--;
                 player.lifeRegen += 75;
             }
+
             #region encounters
             if (MyWorld.encounterTimer == 3200)
             {
@@ -1234,91 +1249,7 @@ namespace ElementsAwoken
             }
             #endregion
 
-            #region computer
-            // computer
-            int num16 = (int)(((double)player.position.X + (double)player.width * 0.5) / 16.0);
-            int num17 = (int)(((double)player.position.Y + (double)player.height * 0.5) / 16.0);
-            if (num16 < computerX - Player.tileRangeX || num16 > computerX + Player.tileRangeX + 1 || num17 < computerY - Player.tileRangeY || num17 > computerY + Player.tileRangeY + 1)
-            {
-                inComputer = false;
-            }
-            if (Main.playerInventory == true || player.sign != -1 || player.talkNPC != -1)
-            {
-                inComputer = false;
-            }
-            switch (computerTextNo)
-            {
-                case 0:
-                    //no drive
-                    computerText = "ERROR- DRIVE NOT LOCATED";
-                    break;
-                case 1:
-                    //wasteland
-                    computerText = "What is this monstrosity, what have we created?!\nThis... beast, it has killed the others, I hear it trying to \nbreak the door to my room... Its coming for me... \nAnybody who finds this note, END THIS MADNESS, \nI beg of you... Oh no.. Its her-";
-                    break;
-                case 2:
-                    //infernace
-                    computerText = "My colleagues found something very interesting within the\ndeepest part of this world. A sentient being controlling fire\nat will...unfortunately, we can't go down there, as it may\nkill us if we approach it, but...we will continue watching it.";
-                    break;
-                case 3:
-                    //scourge fighter
-                    computerText = "Our other team managed to lose control of the 4 robots\nthey've built. Seems like some people are better off being\nfired. Those things now roam the surface, I am not sure\nof what will happen...";
-                    break;
-                case 4:
-                    //regaroth
-                    computerText = "A massive amount of energy surged through one of our\nmachines, overloading it and causing it to blow up. The\nenergy readings were... outstanding, to say the least,\nalmost supernatural. It has probably to do with that\nthunder serpent, far up in the skies...";
-                    break;
-                case 5:
-                    //the celestial
-                    computerText = "When we attempted to find a source for the cultists to\nrelay celestial power from, we stumbled across an\nimperfect reflection of the celestial forces... However, it\nwill be hard to find a source of power from that creature.";
-                    break;
-                case 6:
-                    //obsidious
-                    computerText = "We've heard of some, artifact lost in the underworld but\nnever bothered to look for it. Recently we checked and it\nwas gone. I suppose someone else found it first, ah well...";
-                    break;
-                case 7:
-                    //permafrost
-                    computerText = "There appear to be signs of magic in the coldest parts of\nthe land, we have sent someone to look into it, but\nunfortunately we have not heard from them as of yet...\nI fear he has been frozen due to the cold. After all, these\nlands are rather, harsh, to take on alone.";
-                    break;
-                case 8:
-                    //aqueous
-                    computerText = "The tides have risen rather high, and there have been\nrather heavy amounts of rain lately, with terrifying\nconsistency no less. On top of that, there are multiple\nreports of tornados composed almost entirely of water.\nThe wrath of the ocean may be upon us soon..";
-                    break;
-                case 9:
-                    //the guardian
-                    if (guardianEntryNo == 0)
-                    {
-                        computerText = "001: This element, drakonite, is rather interesting to say\nthe least. We've taken a shard of it into our lab for\nfurther research. However, we should be prepared for\nwhatever danger lurks within this shard...";
-                    }
-                    else
-                    {
-                        computerText = "002: The drakonite shard, it had quite the reaction to lava\nand then right before us, a giant...thing began to\nbuild up. It was entirely made of drakonite! However it\nwas not friendly, we had to quickly evacuate to save\nourselves.";
-                    }
-                    break;
-                case 10:
-                    //volcanox
-                    computerText = "After extensive research via our machines, we came to the\nconclusion that, if the moon lord were to be felled,\nthe underworld would burst out in extreme heat, and even \nthe most fire resistant gear would not last long... What \nsort of a being could withstand this heatwave?";
-                    break;
-                case 11:
-                    //void leviathan
-                    computerText = "My colleagues have been constantly hallucinating, and were\nshowing signs of sickness, as well as being easily\ntired. They are barely able to breathe. I am trying to find\nsome way to save them, however... I feel this will hit\nme as well. I need to get this cure done -at all costs!";
-                    break;
-                case 12:
-                    //azana
-                    if (azanaEntryNo == 0)
-                    {
-                        computerText = "001: This is going to be my final entry...\nI've lost everything. I had, all my colleagues... everything\nis gone and I'm alone. The chaos ravages the lands, and I\nam unable to do anything. There is no reason for me to\nlive anymore...";
-                    }
-                    else
-                    {
-                        computerText = "002: Whoever finds this...I beg of you, do not make the\nsame mistakes as we did...Do not..";
-                    }
-                    break;
-                default:
-                    computerText = "muffins";
-                    return;
-            }
-            #endregion
+            ComputerText();
 
             #region PROMPTS!!
             if (Config.bossPrompts)
@@ -1557,6 +1488,103 @@ namespace ElementsAwoken
                     }
                 }
                 #endregion
+            }
+        }
+
+        private void ComputerText()
+        {
+            int num16 = (int)(((double)player.position.X + (double)player.width * 0.5) / 16.0);
+            int num17 = (int)(((double)player.position.Y + (double)player.height * 0.5) / 16.0);
+            if (num16 < computerPos.X - Player.tileRangeX || num16 > computerPos.X + Player.tileRangeX + 1 || num17 < computerPos.Y - Player.tileRangeY || num17 > computerPos.Y + Player.tileRangeY + 1)
+            {
+                inComputer = false;
+            }
+            if (Main.playerInventory == true || player.sign != -1 || player.talkNPC != -1)
+            {
+                inComputer = false;
+            }
+            switch (computerTextNo)
+            {
+                case 0:
+                    //no drive
+                    computerText = "ERROR- DRIVE NOT LOCATED";
+                    break;
+                case 1:
+                    //wasteland
+                    computerText = "What is this monstrosity, what have we created?!\nThis... beast, it has killed the others, I hear it trying to \nbreak the door to my room... Its coming for me... \nAnybody who finds this note, END THIS MADNESS, \nI beg of you... Oh no.. Its her-";
+                    break;
+                case 2:
+                    //infernace
+                    computerText = "My colleagues found something very interesting within the\ndeepest part of this world. A sentient being controlling fire\nat will...unfortunately, we can't go down there, as it may\nkill us if we approach it, but...we will continue watching it.";
+                    break;
+                case 3:
+                    //scourge fighter
+                    computerText = "Our other team managed to lose control of the 4 robots\nthey've built. Seems like some people are better off being\nfired. Those things now roam the surface, I am not sure\nof what will happen...";
+                    break;
+                case 4:
+                    //regaroth
+                    computerText = "A massive amount of energy surged through one of our\nmachines, overloading it and causing it to blow up. The\nenergy readings were... outstanding, to say the least,\nalmost supernatural. It has probably to do with that\nthunder serpent, far up in the skies...";
+                    break;
+                case 5:
+                    //the celestial
+                    computerText = "When we attempted to find a source for the cultists to\nrelay celestial power from, we stumbled across an\nimperfect reflection of the celestial forces... However, it\nwill be hard to find a source of power from that creature.";
+                    break;
+                case 6:
+                    //obsidious
+                    computerText = "We've heard of some, artifact lost in the underworld but\nnever bothered to look for it. Recently we checked and it\nwas gone. I suppose someone else found it first, ah well...";
+                    break;
+                case 7:
+                    //permafrost
+                    computerText = "There appear to be signs of magic in the coldest parts of\nthe land, we have sent someone to look into it, but\nunfortunately we have not heard from them as of yet...\nI fear he has been frozen due to the cold. After all, these\nlands are rather, harsh, to take on alone.";
+                    break;
+                case 8:
+                    //aqueous
+                    computerText = "The tides have risen rather high, and there have been\nrather heavy amounts of rain lately, with terrifying\nconsistency no less. On top of that, there are multiple\nreports of tornados composed almost entirely of water.\nThe wrath of the ocean may be upon us soon..";
+                    break;
+                case 9:
+                    //the guardian
+                    if (guardianEntryNo == 0)
+                    {
+                        computerText = "001: This element, drakonite, is rather interesting to say\nthe least. We've taken a shard of it into our lab for\nfurther research. However, we should be prepared for\nwhatever danger lurks within this shard...";
+                    }
+                    else
+                    {
+                        computerText = "002: The drakonite shard, it had quite the reaction to lava\nand then right before us, a giant...thing began to\nbuild up. It was entirely made of drakonite! However it\nwas not friendly, we had to quickly evacuate to save\nourselves.";
+                    }
+                    break;
+                case 10:
+                    //volcanox
+                    computerText = "After extensive research via our machines, we came to the\nconclusion that, if the moon lord were to be felled,\nthe underworld would burst out in extreme heat, and even \nthe most fire resistant gear would not last long... What \nsort of a being could withstand this heatwave?";
+                    break;
+                case 11:
+                    //void leviathan
+                    computerText = "My colleagues have been constantly hallucinating, and were\nshowing signs of sickness, as well as being easily\ntired. They are barely able to breathe. I am trying to find\nsome way to save them, however... I feel this will hit\nme as well. I need to get this cure done -at all costs!";
+                    break;
+                case 12:
+                    //azana
+                    if (azanaEntryNo == 0)
+                    {
+                        computerText = "001: This is going to be my final entry...\nI've lost everything. I had, all my colleagues... everything\nis gone and I'm alone. The chaos ravages the lands, and I\nam unable to do anything. There is no reason for me to\nlive anymore...";
+                    }
+                    else
+                    {
+                        computerText = "002: Whoever finds this...I beg of you, do not make the\nsame mistakes as we did...Do not..";
+                    }
+                    break;
+                case 13:
+                    //ancients
+                    if (ancientsEntryNo == 0)
+                    {
+                        computerText = "003: We just witnissed something dangerous...some old\nman entered our laboratory and split into four crystalline\nmonsters, which roamed the entire place. Almost the\nentirety of our team is missing and all we found was some\ncrystal shards on the ground. We have to make some tests.";
+                    }
+                    else
+                    {
+                        computerText = "004: Upon further investigation, the shards belong to\na long forgotten race, thought to be eliminated.\nNo doubt, they could bring more chaos than anything\ncurrently ever could. And that there are four survivors\ngives me an awful feeling...";
+                    }
+                    break;
+                default:
+                    computerText = "muffins";
+                    return;
             }
         }
 
@@ -2224,6 +2252,7 @@ namespace ElementsAwoken
                 expr_3D9.shader = GameShaders.Armor.GetSecondaryShader(player.cYorai, player);
             }
         }
+
 
         private int CollideWithNPCs(Rectangle myRect, float Damage, float Knockback, int NPCImmuneTime, int PlayerImmuneTime)
         {

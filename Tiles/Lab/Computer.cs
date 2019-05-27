@@ -11,8 +11,6 @@ namespace ElementsAwoken.Tiles.Lab
     public class Computer : ModTile
     {
         public int entryNo = 0; // no drive
-        public int guardianEntry = 1;
-        public int azanaEntry = 1;
         public int noDetectTimer = 0;
         public override void SetDefaults()
         {
@@ -44,13 +42,13 @@ namespace ElementsAwoken.Tiles.Lab
         {
             Main.PlaySound(SoundID.MenuTick);
             Player player = Main.LocalPlayer;
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
             #region drive detection
-            // was in post draw, but this made it so every computer updated the player
             float distance = 3 * 16;
             Point topLeft = ((new Vector2(i * 16, j * 16) - new Vector2(distance, distance)) / 16).ToPoint();
             Point bottomRight = ((new Vector2(i * 16 - 16, j * 16 - 16) + new Vector2(distance, distance)) / 16).ToPoint();
 
-            // draws dust where the hitbox is 
+            // draws dust where the detection zone is 
             /*for (int d = 0; d < 3; d++)
             {
                 int dust = Dust.NewDust(new Vector2(topLeft.X * 16, topLeft.Y * 16), (bottomRight.X - topLeft.X) * 16, (bottomRight.Y - topLeft.Y) * 16, 57, 0f, 0f, 100);
@@ -105,10 +103,10 @@ namespace ElementsAwoken.Tiles.Lab
                     else if (t.type == mod.TileType("GuardianDrive"))
                     {
                         entryNo = 9;
-                        guardianEntry++;
-                        if (guardianEntry > 1)
+                        modPlayer.guardianEntryNo++;
+                        if (modPlayer.guardianEntryNo > 1)
                         {
-                            guardianEntry = 0;
+                            modPlayer.guardianEntryNo = 0;
                         }
                         noDetectTimer = 20;
                     }
@@ -125,10 +123,20 @@ namespace ElementsAwoken.Tiles.Lab
                     else if (t.type == mod.TileType("AzanaDrive"))
                     {
                         entryNo = 12;
-                        azanaEntry++;
-                        if (azanaEntry > 1)
+                        modPlayer.azanaEntryNo++;
+                        if (modPlayer.azanaEntryNo > 1)
                         {
-                            azanaEntry = 0;
+                            modPlayer.azanaEntryNo = 0;
+                        }
+                        noDetectTimer = 20;
+                    }
+                    else if (t.type == mod.TileType("AncientsDrive"))
+                    {
+                        entryNo = 13;
+                        modPlayer.ancientsEntryNo++;
+                        if (modPlayer.ancientsEntryNo > 1)
+                        {
+                            modPlayer.ancientsEntryNo = 0;
                         }
                         noDetectTimer = 20;
                     }
@@ -145,14 +153,9 @@ namespace ElementsAwoken.Tiles.Lab
             Main.playerInventory = false;
             player.talkNPC = -1;
             player.sign = -1;
-            player.GetModPlayer<MyPlayer>(mod).inComputer = true;
-            int left = i;
-            int top = j;
-            player.GetModPlayer<MyPlayer>(mod).computerX = left;
-            player.GetModPlayer<MyPlayer>(mod).computerY = top;
-            player.GetModPlayer<MyPlayer>(mod).computerTextNo = entryNo;
-            player.GetModPlayer<MyPlayer>(mod).guardianEntryNo = guardianEntry;
-            player.GetModPlayer<MyPlayer>(mod).azanaEntryNo = azanaEntry;
+            modPlayer.inComputer = true;
+            modPlayer.computerPos = new Vector2(i, j);
+            modPlayer.computerTextNo = entryNo;
         }
         public override void MouseOver(int i, int j)
         {

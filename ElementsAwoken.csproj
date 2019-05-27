@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Buffs\EldritchHorror.cs" />
     <Compile Include="Buffs\PotionBuffs\SanityRegenerationBuff.cs" />
+    <Compile Include="Items\Accessories\AlchemistsTimer.cs" />
     <Compile Include="Items\Ancient\Xernon\LamentIV.cs" />
     <Compile Include="Items\Ancient\Xernon\LamentIII.cs" />
     <Compile Include="Items\Ancient\Xernon\LamentII.cs" />
@@ -61,6 +62,8 @@
     <Compile Include="Items\Consumable\ElementalCapsule.cs" />
     <Compile Include="Items\Consumable\Potions\SanityRegenerationPotion.cs" />
     <Compile Include="Items\Other\SanityBook.cs" />
+    <Compile Include="Items\Placeable\CrystalContainer.cs" />
+    <Compile Include="Items\Placeable\LabBench.cs" />
     <Compile Include="Items\Placeable\ItemMagnetTile.cs" />
     <Compile Include="Items\Placeable\AutoDriller.cs" />
     <Compile Include="Items\Tech\Tools\AutoMinerMKIII.cs" />
@@ -1145,6 +1148,7 @@
     <Compile Include="NPCs\Bosses\Wasteland\WastelandEgg.cs" />
     <Compile Include="NPCs\Bosses\Wasteland\WastelandMinion.cs" />
     <Compile Include="NPCs\Bosses\Wasteland\Wasteland.cs" />
+    <Compile Include="Projectiles\FistsOfFuryFire.cs" />
     <Compile Include="Projectiles\AutoDrillBeam.cs" />
     <Compile Include="Projectiles\EscapedChlorobyte.cs" />
     <Compile Include="Projectiles\BlightfireSpawner.cs" />
@@ -1942,6 +1946,7 @@
     <Compile Include="Sounds\Item\Warhorn.cs" />
     <Compile Include="Sounds\Item\ElectricArcing.cs" />
     <Compile Include="Sounds\Item\LaserCharge.cs" />
+    <Compile Include="Structures\AncientsLab.cs" />
     <Compile Include="Structures\LabPlatforms.cs" />
     <Compile Include="Structures\WastelandLabPlatforms.cs" />
     <Compile Include="Structures\WastelandLabFurniture.cs" />
@@ -1984,6 +1989,8 @@
     <Compile Include="Tiles\AutoDrillerEntity.cs" />
     <Compile Include="Tiles\ItemMagnetEntity.cs" />
     <Compile Include="Tiles\Lab\Computer.cs" />
+    <Compile Include="Tiles\Lab\CrystalContainer.cs" />
+    <Compile Include="Tiles\Lab\LabBench.cs" />
     <Compile Include="Tiles\Lab\Drives\WastelandDrive.cs" />
     <Compile Include="Tiles\Lab\Drives\ScourgeFighterDrive.cs" />
     <Compile Include="Tiles\Lab\Drives\RegarothDrive.cs" />
