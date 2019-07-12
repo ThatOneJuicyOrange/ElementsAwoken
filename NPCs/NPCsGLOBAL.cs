@@ -21,6 +21,8 @@ namespace ElementsAwoken.NPCs
         public bool discordDebuff = false;
         public bool chaosBurn = false;
         public bool electrified = false;
+        public bool acidBurn = false;
+        public bool corroding = false;
         // public bool soulRip = false;
         //public int soulRipTimer = 0;
         //public float soulRipAlpha = 0.3f;
@@ -54,6 +56,8 @@ namespace ElementsAwoken.NPCs
             discordDebuff = false;
             chaosBurn = false;
             electrified = false;
+            acidBurn = false;
+            corroding = false;
 
             impishCurse = false;
 
@@ -224,6 +228,14 @@ namespace ElementsAwoken.NPCs
                 npc.velocity *= 0.8f;
             }
 
+            if (acidBurn)
+            {
+                npc.lifeRegen -= 20;
+                if (damage < 3)
+                {
+                    damage = 3;
+                }
+            }
             if (dragonfire)
             {
                 npc.lifeRegen -= 40;
@@ -255,6 +267,11 @@ namespace ElementsAwoken.NPCs
                 {
                     damage = 3;
                 }
+            }
+            if (corroding)
+            {
+                npc.lifeRegen -= 75;
+                if (damage < 4) damage = 4;
             }
             if (handsOfDespair)
             {
@@ -341,6 +358,10 @@ namespace ElementsAwoken.NPCs
             if (glowing)
             {
                 Lighting.AddLight(npc.position, 0.5f, 0.4f, 0.6f);
+            }
+            if (acidBurn)
+            {
+                npc.color = new Color(178, 244, 124, 120);
             }
             if (MyWorld.swearingEnemies && npc.damage > 0)
             {

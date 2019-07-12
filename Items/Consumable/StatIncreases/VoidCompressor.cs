@@ -51,5 +51,14 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             }
             return true;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "Darkstone", 25);
+            recipe.AddIngredient(null, "VoidEssence", 2);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }

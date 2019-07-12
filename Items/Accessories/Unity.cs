@@ -91,7 +91,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(null, "Pyroplasm", 50);
             recipe.AddIngredient(null, "LunarShell", 1);
             recipe.AddIngredient(null, "EnergyGeode", 1);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

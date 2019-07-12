@@ -17,13 +17,15 @@ namespace ElementsAwoken.Projectiles.Whips
         {
             projectile.width = 16;
             projectile.height = 16;
-            projectile.friendly = true;
             projectile.alpha = 255;
             projectile.penetrate = -1;
+
+            projectile.friendly = true;
             projectile.hide = true;
             projectile.tileCollide = false;
             projectile.melee = true;
             projectile.ignoreWater = true;
+
             projectile.GetGlobalProjectile<EAProjectileType>().whip = true;
             projectile.GetGlobalProjectile<EAProjectileType>().whipAliveTime = 30; 
         }

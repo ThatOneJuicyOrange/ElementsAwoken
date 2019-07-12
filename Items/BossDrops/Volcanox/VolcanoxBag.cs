@@ -17,9 +17,9 @@ namespace ElementsAwoken.Items.BossDrops.Volcanox
             item.width = 24;
             item.height = 24;
             item.rare = 11;
-            bossBagNPC = mod.NPCType("Volcanox");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("Volcanox");
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Volcanox
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             player.QuickSpawnItem(mod.ItemType("CharredInsignia"));
             int choice = Main.rand.Next(5);
             if (choice == 0)

@@ -20,8 +20,8 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
             item.width = 24;
             item.height = 24;
             item.rare = 5;
-            bossBagNPC = mod.NPCType("RegarothHead");
         }
+        public override int BossBagNPC => mod.NPCType("RegarothHead");
 
         public override void SetStaticDefaults()
         {
@@ -36,6 +36,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {

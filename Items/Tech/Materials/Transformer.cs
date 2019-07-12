@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Tech.Materials
          {
              ModRecipe recipe = new ModRecipe(mod);
              recipe.AddIngredient(ItemID.LunarBar, 5);
-             recipe.AddIngredient(null, "VoidAshes", 2);
+             recipe.AddIngredient(null, "VoiditeBar", 2);
              recipe.AddIngredient(null, "GoldWire", 3);
              recipe.AddIngredient(null, "CopperWire", 8);
              recipe.AddTile(TileID.LunarCraftingStation);

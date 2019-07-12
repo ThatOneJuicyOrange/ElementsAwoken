@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddIngredient(ItemID.LunarBar, 10);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);

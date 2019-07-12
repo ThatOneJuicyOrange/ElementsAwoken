@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace ElementsAwoken.Items.InfinityGauntlet
@@ -114,7 +116,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
             }
 
             player.ignoreWater = true;
-            player.statManaMax2 += 50;
+            //player.statManaMax2 += 50; // makes it beep
 
             if (Main.rand.Next(1600) == 0)
             {
@@ -143,6 +145,59 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                     }
                 }
             }
+
+            if (Main.mapFullscreen && player.FindBuffIndex(mod.BuffType("InfinityPortalCooldown")) == -1 && gauntletMode == 2 && Main.mouseRight && Main.mouseRightRelease)
+            {
+                // thx heros mod for help with this code
+                Vector2 worldMapSize = new Vector2(Main.maxTilesX * 16, Main.maxTilesY * 16);
+                Vector2 cursorPosition = new Vector2((Main.mouseX - Main.screenWidth / 2) / 16, (Main.mouseY - Main.screenHeight / 2) / 16) * 16 / Main.mapFullscreenScale;
+                Vector2 targetPos = (Main.mapFullscreenPos + cursorPosition) * 16;
+
+                // to stop the player teleporting out of the map
+                if (targetPos.X < 0) targetPos.X = 0;
+                else if (targetPos.X + player.width > worldMapSize.X) targetPos.X = worldMapSize.X - player.width;
+                if (targetPos.Y < 0) targetPos.Y = 0;
+                else if (targetPos.Y + player.height > worldMapSize.Y) targetPos.Y = worldMapSize.Y - player.height;
+                
+                Point tilePos = (targetPos / 16).ToPoint();
+                Tile tile = Framing.GetTileSafely(tilePos.X, tilePos.Y);
+                MapTile mapTile = Main.Map[tilePos.X, tilePos.Y];
+                Main.NewText(mapTile.Type);
+                if (ValidTile(tile) && DiscoveredArea(mapTile))
+                {
+                    player.position = targetPos;
+                    player.velocity = Vector2.Zero;
+                    if (Main.netMode != 0)
+                    {
+                        NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, targetPos.X, targetPos.Y, 1, 0, 0);
+                    }
+
+                    if (!Config.debugMode)
+                    {
+                        player.AddBuff(mod.BuffType("InfinityPortalCooldown"), 1800);
+                    }
+                    else
+                    {
+                        player.AddBuff(mod.BuffType("InfinityPortalCooldown"), 30);
+                    }
+                }
+            }
+        }
+        private bool ValidTile(Tile tile)
+        {
+            if (Main.tileSolid[tile.type] && tile.active())
+            {
+                return false;
+            }
+            return true;
+        }
+        private bool DiscoveredArea(MapTile mapTile)
+        {
+            if (mapTile.Type == 0)
+            {
+                return false;
+            }
+            return true;
         }
         public override bool CanUseItem(Player player)
         {
@@ -241,7 +296,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                     text = "Fire: Fires a fireball";
                     break;
                 case 2:
-                    text = "Sky: Fires a skybolt";
+                    text = "Sky: Teleport to a discovered location on the map";
                     break;
                 case 3:
                     text = "Frost: Summons a shield around the player";
@@ -261,6 +316,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                 }
             }
         }
+
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             if (player.altFunctionUse != 2)
@@ -293,7 +349,8 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                 }
                 else if (gauntletMode == 2)
                 {
-                    Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("SkylineBolt"), damage * 3, knockBack, player.whoAmI);
+                    //Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("SkylineBolt"), damage * 3, knockBack, player.whoAmI);
+                    Main.mapFullscreen = true;
                 }
                 else if (gauntletMode == 3)
                 {
@@ -321,7 +378,14 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                                 }
                             }
                         }
-                        player.AddBuff(mod.BuffType("InfinityBubbleCooldown"), 1200);//1200
+                        if (!Config.debugMode)
+                        {
+                            player.AddBuff(mod.BuffType("InfinityBubbleCooldown"), 1200);
+                        }
+                        else
+                        {
+                            player.AddBuff(mod.BuffType("InfinityBubbleCooldown"), 30);
+                        }
                     }
                 }
                 else if (gauntletMode == 5)
@@ -366,7 +430,14 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                                 }
                             }
                         }
-                        player.AddBuff(mod.BuffType("InfinityVoidCooldown"), 20);//2700
+                        if (!Config.debugMode)
+                        {
+                            player.AddBuff(mod.BuffType("InfinityVoidCooldown"), 2700);//2700
+                        }
+                        else
+                        {
+                            player.AddBuff(mod.BuffType("InfinityVoidCooldown"), 30);
+                        }
                     }
                 }
             }

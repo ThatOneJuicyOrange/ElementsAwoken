@@ -14,13 +14,14 @@ using Terraria.ModLoader.IO;
 using ReLogic.Graphics;
 using Terraria.Graphics.Effects;
 using ElementsAwoken.NPCs;
+using Terraria.GameContent.Achievements;
 
 namespace ElementsAwoken
 {
     public class MyPlayer : ModPlayer
     {
         private const int saveVersion = 0;
-        //minions
+        #region minions
         public bool fireElemental = false;
         public bool miniatureSandStorm = false;
         public bool babyPuff = false;
@@ -50,7 +51,9 @@ namespace ElementsAwoken
         public bool corruptPenguin = false;
         public bool toyRobot = false;
         public bool miniVlevi = false;
-        // pets
+        public bool corroder = false;
+        #endregion   
+        #region pets
         public bool voidCrawler = false;
         public bool lilOrange = false;
         public bool woke = false;
@@ -60,7 +63,9 @@ namespace ElementsAwoken
         public bool turboDoge = false;
         public bool wyvernPet = false;
         public bool chamchamRat = false;
-        //debuffs
+        #endregion
+        #region debuffs
+        public bool iceBound = false;
         public bool endlessTears = false;
         public bool extinctionCurse = false;
         public bool handsOfDespair = false;
@@ -68,14 +73,16 @@ namespace ElementsAwoken
         public bool discordDebuff = false;
         public bool brokenWings = false;
         public bool chaosBurn = false;
-        //buffs
+        public bool acidBurn = false;
+        #endregion   
+        #region buffs
         public bool extinctionCurseImbue = false;
         public bool discordantPotion = false;
-        // other
+        #endregion
+        #region other
         public bool dashCooldown = false;
         public bool venomSample = false;
         public bool ancientDecayWeapon = false;
-        public bool iceBound = false;
         public bool medicineCooldown = false;
         public bool lightningCloud = false;
         public bool lightningCloudHidden = false;
@@ -99,7 +106,12 @@ namespace ElementsAwoken
         public bool spikeBoots = false;
         public bool sonicArm = false;
         public bool nyanBoots = false;
-        public bool hasMysticGemstone = false;
+        public bool theAntidote = false;
+        public bool cosmicGlass = false;
+        public int cosmicGlassCD = 0;
+        public bool sufferWithMe = false;
+        public bool strangeUkulele = false;
+        #endregion
 
         //amulet of despair
         public int voidEnergyCharge = 0;
@@ -109,7 +121,7 @@ namespace ElementsAwoken
         public int overInfinityCharged = 0;
         public bool infinityDeath = false;
 
-        // armor bonuses
+        #region armor bonuses
         public bool aeroArmor = false;
         public bool oceanicArmor = false;
         public bool voidArmor = false;
@@ -137,6 +149,7 @@ namespace ElementsAwoken
         public bool energyWeaverArmor = false;
         public int energyWeaverTimer = 0;
         public bool cosmicalusArmor = false;
+        #endregion
         // zones
         public static bool zoneTemple = false;
         // dash & hypothermia
@@ -145,7 +158,7 @@ namespace ElementsAwoken
         public bool canGetHypo = false;
         public int canGetHypoTimer = 0;
         public int dashDustTimer = 0;
-        // timers and cooldowns
+        #region timers and cooldowns
         public int neovirtuoTimer = 0;
         public float chaosBoost = 0;
         public float chaosDamageBoost = 0;
@@ -154,7 +167,8 @@ namespace ElementsAwoken
         public float immortalResolveCooldown = 0;
         public float hellsReflectionTimer = 0;
         public float voidPortalCooldown = 0;
-        //aegis
+        #endregion
+        // aegis
         public bool vleviAegis = false;
         public int vleviAegisDamage = 0;
         public int vleviAegisBoost = 0;
@@ -195,16 +209,13 @@ namespace ElementsAwoken
         // oinite statue
         public bool oiniteStatue = false;
         public bool[] doubledBuff = new bool[22];
-        // buff dps
-        //public DateTime bdpsStart;
-        //public DateTime bdpsEnd;
-        //public DateTime bdpsLastHit;
-        //public int bdpsDamage;
-        // public bool bdpsStarted;
+        // info
         public int buffDPSCount = 0;
         public int buffDPS = 0;
-        public bool hideBDPS = false;
         public bool alchemistTimer = false;
+        public bool[] hideEAInfo = new bool[2];
+        public bool dryadsRadar = false;
+        public string nearbyEvil = "No evil";
 
         //encounters
         public int encounterTextTimer = 0;
@@ -225,6 +236,7 @@ namespace ElementsAwoken
 
         public override void ResetEffects()
         {
+            #region minions
             fireElemental = false;
             miniatureSandStorm = false;
             babyPuff = false;
@@ -255,7 +267,9 @@ namespace ElementsAwoken
             corruptPenguin = false;
             toyRobot = false;
             miniVlevi = false;
-
+            corroder = false;
+            #endregion
+            #region pets
             lilOrange = false;
             voidCrawler = false;
             woke = false;
@@ -265,7 +279,9 @@ namespace ElementsAwoken
             turboDoge = false;
             wyvernPet = false;
             chamchamRat = false;
-
+            #endregion
+            #region debuffs
+            iceBound = false;
             endlessTears = false;
             extinctionCurse = false;
             handsOfDespair = false;
@@ -273,7 +289,9 @@ namespace ElementsAwoken
             discordDebuff = false;
             brokenWings = false;
             chaosBurn = false;
-
+            acidBurn = false;
+            #endregion
+        
             dashCooldown = false;
             medicineCooldown = false;
             frozenGauntlet = false;
@@ -284,7 +302,6 @@ namespace ElementsAwoken
             extinctionCurseImbue = false;
             discordantPotion = false;
 
-            iceBound = false;
             cantFly = false;
             cantROD = false;
             cantMagicMirror = false;
@@ -302,6 +319,10 @@ namespace ElementsAwoken
             sonicArm = false;
             nyanBoots = false;
             vleviAegis = false;
+            theAntidote = false;
+            cosmicGlass = false;
+            sufferWithMe = false;
+            strangeUkulele = false;
 
             aeroArmor = false;
             oceanicArmor = false;
@@ -325,6 +346,8 @@ namespace ElementsAwoken
             oiniteStatue = false;
 
             alchemistTimer = false;
+            dryadsRadar = false;
+            nearbyEvil = "No evil";
 
             damageTaken = 1f;
             if (!calamityEnabled)
@@ -362,7 +385,6 @@ namespace ElementsAwoken
             packet.Write(voidHeartsUsed);
             packet.Write(chaosHeartsUsed);
             packet.Write(lunarStarsUsed);
-            packet.Write(hasMysticGemstone);
             packet.Send(toWho, fromWho);
         }
 
@@ -375,7 +397,6 @@ namespace ElementsAwoken
                 {"lunarStarsUsed", lunarStarsUsed},
                 {"voidCompressor", voidCompressor},
                 {"extraAccSlot", extraAccSlot},
-                {"hasMysticGemstone", hasMysticGemstone},
             };
         }
 
@@ -386,7 +407,6 @@ namespace ElementsAwoken
             lunarStarsUsed = tag.GetInt("lunarStarsUsed");
             voidCompressor = tag.GetBool("voidCompressor");
             extraAccSlot = tag.GetBool("extraAccSlot");
-            hasMysticGemstone = tag.GetBool("hasMysticGemstone");
         }
         public override void PostUpdateBuffs()
         {
@@ -431,6 +451,9 @@ namespace ElementsAwoken
         {
             Item item = new Item();
             item.SetDefaults(mod.ItemType("ElementalCapsule"));
+            items.Add(item);
+            Item item2 = new Item();
+            item.SetDefaults(mod.ItemType("MysticGemstone"));
             items.Add(item);
         }
         public override void OnEnterWorld(Player player)
@@ -607,15 +630,50 @@ namespace ElementsAwoken
 
         public override void PostUpdateMiscEffects()
         {
-
+            if(cosmicGlass)
+            {
+                cosmicGlassCD--;
+            }
+            if (dryadsRadar)
+            {
+                if (MyWorld.corruptionTiles > 0)
+                {
+                    nearbyEvil = "Corruption";
+                }
+                if (MyWorld.crimsonTiles > 0)
+                {
+                    if (MyWorld.corruptionTiles > 0 && MyWorld.hallowedTiles == 0)
+                    {
+                        nearbyEvil += " and Crimson";
+                    }
+                    else if (MyWorld.corruptionTiles > 0)
+                    {
+                        nearbyEvil += ", Crimson";
+                    }
+                    else
+                    {
+                        nearbyEvil = "Crimson";
+                    }
+                }
+                if (MyWorld.hallowedTiles > 0)
+                {
+                    if (MyWorld.corruptionTiles > 0 && MyWorld.crimsonTiles > 0)
+                    {
+                        nearbyEvil = "All evils";
+                    }
+                    else if (MyWorld.corruptionTiles > 0 || MyWorld.crimsonTiles > 0)
+                    {
+                        nearbyEvil += " and Hallowed";
+                    }
+                    else
+                    {
+                        nearbyEvil = "Hallowed";
+                    }
+                }
+            }
             if (doubleDownWindow > 0)
             {
                 doubleDownWindow--;
-            }
-            if (!hasMysticGemstone)
-            {
-                player.QuickSpawnItem(mod.ItemType("MysticGemstone"));
-                hasMysticGemstone = true;
             }
             if (forgedShackled > 0)
             {
@@ -1596,6 +1654,16 @@ namespace ElementsAwoken
             }
         }
 
+        public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        {
+            if (acidBurn)
+            {
+                r *= 0.69f;
+                g *= 1f;
+                b *= 0.48f;
+            }
+        }
+
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             if (elementalArmor && !elementalArmorCooldown)
@@ -1623,25 +1691,24 @@ namespace ElementsAwoken
 
         public override void UpdateBadLifeRegen()
         {
-            neovirtuoTimer--;
+            neovirtuoTimer--; // wtf is this doin ghere
+            // poison - 4
+            // on fire - 8
+            // frostburn - 12
 
+            if (acidBurn)
+            {
+                player.lifeRegen -= 16;
+            }
             if (dragonfire)
             {
                 player.lifeRegen -= 20;
             }
-            if (handsOfDespair)
+            if (extinctionCurse || handsOfDespair)
             {
-                player.lifeRegen -= 30;
+                player.lifeRegen -= 30; 
             }
-            if (extinctionCurse)  // make sure you add the right bool
-            {
-                player.lifeRegen -= 30; //this make so the player take damage, the highter is the value the more life losing.
-            }
-            if (chaosBurn)
-            {
-                player.lifeRegen -= 40;
-            }
-            if (discordDebuff)
+            if (chaosBurn || discordDebuff)
             {
                 player.lifeRegen -= 40;
             }
@@ -1663,7 +1730,11 @@ namespace ElementsAwoken
                 }
                 player.wingTimeMax = 0;
                 player.wingTime = 0;
-            }       
+            } 
+            if (player.lifeRegen < 0 && theAntidote)
+            {
+                player.lifeRegen /= 2;
+            }
         }
 
         public override void UpdateBiomeVisuals()
@@ -1804,6 +1875,10 @@ namespace ElementsAwoken
             {
                 target.AddBuff(mod.BuffType("Dragonfire"), 300, false);
             }
+            if (sufferWithMe)
+            {
+                target.AddBuff(mod.BuffType("ChaosBurn"), 300, false);
+            }
             if (voidWalkerArmor == 1)
             {
                 target.AddBuff(mod.BuffType("ExtinctionCurse"), 300, false);
@@ -1886,6 +1961,50 @@ namespace ElementsAwoken
                 Projectile.NewProjectile(spawnpoint.X, spawnpoint.Y, vector95.X, vector95.Y, mod.ProjectileType("CrowLightning"), 100, 0f, Main.myPlayer, vector94.ToRotation(), ai);
                 Projectile.NewProjectile(spawnpoint.X, spawnpoint.Y, 0f, 0f, mod.ProjectileType("CrowStorm"), 0, 0f, Main.myPlayer);
                 crowsArmorCooldown = 30;
+            }
+            if (cosmicGlass && crit && cosmicGlassCD <= 0)
+            {
+                if (target.active && !target.friendly && target.damage > 0 && !target.dontTakeDamage)
+                {
+                    float Speed = 9f;
+                    float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
+
+                    Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
+                    Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 12);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("ChargeRifleHalf"), 30, 3f, player.whoAmI, 0f);
+                    cosmicGlassCD = 3;
+                }
+            }
+            int strikeChance = 10;
+            if (NPC.downedBoss3) strikeChance = 7;
+            if (Main.hardMode) strikeChance = 5;
+            if (NPC.downedPlantBoss) strikeChance = 4;
+            if (NPC.downedMoonlord) strikeChance = 2;
+            if (strangeUkulele && Main.rand.Next(strikeChance) == 0)
+            {
+                List<int> availableNPCs = new List<int>();
+                for (int k = 0; k < Main.npc.Length; k++)
+                {
+                    NPC other = Main.npc[k];
+                    if (other.active && !other.friendly && other.damage > 0 && !other.dontTakeDamage && Vector2.Distance(other.Center, player.Center) < 300)
+                    {
+                        availableNPCs.Add(other.whoAmI);
+                    }
+                }
+                if (availableNPCs.Count > 0)
+                {
+                    NPC arcTarget = Main.npc[availableNPCs[Main.rand.Next(availableNPCs.Count)]];
+                    if (arcTarget.active && !arcTarget.friendly && arcTarget.damage > 0 && !arcTarget.dontTakeDamage)
+                    {
+                        Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/ElectricArcing"));
+
+                        float Speed = 9f;
+                        float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
+                        rotation += MathHelper.ToRadians(Main.rand.Next(-60, 60));
+                        Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), 30, 3f, player.whoAmI, arcTarget.whoAmI);
+                    }
+                }
             }
         }
 
@@ -2252,7 +2371,6 @@ namespace ElementsAwoken
                 expr_3D9.shader = GameShaders.Armor.GetSecondaryShader(player.cYorai, player);
             }
         }
-
 
         private int CollideWithNPCs(Rectangle myRect, float Damage, float Knockback, int NPCImmuneTime, int PlayerImmuneTime)
         {

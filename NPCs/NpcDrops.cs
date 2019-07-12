@@ -571,6 +571,18 @@ namespace ElementsAwoken.NPCs
                     WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), TileID.LunarOre);
                 }
             }
+            if (npc.type == mod.NPCType("VoidLeviathanHead") && MyWorld.voidLeviathanKills < 3)
+            {
+                MyWorld.voidLeviathanKills++;
+                Main.NewText("The world has been blessed with Voidite!", Color.GreenYellow);
+                for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 4E-05); k++) // xE-05 x is how many veins will spawn
+                {
+                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+                    int y = WorldGen.genRand.Next((int)(Main.maxTilesY * .4f), Main.maxTilesY - 200);
+
+                    WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), (ushort)mod.TileType("Voidite"));
+                }
+            }
         }
     }
 }

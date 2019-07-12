@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Donator.Buildmonger
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "FireEssence", 1);
             recipe.AddIngredient(ItemID.Chain, 15);
-            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.AddTile(TileID.Furnaces);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

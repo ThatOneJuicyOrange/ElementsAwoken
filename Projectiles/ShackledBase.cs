@@ -76,7 +76,7 @@ namespace ElementsAwoken.Projectiles
         {
             Player parent = Main.player[(int)projectile.ai[1]];
 
-            Texture2D texture = ModLoader.GetTexture("ElementsAwoken/Projectiles/ShackledBaseChain");
+            Texture2D texture = ModContent.GetTexture("ElementsAwoken/Projectiles/ShackledBaseChain");
 
             Vector2 position = projectile.Center;
             Vector2 mountedCenter = parent.MountedCenter;

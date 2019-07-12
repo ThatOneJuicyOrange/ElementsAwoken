@@ -32,5 +32,10 @@ namespace ElementsAwoken.Items.Accessories
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
             modPlayer.alchemistTimer = true;
         }
+        public override void UpdateInventory(Player player)
+        {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            modPlayer.alchemistTimer = true;
+        }
     }
 }

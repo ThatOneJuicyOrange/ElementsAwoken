@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             player.GetModPlayer<MyPlayer>().extraAccSlot = true;
             return true;
         }
-        /*public override void AddRecipes()
+        public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DiscordantBar", 25);
@@ -48,6 +48,6 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }*/
+        }
     }
 }

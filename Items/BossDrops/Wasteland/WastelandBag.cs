@@ -17,9 +17,10 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
             item.width = 24;
             item.height = 24;
             item.rare = 2;
-            bossBagNPC = mod.NPCType("Wasteland");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("Wasteland");
+
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +35,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {

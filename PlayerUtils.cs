@@ -26,7 +26,13 @@ namespace ElementsAwoken
         public float playerMaxLight = 1.3f;
 
         public int potionsConsumedLastMin = 0;
-        public int[] potionConsumedCD = new int[30];
+        public int[] potionConsumedCD = new int[60];
+
+        public int salesLastMin = 0;
+        public int[] salesCD = new int[9999];
+
+        public int buysLastMin = 0;
+        public int[] buysCD = new int[9999];
 
         public int bossesKilledLastMin = 0;
         public int bossesKilledLastFiveMin = 0;
@@ -108,12 +114,27 @@ namespace ElementsAwoken
                     potionConsumedCD[i]--;
                 }
             }
+            for (int i = 0; i < salesCD.Length; i++)
+            {
+                if (salesCD[i] > 0)
+                {
+                    salesLastMin++;
+                    salesCD[i]--;
+                }
+            }
+            for (int i = 0; i < buysCD.Length; i++)
+            {
+                if (buysCD[i] > 0)
+                {
+                    buysLastMin++;
+                    buysCD[i]--;
+                }
+            }
             for (int i = 0; i < bossKilledCD.Length; i++)
             {
                 if (bossKilledCD[i] > 14400)
                 {
                     bossesKilledLastMin++;
-                    bossKilledCD[i]--;
                 }
                 if (bossKilledCD[i] > 0)
                 {
@@ -180,6 +201,31 @@ namespace ElementsAwoken
                 return false;
             }
         }
+
+        public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            for (int i = 0; i < salesCD.Length; i++)
+            {
+                if (salesCD[i] <= 0)
+                {
+                    salesCD[i] = 3600;
+                    break;
+                }
+            }
+            ElementsAwoken.DebugModeText("sales last min: " + (salesLastMin + 1));
+        }
+        public override void PostBuyItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            for (int i = 0; i < buysCD.Length; i++)
+            {
+                if (buysCD[i] <= 0)
+                {
+                    buysCD[i] = 3600;
+                    break;
+                }
+            }
+            ElementsAwoken.DebugModeText("buys last min: " + (buysLastMin + 1));
+        }
     }
     
     class PlayerUtilsItem : GlobalItem
@@ -199,7 +245,7 @@ namespace ElementsAwoken
                         break;
                     }
                 }
-                ElementsAwoken.DebugModeText("consumed potion");
+                ElementsAwoken.DebugModeText("potions consumed last min: " + (modPlayer.potionsConsumedLastMin + 1)); // plus 1 because it hasnt updated yet
             }
             /*if (item.Name.Contains("Potion") && item.buffType != 0)
             {
@@ -226,7 +272,7 @@ namespace ElementsAwoken
                 }
                 ElementsAwoken.DebugModeText("boss killed");
                 ElementsAwoken.DebugModeText("bosses killed last min: " + (modPlayer.bossesKilledLastMin + 1)); // plus 1 because it hasnt updated yet
-                ElementsAwoken.DebugModeText("bosses killed last five min: " + (modPlayer.bossesKilledLastMin + 1));
+                ElementsAwoken.DebugModeText("bosses killed last five min: " + (modPlayer.bossesKilledLastFiveMin + 1));
             }
         }
     }

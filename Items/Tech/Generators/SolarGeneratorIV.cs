@@ -76,7 +76,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "SolarGeneratorIII", 1);
             recipe.AddIngredient(ItemID.LunarBar, 12);
-            recipe.AddIngredient(null, "VoidAshes", 4);
+            recipe.AddIngredient(null, "VoiditeBar", 4);
             recipe.AddIngredient(null, "Microcontroller", 1);
             recipe.AddIngredient(null, "Transformer", 1);
             recipe.AddTile(TileID.Anvils);

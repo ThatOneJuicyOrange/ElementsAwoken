@@ -65,7 +65,7 @@ namespace ElementsAwoken.Items.Donator.Crow
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "ChaoticFlare", 10);
-            recipe.AddIngredient(null, "VoidAshes", 4);
+            recipe.AddIngredient(null, "VoiditeBar", 4);
             recipe.AddIngredient(ItemID.SDMG, 1);
             recipe.AddIngredient(ItemID.RocketLauncher, 1);
             recipe.AddTile(TileID.LunarCraftingStation);

@@ -39,10 +39,7 @@ namespace ElementsAwoken.Projectiles.Arrows
             int numberProjectiles = 2;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 value15 = new Vector2((float)Main.rand.Next(-12, 12), (float)Main.rand.Next(-12, 12));
-                value15.X *= 0.1f;
-                value15.Y *= 0.1f;
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, value15.X, value15.Y, mod.ProjectileType("ThickSmoke"), (int)(projectile.damage * 0.75f), 2f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.NextFloat(-1.2f, 1.2f), Main.rand.NextFloat(-1.2f, 1.2f), mod.ProjectileType("ThickSmoke"), (int)(projectile.damage * 0.75f), 2f, projectile.owner, 0f, 0f);
             }
         }
     }

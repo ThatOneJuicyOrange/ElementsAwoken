@@ -187,7 +187,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Texture2D texture = ModLoader.GetTexture("ElementsAwoken/NPCs/Bosses/Volcanox/VolcanoxChain2");
+            Texture2D texture = ModContent.GetTexture("ElementsAwoken/NPCs/Bosses/Volcanox/VolcanoxChain2");
             NPC parent = Main.npc[0];
             for (int i = 0; i < Main.npc.Length; ++i)
             {

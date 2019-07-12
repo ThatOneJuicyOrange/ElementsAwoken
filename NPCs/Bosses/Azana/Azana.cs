@@ -195,8 +195,8 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EntropicCoating"));
                 }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiscordantOre"), Main.rand.Next(35, 80));
             }
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiscordantBar"), Main.rand.Next(15, 25));
             Main.NewText("But you wont stop at anything to satisfy your bloodlust...", new Color(93, 25, 43, 200));
             MyWorld.downedAzana = true;
         }

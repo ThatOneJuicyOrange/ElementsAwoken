@@ -25,7 +25,7 @@ namespace ElementsAwoken.Tiles.Lab
             ModTranslation name = CreateMapEntryName();
             AddMapEntry(new Color(200, 200, 200));
             disableSmartCursor = true;
-            TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16 };
+            TileObjectData.newTile.CoordinateHeights = new int[] { 16 };
             TileObjectData.addTile(Type);
             soundStyle = 21;
         }

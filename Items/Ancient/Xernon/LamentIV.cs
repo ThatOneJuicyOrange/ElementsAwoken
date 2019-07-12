@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Ancient.Xernon
             item.noMelee = true;
             item.autoReuse = true;
 
-            item.value = Item.sellPrice(0, 2, 0, 0);
+            item.value = Item.sellPrice(0, 50, 0, 0);
             item.rare = 11;
             item.GetGlobalItem<EARarity>().rare = 14;
 
@@ -59,7 +59,7 @@ namespace ElementsAwoken.Items.Ancient.Xernon
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "LamentIII", 1);
             recipe.AddIngredient(null, "AncientShard", 5);
-            recipe.AddIngredient(null, "VoidAshes", 4);
+            recipe.AddIngredient(null, "VoiditeBar", 4);
             recipe.AddIngredient(null, "DiscordantBar", 20);
             recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);

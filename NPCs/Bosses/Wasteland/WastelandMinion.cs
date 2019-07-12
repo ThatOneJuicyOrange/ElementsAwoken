@@ -25,8 +25,6 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             animationType = 257;
             aiType = NPCID.AnomuraFungus;
 
-            npc.value = Item.buyPrice(0, 0, 0, 4);
-
             npc.HitSound = SoundID.NPCHit31;
             npc.DeathSound = SoundID.NPCDeath34;
         }

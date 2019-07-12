@@ -627,15 +627,15 @@ namespace ElementsAwoken
             }
             if (!Main.player[Main.myPlayer].ghost && !Main.gameMenu)
             {
-                var bdpsLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var bdpsState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                var infoLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+                var infoState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
                     delegate
                     {
-                        DrawBuffDPS();
+                        DrawInfoAccs();
                         return true;
                     },
                     InterfaceScaleType.UI);
-                layers.Insert(bdpsLayer, bdpsState);
+                layers.Insert(infoLayer, infoState);
             }
             // make rain black
             if (MyWorld.encounter3)
@@ -1033,11 +1033,11 @@ namespace ElementsAwoken
             }
         }
 
-        public void DrawBuffDPS()
+        /*public void DrawInfoAccs()
         {
             Player player = Main.player[Main.myPlayer];
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
-            if (modPlayer.alchemistTimer)
+                if (modPlayer.alchemistTimer)
             {
                 int mH = (int)((typeof(Main).GetField("mH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)).GetValue(null));
                 if ((Main.npcChatText == null || Main.npcChatText == "") && player.sign < 0)
@@ -1176,14 +1176,14 @@ namespace ElementsAwoken
                             {
                                 black = new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor);
                             }
-                            /*if (i > num2 && i < num2 + 2)
+                            if (i > num2 && i < num2 + 2)
                             {
                                 black = new Color((int)(black.R / 3), (int)(black.G / 3), (int)(black.B / 3), (int)(black.A / 3));
-                            }*/
+                            }
 
-                            DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, Main.fontMouseText, text2, new Vector2((float)(iconPosX + num32), (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + num33 + 48)), black, 0f, default(Vector2), vector2, SpriteEffects.None, 0f);
+        DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, Main.fontMouseText, text2, new Vector2((float)(iconPosX + num32), (float) (iconPosY + 74 + distBetweenInfo* amountOfInfoActive + num33 + 48)), black, 0f, default(Vector2), vector2, SpriteEffects.None, 0f);
                         }
-                    }
+}
                     if (!string.IsNullOrEmpty(text))
                     {
                         if (Main.playerInventory)
@@ -1197,6 +1197,221 @@ namespace ElementsAwoken
                         }
 
                         Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, drawTextPos.X, drawTextPos.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, new Vector2());
+                    }
+                }
+            }
+        }
+         */ // old
+        public void DrawInfoAccs()
+        {
+            Player player = Main.player[Main.myPlayer];
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
+
+            int amountOfInfoActive = CountAvailableInfo() - 1; // - 1 so it starts at 0 when 1 is equipped
+            int amountOfInfoEquipped = CountEquippedInfo() - 1;
+
+            float num4 = 215f;
+            int whichInfoDrawing = -1;
+            string text = "";
+
+            for (int infoNum = 0; infoNum < 2; infoNum++)
+            {
+                string text2 = "";
+                string hoverText = "";
+
+                if (infoNum == 0 && modPlayer.alchemistTimer)
+                {
+                    if ((!modPlayer.hideEAInfo[0] || Main.playerInventory))
+                    {
+                        hoverText = "Buff Damage Per Second";
+                        whichInfoDrawing = infoNum;
+
+                        text2 = modPlayer.buffDPS + " buff damage per second";
+                        if (modPlayer.buffDPS <= 0)
+                        {
+                            text2 = Language.GetTextValue("GameUI.NoDPS");
+                        }
+                    }
+                    amountOfInfoEquipped++;
+                    if (!modPlayer.hideEAInfo[0])
+                    {
+                        amountOfInfoActive++;
+                    }
+                }
+                else if (infoNum == 1 && modPlayer.dryadsRadar)
+                {
+                    if ((!modPlayer.hideEAInfo[1] || Main.playerInventory))
+                    {
+                        hoverText = "Nearby Evil Biomes";
+                        whichInfoDrawing = infoNum;
+
+                        text2 = modPlayer.nearbyEvil + " nearby";
+                    }
+                    amountOfInfoEquipped++;
+                    if (!modPlayer.hideEAInfo[1])
+                    {
+                        amountOfInfoActive++;
+                    }
+                }
+                if (text2 != "")
+                {
+                    int mH = (int)((typeof(Main).GetField("mH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)).GetValue(null));
+                    if ((Main.npcChatText == null || Main.npcChatText == "") && player.sign < 0)
+                    {
+                        int distBetweenInfo = 22;
+                        if (Main.screenHeight < 650)
+                        {
+                            distBetweenInfo = 20;
+                        }
+
+
+                        int iconPosX;
+                        int iconPosY;
+                        if (!Main.playerInventory)
+                        {
+                            iconPosX = Main.screenWidth - 280;
+                            iconPosY = -32;
+                            if (Main.mapStyle == 1 && Main.mapEnabled)
+                            {
+                                iconPosY += 254;
+                            }
+                        }
+                        else if (Main.ShouldDrawInfoIconsHorizontally)
+                        {
+                            iconPosX = Main.screenWidth - 280 + 20 * amountOfInfoEquipped - 10;
+                            iconPosY = 94;
+                            if (Main.mapStyle == 1 && Main.mapEnabled)
+                            {
+                                iconPosY += 254;
+                            }
+                            if (amountOfInfoEquipped + 1 > 12)
+                            {
+                                iconPosX -= 20 * 12;
+                                iconPosY += 26;
+                            }
+                        }
+                        else
+                        {
+                            int num28 = (int)(52f * Main.inventoryScale);
+                            iconPosX = 697 - num28 * 4 + Main.screenWidth - 800 + 20 * (amountOfInfoEquipped % 2);
+                            iconPosY = 114 + mH + num28 * 7 + num28 / 2 + 20 * (amountOfInfoEquipped / 2) + 8 * (amountOfInfoEquipped / 4) - 20;
+                            if (Main.EquipPage == 2)
+                            {
+                                iconPosX += num28 + num28 / 2;
+                                iconPosY -= num28;
+                            }
+                        }
+                        if (whichInfoDrawing >= 0)
+                        {
+                            Texture2D tex = GetTexture("Extra/EAInfo" + whichInfoDrawing);
+                            Vector2 vector = new Vector2((float)iconPosX, (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + 52));
+
+                            Color white = Color.White;
+                            bool flag14 = false;
+                            if (Main.playerInventory)
+                            {
+                                vector = new Vector2((float)iconPosX, (float)iconPosY);
+                                if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !PlayerInput.IgnoreMouseInterface)
+                                {
+                                    flag14 = true;
+                                    player.mouseInterface = true;
+                                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                                    {
+                                        Main.PlaySound(12, -1, -1, 1, 1f, 0f);
+                                        Main.mouseLeftRelease = false;
+                                        modPlayer.hideEAInfo[whichInfoDrawing] = !modPlayer.hideEAInfo[whichInfoDrawing];
+                                    }
+                                    if (!Main.mouseText)
+                                    {
+                                        text = hoverText;
+                                        Main.mouseText = true;
+                                    }
+                                }
+                                if (modPlayer.hideEAInfo[whichInfoDrawing])
+                                {
+                                    white = new Color(80, 80, 80, 70);
+                                }
+
+                            }
+                            else if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !Main.mouseText)
+                            {
+                                Main.mouseText = true;
+                                text = hoverText;
+                            }
+                            //UILinkPointNavigator.SetPosition(1558 + amountOfInfoEquipped - 1, vector + tex.Size() * 0.75f);
+                            if (!Main.playerInventory && modPlayer.hideEAInfo[whichInfoDrawing])
+                            {
+                                white = Color.Transparent;
+                            }
+                            Main.spriteBatch.Draw(tex, vector, new Rectangle?(new Rectangle(0, 0, tex.Width, tex.Height)), white, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+                            if (flag14)
+                            {
+                                Texture2D outline = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "UI" + Path.DirectorySeparatorChar.ToString() + "InfoIcon_13");
+                                Main.spriteBatch.Draw(outline, vector - Vector2.One * 2f, null, Main.OurFavoriteColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+                                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, hoverText, new Vector2(Main.mouseX, Main.mouseX), new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+                            }
+                            iconPosX += 20;
+                        }
+                        if (!Main.playerInventory)
+                        {
+                            Vector2 vector2 = new Vector2(1f);
+
+                            Vector2 vector3 = Main.fontMouseText.MeasureString(text2);
+                            if (vector3.X > num4)
+                            {
+                                vector2.X = num4 / vector3.X;
+                            }
+                            if (vector2.X < 0.58f)
+                            {
+                                vector2.Y = 1f - vector2.X / 3f;
+                            }
+                            for (int num31 = 0; num31 < 5; num31++)
+                            {
+                                int num32 = 0;
+                                int num33 = 0;
+                                Color black = Color.Black;
+                                if (num31 == 0)
+                                {
+                                    num32 = -2;
+                                }
+                                if (num31 == 1)
+                                {
+                                    num32 = 2;
+                                }
+                                if (num31 == 2)
+                                {
+                                    num33 = -2;
+                                }
+                                if (num31 == 3)
+                                {
+                                    num33 = 2;
+                                }
+                                if (num31 == 4)
+                                {
+                                    black = new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor);
+                                }
+                                /*if (i > num2 && i < num2 + 2)
+                                {
+                                    black = new Color((int)(black.R / 3), (int)(black.G / 3), (int)(black.B / 3), (int)(black.A / 3));
+                                }*/
+
+                                DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, Main.fontMouseText, text2, new Vector2((float)(iconPosX + num32), (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + num33 + 48)), black, 0f, default(Vector2), vector2, SpriteEffects.None, 0f);
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            if (Main.playerInventory)
+                            {
+                                Main.player[Main.myPlayer].mouseInterface = true;
+                            }
+                            Vector2 drawTextPos = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16.0f);
+                            if (drawTextPos.X + Main.fontMouseText.MeasureString(text).X > Main.screenWidth)
+                            {
+                                drawTextPos.X -= Main.fontMouseText.MeasureString(text).X; // to stop it drawing off the side
+                            }
+
+                            Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, drawTextPos.X, drawTextPos.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, new Vector2());
+                        }
                     }
                 }
             }
@@ -1475,7 +1690,12 @@ namespace ElementsAwoken
                 bossChecklist.Call("AddBossWithInfo", "Azana", 15.5f, (Func<bool>)(() => MyWorld.downedAzana), "Use a [i:" + ItemType("AzanaSummon") + "] at nighttime");
                 bossChecklist.Call("AddBossWithInfo", "The Ancients", 16f, (Func<bool>)(() => MyWorld.downedAncients), "Speak to the storyteller or use an [i:" + ItemType("AncientsSummon") + "]");
             }
-            Mod censusMod = ModLoader.GetMod("Census");
+            Mod mystaria = ModLoader.GetMod("Mystaria");
+            if (mystaria != null)
+            {
+                mystaria.Call("AddSpellCombo", ItemType("FrostMine"), 1, 1, 2, 2, 3, 1, 0, 0, 4, 2);
+            }
+                Mod censusMod = ModLoader.GetMod("Census");
             if (censusMod != null)
             {
                 //censusMod.Call("TownNPCCondition", NPCType("Example Person"), $"Have [i:{ItemType<Items.ExampleItem>()}] or [i:{ItemType<Items.Placeable.ExampleBlock>()}] in inventory and build a house out of [i:{ItemType<Items.Placeable.ExampleBlock>()}] and [i:{ItemType<Items.Placeable.ExampleWall>()}]");

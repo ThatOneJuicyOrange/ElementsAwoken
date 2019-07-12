@@ -50,6 +50,9 @@ namespace ElementsAwoken
         public int mineTileCooldownMax = 3600 * 3;
         public int miningCounter = 0;
 
+        public int nurseCooldown = 0;
+
+
         public override void ResetEffects()
         {
             sanityIncreaser = 150;
@@ -65,6 +68,7 @@ namespace ElementsAwoken
 
         public override void PostUpdateMiscEffects()
         {
+            nurseCooldown--;
             if (!MyWorld.awakenedMode)
             {
                 sanity = sanityMax;
@@ -362,7 +366,7 @@ namespace ElementsAwoken
             {
                 if (target.life <= 0)
                 {
-                    if (target.damage == 0)
+                    if (target.damage == 0 && NPCID.Sets.TownCritter[target.type])
                     {
                         Main.NewText("reduced sanity");
                         sanity -= 3;
@@ -381,7 +385,7 @@ namespace ElementsAwoken
             {
                 if (target.life <= 0)
                 {
-                    if (target.damage == 0)
+                    if (target.damage == 0 && NPCID.Sets.TownCritter[target.type])
                     {
                         Main.NewText("reduced sanity");
                         sanity -= 3;
@@ -397,19 +401,120 @@ namespace ElementsAwoken
 
         public override void OnHitByNPC(NPC npc, int damage, bool crit)
         {
-            if (MyWorld.awakenedMode)
+            if (MyWorld.awakenedMode && damage > 0)
             {
-                sanity -= 2;
+                    sanity -= 2;
             }
         }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
-            if (MyWorld.awakenedMode)
+            if (MyWorld.awakenedMode && damage > 0)
             {
                 sanity -= 2;
             }
         }
 
+        public override void UpdateDead()
+        {
+            nurseCooldown = 0;
+        }
+
+        public override bool ModifyNurseHeal(NPC nurse, ref int health, ref bool removeDebuffs, ref string chatText)
+        {
+            if (MyWorld.awakenedMode)
+            {
+                health = (int)((player.statLifeMax2 * 0.75f) - player.statLife);
+                if (player.statLife > player.statLifeMax2 * 0.75f)
+                {
+                    return false;
+                }
+                if (nurseCooldown > 0)
+                {
+                    int nurseCDSeconds = nurseCooldown / 60;
+                    chatText = "Sorry, I'm still preparing my stuff. Come back in " + nurseCDSeconds + " seconds";
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
+        }
+        public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price)
+        {
+            nurseCooldown = 30 * 60;
+        }
+        public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
+        {
+            if (MyWorld.awakenedMode)
+            {
+                int newPrice = (int)((player.statLifeMax2 * 0.75f) - player.statLife);
+                for (int j = 0; j < 22; j++)
+                {
+                    int debuff = player.buffType[j];
+                    if (Main.debuff[debuff] && player.buffTime[j] > 5 && debuff != 28 && debuff != 34 && debuff != 87 && debuff != 89 && debuff != 21 && debuff != 86 && debuff != 199)
+                    {
+                        newPrice += 1000;
+                    }
+                }
+                newPrice = (int)(newPrice * GetNursePriceScale());
+                price = newPrice;
+            }
+        }
+
+        private float GetNursePriceScale()
+        {
+            float scale = 0.5f;
+            if (NPC.downedSlimeKing) scale += 0.25f;
+            if (NPC.downedBoss1) scale += 0.25f;
+            if (MyWorld.downedWasteland) scale += 0.25f;
+            if (NPC.downedBoss2) scale += 0.25f;
+            if (NPC.downedBoss3) scale += 0.5f;
+            if (MyWorld.downedInfernace) scale += 0.5f;
+            if (Main.hardMode) scale += 4f;
+            if (NPC.downedMechBossAny) scale += 2f;
+            if (MyWorld.downedScourgeFighter) scale += 1f;
+            if (MyWorld.downedRegaroth) scale += 2f;
+            if (NPC.downedPlantBoss) scale += 2f;
+            if (MyWorld.downedCelestial) scale += 1f;
+            if (MyWorld.downedPermafrost) scale += 2f;
+            if (MyWorld.downedObsidious) scale += 1f;
+            if (NPC.downedFishron) scale += 2f;
+            if (MyWorld.downedAqueous) scale += 2f;
+            if (NPC.downedMoonlord) scale += 10f;
+            if (MyWorld.downedGuardian) scale += 3f;
+            if (MyWorld.downedVolcanox) scale += 3f;
+            if (MyWorld.downedVoidLeviathan) scale += 3f;
+            if (MyWorld.downedAzana) scale += 3f;
+            if (MyWorld.downedAncients) scale += 3f;
+            return scale;
+        }
+
+        public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+
+            if (MyWorld.awakenedMode)
+            {
+                if (playerUtils.salesLastMin < 10)
+                {
+                    sanity++;
+                }
+            }
+        }
+        public override void PostBuyItem(NPC vendor, Item[] shopInventory, Item item)
+        {
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+
+            if (MyWorld.awakenedMode)
+            {
+                if (playerUtils.buysLastMin < 10)
+                {
+                    sanity++;
+                }
+            }
+        }
         public override TagCompound Save()
         {
             return new TagCompound {

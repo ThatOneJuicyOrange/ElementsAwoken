@@ -195,7 +195,7 @@ namespace ElementsAwoken.Projectiles.Whips
                 }
             }
 
-            rectangle8 = new Rectangle(0, 54, texture2D22.Width, 24); //end
+            rectangle8 = new Rectangle(0, 54, texture2D22.Width, 20); //end
             Main.spriteBatch.Draw(texture2D22, value30 - Main.screenPosition + value29, new Rectangle?(rectangle8), alpha3, rotation24, texture2D22.Frame(1, 1, 0, 0).Top(), projectile.scale, SpriteEffects.None, 0f);
             return false;
         }

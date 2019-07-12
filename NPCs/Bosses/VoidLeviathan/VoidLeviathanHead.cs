@@ -276,16 +276,9 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
                         int randomWormLength = Main.rand.Next(100, 110);
                         for (int i = 0; i < randomWormLength; ++i)
                         {
-                            int body = 0;
-                            int choice = Main.rand.Next(3);
-                            if (choice == 0)
-                            {
-                                body = mod.NPCType("VoidLeviathanBodyWeak");
-                            }
-                            else
-                            {
-                                body = mod.NPCType("VoidLeviathanBody");
-                            }
+                            int body = mod.NPCType("VoidLeviathanBody");
+                            if (Main.rand.Next(3) == 0) body = mod.NPCType("VoidLeviathanBodyWeak");
+ 
                             latestNPC = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, body, npc.whoAmI, 0, latestNPC);
                             Main.npc[(int)latestNPC].realLife = npc.whoAmI;
                             Main.npc[(int)latestNPC].ai[3] = npc.whoAmI;

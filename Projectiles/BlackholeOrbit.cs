@@ -80,7 +80,7 @@ namespace ElementsAwoken.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             //if (!Main.npc[(int)target.ai[3]].boss) // detecting boss worms (if they use ai[3])
-            if (target.realLife != -1) // detecting any worm
+            if (target.realLife == -1) // detecting not a worm
             {
                 target.immune[projectile.owner] = 5;
             }

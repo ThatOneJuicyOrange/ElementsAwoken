@@ -116,20 +116,24 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
         {
             Player P = Main.player[npc.target];
 
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+            #region despawning
+            if (!P.active || P.dead)
             {
                 npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+                if (!P.active || P.dead)
                 {
-                    despawnTimer++;
-                    if (despawnTimer >= 300)
-                    {
-                        npc.active = false;
-                    }
+                    npc.localAI[0]++;
                 }
-                else
-                    despawnTimer = 0;
             }
+            if (P.active && !P.dead)
+            {
+                npc.localAI[0] = 0;
+            }
+            if (npc.localAI[0] >= 300)
+            {
+                npc.active = false;
+            }
+            #endregion
 
             float num234 = 1f;
             bool flag8 = false;
@@ -249,8 +253,20 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
             if (!Collision.CanHitLine(npc.Center, 0, 0, Main.player[npc.target].Center, 0, 0)) // if the player is behind a wall
             {
                 npc.ai[2]++;
+                if (MyWorld.awakenedMode)
+                {
+                    npc.ai[2]++;
+                }
             }
             if (Math.Abs(npc.Top.Y - Main.player[npc.target].Bottom.Y) > 320f) // if the players feet are 320 units above 
+            {
+                npc.ai[2]++;
+                if (MyWorld.awakenedMode)
+                {
+                    npc.ai[2]++;
+                }
+            }
+            if (MyWorld.awakenedMode && Main.time % 2 == 0)
             {
                 npc.ai[2]++;
             }
@@ -440,13 +456,16 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                 {
                     brickTimer--;
                 }
-                if (npc.life < npc.lifeMax * 0.25)
+                if (MyWorld.awakenedMode)
                 {
-                    brickTimer--;
-                }
-                if (npc.life < npc.lifeMax * 0.1)
-                {
-                    brickTimer--;
+                    if (npc.life < npc.lifeMax * 0.25)
+                    {
+                        brickTimer--;
+                    }
+                    if (npc.life < npc.lifeMax * 0.1)
+                    {
+                        brickTimer--;
+                    }
                 }
                 if (brickTimer <= 0)
                 {
@@ -455,6 +474,10 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                         Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 10, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, -2), mod.ProjectileType("LegoBrick"), projectileBaseDamage, 0f, 0, 0, 0);
                     }
                     brickTimer = Main.rand.Next(200, 350);
+                    if (MyWorld.awakenedMode)
+                    {
+                        brickTimer = Main.rand.Next(150, 300);
+                    }
                 }
             }
         }

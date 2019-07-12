@@ -17,9 +17,10 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
             item.consumable = true;
             item.width = 24;
             item.height = 24;
-            bossBagNPC = mod.NPCType("VoidLeviathanHead");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("VoidLeviathanHead");
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
@@ -33,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(8);
             if (choice == 0)
             {

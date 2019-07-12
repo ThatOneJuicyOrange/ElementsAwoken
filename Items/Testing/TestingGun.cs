@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Testing
 
             item.UseSound = SoundID.Item12;
             item.shootSpeed = 15f;
-            item.shoot = mod.ProjectileType("SolarFragmentProj");
+            item.shoot = mod.ProjectileType("ShockwaveCreator");
         }
 
         public override void SetStaticDefaults()
@@ -41,9 +41,9 @@ namespace ElementsAwoken.Items.Testing
             DisplayName.SetDefault("Testing Gun");
             Tooltip.SetDefault("hit or miss, guess they never miss");
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        /*public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            /*int npcType = 519;
+            int npcType = 519;
             if (mode == 0)
             {
                 npcType = 519;
@@ -62,10 +62,10 @@ namespace ElementsAwoken.Items.Testing
             else
             {
                 Projectile.NewProjectile(position.X, position.Y - 60, speedX, speedY, mod.ProjectileType("SolarFragmentProj"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
-            }*/
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("SineWaveTest"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
+            }
+            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("ShockwaveCreator"), damage, knockBack, player.whoAmI, 10, 9);
             return false;
-        }
+        }*/
        /* public override bool AltFunctionUse(Player player)
         {
             return true;

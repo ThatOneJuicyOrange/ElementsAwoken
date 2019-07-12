@@ -192,7 +192,7 @@ namespace ElementsAwoken.Projectiles.Drills
                 yAdd.Y = -6;
             }
 
-            Texture2D texture = ModLoader.GetTexture("ElementsAwoken/Projectiles/Drills/ManipulatorChain");
+            Texture2D texture = ModContent.GetTexture("ElementsAwoken/Projectiles/Drills/ManipulatorChain");
             Vector2 position = projectile.Center;
             Vector2 mountedCenter = Main.player[projectile.owner].MountedCenter;
             Rectangle? sourceRectangle = new Microsoft.Xna.Framework.Rectangle?();

@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             item.width = 18;
             item.height = 18;
 
-            item.maxStack = 999;
+            item.maxStack = 10;
 
             item.consumable = true;
 
@@ -51,6 +51,16 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             }
             player.GetModPlayer<MyPlayer>().chaosHeartsUsed += 1;
             return true;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "DiscordantBar", 25);
+            recipe.AddIngredient(null, "VoidAshes", 12);
+            recipe.AddIngredient(null, "VoidEssence", 15);
+            recipe.AddTile(null, "ChaoticCrucible");
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

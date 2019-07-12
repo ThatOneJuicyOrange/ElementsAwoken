@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Meaningful Weeb");
-            Tooltip.SetDefault("Swing it like you mean it");
+            Tooltip.SetDefault("Swing it like you mean it\nEoite's donator item");
         }
 
 

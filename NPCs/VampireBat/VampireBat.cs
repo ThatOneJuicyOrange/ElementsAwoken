@@ -54,8 +54,11 @@ namespace ElementsAwoken.NPCs.VampireBat
         }
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
-            npc.life += 3;
-            npc.HealEffect(3);
+            if (npc.life + 2 < npc.lifeMax)
+            {
+                npc.life += 3;
+                npc.HealEffect(3);
+            }
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {

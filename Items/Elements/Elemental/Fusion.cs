@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Elements.Elemental
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "ElementalEssence", 5);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddIngredient(ItemID.LunarBar, 8);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);

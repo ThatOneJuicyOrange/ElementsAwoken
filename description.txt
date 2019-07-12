@@ -22,16 +22,22 @@ Hope you enjoy playing my mod :)
   - The Ancients (NEW BOSS)
   - A new energy system for all tech items
   - Awakened Mode
-    -Insanity, gets increased and decreased based on circumstances and being low sanity is bad for the player
+    - Insanity, gets increased and decreased based on circumstances and being low sanity is bad for the player
+    - Elite NPCs- if there are more than 5 enemies of a type, they might be turned into an elite
   - Some automation!
     - Auto Driller- digs a 3 block tunnel underneath
     - Auto Smelter- automatically smelts vanilla ore in your inventory
     - Auto Digger- digs nearby ores
+  - A lab for The Ancients
+  - Voidite Ore- Spawns post Void Leviathan up to 3 times
 -Changes
   - Supreme Awakener now only requires 1 awakener
+  - Azana now drops Discordant Ore instead of bars
+  - You can now teleport to any discovered location on the map with the Sky function of the Infinity Gauntlet
 -Bug Fixes
   - Custom recipes are now in the game properly
   - Scourge fighter trail now follows the engine properly
+  - Rarities no longer randomly increase and decrease
 -Resprites
   - The Celestials resprite
   - Volcanox and item resprites!

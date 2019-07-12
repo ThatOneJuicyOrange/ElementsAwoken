@@ -62,7 +62,7 @@ namespace ElementsAwoken.Items.Accessories
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "LifeDiamond", 1);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

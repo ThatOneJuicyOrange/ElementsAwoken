@@ -14,10 +14,12 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 4;
             projectile.height = 4;
+
             projectile.friendly = true;
             projectile.hostile = false;
             projectile.ignoreWater = true;
-            projectile.ranged = true;
+            projectile.thrown = true;
+
             projectile.alpha = 255;
             projectile.penetrate = 1;
             projectile.extraUpdates = 2;

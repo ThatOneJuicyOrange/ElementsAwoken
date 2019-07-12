@@ -77,7 +77,7 @@ namespace ElementsAwoken.Tiles
             if (isPlayerActive)
             {
                 PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
-                Console.WriteLine(modPlayer.energy);
+                //Console.WriteLine(modPlayer.energy);
                 if (enabled && modPlayer.energy >= 3)
                 {
                     Point digLeft = new Point(Position.X + 1, Position.Y + 5);

@@ -50,7 +50,7 @@ namespace ElementsAwoken.Items.Developer
             recipe.AddRecipeGroup("GoldBar", 10);
             recipe.AddIngredient(ItemID.BrokenHeroSword, 1);
             recipe.AddIngredient(ItemID.LunarBar, 8);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

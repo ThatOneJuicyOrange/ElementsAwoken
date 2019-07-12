@@ -18,9 +18,9 @@ namespace ElementsAwoken.Items.BossDrops.Azana
             item.width = 24;
             item.height = 24;
             item.rare = 11;
-            bossBagNPC = mod.NPCType("Azana");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("Azana");
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(5);
             if (choice == 0)
             {
@@ -68,7 +69,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
             {
                 player.QuickSpawnItem(mod.ItemType("EntropicCoating"));
             }
-            player.QuickSpawnItem(mod.ItemType("DiscordantBar"), Main.rand.Next(15, 25));
+            player.QuickSpawnItem(mod.ItemType("DiscordantOre"), Main.rand.Next(45, 90));
 
         }
     }

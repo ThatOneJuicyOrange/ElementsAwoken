@@ -25,6 +25,7 @@ namespace ElementsAwoken
         private const int saveVersion = 0;
 
         public static int moonlordKills = 0;
+        public static int voidLeviathanKills = 0;
         public static int ancientSummons = 0;
         public static int ancientKills = 0;
 
@@ -69,6 +70,9 @@ namespace ElementsAwoken
         // tiles
         public static int SkyTiles = 0;
         public static int lizardTiles = 0;
+        public static int corruptionTiles = 0;
+        public static int crimsonTiles = 0;
+        public static int hallowedTiles = 0;
         //lab
         public static int labPosition = 0;
         public static int sizeMult = (int)(Math.Floor(Main.maxTilesX / 4200f)); //Small = 2; Medium = ~3; Large = 4;
@@ -201,6 +205,7 @@ namespace ElementsAwoken
             tag["generatedLabs"] = generatedLabs;
 
             tag["moonlordKills"] = moonlordKills;
+            tag["voidLeviathanKills"] = voidLeviathanKills;
             tag["ancientKills"] = ancientKills;
             tag["ancientSummons"] = ancientSummons;
 
@@ -254,6 +259,7 @@ namespace ElementsAwoken
             generatedLabs = tag.GetBool("generatedLabs");
 
             moonlordKills = tag.GetInt("moonlordKills");
+            voidLeviathanKills = tag.GetInt("voidLeviathanKills");
             ancientKills = tag.GetInt("ancientKills");
             ancientSummons = tag.GetInt("ancientSummons");
 
@@ -335,7 +341,6 @@ namespace ElementsAwoken
             //random
             BitsByte flags7 = new BitsByte();
             flags7[0] = awakenedMode;
-            writer.Write(flags7);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -900,6 +905,10 @@ namespace ElementsAwoken
         {
             SkyTiles = tileCounts[TileID.Cloud];
             lizardTiles = tileCounts[TileID.LihzahrdBrick];
+
+            corruptionTiles = tileCounts[TileID.CorruptGrass] + tileCounts[TileID.CorruptHardenedSand] + tileCounts[TileID.CorruptIce] + tileCounts[TileID.CorruptSandstone] + tileCounts[TileID.CorruptThorns] + tileCounts[TileID.Ebonsand] + tileCounts[TileID.Ebonstone];
+            crimsonTiles = tileCounts[TileID.FleshGrass] + tileCounts[TileID.CrimsonHardenedSand] + tileCounts[TileID.FleshIce] + tileCounts[TileID.CrimsonSandstone] + tileCounts[TileID.CrimtaneThorns] + tileCounts[TileID.Crimsand] + tileCounts[TileID.Crimstone];
+            hallowedTiles = tileCounts[TileID.HallowedGrass] + tileCounts[TileID.HallowHardenedSand] + tileCounts[TileID.HallowedIce] + tileCounts[TileID.HallowedPlants] + tileCounts[TileID.HallowedPlants2] + tileCounts[TileID.HallowSandstone] + tileCounts[TileID.Pearlsand] + tileCounts[TileID.Pearlstone];
         }
         private void MoonlordShake(float intensity)
         {

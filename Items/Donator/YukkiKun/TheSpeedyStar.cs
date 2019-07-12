@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Speedy Star");
-            Tooltip.SetDefault("Hitting all the stars restores all the mana consumed in that shot");
+            Tooltip.SetDefault("Hitting all the stars restores all the mana consumed in that shot\nYukki-Kun's donator item");
         }
         public override void AddRecipes()
         {

@@ -160,6 +160,10 @@ namespace ElementsAwoken.NPCs.Town
         }
         public override string TownNPCName()
         {
+            if (Main.rand.Next(300) == 0)
+            {
+                return "Amadis";
+            }
             switch (WorldGen.genRand.Next(4))
             {
                 case 0:

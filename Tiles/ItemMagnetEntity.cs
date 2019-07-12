@@ -154,7 +154,7 @@ namespace ElementsAwoken.Tiles
             //Main.NewText("i " + i + " j " + j + " t " + type + " s " + style + " d " + direction);
             if (Main.netMode == 1)
             {
-                NetMessage.SendTileSquare(Main.myPlayer, i, j, 3);
+                NetMessage.SendTileSquare(Main.myPlayer, i, j, 1);
                 NetMessage.SendData(87, -1, -1, null, i, j, Type, 0f, 0, 0, 0);
                 return -1;
             }

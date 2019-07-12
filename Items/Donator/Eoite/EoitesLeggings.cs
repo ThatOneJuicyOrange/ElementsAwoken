@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eoite's Leggings");
-            Tooltip.SetDefault("The leggings of a weeb streamer\n5% increased magic damage");
+            Tooltip.SetDefault("The leggings of a weeb streamer\n5% increased magic damage\nEoite's donator item");
         }
         public override void UpdateEquip(Player player)
         {

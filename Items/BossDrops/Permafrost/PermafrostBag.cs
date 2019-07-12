@@ -17,9 +17,9 @@ namespace ElementsAwoken.Items.BossDrops.Permafrost
             item.width = 24;
             item.height = 24;
             item.rare = 7;
-            bossBagNPC = mod.NPCType("Permafrost");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("Permafrost");
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Permafrost
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {

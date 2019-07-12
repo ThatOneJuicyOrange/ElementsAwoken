@@ -17,9 +17,9 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
             item.width = 24;
             item.height = 24;
             item.rare = 4;
-            bossBagNPC = mod.NPCType("Infernace");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("Infernace");
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             player.QuickSpawnItem(mod.ItemType("FireHeart"));
             int choice = Main.rand.Next(4);
             if (choice == 0)

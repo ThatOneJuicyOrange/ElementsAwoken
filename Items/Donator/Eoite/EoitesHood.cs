@@ -22,7 +22,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eoite's Hood");
-            Tooltip.SetDefault("The hood of a weeb streamer\n10% increased magic damage");
+            Tooltip.SetDefault("The hood of a weeb streamer\n10% increased magic damage\nEoite's donator item");
         }
 
         public override void UpdateEquip(Player player)

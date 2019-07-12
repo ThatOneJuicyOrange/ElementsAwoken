@@ -206,6 +206,54 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
                 modPlayer.crowsArmorCooldown = 30;
             }
 
+            if (modPlayer.cosmicGlass && crit && modPlayer.cosmicGlassCD <= 0 && projectile.type != mod.ProjectileType("ChargeRifleHalf"))
+            {
+                if (target.active && !target.friendly && target.damage > 0 && !target.dontTakeDamage)
+                {
+                    float Speed = 9f;
+                    float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
+
+                    Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
+                    Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 12);
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("ChargeRifleHalf"), 30, 3f, projectile.owner, 0f);
+                    modPlayer.cosmicGlassCD = 3;
+                }
+            }
+            if (modPlayer.sufferWithMe && Main.rand.Next(4) == 0)
+            {
+                target.AddBuff(mod.BuffType("ChaosBurn"), 300, false);
+            }
+            int strikeChance = 10;
+            if (NPC.downedBoss3) strikeChance = 7;
+            if (Main.hardMode) strikeChance = 5;
+            if (NPC.downedPlantBoss) strikeChance = 4;
+            if (NPC.downedMoonlord) strikeChance = 2;
+            if (modPlayer.strangeUkulele && Main.rand.Next(strikeChance) == 0)
+            {
+                List<int> availableNPCs = new List<int>();
+                for (int k = 0; k < Main.npc.Length; k++)
+                {
+                    NPC other = Main.npc[k];
+                    if (other.active && !other.friendly && other.damage > 0 && !other.dontTakeDamage && Vector2.Distance(other.Center, player.Center) < 300)
+                    {
+                        availableNPCs.Add(other.whoAmI);
+                    }
+                }
+                if (availableNPCs.Count > 0)
+                {
+                    NPC arcTarget = Main.npc[availableNPCs[Main.rand.Next(availableNPCs.Count)]];
+                    if (arcTarget.active && !arcTarget.friendly && arcTarget.damage > 0 && !arcTarget.dontTakeDamage)
+                    {
+                        Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/ElectricArcing"));
+
+                        float Speed = 9f;
+                        float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
+                        rotation += MathHelper.ToRadians(Main.rand.Next(-60, 60));
+                        Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), 30, 3f, player.whoAmI, arcTarget.whoAmI);
+                    }
+                }
+            }
         }
         public override void SetDefaults(Projectile projectile)
         {

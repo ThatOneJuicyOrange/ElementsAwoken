@@ -22,7 +22,7 @@ namespace ElementsAwoken.Items.Essence
         {
             DisplayName.SetDefault("Frost Essence");
             Tooltip.SetDefault("Essence from the frosty wasteland");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 12));
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 11));
         }
 
         public override Color? GetAlpha(Color lightColor)

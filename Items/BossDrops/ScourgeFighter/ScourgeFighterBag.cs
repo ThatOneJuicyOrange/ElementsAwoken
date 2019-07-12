@@ -16,9 +16,9 @@ namespace ElementsAwoken.Items.BossDrops.ScourgeFighter
             item.consumable = true;
             item.width = 24;
             item.height = 24;
-            bossBagNPC = mod.NPCType("ScourgeFighter");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("ScourgeFighter");
 
         public override void SetStaticDefaults()
         {
@@ -32,7 +32,8 @@ namespace ElementsAwoken.Items.BossDrops.ScourgeFighter
         }
 
         public override void OpenBossBag(Player player)
-        {   
+        {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {

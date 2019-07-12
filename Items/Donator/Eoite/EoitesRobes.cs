@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eoite's Robes");
-            Tooltip.SetDefault("The robes of a weeb streamer\nDamage taken reduced by 18%\n5% increased magic damage");
+            Tooltip.SetDefault("The robes of a weeb streamer\nDamage taken reduced by 18%\n5% increased magic damage\nEoite's donator item");
         }
         public override void UpdateEquip(Player player)
         {

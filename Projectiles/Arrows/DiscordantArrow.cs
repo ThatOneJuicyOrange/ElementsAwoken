@@ -61,7 +61,7 @@ namespace ElementsAwoken.Projectiles.Arrows
             {
                 Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
                 Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
-                sb.Draw(ModLoader.GetTexture("ElementsAwoken/Projectiles/Arrows/DiscordantArrowChaos"), drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                sb.Draw(ModContent.GetTexture("ElementsAwoken/Projectiles/Arrows/DiscordantArrowChaos"), drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
             }
             return true;
         }

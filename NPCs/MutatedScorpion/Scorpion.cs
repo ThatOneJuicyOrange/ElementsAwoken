@@ -13,26 +13,30 @@ namespace ElementsAwoken.NPCs.MutatedScorpion
     {
         public override void SetDefaults()
         {
-            npc.npcSlots = 1f;
-            npc.aiStyle = 3;
-            npc.damage = 35;
             npc.width = 44;
             npc.height = 34;
+
+            npc.damage = 35;
+
             npc.defense = 6;
             npc.lifeMax = 30;
             npc.knockBackResist = 0.3f;
-            animationType = 257;
+
+            npc.aiStyle = 3;
+            animationType = NPCID.Scorpion;
             aiType = NPCID.AnomuraFungus;
+
             npc.value = Item.buyPrice(0, 0, 5, 0);
             npc.HitSound = SoundID.NPCHit31;
             npc.DeathSound = SoundID.NPCDeath34;
+
             npc.friendly = false;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Scorpion");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[npc.type] = 4;
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

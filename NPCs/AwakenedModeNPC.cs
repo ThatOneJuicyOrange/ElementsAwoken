@@ -10,6 +10,10 @@ namespace ElementsAwoken.NPCs
 {
     public class AwakenedModeNPC : GlobalNPC
     {
+        public int elite = 0;
+        public bool cantElite = false;
+        public bool dontExtraScale = false;
+        public bool hasAssignedElite = false;
         public override void ResetEffects(NPC npc)
         {
         }
@@ -25,11 +29,163 @@ namespace ElementsAwoken.NPCs
         {
             get { return CalamityMod.CalamityWorld.revenge; }
         }
+        public override void SetDefaults(NPC npc)
+        {
+            if (MyWorld.awakenedMode)
+            {
+                if (NPC.CountNPCS(npc.type) > 5 && npc.realLife == -1 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC)
+                {
+                    if (Main.rand.Next(3) == 0)
+                    {
+                        elite = Main.rand.Next(1, 5);
+                    }
+                }
+
+            }
+            
+        }
+        public override void PostAI(NPC npc)
+        {
+            string basename = "";
+            if (npc.GivenName == "") basename = npc.TypeName;
+            else basename = npc.GivenName;
+
+            if (elite > 0 && !hasAssignedElite)
+            {
+                switch (elite)
+                {
+                    case 1:
+                        npc.GivenName = "Blazing " + basename;
+                        break;
+                    case 2:
+                        npc.GivenName = "Frozen " + basename;
+                        npc.color = new Color(175, 247, 240);
+                        break;
+                    case 3:
+                        npc.GivenName = "Electrifying " + basename;
+                        break;
+                    case 4:
+                        npc.GivenName = "Shielded " + basename;
+                        break;
+                    case 5:
+                        npc.GivenName = "Poisonous " + basename;
+                        break;
+                    default: break;
+                }
+                hasAssignedElite = true;
+            }
+        }
+        public override void AI(NPC npc)
+        {
+            if (elite > 0)
+            {
+                switch (elite)
+                {
+                    case 1:
+                        if (Main.rand.Next(2) == 0)
+                        {
+                            Dust fire = Main.dust[Dust.NewDust(npc.position, npc.width, npc.height, 6, npc.velocity.X * -0.5f, npc.velocity.X * -0.5f, 100, default(Color), 2f)];
+                            fire.noGravity = true;
+                            fire.scale = 1f + Main.rand.Next(10) * 0.1f;
+                            fire.fadeIn = 2.5f;
+                        }
+                        break;
+                    case 2:
+                        if (Main.rand.Next(3) == 0)
+                        { 
+                            Dust frost = Main.dust[Dust.NewDust(npc.BottomLeft + npc.velocity, npc.width, 4, 135, npc.velocity.X * -0.5f, npc.velocity.X * -0.5f, 100, default(Color), 2f)];
+                            frost.noGravity = true;
+                            frost.scale = 1f + Main.rand.Next(10) * 0.1f;
+                            frost.fadeIn = 1.5f;
+                        }
+                        break;
+                    case 3:
+                        Dust electricity = Main.dust[Dust.NewDust(npc.position, npc.width, npc.height, 226, 0f, 0f, 100, default(Color), 0.5f)];
+                        electricity.velocity *= 1.6f;
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default: break;
+                }
+            }
+        }
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, int damage, float knockback, bool crit)
+        {
+            if (elite == 4)
+            {
+                if (npc.life > npc.lifeMax / 2)
+                {
+                    damage = (int)(damage * 0.5f);
+                }
+            }
+        }
+        public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
+        {
+            if (elite == 4)
+            {
+                if (npc.life > npc.lifeMax / 2)
+                {
+                    damage = (int)(damage * 0.5f);
+                }
+            }
+        }
+        public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
+        {
+            if (elite == 4)
+            {
+                if (npc.life > npc.lifeMax / 2)
+                {
+                    damage = (int)(damage * 0.5f);
+                }
+            }
+        }
+        public override void OnHitPlayer(NPC npc, Player target, int damage, bool crit)
+        {
+            if (elite > 0)
+            {
+                switch (elite)
+                {
+                    case 1:
+                        target.AddBuff(BuffID.OnFire, 180, false);
+                        break;
+                    case 2:
+                        target.AddBuff(BuffID.Frostburn, 180, false);
+                        break;
+                    case 3:
+                        target.AddBuff(BuffID.Electrified, 180, false);
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        target.AddBuff(BuffID.Poisoned, 180, false);
+                        target.AddBuff(BuffID.Venom, 180, false);
+                        break;
+                    default: break;
+                }
+            }
+        }
+        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+        {
+            if (elite == 4 && npc.life > npc.lifeMax / 2)
+            {
+                Vector2 drawPos = npc.Center - Main.screenPosition + new Vector2(0, npc.gfxOffY);
+                Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width * 0.5f, (Main.npcTexture[npc.type].Height / Main.npcFrameCount[npc.type]) * 0.5f);
+                Color color = new Color(66, 244, 226, 50);
+                SpriteEffects effects = npc.direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(0, 4), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(0, -4), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(4, 0), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(-4, 0), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
+                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, npc.GetAlpha(drawColor), npc.rotation, drawOrigin, npc.scale, effects, 0f);
+            }
+        }
         public override void ScaleExpertStats(NPC npc, int numPlayers, float bossLifeScale)
         {
             if (MyWorld.awakenedMode)
             {
-                if (!npc.boss)
+                if (!npc.boss && !dontExtraScale)
                 {
                     npc.lifeMax = (int)(npc.lifeMax * 1.75f);
                     npc.damage = (int)(npc.damage * 1.75f);
@@ -47,6 +203,10 @@ namespace ElementsAwoken.NPCs
                 {
                     npc.value *= 1.5f;
                     ScaleBossStats(npc);
+                }
+                if (elite > 0)
+                {
+                    npc.lifeMax = (int)(npc.lifeMax * 1.5f);
                 }
             }
         }

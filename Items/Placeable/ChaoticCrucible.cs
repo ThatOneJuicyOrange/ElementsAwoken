@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Placeable
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "ElementalForge", 1);
-            recipe.AddIngredient(null, "DiscordantBar", 10);
+            recipe.AddIngredient(null, "DiscordantOre", 30);
             recipe.AddIngredient(null, "ChaoticFlare", 8);
             recipe.AddTile(TileID.WorkBenches);
             recipe.SetResult(this);

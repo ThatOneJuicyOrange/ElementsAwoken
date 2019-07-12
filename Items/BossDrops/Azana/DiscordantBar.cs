@@ -28,5 +28,14 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         {
             return Color.White;
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "DiscordantOre", 3);
+            recipe.AddIngredient(null, "ChaoticFlare", 1);
+            recipe.AddTile(null, "ChaoticCrucible");
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }

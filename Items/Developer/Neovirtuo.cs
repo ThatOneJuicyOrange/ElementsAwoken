@@ -106,7 +106,7 @@ namespace ElementsAwoken.Items.Developer
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "Pyroplasm", 50);
             recipe.AddIngredient(null, "NeutronFragment", 8);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddIngredient(null, "Unity", 1);
             recipe.AddIngredient(null, "Asterox", 1);
             recipe.AddIngredient(ItemID.LunarBar, 8);

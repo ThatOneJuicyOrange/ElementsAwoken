@@ -20,7 +20,7 @@ namespace ElementsAwoken.Projectiles
 			projectile.friendly = true;
 			projectile.tileCollide = true;
 			projectile.ignoreWater = true;
-			projectile.magic = true;          
+			projectile.melee = true;          
 			projectile.penetrate = 2;
 		}
         public override void SetStaticDefaults()

@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("MurrAwAve");
-            Tooltip.SetDefault("When in Doubt, go for speed - Weeb Streamer");
+            Tooltip.SetDefault("When in Doubt, go for speed - Weeb Streamer\nEoite's donator item");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

@@ -106,10 +106,9 @@ namespace ElementsAwoken.Items.Accessories
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "VoidAshes", 8);
+            recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddIngredient(null, "Pyroplasm", 50);
             recipe.AddIngredient(null, "ElementalEssence", 5);
-            recipe.AddIngredient(ItemID.LunarBar, 8);
             recipe.AddIngredient(ItemID.IntenseRainbowDye, 1);
             recipe.AddIngredient(ItemID.RainbowBrick, 10);
             recipe.AddIngredient(null, "VoidBoots");

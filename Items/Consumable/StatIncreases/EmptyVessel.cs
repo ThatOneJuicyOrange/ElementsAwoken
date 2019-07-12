@@ -10,7 +10,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
     {
         public override void SetDefaults()
         {
-            item.maxStack = 999;
+            item.maxStack = 10;
             item.consumable = true;
             item.width = 18;
             item.height = 18;
@@ -43,6 +43,16 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             }
             player.GetModPlayer<MyPlayer>().voidHeartsUsed += 1;
             return true;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "VoidAshes", 12);
+            recipe.AddIngredient(null, "VoidStone", 25);
+            recipe.AddIngredient(null, "VoidEssence", 15);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

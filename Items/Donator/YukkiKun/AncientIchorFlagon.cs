@@ -27,7 +27,6 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
             item.useStyle = 1;
             item.knockBack = 3f;
             item.UseSound = SoundID.Item1;
-            item.maxStack = 999;
 
             item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = 7;
@@ -40,7 +39,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Ichor Flagon");
+            DisplayName.SetDefault("Ancient Ichor Flagon\nYukki-Kun's donator item");
         }
 
         public override void AddRecipes()

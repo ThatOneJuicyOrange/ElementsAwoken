@@ -11,16 +11,15 @@ namespace ElementsAwoken.Items
 {
     public class EARarity : GlobalItem
     {
-        private bool rarityStored = false;
+        public bool awakened = false;
 
         private int initialRarity = 0;
 
         public int rare = 0;
 
-        public int previousPrefix;
-
         public EARarity()
         {
+            awakened = false;
             rare = 0;
             initialRarity = 0;
         }
@@ -36,13 +35,13 @@ namespace ElementsAwoken.Items
             EARarity myClone = (EARarity)base.Clone(item, itemClone);
             myClone.rare = rare;
             myClone.initialRarity = initialRarity;
-            myClone.previousPrefix = previousPrefix;
+            myClone.awakened = awakened;
             return myClone;
         }
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             EARarity modItem = item.GetGlobalItem<EARarity>();
-            if (!item.expert)
+            if (!item.expert && !awakened)
             {
                 TooltipLine tooltipLine = tooltips.Single(i => i.Name == "ItemName" && i.mod == "Terraria");
 
@@ -62,8 +61,17 @@ namespace ElementsAwoken.Items
                         break;
                 }
             }
+            if (awakened)
+            {
+                TooltipLine tooltipLine = tooltips.Single(i => i.Name == "ItemName" && i.mod == "Terraria");
+                tooltipLine.overrideColor = new Color(220, 50, Main.DiscoB);
+
+                //TooltipLine tip = new TooltipLine(mod, "Elements Awoken:AwakenedTip", "Awakened");
+                //tooltips.Insert(5, tip);
+            }
             //Main.NewText("item.rare = " + item.rare);
             //Main.NewText("modItem.rare = " + modItem.rare);
+            //ElementsAwoken.DebugModeText(initialRarity);
         }
         public override void SetDefaults(Item item)
         {
@@ -76,17 +84,21 @@ namespace ElementsAwoken.Items
             {
                 modItem.rare = item.rare; // doesnt include rarities for some reason
             }
+            if (awakened)
+            {
+                item.expert = false;
+            }
         }
         public override void UpdateInventory(Item item, Player player)
         {
             EARarity modItem = item.GetGlobalItem<EARarity>();
-            if (!rarityStored)
-            {
-                initialRarity = modItem.rare;
-                rarityStored = true;
-            }
-            //initialRarity = item.SetDefaults(item.type).rare;
-            modItem.rare = initialRarity;
+            Item defaultItem = new Item();
+            defaultItem.SetDefaults(item.type);
+            EARarity defaultModItem = defaultItem.GetGlobalItem<EARarity>();
+            initialRarity = defaultModItem.rare;
+
+           // initialRarity = item.SetDefaults(item.type).rare;
+            //modItem.rare = initialRarity;
             int prefix = item.prefix;
             float damageBoost = 1f;
             float knockbackBoost = 1f;
@@ -346,9 +358,7 @@ namespace ElementsAwoken.Items
                     break;
             }
             float prefixValue = 1f * damageBoost * (2f - speedBoost) * (2f - manaCostBoost) * sizeBoost * knockbackBoost * shootspeedBoost * (1f + (float)item.crit * 0.02f);
-            //if (previousPrefix != prefix) // stops the custom rarity from raising
-            {
-                previousPrefix = item.prefix;
+            
                 if (prefix == 62 || prefix == 69 || prefix == 73 || prefix == 77)
                 {
                     prefixValue *= 1.05f;
@@ -367,19 +377,19 @@ namespace ElementsAwoken.Items
                 }
                 if ((double)prefixValue >= 1.2)
                 {
-                    modItem.rare += 2;
+                    modItem.rare = initialRarity + 2;
                 }
                 else if ((double)prefixValue >= 1.05)
                 {
-                    modItem.rare++;
+                    modItem.rare = initialRarity + 1;
                 }
                 else if ((double)prefixValue <= 0.8)
                 {
-                    modItem.rare -= 2;
+                    modItem.rare = initialRarity - 2;
                 }
                 else if ((double)prefixValue <= 0.95)
                 {
-                    modItem.rare--;
+                    modItem.rare = initialRarity - 1;
                 }
                 if (modItem.rare <= 11)
                 {
@@ -393,7 +403,7 @@ namespace ElementsAwoken.Items
                 {
                     modItem.rare = 15;
                 }
-            }
+            
         }
     }
 }

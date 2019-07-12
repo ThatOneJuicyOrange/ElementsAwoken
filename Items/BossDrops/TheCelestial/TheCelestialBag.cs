@@ -17,9 +17,9 @@ namespace ElementsAwoken.Items.BossDrops.TheCelestial
             item.width = 24;
             item.height = 24;
             item.rare = 6;
-            bossBagNPC = mod.NPCType("TheCelestial");
             item.expert = true;
         }
+        public override int BossBagNPC => mod.NPCType("TheCelestial");
 
         public override void SetStaticDefaults()
         {
@@ -34,6 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.TheCelestial
 
         public override void OpenBossBag(Player player)
         {
+            player.TryGettingDevArmor();
             int choice = Main.rand.Next(3);
             if (choice == 0)
             {

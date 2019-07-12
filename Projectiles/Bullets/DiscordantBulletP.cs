@@ -34,7 +34,7 @@ namespace ElementsAwoken.Projectiles.Bullets
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Arrow");
+            DisplayName.SetDefault("Discordant Bullet");
 
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
