@@ -50,7 +50,7 @@ namespace ElementsAwoken.Items.Tech
                 Main.NewText("Labs have already been generated", Color.White.R, Color.White.G, Color.White.B);
                 return false;
             }
-            if (!Config.labsEnabled)
+            if (ModContent.GetInstance<Config>().labsDisabled)
             {
                 Main.NewText("Labs arent enabled in the EA Config!", Color.White.R, Color.White.G, Color.White.B);
                 return false;
@@ -61,7 +61,7 @@ namespace ElementsAwoken.Items.Tech
         {
             int xO = Main.maxTilesX / 2;
             int yO = (int)(Main.maxTilesY * .7f);
-            if (Config.labsEnabled && !MyWorld.generatedLabs)
+            if (!ModContent.GetInstance<Config>().labsDisabled && !MyWorld.generatedLabs)
             {
                 LabStructures(xO, yO);
                 Main.NewText("Generating...", Color.White.R, Color.White.G, Color.White.B);

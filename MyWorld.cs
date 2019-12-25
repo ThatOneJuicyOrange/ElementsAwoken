@@ -15,6 +15,8 @@ using Terraria.DataStructures;
 using ReLogic.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
+using System.Linq;
+using ElementsAwoken.Items.Consumable.Potions;
 
 namespace ElementsAwoken
 {
@@ -22,12 +24,17 @@ namespace ElementsAwoken
     {
         public static bool awakenedMode = false;
 
+        public static bool credits = false;
+        public static int creditsCounter = 0;
+
         private const int saveVersion = 0;
 
         public static int moonlordKills = 0;
         public static int voidLeviathanKills = 0;
         public static int ancientSummons = 0;
         public static int ancientKills = 0;
+
+        public static string[] mysteriousPotionColours = new string[10];
 
         // one time alerts
         public static bool desertText = false;
@@ -105,6 +112,8 @@ namespace ElementsAwoken
         public override void Initialize()
         {
             awakenedMode = false;
+
+            credits = false;
 
             sizeMult = (int)(Math.Floor(Main.maxTilesX / 4200f));
             generatedLabs = false;
@@ -221,6 +230,11 @@ namespace ElementsAwoken
             tag["voidLeviathanDrive"] = voidLeviathanDrive;
             tag["volcanoxDrive"] = volcanoxDrive;
             tag["wastelandDrive"] = wastelandDrive;
+
+            for (int i = 0; i < mysteriousPotionColours.Length; i++)
+            {
+                tag["potColours" + i] = mysteriousPotionColours[i];
+            }
             return tag;
         }
 
@@ -275,6 +289,10 @@ namespace ElementsAwoken
             voidLeviathanDrive = tag.GetBool("voidLeviathanDrive");
             volcanoxDrive = tag.GetBool("volcanoxDrive");
             wastelandDrive = tag.GetBool("wastelandDrive");
+            for (int i = 0; i < mysteriousPotionColours.Length; i++)
+            {
+                mysteriousPotionColours[i] = tag.GetString("potColours" + i);
+            }
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -431,6 +449,7 @@ namespace ElementsAwoken
         // adding item in chests
         public override void PostWorldGen()
         {
+            RandomisePotions();
             int[] dungeonItems = new int[] { mod.ItemType("CrashingWave") };
             for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
             {
@@ -450,28 +469,44 @@ namespace ElementsAwoken
                         }
                     }
                 }
+                if (chest != null && Main.tile[chest.x, chest.y].type == TileID.Containers && Main.tile[chest.x, chest.y].frameX == 1 * 36)
+                {
+                    if (Main.rand.Next(5) == 0)
+                    {
+                        for (int inventoryIndex = 0; inventoryIndex < 40; inventoryIndex++)
+                        {
+                            if (chest.item[inventoryIndex].type == 0)
+                            {
+                                chest.item[inventoryIndex].SetDefaults(mod.ItemType("MysteriousPotion"));
+                                MysteriousPotion pot = (MysteriousPotion)chest.item[inventoryIndex].modItem;
+                                pot.potionNum = Main.rand.Next(10);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
         }
-        public bool CalamityModRevengeance
+        /*public bool CalamityModRevengeance
         {
             get { return CalamityMod.CalamityWorld.revenge; }
-        }
+        }*/ // gimme the fckn windows.dll pls 
         public override void PostUpdate()
         {
             Player player = Main.player[Main.myPlayer];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (ElementsAwoken.calamityEnabled)
             {
-                if (CalamityModRevengeance)
+                /*if (CalamityModRevengeance)
                 {
                     if (!awakenedMode)
                     {
                         Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
                         awakenedMode = true;
                     }
-                }
+                }*/
             }
             if (awakenedMode)
             {
@@ -488,6 +523,11 @@ namespace ElementsAwoken
                 MoonlordShake(0.6f);
             }
 
+            #region credits
+
+            
+            #endregion
+
             #region encounters
             encounterTimer--;
             if (encounterTimer <= 0)
@@ -501,7 +541,7 @@ namespace ElementsAwoken
             {
                 encounterSetup = true;
                 modPlayer.encounterTextTimer = 0;
-                if (!encounter1)
+                if (encounter2 || encounter3)
                 {
                     Main.rainTime = 3600;
                     Main.raining = true;
@@ -685,7 +725,7 @@ namespace ElementsAwoken
         {
             int xO = (int)(Main.maxTilesX * 0.75f);
             int yO = (int)(Main.maxTilesY * .7f);
-            if (Config.labsEnabled)
+            if (!ModContent.GetInstance<Config>().labsDisabled)
             {
                 int genIndex2 = tasks.FindIndex(genpass => genpass.Name.Equals("Buried Chests")); // "Lihzahrd Altars" are basically the last thing to be generated
                 tasks.Insert(genIndex2 + 2, new PassLegacy("Generating Labs", delegate (GenerationProgress progress)
@@ -917,6 +957,74 @@ namespace ElementsAwoken
                 Filters.Scene.Activate("MoonLordShake", Main.player[Main.myPlayer].position, new object[0]);
             }
             Filters.Scene["MoonLordShake"].GetShader().UseIntensity(intensity);
+        }
+
+        public static void RandomisePotions()
+        {
+            var nums = Enumerable.Range(0, 10).ToArray();
+
+            // Shuffle the array
+            for (int i = 0; i < nums.Length; ++i)
+            {
+                int randomIndex = Main.rand.Next(nums.Length);
+                int temp = nums[randomIndex];
+                nums[randomIndex] = nums[i];
+                nums[i] = temp;
+            }
+            for (int i = 0; i < nums.Length; ++i)
+            {
+                switch (nums[i])
+                {
+                    case 0:
+                        mysteriousPotionColours[i] = "Red";
+                        break;
+                    case 1:
+                        mysteriousPotionColours[i] = "Cyan";
+                        break;
+                    case 2:
+                        mysteriousPotionColours[i] = "Lime";
+                        break;
+                    case 3:
+                        mysteriousPotionColours[i] = "Fuschia";
+                        break;
+                    case 4:
+                        mysteriousPotionColours[i] = "Pink";
+                        break;
+                    case 5:
+                        mysteriousPotionColours[i] = "Brown";
+                        break;
+                    case 6:
+                        mysteriousPotionColours[i] = "Orange";
+                        break;
+                    case 7:
+                        mysteriousPotionColours[i] = "Yellow";
+                        break;
+                    case 8:
+                        mysteriousPotionColours[i] = "Blue";
+                        break;
+                    case 9:
+                        mysteriousPotionColours[i] = "Purple";
+                        break;
+                    default:
+                        mysteriousPotionColours[i] = "Red";
+                        break;
+                }
+                ElementsAwoken.DebugModeText(nums[i] + " " + mysteriousPotionColours[i]);
+            }
+        }
+    }
+    public class CreditsLight : GlobalWall
+    {
+        public override void ModifyLight(int i, int j, int type, ref float r, ref float g, ref float b)
+        {
+            Player player = Main.player[Main.myPlayer];
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            if (Main.tile[i, j].active() == false && MyWorld.credits && MyWorld.creditsCounter >= modPlayer.screenTransDuration / 2)
+            {
+                r = 0.7f;
+                g = 0.7f;
+                b = 0.7f;
+            }
         }
     }
 }

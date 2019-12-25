@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Ranged projectiles inflict Dragonfire\nRanged attacks have a chance to explode into Dragonfire";
-            player.GetModPlayer<MyPlayer>(mod).dragonmailVisage = true;
+            player.GetModPlayer<MyPlayer>().dragonmailVisage = true;
         }
 
         public override void AddRecipes()

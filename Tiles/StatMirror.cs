@@ -56,8 +56,8 @@ namespace ElementsAwoken.Tiles
                  "\nSwing speed: +" + (int)(100 - (player.meleeSpeed * 100)) + "%" + 
                  "\nMovement speed: +" + (int)((player.moveSpeed * 100) - 100) + "%" +
                  "\nDamage reduction: +" + (int)(player.endurance * 100) + "%" +
-                 "\nMax life: +" + +(player.statLifeMax2 - player.statLifeMax - player.GetModPlayer<MyPlayer>(mod).voidHeartsUsed * 10 - player.GetModPlayer<MyPlayer>(mod).chaosHeartsUsed * 10) +
-                 "\nMax mana: +" + +(player.statManaMax2 - player.statManaMax - player.GetModPlayer<MyPlayer>(mod).lunarStarsUsed * 100) +
+                 "\nMax life: +" + +(player.statLifeMax2 - player.statLifeMax - player.GetModPlayer<MyPlayer>().voidHeartsUsed * 10 - player.GetModPlayer<MyPlayer>().chaosHeartsUsed * 10) +
+                 "\nMax mana: +" + +(player.statManaMax2 - player.statManaMax - player.GetModPlayer<MyPlayer>().lunarStarsUsed * 100) +
                  "\nCurrent life regen: " + (player.lifeRegen);
 
             player.noThrow = 2;

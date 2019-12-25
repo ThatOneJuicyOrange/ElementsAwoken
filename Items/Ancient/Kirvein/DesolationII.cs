@@ -30,8 +30,8 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
             item.noMelee = true;
             item.autoReuse = true;
 
-            item.value = Item.sellPrice(0, 2, 0, 0);
-            item.rare = 3;
+            item.value = Item.sellPrice(0, 5, 0, 0);
+            item.rare = 5;
 
             item.shoot = ProjectileID.WoodenArrowFriendly;
             item.shootSpeed = 14f;

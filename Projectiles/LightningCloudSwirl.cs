@@ -29,7 +29,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player parent = Main.player[(int)projectile.ai[1]];
-            MyPlayer modPlayer = parent.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = parent.GetModPlayer<MyPlayer>();
 
             int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 15, 0f, 0f, 100, default(Color), 1.5f);
             Main.dust[dust].noGravity = true;

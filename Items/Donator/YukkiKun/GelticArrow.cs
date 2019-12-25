@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.WoodenArrow, 10);
-            recipe.AddIngredient(ItemID.Gel, 2);
+            recipe.AddIngredient(ItemID.Gel, 1);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this, 10);
             recipe.AddRecipe();

@@ -17,7 +17,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
         public override void SetDefaults()
         {
             npc.width = 52;
-            npc.height = 24;
+            npc.height = 88;
 
             npc.damage = 35;
             npc.defense = 35;
@@ -87,6 +87,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     npc.life = 0;
                     npc.HitEffect(0, 10.0);
                     npc.active = false;
+                    NetMessage.SendData(28, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
                 }
             }
             // shoot code
@@ -109,7 +110,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     {
                         float Speed = 10f;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
-                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBeam"), projectileBaseDamage, 0f, 0);
+                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBolt"), projectileBaseDamage, 0f, 0);
                     }
                 }
                 if (npc.ai[2] <= 750)

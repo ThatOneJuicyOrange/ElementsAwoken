@@ -13,8 +13,8 @@ namespace ElementsAwoken.Projectiles.Yoyos
         int shootTimer2 = 0;
         public override void SetDefaults()
         {
-            projectile.width = 20;
-            projectile.height = 20;
+            projectile.width = 36;
+            projectile.height = 36;
 
             projectile.aiStyle = 99;
             projectile.friendly = true;

@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Elements.Void
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "All projectiles have a chance of healing you slightly";
-            player.GetModPlayer<MyPlayer>(mod).voidArmor = true;
+            player.GetModPlayer<MyPlayer>().voidArmor = true;
         }
 
         public override void AddRecipes()

@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Storyteller
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Searing Blaze");
-            Tooltip.SetDefault("Turns normal arrows into searing arrows\nReleases thick clouds of smoke when arrows hit an enemy\n50% chance not to consume ammo");
+            Tooltip.SetDefault("Turns normal arrows into searing arrows\nReleases thick clouds of smoke when arrows collide\n50% chance not to consume ammo");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

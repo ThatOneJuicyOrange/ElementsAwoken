@@ -74,7 +74,7 @@ namespace ElementsAwoken.Items.Artifacts
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             //Discordant Skull
             player.pickSpeed -= 0.3f;
             /*player.rangedDamage *= 1.04f;

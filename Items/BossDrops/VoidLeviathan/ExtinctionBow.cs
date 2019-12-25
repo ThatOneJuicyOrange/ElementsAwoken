@@ -47,7 +47,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.altFunctionUse != 2)
             {
                 if (type == ProjectileID.WoodenArrowFriendly)
@@ -70,7 +70,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override bool CanUseItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.altFunctionUse == 2)
             {
                 if (modPlayer.voidPortalCooldown > 0)
@@ -82,7 +82,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override void HoldItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (modPlayer.voidPortalCooldown <= 0)
             {
                 for (int i = 0; i < 2; i++)

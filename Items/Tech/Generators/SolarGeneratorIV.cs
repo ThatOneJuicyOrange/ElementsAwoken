@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             Player player = Main.LocalPlayer;
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
 
             float powerPerSec = (float)producePowerCooldownMax / 60f;
             string ppsString = powerPerSec.ToString("n1");
@@ -57,7 +57,7 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (modPlayer.energy < modPlayer.maxEnergy && Main.dayTime)
             {
                 producePowerCooldownMax = (int)MathHelper.Lerp(15, 120, MathHelper.Distance((float)Main.time, 27000) / 27000);

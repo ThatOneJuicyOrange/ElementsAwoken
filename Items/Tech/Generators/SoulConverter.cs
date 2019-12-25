@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         }
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>();
             energyPlayer.soulConverter = true;
         }
         public override void AddRecipes()

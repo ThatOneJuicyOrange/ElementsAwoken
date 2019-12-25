@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         }
         public override void RightClick(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (crankCooldown <= 0 && modPlayer.energy < modPlayer.maxEnergy)
             {
                 Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/HandCrank"), 1, 0);

@@ -52,7 +52,7 @@ namespace ElementsAwoken
 
         public int nurseCooldown = 0;
 
-
+        public int aleCD = 0;
         public override void ResetEffects()
         {
             sanityIncreaser = 150;
@@ -73,10 +73,11 @@ namespace ElementsAwoken
             {
                 sanity = sanityMax;
             }
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
 
             sanityMax = sanityIncreaser;
             craftWeaponCooldown--;
+            aleCD--;
             // decreases
             if (MyWorld.awakenedMode)
             {
@@ -160,6 +161,8 @@ namespace ElementsAwoken
 
                     Tile closest = null;
                     Vector2 closestPos = new Vector2();
+                    Tile closestVoidite = null;
+                    Vector2 voiditePos = new Vector2();
                     for (int i = topLeft.X; i <= bottomRight.X; i++)
                     {
                         for (int j = topLeft.Y; j <= bottomRight.Y; j++)
@@ -183,16 +186,41 @@ namespace ElementsAwoken
                                 }
 
                             }
+                            if (t.type == mod.TileType("Voidite"))
+                            {
+                                Vector2 tileCenter = new Vector2(i * 16, j * 16);
+                                if (closestVoidite != null)
+                                {
+                                    if (Vector2.Distance(tileCenter, player.Center) < Vector2.Distance(voiditePos, player.Center))
+                                    {
+                                        closestVoidite = t;
+                                        voiditePos = new Vector2(i * 16, j * 16);
+                                    }
+                                }
+                                else
+                                {
+                                    closestVoidite = t;
+                                    voiditePos = new Vector2(i * 16, j * 16);
+                                }
+                            }
                         }
                     }
                     if (Vector2.Distance(closestPos, player.Center) < distance && CheckValidSanityTile(closest))
                     {
                         int amount = (int)Math.Round(MathHelper.Lerp(3, 1, Vector2.Distance(closestPos, player.Center) / distance));
                         sanityRegen += amount;
-                        string type = "";
+                        string type = "Nice Object";
                         if (closest.type == TileID.Campfire)
                         {
                             type = "Campfire";
+                        }
+                        if (closest.type == TileID.Fireplace)
+                        {
+                            type = "Fireplace";
+                        }
+                        if (closest.type == TileID.FireflyinaBottle)
+                        {
+                            type = "Firefly in a Bottle";
                         }
                         if (closest.type == TileID.Sunflower)
                         {
@@ -203,6 +231,12 @@ namespace ElementsAwoken
                             type = "Planter Box";
                         }
                         AddSanityRegen(amount, "Nearby " + type);
+                    }
+                    if (Vector2.Distance(voiditePos, player.Center) < distance && closestVoidite != null)
+                    {
+                        int amount = (int)Math.Round(MathHelper.Lerp(5, 1, Vector2.Distance(voiditePos, player.Center) / distance));
+                        sanityRegen -= amount;
+                        AddSanityDrain(amount, "Voidite");
                     }
                     #endregion
 
@@ -270,22 +304,24 @@ namespace ElementsAwoken
                     player.thrownDamage *= 0.5f;
                 }
                 // sanity regen logic
-                sanityRegenCount = Math.Abs(sanityRegen);
-                sanityRegenTime -= sanityRegenCount;
-                if (sanityRegenTime <= 0)
+                if (!MyWorld.credits)
                 {
-                    sanityRegenTime = 450;
-                    sanity += Math.Sign(sanityRegen);
+                    sanityRegenCount = Math.Abs(sanityRegen);
+                    sanityRegenTime -= sanityRegenCount;
+                    if (sanityRegenTime <= 0)
+                    {
+                        sanityRegenTime = 450;
+                        sanity += Math.Sign(sanityRegen);
+                    }
+                    if (sanity > sanityMax)
+                    {
+                        sanity = sanityMax;
+                    }
+                    if (sanity < 0)
+                    {
+                        sanity = 0;
+                    }
                 }
-                if (sanity > sanityMax)
-                {
-                    sanity = sanityMax;
-                }
-                if (sanity < 0)
-                {
-                    sanity = 0;
-                }
-
                 if (mineTileCooldown > 0)
                 {
                     mineTileCooldown--;
@@ -338,6 +374,8 @@ namespace ElementsAwoken
         private bool CheckValidSanityTile(Tile t)
         {
             if (t.type == TileID.Campfire ||
+                t.type == TileID.Fireplace ||
+                t.type == TileID.FireflyinaBottle ||
                 t.type == TileID.Sunflower ||
                 t.type == TileID.PlanterBox)
             {
@@ -357,6 +395,10 @@ namespace ElementsAwoken
                 }
             }
             return num;
+        }
+        public override void OnRespawn(Player player)
+        {
+            sanity = sanityMax / 2;
         }
 
         // remove sanity on killing stuff 
@@ -493,7 +535,7 @@ namespace ElementsAwoken
 
         public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)
         {
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
 
             if (MyWorld.awakenedMode)
             {
@@ -505,7 +547,7 @@ namespace ElementsAwoken
         }
         public override void PostBuyItem(NPC vendor, Item[] shopInventory, Item item)
         {
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
 
             if (MyWorld.awakenedMode)
             {
@@ -547,7 +589,7 @@ namespace ElementsAwoken
         }
         /*private void QuickBuff()
         {
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
 
             // only checks potions
             if (player.noItems)
@@ -572,8 +614,8 @@ namespace ElementsAwoken
         public override void NPCLoot(NPC npc)
         {
             Player player = Main.player[Main.myPlayer];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
             if (MyWorld.awakenedMode)
             {
                 if (npc.boss)
@@ -609,7 +651,7 @@ namespace ElementsAwoken
         public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
         {
             Player player = Main.player[item.owner];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (MyWorld.awakenedMode)
             {
                 // lavawet isnt set yet so check it manually
@@ -633,11 +675,11 @@ namespace ElementsAwoken
         // check using potions
         public override bool UseItem(Item item, Player player)
         {
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
-            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
+            PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
             if (MyWorld.awakenedMode)
             {
-                if (item.buffType != 0 && item.useStyle == 2 && item.consumable && item.type != mod.ItemType("SanityRegenerationPotion"))
+                if (item.buffType != 0 && item.useStyle == 2 && item.consumable && item.type != mod.ItemType("SanityRegenerationPotion") && item.type != ItemID.Ale)
                 {
                     if (playerUtils.potionsConsumedLastMin > 5)
                     {
@@ -649,12 +691,17 @@ namespace ElementsAwoken
             {
 
             }*/
+            if (modPlayer.aleCD <= 0 && item.type == ItemID.Ale)
+            {
+                modPlayer.sanity += 3;
+                modPlayer.aleCD = 60 * 30;
+            }
             return base.UseItem(item, player);
         }
         public override void OnCraft(Item item, Recipe recipe)
         {
             Player player = Main.player[item.owner];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (MyWorld.awakenedMode)
             {
                 if (item.damage > 0 && modPlayer.craftWeaponCooldown <= 0)

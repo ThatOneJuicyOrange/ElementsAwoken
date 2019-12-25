@@ -29,8 +29,6 @@ namespace ElementsAwoken.NPCs
 
         public bool impishCurse = false;
 
-        public bool glowing = false;
-
         public bool lifeDrain = false;
         public int lifeDrainAmount = 1;
 
@@ -60,8 +58,6 @@ namespace ElementsAwoken.NPCs
             corroding = false;
 
             impishCurse = false;
-
-            glowing = false;
 
             lifeDrain = false;
         }
@@ -178,7 +174,10 @@ namespace ElementsAwoken.NPCs
                 spawnRate = (int)(spawnRate / 5f);
                 maxSpawns = (int)(maxSpawns * 5f);
             }
-
+            if (MyWorld.credits)
+            {
+                maxSpawns = 0;
+            }
         }
 
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
@@ -332,7 +331,7 @@ namespace ElementsAwoken.NPCs
                 npc.netUpdate = true;
             }
             Player player = Main.LocalPlayer;
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.buffDPS += Math.Abs(npc.lifeRegen / 2);
         }
 
@@ -354,10 +353,6 @@ namespace ElementsAwoken.NPCs
                     }
                 }
                 Lighting.AddLight(npc.position, 0.025f, 0f, 0f);
-            }
-            if (glowing)
-            {
-                Lighting.AddLight(npc.position, 0.5f, 0.4f, 0.6f);
             }
             if (acidBurn)
             {
@@ -657,6 +652,10 @@ namespace ElementsAwoken.NPCs
             {
                 shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("SonicArm"));
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 25, 0, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("FeatheredGoggles"));
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(2, 0, 0, 0);
+                nextSlot++;
             }
             if (type == NPCID.Cyborg)
             {

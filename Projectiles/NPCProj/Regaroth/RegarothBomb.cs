@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,23 +16,26 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
         {
             projectile.width = 24;
             projectile.height = 24;
-            projectile.friendly = false;
+
             projectile.hostile = true;
             projectile.tileCollide = false;
-            projectile.ignoreWater = true;
-            projectile.alpha = 255;
+
             projectile.timeLeft = 600;
+            projectile.light = 1f;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Regaroth Bomb");
+            Main.projFrames[projectile.type] = 4;
         }
         public override void AI()
         {
+            Main.projFrames[projectile.type] = 4;
+
             projectile.velocity.X *= 0.99f;
             projectile.velocity.Y *= 0.99f;
             // create dusts in a circle shape
-            for (int i = 0; i < 10; i++)
+            if (Main.rand.Next(6) == 0 && !ModContent.GetInstance<Config>().lowDust)
             {
                 int dustType = Main.rand.Next(2) == 0 ? 135 : 164;
                 Vector2 position = projectile.Center + Main.rand.NextVector2Circular(projectile.width * 0.5f, projectile.height * 0.5f);
@@ -41,7 +46,8 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             projectile.Kill();
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("ExplosionHostile"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            ProjectileGlobal.HostileExplosion(projectile, new int[] { 135, 164}, projectile.damage);
+            /*Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("ExplosionHostile"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
             for (int num369 = 0; num369 < 20; num369++)
             {
@@ -79,7 +85,19 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
             Gore gore91 = Main.gore[num373];
             gore91.velocity.X = gore91.velocity.X - 1f;
             Gore gore92 = Main.gore[num373];
-            gore92.velocity.Y = gore92.velocity.Y - 1f;
+            gore92.velocity.Y = gore92.velocity.Y - 1f;*/
+        }
+        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        {
+            projectile.frameCounter++;
+            if (projectile.frameCounter >= 4)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+                if (projectile.frame > 3)
+                    projectile.frame = 0;
+            }
+            return true;
         }
     }
 }

@@ -68,8 +68,8 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
                     item.useStyle = 5;
                     player.AddBuff(mod.BuffType("DashCooldown"), 300);
                 }
-                player.GetModPlayer<MyPlayer>(mod).ninjaDash = true;
-                player.GetModPlayer<MyPlayer>(mod).dashDustTimer = 60;
+                player.GetModPlayer<MyPlayer>().ninjaDash = true;
+                player.GetModPlayer<MyPlayer>().dashDustTimer = 60;
 
                 for (int l = 0; l < 100; l++)
                 {

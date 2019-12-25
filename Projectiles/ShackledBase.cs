@@ -29,7 +29,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player parent = Main.player[(int)projectile.ai[1]];
-            MyPlayer modPlayer = parent.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = parent.GetModPlayer<MyPlayer>();
 
             if (modPlayer.forgedShackled <= 0)
             {

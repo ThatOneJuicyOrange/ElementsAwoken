@@ -20,7 +20,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 		
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).ancientDecay = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().ancientDecay = true;
 		}
 	}
 }

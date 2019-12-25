@@ -18,7 +18,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
 		
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<MyPlayer>(mod).medicineCooldown = true;
+			player.GetModPlayer<MyPlayer>().medicineCooldown = true;
 		}
 	}
 }

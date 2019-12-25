@@ -73,7 +73,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         }
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (enabled)
             {
                 // maximum wind is: 50mph?

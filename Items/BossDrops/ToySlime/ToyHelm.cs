@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.ToySlime
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "You drop a lego brick when hit";
-            player.GetModPlayer<MyPlayer>(mod).toyArmor = true;
+            player.GetModPlayer<MyPlayer>().toyArmor = true;
         }
 
         public override void AddRecipes()

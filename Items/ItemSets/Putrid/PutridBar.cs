@@ -12,7 +12,7 @@ namespace ElementsAwoken.Items.ItemSets.Putrid
             item.height = 20;
             item.maxStack = 999;
             item.value = Item.sellPrice(0, 0, 75, 0);
-            item.rare = 8;
+            item.rare = 7;
         }
 
         public override void SetStaticDefaults()

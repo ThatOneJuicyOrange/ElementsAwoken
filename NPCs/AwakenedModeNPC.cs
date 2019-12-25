@@ -25,15 +25,15 @@ namespace ElementsAwoken.NPCs
                 return true;
             }
         }
-        public bool CalamityModRevengeance
+        /*public bool CalamityModRevengeance
         {
             get { return CalamityMod.CalamityWorld.revenge; }
-        }
+        }*/ // gimme the fckn windows.dll pls 
         public override void SetDefaults(NPC npc)
         {
             if (MyWorld.awakenedMode)
             {
-                if (NPC.CountNPCS(npc.type) > 5 && npc.realLife == -1 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC)
+                if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
@@ -49,6 +49,11 @@ namespace ElementsAwoken.NPCs
             string basename = "";
             if (npc.GivenName == "") basename = npc.TypeName;
             else basename = npc.GivenName;
+
+            if (npc.realLife != -1)
+            {
+                elite = 0; // so worms cant
+            }
 
             if (elite > 0 && !hasAssignedElite)
             {
@@ -193,7 +198,7 @@ namespace ElementsAwoken.NPCs
                 }
                 if (ElementsAwoken.calamityEnabled)
                 {
-                    if (!CalamityModRevengeance)
+                    //if (!CalamityModRevengeance)
                     {
                         npc.value *= 1.5f;
                         ScaleBossStats(npc);

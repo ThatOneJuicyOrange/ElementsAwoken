@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Testing
 
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             modPlayer.maxEnergy += 500;
         }
     }

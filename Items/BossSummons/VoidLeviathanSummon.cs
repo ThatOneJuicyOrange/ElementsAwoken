@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Beacon of Eternal Abyss");
+            DisplayName.SetDefault("Embryo of Existance");
             Tooltip.SetDefault("Summons the guardian of the void");
         }
 

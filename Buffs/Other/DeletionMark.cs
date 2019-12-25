@@ -14,7 +14,7 @@ namespace ElementsAwoken.Buffs.Other
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).delete = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().delete = true;
         }
     }
 }

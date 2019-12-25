@@ -16,7 +16,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
 		public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).soulInferno = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().soulInferno = true;
             int num1 = Dust.NewDust(npc.position, npc.width, npc.height, 173);  
             Main.dust[num1].scale = 1f;
             Main.dust[num1].velocity *= 0.5f;

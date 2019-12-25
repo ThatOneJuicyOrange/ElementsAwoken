@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Tiles
 {
@@ -19,7 +20,7 @@ namespace ElementsAwoken.Tiles
         public override void Update()
         {
             Player player = Main.LocalPlayer;
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
 
             Vector2 tileCenter = new Vector2(Position.X * 16, Position.Y * 16);
             if (energy > maxEnergy)
@@ -67,7 +68,7 @@ namespace ElementsAwoken.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<PowerCell>() && tile.frameX == 0 && tile.frameY == 0;
+            return tile.active() && tile.type == TileType<PowerCell>() && tile.frameX == 0 && tile.frameY == 0;
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

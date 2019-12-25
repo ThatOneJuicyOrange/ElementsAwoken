@@ -36,6 +36,8 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         public float tpCooldown1 = 300f;
         public float tpDustCooldown = 10f;
 
+        public float invinceTimer = 0f;
+
         int moveAi = 0;
         int projectileBaseDamage = 37;
 
@@ -594,6 +596,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             #region Last Breaths
             if (droppingMonsters)
             {
+                invinceTimer++;
                 npc.velocity = Vector2.Zero;
                 if (colourIncrease)
                 {
@@ -646,12 +649,12 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                     shadowAlpha = 100;
                     shadowScale = 1f;
                 }
-                if (NPC.AnyNPCs(NPCID.Hellbat) || NPC.AnyNPCs(NPCID.LavaSlime) || monsterDropAI[1] <= 450)
+                if ((NPC.AnyNPCs(NPCID.Hellbat) || NPC.AnyNPCs(NPCID.LavaSlime) || monsterDropAI[1] <= 450) && invinceTimer < 1200)
                 {
                     npc.immortal = true;
                     npc.dontTakeDamage = true;
                 }
-                else if (!NPC.AnyNPCs(NPCID.Hellbat) && !NPC.AnyNPCs(NPCID.LavaSlime) && monsterDropAI[1] >= 450)
+                else if ((!NPC.AnyNPCs(NPCID.Hellbat) && !NPC.AnyNPCs(NPCID.LavaSlime) && monsterDropAI[1] >= 450) || invinceTimer >=  1200)
                 {
                     droppingMonsters = false;
                 }

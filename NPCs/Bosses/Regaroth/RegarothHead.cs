@@ -19,7 +19,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
         public override void SetDefaults()
         {
             npc.width = 120;
-            npc.height = 24;
+            npc.height = 88;
 
             npc.lifeMax = 75000;
             npc.damage = 75;
@@ -145,13 +145,29 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     npc.active = false;
                 }
             }
-            if (!P.ZoneSkyHeight)
+            if (!P.ZoneSkyHeight)npc.localAI[1] = 1;           
+            else npc.localAI[1] = 0;
+
+            if (!ModContent.GetInstance<Config>().lowDust)
             {
-                npc.localAI[1] = 1;
-            }
-            if (P.ZoneSkyHeight)
-            {
-                npc.localAI[1] = 0;
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 dustPos = new Vector2(-38, -10);
+                    dustPos = dustPos.RotatedBy((double)npc.rotation, default(Vector2));
+                    Dust dust = Main.dust[Dust.NewDust(npc.Center + dustPos - Vector2.One * 5f, 4, 4, 135, 0f, 0f, 0, default(Color), 1f)];
+                    dust.scale *= 1f + (float)Main.rand.Next(10) * 0.1f;
+                    dust.noGravity = true;
+                    dust.velocity = dust.velocity * 0.2f + Vector2.Normalize(dustPos) * 1f;
+                    dust.velocity = dust.velocity.RotatedBy((double)(-1.57079637f * (float)npc.direction), default(Vector2));
+
+                    Vector2 dustPos2 = new Vector2(38, -10);
+                    dustPos2 = dustPos2.RotatedBy((double)npc.rotation, default(Vector2));
+                    Dust dust2 = Main.dust[Dust.NewDust(npc.Center + dustPos2 - Vector2.One * 5f, 4, 4, 164, 0f, 0f, 0, default(Color), 1f)];
+                    dust2.scale *= 1f + (float)Main.rand.Next(10) * 0.1f;
+                    dust2.noGravity = true;
+                    dust2.velocity = dust2.velocity * 0.2f + Vector2.Normalize(dustPos2) * 1f;
+                    dust2.velocity = dust2.velocity.RotatedBy((double)(-1.57079637f * (float)npc.direction), default(Vector2));
+                }
             }
 
             //worm stuff starts here

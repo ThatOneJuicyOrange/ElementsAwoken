@@ -77,7 +77,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             }
             amount *= downedBosses;
             CombatText.NewText(player.getRect(), Color.LightBlue, amount, false, false);
-            PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>();
             energyPlayer.energy += amount;
             return false;
         }

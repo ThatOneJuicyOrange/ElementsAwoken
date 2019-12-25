@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Storyteller
         }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (modPlayer.masterSwordCharge > 0)
             {
@@ -58,7 +58,7 @@ namespace ElementsAwoken.Items.Storyteller
         }
         public override bool CanUseItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (player.altFunctionUse == 2)
             {
@@ -76,7 +76,7 @@ namespace ElementsAwoken.Items.Storyteller
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (player.altFunctionUse == 2)
             {
@@ -129,7 +129,7 @@ namespace ElementsAwoken.Items.Storyteller
         }
         public override void GetWeaponDamage(Player player, ref int damage)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             damage = 60 + (int)(modPlayer.masterSwordCharge * 1.5f);
         }
         public override void HoldItem(Player player)

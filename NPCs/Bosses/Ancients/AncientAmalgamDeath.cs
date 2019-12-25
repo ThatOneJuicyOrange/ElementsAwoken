@@ -88,11 +88,44 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
         public override void NPCLoot()
         {
             Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("DeathShockwave"), 0, 0f);
+            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("CreditsStarter"), 0, 0f);
+            MyWorld.downedAncients = true;
+            if (Main.rand.Next(10) == 0)
+            {
+                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsTrophy"));
+            }
+            if (Main.rand.Next(10) == 0)
+            {
+                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsMask"));
+            }
+
+            if (Main.expertMode)
+            {
+                npc.DropBossBags();
+            }
+            else
+            {
+                int choice = Main.rand.Next(3);
+                if (choice == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Chromacast"));
+                }
+                if (choice == 1)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Shimmerspark"));
+                }
+                if (choice == 2)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TheFundamentals"));
+                }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystalAmalgamate"),1);
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientShard"), Main.rand.Next(5, 8));
+            }
         }
 
         public override void BossLoot(ref string name, ref int potionType)
         {
-            potionType = mod.ItemType("SuperHealingPotion");
+            potionType = mod.ItemType("EpicHealingPotion");
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)

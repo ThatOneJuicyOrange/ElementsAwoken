@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Artifacts
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.lightningCloud = true;
             if (hideVisual)
             {

@@ -98,7 +98,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients
                 projectile.alpha -= 10;
             }
 
-            float rotateIntensity = 2;
+            float rotateIntensity = 1.3f;
             float waveTime = 60f;
             projectile.localAI[0]++;
             if (projectile.localAI[1] == 0) // this part is to fix the offset (it is still slightlyyyy offset)

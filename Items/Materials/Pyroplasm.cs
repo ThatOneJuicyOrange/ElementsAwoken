@@ -20,7 +20,7 @@ namespace ElementsAwoken.Items.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Pyroplasm");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(4, 5));
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 4));
         }
     }
 }

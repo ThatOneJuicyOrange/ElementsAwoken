@@ -16,12 +16,6 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
     public class Azana : ModNPC
     {
         int moveAi = 0;
-        float shootTimer1 = 0;
-        float shootTimer2 = 0;
-        float shootTimer3 = 0;
-        float shootTimer4 = 0;
-        float shootTimer5 = 0;
-        float shootTimer6 = 0;
         int wormTimer = 1800;
         int text = 0;
         int dustTimer = 0;
@@ -39,6 +33,8 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
         int lightTimer = 0;
 
         int projectileBaseDamage = 150;
+
+        Vector2 maskCenter;
         public override void SetDefaults()
         {
             npc.lifeMax = 1000000;
@@ -61,7 +57,6 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
             npc.value = Item.buyPrice(0, 75, 0, 0);
             npc.npcSlots = 1f;
             music = MusicID.Boss4;
-            //music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/AzanaTheme");
 
             // all EA modded buffs (unless i forget to add new ones)
             npc.buffImmune[mod.BuffType("IceBound")] = true;
@@ -211,27 +206,27 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
         public override void AI()
         {
             Player P = Main.player[npc.target];
-            bool expertMode = Main.expertMode;
-            npc.netUpdate = true;
             npc.TargetClosest(true);
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+
+            maskCenter = new Vector2(npc.Center.X, npc.Center.Y - 102);
+
+            if (!P.active || P.dead)
             {
                 npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+                if (!P.active || P.dead)
                 {
-                    npc.ai[0]++;
+                    npc.localAI[0]++;
                     npc.velocity.Y = npc.velocity.Y + 0.11f;
-                    if (npc.ai[0] >= 300)
+                    if (npc.localAI[0] >= 300)
                     {
                         npc.active = false;
                     }
                 }
                 else
-                    npc.ai[0] = 0;
+                    npc.localAI[0] = 0;
             }
             Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
             npc.spriteDirection = npc.direction;
-            Vector2 azanaCenter = new Vector2(npc.Center.X, npc.Center.Y);
 
             if (justTransformed)
             {
@@ -304,14 +299,59 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     npc.active = false;
                 }
                 #endregion
-                npc.ai[1]++;
-                shootTimer2--;
-                shootTimer3--;
-                shootTimer4--;
-                shootTimer5--;
-                shootTimer6--;
-                wormTimer--;
-                dustTimer--;
+                #region escape           
+                if (Vector2.Distance(P.Center, npc.Center) >= 2500)
+                {
+                    if (Main.netMode != 1)
+                    {
+                        string escapeText = "Trying to escape so early?";
+                        if (halfLife && !lowLife)
+                        {
+                            int choice = Main.rand.Next(3);
+                            if (choice == 0)
+                            {
+                                escapeText = "Dont try to run away!";
+                            }
+                            if (choice == 1)
+                            {
+                                escapeText = "You cant outrun me!";
+                            }
+                            if (choice == 2)
+                            {
+                                escapeText = "Get over here!";
+                            }
+                        }
+                        if (lowLife)
+                        {
+                            int choice = Main.rand.Next(3);
+                            if (choice == 0)
+                            {
+                                escapeText = "Get... Back... Here...";
+                            }
+                            if (choice == 1)
+                            {
+                                escapeText = "Ah, I'll kill you! Mark my words...";
+                            }
+                            if (choice == 2)
+                            {
+                                escapeText = "You cant escape... your demise...";
+                            }
+                        }
+                        Main.NewText(escapeText, new Color(93, 25, 43, 200));
+                        Teleport(P.position.X + Main.rand.Next(-300, 300), P.position.Y - (400 + Main.rand.Next(0, 600)));
+                        npc.netUpdate = true;
+                    }
+                }
+                #endregion
+                if (Main.netMode != 1)
+                {
+                    npc.ai[1]++;
+                    npc.ai[2]--;
+                    npc.ai[3]++;
+
+                    wormTimer--;
+                    dustTimer--;
+                }
                 if (npc.ai[1] > 5000)
                 {
                     npc.ai[1] = 0;
@@ -322,60 +362,26 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     NPC.NewNPC((int)spawnAt.X, (int)spawnAt.Y, mod.NPCType("AzanaWormHead"));
                     wormTimer = 2700;
                 }
-                #region escape           
-                if (Vector2.Distance(P.Center, npc.Center) >= 2500)
-                {
-                    string escapeText = "Trying to escape so early?";
-                    if (halfLife && !lowLife)
-                    {
-                        int choice = Main.rand.Next(3);
-                        if (choice == 0)
-                        {
-                            escapeText = "Dont try to run away!";
-                        }
-                        if (choice == 1)
-                        {
-                            escapeText = "You cant outrun me!";
-                        }
-                        if (choice == 2)
-                        {
-                            escapeText = "Get over here!";
-                        }
-                    }
-                    if (lowLife)
-                    {
-                        int choice = Main.rand.Next(3);
-                        if (choice == 0)
-                        {
-                            escapeText = "Get... Back... Here...";
-                        }
-                        if (choice == 1)
-                        {
-                            escapeText = "Ah, I'll kill you! Mark my words...";
-                        }
-                        if (choice == 2)
-                        {
-                            escapeText = "You cant escape... your demise...";
-                        }
-                    }
-                    Main.NewText(escapeText, new Color(93, 25, 43, 200));
-                    Teleport(Main.player[npc.target].position.X + Main.rand.Next(-300, 300), Main.player[npc.target].position.Y - (400 + Main.rand.Next(0, 600)));
-                }
-                #endregion
+
                 if (stopHitTimer < 2700)
                 {
                     #region attack 1
                     if (npc.ai[1] < 1000)
                     {
+
+                        if (halfLife && Main.netMode != 1)
+                        {
+                            npc.ai[2] -= 0.5f;
+                        }
                         activeTrail = true;
 
                         //movement
                         float speed = 0.2f;
-                        float playerX = P.Center.X - azanaCenter.X;
-                        float playerY = P.Center.Y - 400f - azanaCenter.Y;
+                        float playerX = P.Center.X - npc.Center.X;
+                        float playerY = P.Center.Y - 400f - npc.Center.Y;
                         if (moveAi == 0)
                         {
-                            playerX = P.Center.X - 600f - azanaCenter.X;
+                            playerX = P.Center.X - 600f - npc.Center.X;
                             if (Math.Abs(P.Center.X - 600f - npc.Center.X) <= 20)
                             {
                                 moveAi = 1;
@@ -383,7 +389,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         }
                         if (moveAi == 1)
                         {
-                            playerX = P.Center.X + 600f - azanaCenter.X;
+                            playerX = P.Center.X + 600f - npc.Center.X;
                             if (Math.Abs(P.Center.X + 600f - npc.Center.X) <= 20)
                             {
                                 moveAi = 0;
@@ -391,24 +397,13 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         }
                         Move(P, speed, playerX, playerY);
 
-                        shootTimer1--;
-                        if (halfLife)
-                        {
-                            shootTimer1 -= 0.5f;
-                        }
-                        if (shootTimer1 <= 0)
+                        if (npc.ai[2] <= 0)
                         {
                             float projSpeed = 18f;
-                            if (halfLife)
-                            {
-                                projSpeed += 2f;
-                            }
-                            if (lowLife)
-                            {
-                                projSpeed += 2f;
-                            }
+                            if (halfLife) projSpeed += 2f;
+                            if (lowLife) projSpeed += 2f;
                             Blasts(P, projSpeed, projectileBaseDamage + 25);
-                            shootTimer1 = 35;
+                            npc.ai[2] = 35;
                         }
 
                         if (halfLife)
@@ -420,24 +415,16 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             }
                             if (npc.ai[2] <= 0)
                             {
-                                int choice = Main.rand.Next(4);
-                                if (choice == 0)
+                                if (Main.netMode != 1)
                                 {
-                                    Teleport(Main.player[npc.target].position.X + (200 + Main.rand.Next(0, 600)), Main.player[npc.target].position.Y - (200 + Main.rand.Next(0, 600)));
+                                    int distance = Main.rand.Next(200, 800);
+                                    double angle = Main.rand.NextDouble() * 2d * Math.PI;
+                                    Vector2 offset = new Vector2((float)Math.Sin(angle) * distance, (float)Math.Cos(angle) * distance);
+
+                                    Teleport(P.Center.X + offset.X, P.Center.Y + offset.Y);
+                                    npc.ai[2] = 180 + Main.rand.Next(0, 120);
+                                    npc.netUpdate = true;
                                 }
-                                if (choice == 1)
-                                {
-                                    Teleport(Main.player[npc.target].position.X - (200 + Main.rand.Next(0, 600)), Main.player[npc.target].position.Y - (200 + Main.rand.Next(0, 600)));
-                                }
-                                if (choice == 2)
-                                {
-                                    Teleport(Main.player[npc.target].position.X + (200 + Main.rand.Next(0, 600)), Main.player[npc.target].position.Y + (200 + Main.rand.Next(0, 600)));
-                                }
-                                if (choice == 3)
-                                {
-                                    Teleport(Main.player[npc.target].position.X - (200 + Main.rand.Next(0, 600)), Main.player[npc.target].position.Y + (200 + Main.rand.Next(0, 600)));
-                                }
-                                npc.ai[2] = 180 + Main.rand.Next(0, 120);
                             }
                         }
                     }
@@ -445,7 +432,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     #region attack 2 - waves
                     if (npc.ai[1] == 1000)
                     {
-                        npc.ai[2] = 0;
+                        npc.ai[3] = 0;
                     }
                     if (npc.ai[1] >= 1000 && npc.ai[1] < 1600)
                     {
@@ -454,37 +441,29 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         npc.velocity.X = 0f;
                         npc.velocity.Y = 0f;
 
-                        npc.ai[2]++;
-                        if (lowLife)
+                        if (Main.netMode != 1)
                         {
-                            npc.ai[2]++;
+                            if (halfLife) npc.ai[3] += 0.5f;
+                            if (lowLife) npc.ai[3] += 0.5f;
+                            if (MyWorld.awakenedMode) npc.ai[3] += 0.5f;
                         }
                         //teleport
-                        if (npc.ai[2] == 20)
+                        if (npc.ai[3] >= 20 && npc.ai[0] == 0)
                         {
+                            if (Main.netMode != 1)
+                            {
+                                int distance = Main.rand.Next(200, 800);
+                                double angle = Main.rand.NextDouble() * 2d * Math.PI;
+                                Vector2 offset = new Vector2((float)Math.Sin(angle) * distance, (float)Math.Cos(angle) * distance);
 
-                            int distance = 200 + Main.rand.Next(0, 600);
-                            int choice = Main.rand.Next(4);
-                            if (choice == 0)
-                            {
-                                Teleport(Main.player[npc.target].position.X + distance, Main.player[npc.target].position.Y - distance);
-                            }
-                            if (choice == 1)
-                            {
-                                Teleport(Main.player[npc.target].position.X - distance, Main.player[npc.target].position.Y - distance);
-                            }
-                            if (choice == 2)
-                            {
-                                Teleport(Main.player[npc.target].position.X + distance, Main.player[npc.target].position.Y + distance);
-                            }
-                            if (choice == 3)
-                            {
-                                Teleport(Main.player[npc.target].position.X - distance, Main.player[npc.target].position.Y + distance);
+                                Teleport(P.Center.X + offset.X, P.Center.Y + offset.Y);
+                                npc.ai[0]++;
+                                npc.netUpdate = true;
                             }
                         }
-                        if (npc.ai[2] >= 45)
+                        if (npc.ai[3] >= 45)
                         {
-                            int damage = expertMode ? projectileBaseDamage + 50 : projectileBaseDamage + 25;
+                            int damage = Main.expertMode ? projectileBaseDamage + 50 : projectileBaseDamage + 25;
                             float speed = 14f;
                             if (halfLife && !lowLife)
                             {
@@ -495,7 +474,8 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                                 speed -= 1f; // make them slower cuz she shoots faster
                             }
                             WaveRing(P, speed, damage);
-                            npc.ai[2] = 0;
+                            npc.ai[3] = 0;
+                            npc.ai[0] = 0;
                         }
                     }
                     #endregion
@@ -504,50 +484,46 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     {
                         activeTrail = false;
 
-                        int damage = projectileBaseDamage;
                         int type = mod.ProjectileType("AzanaMiniBlast");
                         float movespeed = 10f;
-                        if (halfLife)
-                        {
-                            movespeed = 12f;
-                        }
-                        if (lowLife)
-                        {
-                            movespeed = 14f;
-                        }
+                        if (halfLife) movespeed += 2f;
+                        if (lowLife) movespeed += 2;
                         float speed = 22f;
 
                         if (npc.ai[1] == 1620)
                         {
-                            npc.position.X = Main.player[npc.target].position.X - 500;
-                            npc.position.Y = Main.player[npc.target].position.Y + 800;
+                            npc.Center = new Vector2(P.Center.X - 500, P.Center.Y + 800);
                         }
                         if (npc.ai[1] >= 1620 && npc.ai[1] < 1800)
                         {
                             npc.velocity.Y = -movespeed;
-                            if (shootTimer2 <= 0)
+                            if (npc.ai[2] <= 0)
                             {
-                                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                                Projectile.NewProjectile(azanaCenter.X, azanaCenter.Y, speed, 0f, type, damage, 0f, 0);
-                                shootTimer2 = 5 + Main.rand.Next(0, 10);
+                                if (Main.netMode != 1)
+                                {
+                                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
+                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed, 0f, type, projectileBaseDamage, 0f, 0);
+                                    npc.ai[2] = 5 + Main.rand.Next(0, 10);
+                                    npc.netUpdate = true;
+                                }
                             }
                         }
                         if (npc.ai[1] == 1820)
                         {
-                            npc.position.X = Main.player[npc.target].position.X + 500;
-                            npc.position.Y = Main.player[npc.target].position.Y + 800;
+                            npc.Center = new Vector2(P.Center.X + 500, P.Center.Y + 800);
                         }
                         if (npc.ai[1] >= 1820 && npc.ai[1] < 2000)
                         {
                             npc.velocity.Y = -movespeed;
-                            if (shootTimer2 <= 0)
+                            if (npc.ai[2] <= 0)
                             {
-                                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                                Projectile.NewProjectile(azanaCenter.X, azanaCenter.Y, -speed, 0f, type, damage, 0f, 0);
-                                shootTimer2 = 5 + Main.rand.Next(0, 10);
-                                if (lowLife)
+                                if (Main.netMode != 1)
                                 {
-                                    shootTimer2 -= 2;
+                                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
+                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -speed, 0f, type, projectileBaseDamage, 0f, 0);
+                                    npc.ai[2] = Main.rand.Next(5, 15);
+                                    if (lowLife) npc.ai[2] -= 2;
+                                    npc.netUpdate = true;
                                 }
                             }
                         }
@@ -559,15 +535,19 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         activeTrail = true;
 
                         float speed = 0.2f;
-                        float playerX = P.Center.X - azanaCenter.X;
-                        float playerY = P.Center.Y - 500f + Main.rand.Next(-100, 100) - azanaCenter.Y;
+                        float playerX = P.Center.X - npc.Center.X;
+                        float playerY = P.Center.Y - 500f - npc.Center.Y;
                         Move(P, speed, playerX, playerY);
 
-                        int randValue = lowLife ? 6 : 8;
-                        if (Main.rand.Next(randValue) == 0)
+                        if (Main.netMode != 1)
                         {
-                            int damage = projectileBaseDamage - 25;
-                            EdgeSpikes(P, damage);
+                            int randValue = lowLife ? 6 : 8;
+                            if (Main.rand.Next(randValue) == 0)
+                            {
+                                int damage = projectileBaseDamage - 25;
+                                EdgeSpikes(P, damage);
+                            }
+                            npc.netUpdate = true;
                         }
                     }
                     #endregion
@@ -577,16 +557,20 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         activeTrail = true;
 
                         float speed = 0.2f;
-                        float playerX = P.Center.X + 400 - azanaCenter.X;
-                        float playerY = P.Center.Y - azanaCenter.Y;
+                        float playerX = P.Center.X + 400 - npc.Center.X;
+                        float playerY = P.Center.Y - npc.Center.Y;
                         Move(P, speed, playerX, playerY);
 
-                        if (shootTimer3 <= 0)
+                        if (npc.ai[2] <= 0)
                         {
-                            float projSpeed = halfLife ? 20f : 18f;
-                            int damage = projectileBaseDamage + 25;
-                            Blades(P, projSpeed, damage);
-                            shootTimer3 = 10 + Main.rand.Next(0, 20);
+                            if (Main.netMode != 1)
+                            {
+                                float projSpeed = halfLife ? 20f : 18f;
+                                int damage = projectileBaseDamage + 25;
+                                Blades(P, projSpeed, damage);
+                                npc.ai[2] = 10 + Main.rand.Next(0, 20);
+                                npc.netUpdate = true;
+                            }
                         }
                     }
                     #endregion
@@ -612,10 +596,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             }
                             dustTimer = 5;
                         }
-                        if (npc.ai[1] == 3120)
-                        {
-                            spinAI = 0f;
-                        }
+                        if (npc.ai[1] == 3120)spinAI = 0f;
                         if (npc.ai[1] >= 3120 && npc.ai[1] < 3600)
                         {
                             // shoot in circle
@@ -623,23 +604,22 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             float rotateSpeed = 0.027f;
                             spinAI += rotateSpeed;
 
-                            float Speed = halfLife ? 17f : 14f;
+                            float projSpeed = halfLife ? 17f : 14f;
                             int type = mod.ProjectileType("AzanaMiniBlast");
                             int damage = halfLife ? projectileBaseDamage : projectileBaseDamage - 20;
-                            Vector2 vector = new Vector2(npc.Center.X, npc.Center.Y - 102);
 
-                            if (shootTimer4 <= 0)
+                            if (npc.ai[2] <= 0)
                             {
                                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-                                int numProj = 4;
+                                float numProj = 4f;
+                                float projOffset = MathHelper.ToRadians(360f) / numProj;
                                 for (int i = 0; i < numProj; i++)
                                 {
-                                    float projOffset = 360 / numProj;
-                                    Vector2 shootTarget1 = npc.Center + offset.RotatedBy(spinAI + (projOffset * i) * (Math.PI * 2 / 8));
-                                    float rotation = (float)Math.Atan2(vector.Y - shootTarget1.Y, vector.X - shootTarget1.X);
-                                    Projectile.NewProjectile(vector.X, vector.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
+                                    Vector2 shootTarget1 = maskCenter + offset.RotatedBy(spinAI + (projOffset * (float)i));
+                                    float rotation = (float)Math.Atan2(maskCenter.Y - shootTarget1.Y, maskCenter.X - shootTarget1.X);
+                                    Projectile.NewProjectile(maskCenter.X, maskCenter.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), type, damage, 0f, 0);
                                 }
-                                shootTimer4 = 5;
+                                npc.ai[2] = 5;
                             }
                         }
                     }
@@ -653,78 +633,46 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     {
                         activeTrail = true;
                         float speed = halfLife ? 10f : 8f;
-                        float speedX = 0f;
-                        float speedY = 0f;
+                        Vector2 diagSpeed = new Vector2();
 
-                        npc.ai[2]++;
-                        #region top left
-                        if (npc.ai[2] == 1)
+                        //top left
+                        if (npc.ai[3] == 1) Teleport(P.position.X + 700, P.position.Y + 700);
+                        if (npc.ai[3] >= 1 && npc.ai[3] < 120)
                         {
-                            Teleport(Main.player[npc.target].position.X + 700, Main.player[npc.target].position.Y + 700);
+                            npc.velocity = new Vector2(-8f,-8f);
+                            diagSpeed = new Vector2(speed, -speed);
                         }
-                        if (npc.ai[2] >= 1 && npc.ai[2] < 120)
+                        // top right
+                        if (npc.ai[3] == 120) Teleport(P.position.X - 700, P.position.Y + 700);
+                        if (npc.ai[3] >= 120 && npc.ai[3] < 240)
                         {
-                            npc.velocity.X = -8f;
-                            npc.velocity.Y = -8f;
+                            npc.velocity = new Vector2(8f, -8f);
+                            diagSpeed = new Vector2(-speed, -speed);
+                        }
+                        // bottom left
+                        if (npc.ai[3] == 240) Teleport(P.position.X + 700, P.position.Y - 700);
+                        if (npc.ai[3] >= 240 && npc.ai[3] < 360)
+                        {
+                            npc.velocity = new Vector2(-8f, 8f);
+                            diagSpeed = new Vector2(-speed, -speed);
+                        }
+                        // bottom right
+                        if (npc.ai[3] == 360) Teleport(P.position.X - 700, P.position.Y - 700);
+                        if (npc.ai[3] >= 360)
+                        {
+                            npc.velocity = new Vector2(8f, 8f);
+                            diagSpeed = new Vector2(speed, -speed);
+                        }
 
-                            speedX = speed;
-                            speedY = -speed;
-                        }
-                        #endregion
-                        #region top right
-                        if (npc.ai[2] == 120)
-                        {
-                            Teleport(Main.player[npc.target].position.X - 700, Main.player[npc.target].position.Y + 700);
-                        }
-                        if (npc.ai[2] >= 120 && npc.ai[2] < 240)
-                        {
-                            npc.velocity.X = 8f;
-                            npc.velocity.Y = -8f;
-
-                            speedX = -speed;
-                            speedY = -speed;
-                        }
-                        #endregion
-                        #region bottom left
-                        if (npc.ai[2] == 240)
-                        {
-                            Teleport(Main.player[npc.target].position.X + 700, Main.player[npc.target].position.Y - 700);
-                        }
-                        if (npc.ai[2] >= 240 && npc.ai[2] < 360)
-                        {
-                            npc.velocity.X = -8f;
-                            npc.velocity.Y = 8f;
-
-                            speedX = -speed;
-                            speedY = -speed;
-                        }
-                        #endregion
-                        #region bottom right
-                        if (npc.ai[2] == 360)
-                        {
-                            Teleport(Main.player[npc.target].position.X - 700, Main.player[npc.target].position.Y - 700);
-                        }
-                        if (npc.ai[2] >= 360)
-                        {
-                            npc.velocity.X = 8f;
-                            npc.velocity.Y = 8f;
-
-                            speedX = speed;
-                            speedY = -speed;
-                        }
-                        #endregion
-                        if (npc.ai[2] >= 480)
-                        {
-                            npc.ai[2] = 0;
-                        }
-                        if (shootTimer6 <= 0)
+                        if (npc.ai[3] >= 480) npc.ai[3] = 0;
+                        if (npc.ai[2] <= 0)
                         {
                             int damage = projectileBaseDamage - 60;
                             int type = mod.ProjectileType("AzanaMiniBlast");
                             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                            Projectile.NewProjectile(azanaCenter.X, azanaCenter.Y, speedX, speedY, type, damage, 0f, 0);
-                            Projectile.NewProjectile(azanaCenter.X, azanaCenter.Y, -speedX, -speedY, type, damage, 0f, 0);
-                            shootTimer6 = 9;
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, diagSpeed.X, diagSpeed.Y, type, damage, 0f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -diagSpeed.X, -diagSpeed.Y, type, damage, 0f, 0);
+                            npc.ai[2] = 9;
                         }
                     }
                     #endregion
@@ -739,24 +687,24 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         {
                             TeleportDust();
 
-                            npc.position.X = Main.player[npc.target].position.X;
-                            npc.position.Y = Main.player[npc.target].position.Y - 400;
+                            npc.position.X = P.position.X;
+                            npc.position.Y = P.position.Y - 400;
                         }
                         npc.velocity.X = 0f;
                         npc.velocity.Y = 0f;
                         if (npc.ai[1] >= 4060)
                         {
-                            if (shootTimer5 <= 0)
+                            if (npc.ai[2] <= 0)
                             {
                                 HomingFire(projectileBaseDamage - 25);
-                                shootTimer5 = 12;
+                                npc.ai[2] = 12;
                                 if (halfLife)
                                 {
-                                    shootTimer5 -= 3;
+                                    npc.ai[2] -= 3;
                                 }
                                 if (lowLife)
                                 {
-                                    shootTimer5 -= 2;
+                                    npc.ai[2] -= 2;
                                 }
                             }
                         }
@@ -782,11 +730,11 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
 
                     activeTrail = true;
                     float speed = 0.2f;
-                    float playerX = P.Center.X - azanaCenter.X;
-                    float playerY = P.Center.Y - 400f - azanaCenter.Y;
+                    float playerX = P.Center.X - npc.Center.X;
+                    float playerY = P.Center.Y - 400f - npc.Center.Y;
                     if (moveAi == 0)
                     {
-                        playerX = P.Center.X - 600f - azanaCenter.X;
+                        playerX = P.Center.X - 600f - npc.Center.X;
                         if (Math.Abs(P.Center.X - 600f - npc.Center.X) <= 20)
                         {
                             moveAi = 1;
@@ -794,7 +742,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     }
                     if (moveAi == 1)
                     {
-                        playerX = P.Center.X + 600f - azanaCenter.X;
+                        playerX = P.Center.X + 600f - npc.Center.X;
                         if (Math.Abs(P.Center.X + 600f - npc.Center.X) <= 20)
                         {
                             moveAi = 0;
@@ -856,12 +804,10 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
 
         private void Blasts(Player P, float speed, int damage)
         {
-            Vector2 azanaCenter = new Vector2(npc.position.X + (npc.width / 2), npc.position.Y + (npc.height / 2));
-
             int type = mod.ProjectileType("AzanaBlast");
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-            float rotation = (float)Math.Atan2(azanaCenter.Y - (P.position.Y + (P.height * 0.5f)), azanaCenter.X - (P.position.X + (P.width * 0.5f)));
-            int num54 = Projectile.NewProjectile(azanaCenter.X, azanaCenter.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, 0);
+            float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+            int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, 0);
         }
 
         private void WaveRing(Player P, float speed, int damage)

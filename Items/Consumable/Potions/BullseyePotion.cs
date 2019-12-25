@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(ItemID.Obsidian, 4);
             recipe.AddIngredient(ItemID.ArcheryPotion, 1);
             recipe.AddIngredient(ItemID.RagePotion, 1);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

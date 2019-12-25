@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Enums;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Tiles
 {
@@ -26,7 +27,7 @@ namespace ElementsAwoken.Tiles
             TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16, 16, 16, 16 };
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<AutoDrillerEntity>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(GetInstance<AutoDrillerEntity>().Hook_AfterPlacement, -1, 0, true);
             TileObjectData.newTile.AnchorBottom = AnchorData.Empty;
             TileObjectData.newTile.Origin = new Point16(2, 3);
             TileObjectData.newTile.UsesCustomCanPlace = true;
@@ -45,7 +46,7 @@ namespace ElementsAwoken.Tiles
             {
                 foreach (TileEntity current in TileEntity.ByID.Values)
                 {
-                    if (current.type == mod.TileEntityType<AutoDrillerEntity>())
+                    if (current.type == TileEntityType<AutoDrillerEntity>())
                     {
                         if (current.Position == tilePoint)
                         {
@@ -92,7 +93,7 @@ namespace ElementsAwoken.Tiles
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(i * 16, j * 16, 16, 32, mod.ItemType("AutoDriller"));
-            mod.GetTileEntity<AutoDrillerEntity>().Kill(i, j);
+            GetInstance<AutoDrillerEntity>().Kill(i, j);
         }        
     }
 }

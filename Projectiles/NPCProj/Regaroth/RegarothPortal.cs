@@ -13,14 +13,16 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
 
         public override void SetDefaults()
         {
-            projectile.width = 32;
-            projectile.height = 32;
+            projectile.width = 46;
+            projectile.height = 46;
+
             projectile.hostile = true;
-            projectile.ignoreWater = true;
+            projectile.tileCollide = false;
+
             projectile.alpha = 60;
             projectile.penetrate = -1;
-            projectile.tileCollide = false;
             projectile.timeLeft = 600;
+            projectile.light = 1f;
         }
         public override void SetStaticDefaults()
         {
@@ -31,44 +33,18 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
         {
             projectile.velocity.X *= 0.95f;
             projectile.velocity.X *= 0.95f;
-            if (Main.rand.Next(2) == 0)
+            if (Main.rand.Next(4) == 0 && !ModContent.GetInstance<Config>().lowDust)
             {
-                int dustType = 135;
-                switch (Main.rand.Next(2))
-                {
-                    case 0:
-                        dustType = 135;
-                        break;
-                    case 1:
-                        dustType = 164;
-                        break;
-                    default: break;
-                }
-                int dust1 = Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y), projectile.width, projectile.height, dustType, 0f, 0f, 100, default(Color), 1);
-                Main.dust[dust1].velocity *= 0.2f;
-                Main.dust[dust1].noGravity = true;
+                Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.Center.X, projectile.Center.Y), projectile.width, projectile.height, Main.rand.Next(2) == 0 ? 135 : 164, 0f, 0f, 100, default, 1)];
+                dust.velocity *= 0.2f;
+                dust.noGravity = true;
             }
             laserTimer--;
             if (laserTimer <= 0)
             {
                 Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 33);
 
-                /*float Speed = 10f;
-                int type = mod.ProjectileType("RegarothBeam");
-                Vector2 vector8 = new Vector2(projectile.position.X + (projectile.width / 2), projectile.position.Y + (projectile.height / 2));
-                float spread = 45f * 0.0174f;
-                double startAngle = Math.Atan2(projectile.velocity.X, projectile.velocity.Y) - spread / 2;
-                double deltaAngle = spread / 8f;
-                double offsetAngle;
-                for (int i = 0; i < 4; i++)
-                {
-                    offsetAngle = (startAngle + deltaAngle * (i + i * i) / 2f) + 32f * i;
-                    Projectile.NewProjectile(vector8.X, vector8.Y, (float)(Math.Sin(offsetAngle) * Speed), (float)(Math.Cos(offsetAngle) * Speed), type, projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
-                    Projectile.NewProjectile(vector8.X, vector8.Y, (float)(-Math.Sin(offsetAngle) * Speed), (float)(-Math.Cos(offsetAngle) * Speed), type, projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
-                }*/
-
-                int type = mod.ProjectileType("RegarothBeam");
-                int projDamage = Main.expertMode ? 200 : 300;
+                int type = mod.ProjectileType("RegarothBolt");
                 float numberProjectiles = 8;
                 float rotation = MathHelper.ToRadians(360);
                 float speed = 3f;

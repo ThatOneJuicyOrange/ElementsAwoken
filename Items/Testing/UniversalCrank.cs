@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Testing
         }
         public override void RightClick(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/HandCrank"), 1, 0);
             modPlayer.energy += 25;
             item.stack++;

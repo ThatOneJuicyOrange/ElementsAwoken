@@ -18,7 +18,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).lifeDrain = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().lifeDrain = true;
         }
     }
 }

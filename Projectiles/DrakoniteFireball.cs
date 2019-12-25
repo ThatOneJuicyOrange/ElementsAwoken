@@ -15,6 +15,7 @@ namespace ElementsAwoken.Projectiles
             projectile.aiStyle = 1;
             projectile.friendly = true;
             projectile.magic = true;
+            projectile.ignoreWater = false;
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
             projectile.alpha = 0;

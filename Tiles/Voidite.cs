@@ -18,6 +18,11 @@ namespace ElementsAwoken.Tiles
             Main.tileMergeDirt[Type] = true;
             Main.tileBlockLight[Type] = true;  //true for block to emit light
             Main.tileLighted[Type] = true;
+
+            Main.tileSpelunker[Type] = true;
+            TileID.Sets.Ore[Type] = true;
+            Main.tileValue[Type] = 1500;
+
             drop = mod.ItemType("VoiditeOre");
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Voidite");
@@ -40,6 +45,12 @@ namespace ElementsAwoken.Tiles
             {
                 Dust.NewDust(new Vector2(i * 16, j * 16), 16, 16, DustID.PinkFlame, 0f, 0f, 0, default(Color), 1.0f);
             }
+        }
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)   //light colors
+        {
+            r = 0.25f;
+            g = 0f;
+            b = 0.2f;
         }
     }
 }

@@ -51,6 +51,13 @@ namespace ElementsAwoken
         public static float screenshakeAmount = 0; // dont go above 15 unless you want to have a seizure
         private static int screenshakeTimer = 0;
 
+        public static int[] screenTextTimer = new int[5];
+        public static int[] screenTextDuration = new int[5];
+        public static float[] screenTextAlpha = new float[5];
+        public static float[] screenTextScale = new float[5];
+        public static string[] screenText = new string[5];
+        public static Vector2[] screenTextPos = new Vector2[5];
+
         //public static Dictionary<int, Color> RarityColors = new Dictionary<int, Color>();
 
         public static Texture2D AADeathBall;
@@ -96,6 +103,14 @@ namespace ElementsAwoken
             recipe = new ModRecipe(this);
             recipe.AddIngredient(null, "Stardust", 5);
             recipe.SetResult(ItemID.FallenStar, 1);
+            recipe.AddRecipe();
+
+            recipe = new ModRecipe(this);
+            recipe.AddIngredient(null, "ThrowerEmblem");
+            recipe.AddIngredient(ItemID.SoulofMight, 5);
+            recipe.AddIngredient(ItemID.SoulofSight, 5);
+            recipe.AddIngredient(ItemID.SoulofFright, 5);
+            recipe.SetResult(ItemID.AvengerEmblem, 1);
             recipe.AddRecipe();
 
             recipe = new ModRecipe(this);
@@ -346,10 +361,18 @@ namespace ElementsAwoken
                 PremultiplyTexture(insanityTex);
             }
             // config
-            Config.Load();
+            //Config.Load();
 
-            #region instakill immunities
-            instakillImmune.Add(NPCID.EyeofCthulhu);
+            // go away null
+            for (int i = 0; i < screenText.Length; i++)
+            {
+                if (screenText[i] == null)
+                {
+                    screenText[i] = "";
+                }
+            }
+                #region instakill immunities
+                instakillImmune.Add(NPCID.EyeofCthulhu);
             instakillImmune.Add(NPCID.EaterofWorldsHead);
             instakillImmune.Add(NPCID.EaterofWorldsBody);
             instakillImmune.Add(NPCID.EaterofWorldsTail);
@@ -470,8 +493,8 @@ namespace ElementsAwoken
             #endregion
         }
 
-        public static bool prevMenuState;
 
+        public static bool prevMenuState;
         public static void Update()
         {
             if (Main.gameMenu != prevMenuState)
@@ -488,7 +511,7 @@ namespace ElementsAwoken
         public static void DebugModeText(object text, int r = 255, int g = 255, int b = 255)
         {
             Color color = new Color(r, g, b);
-            if (Config.debugMode)
+            if (ModContent.GetInstance<Config>().debugMode)
             {
                 Main.NewText(text, color);
             }
@@ -496,7 +519,7 @@ namespace ElementsAwoken
         public static void DebugModeNetworkText(string text, int r = 255, int g = 255, int b = 255)
         {
             Color color = new Color(r, g, b);
-            if (Config.debugMode)
+            if (ModContent.GetInstance<Config>().debugMode)
             {
                 NetworkText f = NetworkText.FromLiteral(text);
                 NetMessage.BroadcastChatMessage(f, color);
@@ -505,7 +528,7 @@ namespace ElementsAwoken
         public static void DebugModeCombatText(string text, Rectangle rect, int r = 255, int g = 255, int b = 255)
         {
             Color color = new Color(r, g, b);
-            if (Config.debugMode)
+            if (ModContent.GetInstance<Config>().debugMode)
             {
                 CombatText.NewText(rect, color, text, true, false);
             }
@@ -515,140 +538,155 @@ namespace ElementsAwoken
         {
             Mod mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
-            AwakenedPlayer awakenedPlayer = player.GetModPlayer<AwakenedPlayer>(this);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            AwakenedPlayer awakenedPlayer = player.GetModPlayer<AwakenedPlayer>();
 
-            // computer
-            if (!Main.player[Main.myPlayer].ghost && modPlayer.inComputer && !Main.gameMenu)
+            if (!Main.gameMenu)
             {
-                var computerLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var computerState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
-                    delegate
-                    {
-                        DrawComputer(Main.spriteBatch);
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(computerLayer, computerState);
-            }
-            // encounter text
-            if (!Main.player[Main.myPlayer].ghost && !Main.gameMenu && MyWorld.encounterTimer > 0)
-            {
-                var encounterLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var encounterState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
-                    delegate
-                    {
-                        DrawEncounterText(Main.spriteBatch);
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(encounterLayer, encounterState);
-            }
-            // hearts & mana
-            if (!calamityEnabled && !Main.gameMenu)
-            {
-                var heartLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var heartState = new LegacyGameInterfaceLayer("ElementsAwoken: UI2",
-                    delegate
-                    {
-                        DrawHearts();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(heartLayer, heartState);
-
-                // to stop hearts being underneath
-                if (modPlayer.voidHeartsUsed == 10)
+                if (MyWorld.credits)
                 {
-                    Main.heart2Texture = GetTexture("Extra/Blank");
+                    layers.Clear();
+
+                    var creditsState = new LegacyGameInterfaceLayer("ElementsAwoken: Credits",
+                        delegate
+                        {
+                            Credits();
+                            return true;
+                        },
+                        InterfaceScaleType.UI);
+                    layers.Insert(0, creditsState); // because all layers are deleted, 0 is the next one
                 }
                 else
                 {
-                    Main.heart2Texture = GetTexture("Extra/Heart2");
+                    if (!player.ghost)
+                    {
+                        // computer
+                        if (modPlayer.inComputer)
+                        {
+                            var computerLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                            var computerState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                                delegate
+                                {
+                                    DrawComputer(Main.spriteBatch);
+                                    return true;
+                                },
+                                InterfaceScaleType.UI);
+                            layers.Insert(computerLayer, computerState);
+                        }
+                        // encounter text
+                        if (MyWorld.encounterTimer > 0)
+                        {
+                            var encounterLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                            var encounterState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                                delegate
+                                {
+                                    DrawEncounterText(Main.spriteBatch);
+                                    return true;
+                                },
+                                InterfaceScaleType.UI);
+                            layers.Insert(encounterLayer, encounterState);
+                        }
+                        // hearts & mana
+                        if (!calamityEnabled)
+                        {
+                            var heartLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                            var heartState = new LegacyGameInterfaceLayer("ElementsAwoken: UI2",
+                                delegate
+                                {
+                                    DrawHearts();
+                                    return true;
+                                },
+                                InterfaceScaleType.UI);
+                            layers.Insert(heartLayer, heartState);
+
+                            // to stop hearts being underneath
+                            if (modPlayer.voidHeartsUsed == 10)
+                            {
+                                Main.heart2Texture = GetTexture("Extra/Blank");
+                            }
+                            else
+                            {
+                                Main.heart2Texture = GetTexture("Extra/Heart2");
+                            }
+                            if (modPlayer.lunarStarsUsed == 1)
+                            {
+                                Main.manaTexture = GetTexture("Extra/Mana2");
+                            }
+                            else
+                            {
+                                Main.manaTexture = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "Mana");
+                            }
+                        }
+                        #region shield hearts
+                        var shieldLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                        var shieldState = new LegacyGameInterfaceLayer("ElementsAwoken: UI2",
+                            delegate
+                            {
+                                DrawShield();
+                                return true;
+                            },
+                            InterfaceScaleType.UI);
+                        layers.Insert(shieldLayer, shieldState);
+                        #endregion
+                        #region energy & insanity UI
+
+                        var BarLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                        var BarState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                            delegate
+                            {
+                                DrawEnergyBar();
+                                DrawInsanityBar();
+                                return true;
+                            },
+                            InterfaceScaleType.UI);
+                        layers.Insert(BarLayer, BarState);
+
+                        var insanityOverlayLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                        var insanityOverlayState = new LegacyGameInterfaceLayer("ElementsAwoken: Interface Logic 1",
+                            delegate
+                            {
+                                DrawInsanityOverlay();
+                                return true;
+                            },
+                            InterfaceScaleType.UI);
+                        layers.Insert(insanityOverlayLayer, insanityOverlayState);
+                        #endregion
+                        // sanity book
+                        if (awakenedPlayer.openSanityBook)
+                        {
+                            var bookLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                            var bookState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                                delegate
+                                {
+                                    DrawSanityBook();
+                                    return true;
+                                },
+                                InterfaceScaleType.UI);
+                            layers.Insert(bookLayer, bookState);
+                        }
+                        #region info accessories
+                        var infoLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+                        var infoState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
+                            delegate
+                            {
+                                DrawInfoAccs();
+                                return true;
+                            },
+                            InterfaceScaleType.UI);
+                        layers.Insert(infoLayer, infoState);
+                        #endregion
+                    }
                 }
-                if (modPlayer.lunarStarsUsed == 1)
+                // make rain black
+                if (MyWorld.encounter3)
                 {
-                    Main.manaTexture = GetTexture("Extra/Mana2");
+                    Main.rainTexture = GetTexture("Extra/Rain3");
                 }
                 else
                 {
-                    Main.manaTexture = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "Mana");
+                    Main.rainTexture = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "Rain");
                 }
-            }
-            // shield hearts
-            if (!Main.gameMenu)
-            {
-                var shieldLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var shieldState = new LegacyGameInterfaceLayer("ElementsAwoken: UI2",
-                    delegate
-                    {
-                        DrawShield();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(shieldLayer, shieldState);
-            }
-            // energy & insanity UI
-            if (!Main.player[Main.myPlayer].ghost)
-            {
-                var BarLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var BarState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
-                    delegate
-                    {
-                        DrawEnergyBar();
-                        DrawInsanityBar();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(BarLayer, BarState);
-
-                var insanityOverlayLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var insanityOverlayState = new LegacyGameInterfaceLayer("ElementsAwoken: Interface Logic 1",
-                    delegate
-                    {
-                        DrawInsanityOverlay();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(insanityOverlayLayer, insanityOverlayState);
-            }
-            // sanity book
-            if (!Main.player[Main.myPlayer].ghost && awakenedPlayer.openSanityBook && !Main.gameMenu)
-            {
-                var bookLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-                var bookState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
-                    delegate
-                    {
-                        DrawSanityBook();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(bookLayer, bookState);
-            }
-            if (!Main.player[Main.myPlayer].ghost && !Main.gameMenu)
-            {
-                var infoLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-                var infoState = new LegacyGameInterfaceLayer("ElementsAwoken: UI",
-                    delegate
-                    {
-                        DrawInfoAccs();
-                        return true;
-                    },
-                    InterfaceScaleType.UI);
-                layers.Insert(infoLayer, infoState);
-            }
-            // make rain black
-            if (MyWorld.encounter3)
-            {
-                Main.rainTexture = GetTexture("Extra/Rain3");
-            }
-            else
-            {
-                Main.rainTexture = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "Rain");
-            }
-            // infernace clouds
-            if (!Main.gameMenu)
-            {
+                // infernace clouds
                 if (NPC.downedBoss3 && !MyWorld.downedInfernace)
                 {
                     for (int cloud = 0; cloud < 22; cloud++)
@@ -664,9 +702,45 @@ namespace ElementsAwoken
                 {
                     ResetCloudTexture();
                 }
+
+                var textLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
+                var textState = new LegacyGameInterfaceLayer("ElementsAwoken: Text",
+                    delegate
+                    {
+                        for (int i = 0; i < screenText.Length - 1; i++)
+                        {
+                            if (screenText[i] != "" && screenText[i] != null)
+                            {
+                                screenTextTimer[i]++;
+                                if (screenTextTimer[i] < screenTextDuration[i] / 8) screenTextAlpha[i] += 1f / ((float)screenTextDuration[i] / 8f);// 1/4 of the time fading 
+                                else if (screenTextTimer[i] > screenTextDuration[i] - (screenTextDuration[i] / 8)) screenTextAlpha[i] -= 1f / ((float)screenTextDuration[i] / 8f);
+                                else screenTextAlpha[i] = 1;
+                                if (screenTextTimer[i] > screenTextDuration[i]) screenText[i] = "";
+
+                                DrawStringOutlined(Main.spriteBatch, screenText[i], screenTextPos[i], Color.White * screenTextAlpha[i], screenTextScale[i]);
+                            }
+                        }
+                        return true;
+                    },
+                    InterfaceScaleType.UI);
+                if (!MyWorld.credits) layers.Insert(textLayer, textState);
+                else layers.Insert(1, textState); // in credits all layers r deleted
+
+                if (modPlayer.screenTransition)
+                {
+                    var transLayer = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Interface Logic 4"));
+                    var transState = new LegacyGameInterfaceLayer("ElementsAwoken: Transitions",
+                        delegate
+                        {
+                            BlackScreenTrans();
+                            return true;
+                        },
+                        InterfaceScaleType.UI);
+                    if (!MyWorld.credits) layers.Insert(transLayer, transState);
+                    else layers.Insert(1, transState); // in credits all layers r deleted
+                }
             }
         }
-
         private static void ResetCloudTexture()
         {
             for (int num25 = 0; num25 < 22; num25++)
@@ -686,7 +760,7 @@ namespace ElementsAwoken
             Mod mod = ModLoader.GetMod("ElementsAwoken");
 
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            var modPlayer = player.GetModPlayer<MyPlayer>();
             float lifePerHeart = 10f;
             if (Main.LocalPlayer.ghost)
             {
@@ -804,7 +878,7 @@ namespace ElementsAwoken
             Mod mod = ModLoader.GetMod("ElementsAwoken");
 
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            var modPlayer = player.GetModPlayer<MyPlayer>();
             float lifePerHeart = 5f;
             if (Main.LocalPlayer.ghost)
             {
@@ -895,7 +969,7 @@ namespace ElementsAwoken
         {
             Mod mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            var modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (Main.LocalPlayer.ghost)
             {
                 return;
@@ -926,7 +1000,7 @@ namespace ElementsAwoken
         {
             Mod mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            var modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (Main.LocalPlayer.ghost)
             {
                 return;
@@ -977,7 +1051,7 @@ namespace ElementsAwoken
         {
             Mod mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            var modPlayer = player.GetModPlayer<AwakenedPlayer>();
 
             if (modPlayer.sanity > modPlayer.sanityMax * 0.50f) return;
 
@@ -997,12 +1071,22 @@ namespace ElementsAwoken
             Main.spriteBatch.Draw(Main.magicPixel, destinationRectangle4, new Rectangle?(new Rectangle(0, 0, 1, 1)), color);
             Main.spriteBatch.Draw(insanityTex, rect, color);
         }
+        private static void BlackScreenTrans()
+        {
+            Mod mod = ModLoader.GetMod("ElementsAwoken");
 
+            Player player = Main.player[Main.myPlayer];
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+
+            Color color = Color.Black * modPlayer.screenTransAlpha;
+            Rectangle rect = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+            Main.spriteBatch.Draw(Main.magicPixel, rect, color);
+        }
         public void DrawComputer(SpriteBatch spriteBatch)
         {
             var mod = ModLoader.GetMod("ElementsAwoken");
             var background = mod.GetTexture("Extra/ComputerText");
-            var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>(mod);
+            var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>();
             string text = player.computerText;
             spriteBatch.Draw(background, new Rectangle(Main.screenWidth / 2, 150, background.Width, background.Height), null, Color.White, 0f, new Vector2(background.Width / 2, background.Height / 2), SpriteEffects.None, 0f);
             Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, text, Main.screenWidth / 2 - 230, 86, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
@@ -1011,7 +1095,7 @@ namespace ElementsAwoken
         public void DrawSanityBook()
         {
             Player player = Main.player[Main.myPlayer];
-            AwakenedPlayer awakenedPlayer = player.GetModPlayer<AwakenedPlayer>(this);
+            AwakenedPlayer awakenedPlayer = player.GetModPlayer<AwakenedPlayer>();
 
             var background = GetTexture("Extra/InsanityBookUI");
             Main.spriteBatch.Draw(background, new Rectangle(Main.screenWidth - 350, Main.screenHeight - 250, background.Width, background.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
@@ -1032,180 +1116,10 @@ namespace ElementsAwoken
                 Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, Main.screenWidth - 150, yPos, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
             }
         }
-
-        /*public void DrawInfoAccs()
-        {
-            Player player = Main.player[Main.myPlayer];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
-                if (modPlayer.alchemistTimer)
-            {
-                int mH = (int)((typeof(Main).GetField("mH", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)).GetValue(null));
-                if ((Main.npcChatText == null || Main.npcChatText == "") && player.sign < 0)
-                {
-                    int amountOfInfoActive = CountAvailableInfo();
-                    int amountOfInfoEquipped = CountEquippedInfo();
-
-                    int distBetweenInfo = 22;
-                    if (Main.screenHeight < 650)
-                    {
-                        distBetweenInfo = 20;
-                    }
-                    string text = "";
-                    string hoverText = "Buff Damage Per Second";
-                    float num4 = 215f;
-
-                    int iconPosX;
-                    int iconPosY;
-                    if (!Main.playerInventory)
-                    {
-                        iconPosX = Main.screenWidth - 280;
-                        iconPosY = -32;
-                        if (Main.mapStyle == 1 && Main.mapEnabled)
-                        {
-                            iconPosY += 254;
-                        }
-                    }
-                    else if (Main.ShouldDrawInfoIconsHorizontally)
-                    {
-                        iconPosX = Main.screenWidth - 280 + 20 * amountOfInfoEquipped - 10;
-                        iconPosY = 94;
-                        if (Main.mapStyle == 1 && Main.mapEnabled)
-                        {
-                            iconPosY += 254;
-                        }
-                    }
-                    else
-                    {
-                        int num28 = (int)(52f * Main.inventoryScale);
-                        iconPosX = 697 - num28 * 4 + Main.screenWidth - 800 + 20 * (amountOfInfoEquipped % 2);
-                        iconPosY = 114 + mH + num28 * 7 + num28 / 2 + 20 * (amountOfInfoEquipped / 2) + 8 * (amountOfInfoEquipped / 4) - 20;
-                        if (Main.EquipPage == 2)
-                        {
-                            iconPosX += num28 + num28 / 2;
-                            iconPosY -= num28;
-                        }
-                    }
-
-                    Texture2D tex = GetTexture("Extra/BuffDPSInfo");
-                    Vector2 vector = new Vector2((float)iconPosX, (float)(iconPosY + 74 + distBetweenInfo * amountOfInfoActive + 52));
-                    Color white = Color.White;
-                    bool flag14 = false;
-                    if (Main.playerInventory)
-                    {
-                        vector = new Vector2((float)iconPosX, (float)iconPosY);
-                        if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !PlayerInput.IgnoreMouseInterface)
-                        {
-                            flag14 = true;
-                            player.mouseInterface = true;
-                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                            {
-                                Main.PlaySound(12, -1, -1, 1, 1f, 0f);
-                                Main.mouseLeftRelease = false;
-                                modPlayer.hideBDPS = !modPlayer.hideBDPS;
-                            }
-                            if (!Main.mouseText)
-                            {
-                                text = hoverText;
-                                Main.mouseText = true;
-                            }
-                        }
-                        if (modPlayer.hideBDPS)
-                        {
-                            white = new Color(80, 80, 80, 70);
-                        }
-
-                    }
-                    else if ((float)Main.mouseX >= vector.X && (float)Main.mouseY >= vector.Y && (float)Main.mouseX <= vector.X + (float)tex.Width && (float)Main.mouseY <= vector.Y + (float)tex.Height && !Main.mouseText)
-                    {
-                        Main.mouseText = true;
-                        text = hoverText;
-                    }
-                    UILinkPointNavigator.SetPosition(1558 + amountOfInfoEquipped - 1, vector + tex.Size() * 0.75f);
-                    if (!Main.playerInventory && modPlayer.hideBDPS)
-                    {
-                        white = Color.Transparent;
-                    }
-                    Main.spriteBatch.Draw(tex, vector, new Rectangle?(new Rectangle(0, 0, tex.Width, tex.Height)), white, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);                         
-                    if (flag14)
-                    {
-                        Texture2D outline = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "UI" + Path.DirectorySeparatorChar.ToString() + "InfoIcon_13");
-                        Main.spriteBatch.Draw(outline, vector - Vector2.One * 2f, null, Main.OurFavoriteColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
-                        ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, hoverText, new Vector2(Main.mouseX, Main.mouseX), new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
-                    }
-                    iconPosX += 20;
-
-                    if (!Main.playerInventory && !modPlayer.hideBDPS)
-                    {
-                        Vector2 vector2 = new Vector2(1f);
-                        string text2 = modPlayer.buffDPS + " buff damage per second";
-                        if (modPlayer.buffDPS <= 0)
-                        {
-                            text2 = Language.GetTextValue("GameUI.NoDPS");
-                        }
-                        Vector2 vector3 = Main.fontMouseText.MeasureString(text2);
-                        if (vector3.X > num4)
-                        {
-                            vector2.X = num4 / vector3.X;
-                        }
-                        if (vector2.X < 0.58f)
-                        {
-                            vector2.Y = 1f - vector2.X / 3f;
-                        }
-                        for (int num31 = 0; num31 < 5; num31++)
-                        {
-                            int num32 = 0;
-                            int num33 = 0;
-                            Color black = Color.Black;
-                            if (num31 == 0)
-                            {
-                                num32 = -2;
-                            }
-                            if (num31 == 1)
-                            {
-                                num32 = 2;
-                            }
-                            if (num31 == 2)
-                            {
-                                num33 = -2;
-                            }
-                            if (num31 == 3)
-                            {
-                                num33 = 2;
-                            }
-                            if (num31 == 4)
-                            {
-                                black = new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor);
-                            }
-                            if (i > num2 && i < num2 + 2)
-                            {
-                                black = new Color((int)(black.R / 3), (int)(black.G / 3), (int)(black.B / 3), (int)(black.A / 3));
-                            }
-
-        DynamicSpriteFontExtensionMethods.DrawString(Main.spriteBatch, Main.fontMouseText, text2, new Vector2((float)(iconPosX + num32), (float) (iconPosY + 74 + distBetweenInfo* amountOfInfoActive + num33 + 48)), black, 0f, default(Vector2), vector2, SpriteEffects.None, 0f);
-                        }
-}
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        if (Main.playerInventory)
-                        {
-                            Main.player[Main.myPlayer].mouseInterface = true;
-                        }
-                        Vector2 drawTextPos = new Vector2(Main.mouseX, Main.mouseY) + new Vector2(16.0f);
-                        if (drawTextPos.X + Main.fontMouseText.MeasureString(text).X > Main.screenWidth)
-                        {
-                            drawTextPos.X -= Main.fontMouseText.MeasureString(text).X; // to stop it drawing off the side
-                        }
-
-                        Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, drawTextPos.X, drawTextPos.Y, new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), Color.Black, new Vector2());
-                    }
-                }
-            }
-        }
-         */ // old
         public void DrawInfoAccs()
         {
             Player player = Main.player[Main.myPlayer];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(this);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             int amountOfInfoActive = CountAvailableInfo() - 1; // - 1 so it starts at 0 when 1 is equipped
             int amountOfInfoEquipped = CountEquippedInfo() - 1;
@@ -1529,7 +1443,7 @@ namespace ElementsAwoken
         public void DrawEncounterText(SpriteBatch spriteBatch)
         {
             var mod = ModLoader.GetMod("ElementsAwoken");
-            var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>(mod);
+            var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>();
             string text = player.encounterText;
             if (player.encounterTextTimer > 0)
             {
@@ -1542,16 +1456,323 @@ namespace ElementsAwoken
                 pos.Y += Main.rand.NextFloat(-rand, rand);
                 Color color = player.finalText ? new Color(player.encounterTextAlpha, 0, 0, player.encounterTextAlpha) : new Color(player.encounterTextAlpha, player.encounterTextAlpha, player.encounterTextAlpha, player.encounterTextAlpha);
                 //Utils.DrawBorderStringBig(spriteBatch, text, pos, color);
-                DrawStringOutlined(spriteBatch, text, pos, color);
+                DrawStringOutlined(spriteBatch, text, pos, color, 1f);
             }
         }
 
+        public void Credits()
+        {
+            var mod = ModLoader.GetMod("ElementsAwoken");
+            var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>();
+            if (MyWorld.creditsCounter > player.screenDuration * 2) DrawStringOutlined(Main.spriteBatch, "Hold 'Escape' to skip", new Vector2 (Main.screenWidth - 220, Main.screenHeight - 35), Color.White * (player.escHeldTimer > 0 ? 1 : 0.4f), 0.5f);
+            if (MyWorld.creditsCounter > 180 && MyWorld.creditsCounter < 480)
+            {
+                var logo = GetTexture("Extra/ElementsAwoken");
+                float scale = 1.4f;
+                Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - 180, 300); // old: (float)Math.Sin(MathHelper.Lerp(0, (float)Math.PI, ((float)MyWorld.creditsCounter - 300f) / 180f))
+                Main.spriteBatch.Draw(logo, new Vector2(Main.screenWidth / 2 - ((logo.Width * scale) / 2), Main.screenHeight / 2 - 200 - ((logo.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+            #region slide 1
+            if (MyWorld.creditsCounter == player.screenDuration + 60)
+            {
+                string text = "Created by ThatOneJuicyOrange_";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 300);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            int statueDuration = player.screenDuration - 60 * 3;
+            int statueOffset = (player.screenDuration - statueDuration)/2;
+            if (MyWorld.creditsCounter > player.screenDuration + statueOffset && MyWorld.creditsCounter < player.screenDuration * 2 - statueOffset)
+            {
+                var statue = GetTexture("Extra/Credits/ThatOneJuicyOrangeStatue");
+                float scale = 1.5f;
+                Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration - statueOffset, statueDuration);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+            #endregion
+            #region slide 2
+            if (MyWorld.creditsCounter == player.screenDuration * 2 + 60)
+            {
+                string text = "Music by";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 2 + 90)
+            {
+                string text = "Ranipla";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 2 + 120)
+            {
+                string text = "GENIH WAT";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text,scale), Main.screenHeight / 2 - 160);
+                DrawScreenText(text, 7 * 60 - 90, scale, pos);
+            }
+            if (MyWorld.creditsCounter > player.screenDuration * 2 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 3 - statueOffset)
+            {
+                var statue = GetTexture("Extra/Credits/RaniplaStatue");
+                var statue2 = GetTexture("Extra/Credits/GenihWatStatue");
+                float scale = 1.5f;
+                Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 2 - statueOffset, statueDuration);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(statue2, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+            }
+            #endregion
+            #region slide 3
+            if (MyWorld.creditsCounter == player.screenDuration * 3 + 60)
+            {
+                string text = "Lore by";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 3 + 90)
+            {
+                string text = "Burst";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 3 + 120)
+            {
+                string text = "Amadis";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160);
+                DrawScreenText(text, 7 * 60 - 90, scale, pos);
+            }
+            if (MyWorld.creditsCounter > player.screenDuration * 3 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 4 - statueOffset)
+            {
+                var statue = GetTexture("Extra/Credits/BurstStatue");
+                var statue2 = GetTexture("Extra/Credits/AmadisStatue");
+                float scale = 1.5f;
+                Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 3 - statueOffset, statueDuration);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(statue2, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+            }
+            #endregion
+            #region slide 4
+            if (MyWorld.creditsCounter == player.screenDuration * 4 + 60)
+            {
+                string text = "Sprites By";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 4 + 90)
+            {
+                string text = "Silvestre";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter > player.screenDuration * 4 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 5 - statueOffset)
+            {
+                var statue = GetTexture("Extra/Credits/Azana");
+                float scale = 1.2f;
+                Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 4 - statueOffset, statueDuration);
+                Main.spriteBatch.Draw(statue, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 4) / 2, Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+            }
+            #endregion
+            #region slide 5
+            if (MyWorld.creditsCounter == player.screenDuration * 5 + 60)
+            {
+                string text = "Sprites By";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 5 + 90)
+            {
+                string text = "Aloe";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter > player.screenDuration * 5 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 6 - statueOffset)
+            {
+                float scale = 1.5f;
+                int offset = 30;
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Shimmerspark"), new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 5 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/SolarGeneratorIV"), new Vector2(Main.screenWidth - 500 - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 - 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 5 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertGun"), new Vector2(500 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2- player.screenDuration * 5 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientsSword"), new Vector2(Main.screenWidth - 400 - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 100), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 3 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 3), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/BurnerGenerator"), new Vector2(900 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 300), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 4 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 4), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertTrailers"), new Vector2(150 + (MyWorld.creditsCounter - player.screenDuration * 5) / 2, 100), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 5 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 5), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            }
+            #endregion
+            #region slide 6
+            if (MyWorld.creditsCounter == player.screenDuration * 6 + 60)
+            {
+                string text = "Sprites By";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 6 + 90)
+            {
+                string text = "NnickykunN";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 6 + 105)
+            {
+                string text = "Darkpuppey";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160);
+                DrawScreenText(text, 7 * 60 - 75, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 6 + 120)
+            {
+                string text = "Skeletony";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 100);
+                DrawScreenText(text, 7 * 60 - 90, scale, pos);
+            }
+            if (MyWorld.creditsCounter > player.screenDuration * 6 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 7 - statueOffset)
+            {
+                float scale = 1.1f;
+                int offset = 45;
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientAmalgam"), new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 + 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 6 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/ScourgeFighter"), new Vector2(Main.screenWidth - 500 - (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 6 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Permafrost"), new Vector2(300 + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 250), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2 - player.screenDuration * 6 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);               
+            }
+            #endregion
+            #region slide 7
+            if (MyWorld.creditsCounter == player.screenDuration * 7 + 60)
+            {
+                string text = "Donators";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 7 + 90)
+            {
+                string text = "Eoite\n" +
+                    "ChamCham\n" +
+                    "Badas\n" +
+                    "Buildmonger\n" +
+                    "YukkiKun\n" +
+                    "Superbaseball101\n" +
+                    "Crow\n" +
+                    "Lantard";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 45, Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            #endregion
+            #region slide 8
+            if (MyWorld.creditsCounter == player.screenDuration * 8 + 60)
+            {
+                string text = "Helpers";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 8 + 90)
+            {
+                string text = "Dradonhunter11\n" +
+                    "jopojelly\n" +
+                    "Misaro\n" +
+                    "Alpaca121\n" +
+                    "ReedemtheD3ad!\n" +
+                    "Oinite12\n" +
+                    "And many more";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            #endregion
+            #region slide 9
+            if (MyWorld.creditsCounter == player.screenDuration * 9 + 60)
+            {
+                string text = "Special Thanks To";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 9 + 90)
+            {
+                string text = "ReLogic for creating the amazing Terraria\n" +
+                    "Jofairden, jopojelly & bluemagic for creating tModloader\n" +
+                    "Gameraiders101 for getting me into modding\n" +
+                    "FuryForged for showcasing the mod\n" +
+                    "Gameraiders101 again for showcasing the mod";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 60, Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            #endregion
+            #region slide 10
+            if (MyWorld.creditsCounter == player.screenDuration * 10 + 60)
+            {
+                string text = "Biggest Thanks";
+                float scale = 1.3f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 360);
+                DrawScreenText(text, 7 * 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 10 + 90)
+            {
+                string text = "To YOU";
+                float scale = 1.4f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 290);
+                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 10 + 120)
+            {
+                string text = "Seriously, thank you so much for playing Elements Awoken.\nIt means a lot to me and all of the dev team that you can enjoy\nsomething we spent so much time on.";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                DrawScreenText(text, 7 * 60 - 90, scale, pos);
+            }
+            if (MyWorld.creditsCounter == player.screenDuration * 10 + 180)
+            {
+                string text = "From- ThatOneJuicyOrange_ and the team <3";
+                float scale = 1f;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 300, Main.screenHeight / 2 + 40);
+                DrawScreenText(text, 5 * 60, scale, pos);
+            }
+            #endregion
+        }
+
+        private float FindTextCenterX(string text, float scale)
+        {
+            Vector2 textSize = Main.fontDeathText.MeasureString(text) * scale;
+            float textPositionLeft = Main.screenWidth / 2 - textSize.X / 2;
+            return textPositionLeft;
+        }
+        public void DrawScreenText(string text, int duration, float scale, Vector2 pos)
+        {
+            for (int i = 0; i < screenText.Length - 1; i++)
+            {
+                if (screenText[i] == "")
+                {
+                    screenText[i] = text;
+                    screenTextAlpha[i] = 0;
+                    screenTextTimer[i] = 0;
+                    screenTextDuration[i] = duration;
+                    screenTextScale[i] = scale;
+                    screenTextPos[i] = pos;
+                    break;
+                }
+            }
+        }
+        public float GetFadeAlpha(float timer, float duration)
+        {
+            if (timer < duration / 8) return timer / (duration / 8f);
+            else if (timer > duration - (duration / 8)) return 1 - (timer- (duration - duration / 8f)) / (duration / 8f); // probably a better way to do this
+            else return 1f;
+        }
         /*private static void DrawManaStars()
         {
             
             Mod mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            var modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            var modPlayer = player.GetModPlayer<MyPlayer>();
             float manaPerStar = 40f;
             if (Main.LocalPlayer.ghost)
             {
@@ -1646,6 +1867,11 @@ namespace ElementsAwoken
                 {
                     music = GetSoundSlot(SoundType.Music, "Sounds/Blank");
                 }
+
+                if (MyWorld.credits)
+                {
+                    music = MusicID.OverworldDay;
+                }
             }
         }
 
@@ -1699,7 +1925,7 @@ namespace ElementsAwoken
             if (censusMod != null)
             {
                 //censusMod.Call("TownNPCCondition", NPCType("Example Person"), $"Have [i:{ItemType<Items.ExampleItem>()}] or [i:{ItemType<Items.Placeable.ExampleBlock>()}] in inventory and build a house out of [i:{ItemType<Items.Placeable.ExampleBlock>()}] and [i:{ItemType<Items.Placeable.ExampleWall>()}]");
-                if (Config.alchemistEnabled)
+                if (!ModContent.GetInstance<Config>().alchemistDisabled)
                 {
                     censusMod.Call("TownNPCCondition", NPCType("Alchemist"), "Defeat Skeletron");
                 }
@@ -1711,34 +1937,50 @@ namespace ElementsAwoken
             }
         }
 
-        internal static void DrawStringOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color)
+        internal static void DrawStringOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float scale)
         {
             // outlines
-            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X - 1, position.Y), Color.Black * (color.A / 255f));
-            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X + 1, position.Y), Color.Black * (color.A / 255f));
-            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y - 1), Color.Black * (color.A / 255f));
-            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y + 1), Color.Black * (color.A / 255f));
+            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X - 1, position.Y), Color.Black * (color.A / 255f), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X + 1, position.Y), Color.Black * (color.A / 255f), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y - 1), Color.Black * (color.A / 255f), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y + 1), Color.Black * (color.A / 255f), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             // actual text
-            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y), color);
+            spriteBatch.DrawString(Main.fontDeathText, text, new Vector2(position.X, position.Y), color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
         // shake shake
         public override void ModifyTransformMatrix(ref SpriteViewMatrix Transform)
         {
-            if (Config.screenshake)
+            Player player = Main.LocalPlayer;
+            if (MyWorld.credits)
+            {
+                if (!Main.gameMenu)
+                {
+                    MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+
+                    if (MyWorld.creditsCounter > modPlayer.screenTransDuration / 2)                    // so the screen doesnt go to the top corner before the transition happens
+                    {
+                        Main.screenPosition = modPlayer.desiredScPos - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2); // t he player gets stuck on blocks so this makes it smooth
+                    }
+                }
+            }
+            //if (!ModContent.GetInstance<Config>().screenshake)
             {
                 // basically simple example mod code?? idk i dont understand the example :lul:
                 if (!Main.gameMenu)
                 {
-                    screenshakeTimer++;
-                    if (screenshakeAmount >= 0 && screenshakeTimer >= 5) // so it doesnt immediately decrease
+                    if (!ModContent.GetInstance<Config>().screenshakeDisabled)
                     {
-                        screenshakeAmount -= 0.1f;
+                        screenshakeTimer++;
+                        if (screenshakeAmount >= 0 && screenshakeTimer >= 5) // so it doesnt immediately decrease
+                        {
+                            screenshakeAmount -= 0.1f;
+                        }
+                        if (screenshakeAmount < 0)
+                        {
+                            screenshakeAmount = 0;
+                        }
+                        Main.screenPosition += new Vector2(screenshakeAmount * Main.rand.NextFloat(), screenshakeAmount * Main.rand.NextFloat()); //NextFloat creates a random value between 0 and 1, multiply screenshake amount for a bit of variety
                     }
-                    if (screenshakeAmount < 0)
-                    {
-                        screenshakeAmount = 0;
-                    }
-                    Main.screenPosition += new Vector2(screenshakeAmount * Main.rand.NextFloat(), screenshakeAmount * Main.rand.NextFloat()); //NextFloat creates a random value between 0 and 1, multiply screenshake amount for a bit of variety
                 }
                 else // dont shake on the menu
                 {
@@ -1746,10 +1988,10 @@ namespace ElementsAwoken
                     screenshakeTimer = 0;
                 }
             }
-            else
+            /*else
             {
                 screenshakeAmount = 0;
-            }
+            }*/
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)

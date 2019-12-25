@@ -42,7 +42,9 @@ namespace ElementsAwoken.Items.Storyteller
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, 409, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
+            Projectile proj = Main.projectile[Projectile.NewProjectile(position.X, position.Y, speedX, speedY, 409, damage, knockBack, player.whoAmI, 0.0f, 0.0f)];
+            proj.magic = false;
+            proj.melee = true;
             return true;
         }
     }

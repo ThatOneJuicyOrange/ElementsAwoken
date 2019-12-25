@@ -540,7 +540,7 @@ namespace ElementsAwoken.NPCs
             }
             #endregion
 
-            if (player.GetModPlayer<PlayerEnergy>(mod).soulConverter)
+            if (player.GetModPlayer<PlayerEnergy>().soulConverter)
             {
                 if (Main.rand.Next(12) == 0)
                 {
@@ -574,7 +574,7 @@ namespace ElementsAwoken.NPCs
             if (npc.type == mod.NPCType("VoidLeviathanHead") && MyWorld.voidLeviathanKills < 3)
             {
                 MyWorld.voidLeviathanKills++;
-                Main.NewText("The world has been blessed with Voidite!", Color.GreenYellow);
+                Main.NewText("The world has been blessed with Voidite!", Color.DeepPink);
                 for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 4E-05); k++) // xE-05 x is how many veins will spawn
                 {
                     int x = WorldGen.genRand.Next(0, Main.maxTilesX);

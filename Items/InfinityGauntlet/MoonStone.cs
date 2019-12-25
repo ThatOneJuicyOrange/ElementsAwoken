@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
         }
         public override void UpdateInventory(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (!player.HasItem(mod.ItemType("EmptyGauntlet")))
             {

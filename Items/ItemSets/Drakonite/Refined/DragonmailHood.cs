@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Magic projectiles inflict Dragonfire\nMagic damage increases as life lowers";
-            player.GetModPlayer<MyPlayer>(mod).dragonmailHood = true;
+            player.GetModPlayer<MyPlayer>().dragonmailHood = true;
             if (player.statLife <= (player.statLifeMax2 * 0.75f))
             {
                 player.magicDamage *= 1.02f;

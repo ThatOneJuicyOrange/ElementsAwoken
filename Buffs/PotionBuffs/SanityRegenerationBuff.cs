@@ -15,7 +15,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             modPlayer.sanityRegen += 3;
             modPlayer.AddSanityRegen(3, "SanityPotion");
         }

@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Testing
         }
         public override bool UseItem(Player player)
         {
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (player.altFunctionUse != 2)
             {
                 modPlayer.sanity++;

@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
             {
                 player.lifeRegen += 10;
             }
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (modPlayer.voidEnergyCharge < 3600 && modPlayer.voidEnergyTimer == 0)
             {
                 modPlayer.voidEnergyCharge++;

@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
-            player.GetModPlayer<MyPlayer>(mod).chamchamRat = true;
+            player.GetModPlayer<MyPlayer>().chamchamRat = true;
             bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("ChamchamRat")] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {

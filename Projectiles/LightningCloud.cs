@@ -42,7 +42,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             projectile.Center = Main.player[projectile.owner].Center + new Vector2(0, -50);
 

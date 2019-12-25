@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Other
         }
         public override void RightClick(Player player)
         {
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
 
             if (MyWorld.awakenedMode)
             {
@@ -59,7 +59,7 @@ namespace ElementsAwoken.Items.Other
         public override void OnCraft(Recipe recipe)
         {
             Player player = Main.player[Main.myPlayer];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (!MyWorld.awakenedMode)
             { 
                 Main.NewText("Enable Awakened Mode for this book to have any functionality");

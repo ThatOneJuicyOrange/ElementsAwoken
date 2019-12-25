@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void UpdateEquip(Player player)
         {
             player.endurance += 0.08f;
-            player.GetModPlayer<MyPlayer>(mod).voidWalkerChest = true;
+            player.GetModPlayer<MyPlayer>().voidWalkerChest = true;
         }
         public override void AddRecipes()
         {

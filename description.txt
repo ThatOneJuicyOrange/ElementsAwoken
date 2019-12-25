@@ -1,8 +1,8 @@
 Elements Awoken aims to add to the experience playing Terraria.
 ----ADDITIONS----
 [i:2018]30+ new enemy NPCs and banners to collect
-[i:1]700+ new items
-[i:43]2 pre-hardmode Bosses, 7 hardmode bosses, 3 post moonlord boss
+[i:1]900+ new items
+[i:43]2 pre-hardmode Bosses, 7 hardmode bosses, 4 post moonlord boss
 [i:1857]3 minibosses and 1 event miniboss
 [i:573]Unique music tracks for each and every boss and event in the mod!
 [i:267]2 new town NPCs
@@ -18,9 +18,13 @@ Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
 1.3.8- Ancients Awakened update ;)
+-Note: there is a small amount of content that isnt included in the update that will be coming out over the next few weeks hopefully. Merry Christmas from the team <3
 -Additions
   - The Ancients (NEW BOSS)
-  - A new energy system for all tech items
+  - Player Energy
+    - The player generates energy (like mana) through many different kinds of generators
+    - Energy is used for automation and tech weapons and tools
+  - New tech items
   - Awakened Mode
     - Insanity, gets increased and decreased based on circumstances and being low sanity is bad for the player
     - Elite NPCs- if there are more than 5 enemies of a type, they might be turned into an elite
@@ -30,17 +34,39 @@ Hope you enjoy playing my mod :)
     - Auto Digger- digs nearby ores
   - A lab for The Ancients
   - Voidite Ore- Spawns post Void Leviathan up to 3 times
+  - Putrid and Blightfire items
+  - Alchemists Timer- Shows the amount of DPS your buffs are doing
+  - Dryads Radar - Detects nearby evils or hallowed
+  - Spike Boots - Allows walking on dungeon spikes
+  - Lantards Donator items- Thank you :)
+  - Credits at the end of the game after beating the Ancients
+  - Crows Dantor items- Thank you :)
+  - Mysterious potions that spawn in golden chests on world generation, you have to drink it to find out what it does
+  - Spawner for the slime rain
+  - Health, mana and accessory slot increases
 -Changes
+  - The Ancient items are now themed after the Ancients boss
   - Supreme Awakener now only requires 1 awakener
   - Azana now drops Discordant Ore instead of bars
   - You can now teleport to any discovered location on the map with the Sky function of the Infinity Gauntlet
+  - A better, now ingame config
+  - Regaroth's projectiles are no longer dust projectiles
+  - Drakonite enemy balancing
+  - Reduced the amount of gel needed for the Geltic Armour
+  - Better wings (not so wings) animation for Skyline Whirlwind
+  - Many more
 -Bug Fixes
   - Custom recipes are now in the game properly
   - Scourge fighter trail now follows the engine properly
   - Rarities no longer randomly increase and decrease
+  - It no longer rains whenever you open a world
+  - Moreeee. Much more
 -Resprites
   - The Celestials resprite
   - Volcanox and item resprites!
+  - Scourge Fighter and item resprites!
+  - Desert item & elemental resprites
+  - Infinity Stone resprites
   - Various resprites
 1.3.7.6 - I DID AN OOPSIE!
 -Fixed multiplayer

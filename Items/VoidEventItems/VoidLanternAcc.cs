@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.VoidEventItems
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.voidLantern = true;
             if (!MyWorld.voidInvasionUp)
             {

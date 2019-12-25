@@ -64,8 +64,8 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             float spawnchance = Main.expertMode ? 0.006f : 0.005f;  
-            MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>(mod);
-            bool enoughDefence = true;
+            MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>();
+            bool enoughStats = true;
             if (modPlayer.increasedToySlimeChance && !NPC.AnyNPCs(mod.NPCType("ToySlime")))
             {
                 return 0.3f;
@@ -76,16 +76,16 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                 {
                     return 0.0f;
                 }
-                if (spawnInfo.player.statDefense > 7)
+                if (spawnInfo.player.statDefense > 7 && spawnInfo.player.statLifeMax2 > 140)
                 {
-                    enoughDefence = true;
+                    enoughStats = true;
                 }
                 else
                 {
-                    enoughDefence = false;
+                    enoughStats = false;
                 }
             }
-            return (spawnInfo.spawnTileY < Main.rockLayer) && !spawnInfo.playerInTown && !Main.bloodMoon && !NPC.AnyNPCs(mod.NPCType("ToySlime")) && enoughDefence ? spawnchance : 0f;
+            return (spawnInfo.spawnTileY < Main.rockLayer) && !spawnInfo.playerInTown && !Main.bloodMoon && !NPC.AnyNPCs(mod.NPCType("ToySlime")) && enoughStats ? spawnchance : 0f;
         }
 
 

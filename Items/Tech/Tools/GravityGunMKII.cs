@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         }
         public override void HoldItem(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
 
             Vector2 mouse = Main.MouseWorld;
             for (int i = 0; i < Main.npc.Length; i++)

@@ -57,7 +57,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "You charge up energy and release it at nearby enemies";
-            player.GetModPlayer<MyPlayer>(mod).energyWeaverArmor = true;
+            player.GetModPlayer<MyPlayer>().energyWeaverArmor = true;
         }
     }
 }

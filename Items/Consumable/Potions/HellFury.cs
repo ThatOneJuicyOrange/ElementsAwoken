@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(ItemID.Hellstone, 4);
             recipe.AddIngredient(ItemID.Obsidian, 4);
             recipe.AddIngredient(null, "MagmaCrystal", 1);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

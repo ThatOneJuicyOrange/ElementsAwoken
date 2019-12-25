@@ -7,6 +7,7 @@ using Terraria.ObjectData;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.Enums;
 using System;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Tiles
 {
@@ -23,7 +24,7 @@ namespace ElementsAwoken.Tiles
             disableSmartCursor = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<PowerCellEntity>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(GetInstance<PowerCellEntity>().Hook_AfterPlacement, -1, 0, true);
             AddMapEntry(new Color(154, 214, 213));
             animationFrameHeight = 90;
 
@@ -34,7 +35,7 @@ namespace ElementsAwoken.Tiles
             tilePoint = new Point16(i, j - 1); // it finds the bottom right while we want top left
             foreach (TileEntity current in TileEntity.ByID.Values)
             {
-                if (current.type == mod.TileEntityType<PowerCellEntity>())
+                if (current.type == TileEntityType<PowerCellEntity>())
                 {
                     if (current.Position == tilePoint)
                     {
@@ -74,7 +75,7 @@ namespace ElementsAwoken.Tiles
         /*public override void RightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (modPlayer.energy > 0 && myEntity.energy < myEntity.maxEnergy)
             {
                 myEntity.energy++;
@@ -84,7 +85,7 @@ namespace ElementsAwoken.Tiles
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(i * 16, j * 16, 16, 32, mod.ItemType("PowerCell"));
-            mod.GetTileEntity<PowerCellEntity>().Kill(i, j);
+            GetInstance<PowerCellEntity>().Kill(i, j);
         }        
     }
 }

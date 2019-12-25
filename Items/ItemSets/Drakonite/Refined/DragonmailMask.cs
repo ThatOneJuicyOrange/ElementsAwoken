@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Minions inflict Dragonfire\nDamage reduced with more minions";
-            player.GetModPlayer<MyPlayer>(mod).dragonmailMask = true;
+            player.GetModPlayer<MyPlayer>().dragonmailMask = true;
             float minions = 0f;
             for (int i = 0; i < 1000; i++)
             {

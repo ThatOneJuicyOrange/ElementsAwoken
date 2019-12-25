@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Donator.Superbaseball101
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Summons a demon to destroy your foes";
-            player.GetModPlayer<MyPlayer>(mod).superbaseballDemon = true;
+            player.GetModPlayer<MyPlayer>().superbaseballDemon = true;
         }
 
         public override void AddRecipes()

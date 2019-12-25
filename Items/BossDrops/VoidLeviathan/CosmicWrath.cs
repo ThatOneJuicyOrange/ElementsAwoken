@@ -52,7 +52,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override bool CanUseItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.altFunctionUse == 2)
             {
                 if (killallDelay > 0)
@@ -64,7 +64,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.altFunctionUse == 2)
             {
                 for (int i = 0; i < Main.projectile.Length; i++)

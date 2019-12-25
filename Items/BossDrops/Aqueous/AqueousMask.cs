@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.BossDrops.Aqueous
                     Main.projectile[projectile1].timeLeft = 40;
                 }
             }
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.aqueousMinions = true;
             if (player.whoAmI == Main.myPlayer)
             {

@@ -19,7 +19,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             modPlayer.sanityRegen = -5;
         }
     }

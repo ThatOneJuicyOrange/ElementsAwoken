@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier4
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (modPlayer.energy > 8)
             {
                 modPlayer.energy -= 8;

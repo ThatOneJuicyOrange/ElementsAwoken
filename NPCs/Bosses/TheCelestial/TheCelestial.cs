@@ -235,26 +235,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                     npc.active = false;
                 }
             }
-            /*bool oldMusic = ModLoader.GetMod("EARetroMusic") != null;
-            if (!oldMusic)
-            {
-                if (npc.ai[1] == 0)
-                {
-                    music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CelestialThemeSolar");
-                }
-                if (npc.ai[1] == 1)
-                {
-                    music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CelestialThemeStardust");
-                }
-                if (npc.ai[1] == 2)
-                {
-                    music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CelestialThemeVortex");
-                }
-                if (npc.ai[1] == 3)
-                {
-                    music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/CelestialThemeNebula");
-                }
-            }*/
             #region orbitals, names & ai changes
             int moonlordBonus = NPC.downedMoonlord ? 2 : 1;
             if (reset)

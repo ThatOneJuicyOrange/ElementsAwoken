@@ -14,7 +14,7 @@ namespace ElementsAwoken.Projectiles
             projectile.width = 12;
             projectile.height = 12;
             projectile.friendly = true;
-            projectile.ignoreWater = true;
+            projectile.ignoreWater = false;
             projectile.ranged = true;
             projectile.penetrate = 3;
             projectile.timeLeft = 100;

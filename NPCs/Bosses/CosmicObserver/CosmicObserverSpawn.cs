@@ -33,7 +33,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             float spawnchance = MyWorld.downedCosmicObserver ? 0.0f : 0.02f; // around half the spawn chance of the wyvern
-            MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>();
 
             if (modPlayer.increasedObserverChance && !NPC.AnyNPCs(mod.NPCType("CosmicObserver")))
             {

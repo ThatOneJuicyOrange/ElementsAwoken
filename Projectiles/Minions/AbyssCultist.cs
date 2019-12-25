@@ -53,7 +53,7 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.rotation += projectile.velocity.X * 0.04f;
             bool flag64 = projectile.type == mod.ProjectileType("AbyssCultist");
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("AbyssCultistBuff"), 3600);
             if (flag64)
             {

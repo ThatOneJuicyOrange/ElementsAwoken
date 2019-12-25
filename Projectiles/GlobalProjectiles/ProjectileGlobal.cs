@@ -39,7 +39,7 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
         }
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (target.GetGlobalNPC<NPCsGLOBAL>(mod).impishCurse)
+            if (target.GetGlobalNPC<NPCsGLOBAL>().impishCurse)
             {
                 damage = (int)(damage * 1.75f);
             }
@@ -61,6 +61,7 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
         {
             Player player = Main.player[projectile.owner];
             MyPlayer modPlayer = (MyPlayer)player.GetModPlayer(mod, "MyPlayer");
+            if (modPlayer.noDamageCounter > 0) modPlayer.noDamageCounter = 0;
 
             if (modPlayer.voidArmor)
             {
@@ -228,7 +229,7 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
             if (Main.hardMode) strikeChance = 5;
             if (NPC.downedPlantBoss) strikeChance = 4;
             if (NPC.downedMoonlord) strikeChance = 2;
-            if (modPlayer.strangeUkulele && Main.rand.Next(strikeChance) == 0)
+            if (modPlayer.strangeUkulele && Main.rand.Next(strikeChance) == 0 && projectile.type != mod.ProjectileType("UkuleleArc"))
             {
                 List<int> availableNPCs = new List<int>();
                 for (int k = 0; k < Main.npc.Length; k++)
@@ -250,7 +251,7 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
                         float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
                         rotation += MathHelper.ToRadians(Main.rand.Next(-60, 60));
                         Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
-                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), 30, 3f, player.whoAmI, arcTarget.whoAmI);
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), (int)(projectile.damage * 0.5f), 3f, player.whoAmI, arcTarget.whoAmI);
                     }
                 }
             }
@@ -261,6 +262,101 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
             {
                 projectile.damage = (int)(projectile.damage * 1.5f);
             }
+        }
+
+        public static void Explosion(Projectile projectile, int[] dustIDs, int damage)
+        {
+            var mod = ModLoader.GetMod("ElementsAwoken");
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("Explosion"), damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
+            int num = ModContent.GetInstance<Config>().lowDust ? 10 : 20;
+            for (int i = 0; i < num; i++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 31, 0f, 0f, 100, default(Color), 1.5f)];
+                dust.velocity *= 1.4f;
+            }
+            int num2 = ModContent.GetInstance<Config>().lowDust ? 5 : 10;
+            for (int i = 0; i < num2; i++)
+            {
+                int dustID = dustIDs[Main.rand.Next(dustIDs.Length)];
+                Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID, 0f, 0f, 100, default(Color), 2.5f)];
+                dust.noGravity = true;
+                dust.velocity *= 5f;
+                int dustID2 = dustIDs[Main.rand.Next(dustIDs.Length)];
+                dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID2, 0f, 0f, 100, default(Color), 1.5f)];
+                dust.velocity *= 3f;
+            }
+            int num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore85 = Main.gore[num373];
+            gore85.velocity.X = gore85.velocity.X + 1f;
+            Gore gore86 = Main.gore[num373];
+            gore86.velocity.Y = gore86.velocity.Y + 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore87 = Main.gore[num373];
+            gore87.velocity.X = gore87.velocity.X - 1f;
+            Gore gore88 = Main.gore[num373];
+            gore88.velocity.Y = gore88.velocity.Y + 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore89 = Main.gore[num373];
+            gore89.velocity.X = gore89.velocity.X + 1f;
+            Gore gore90 = Main.gore[num373];
+            gore90.velocity.Y = gore90.velocity.Y - 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore91 = Main.gore[num373];
+            gore91.velocity.X = gore91.velocity.X - 1f;
+            Gore gore92 = Main.gore[num373];
+            gore92.velocity.Y = gore92.velocity.Y - 1f;
+        }
+        public static void HostileExplosion(Projectile projectile, int[] dustIDs, int damage)
+        {
+            var mod = ModLoader.GetMod("ElementsAwoken");
+            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("ExplosionHostile"), damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
+            int num = ModContent.GetInstance<Config>().lowDust ? 10 : 20;
+            for (int i = 0; i < num; i++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 31, 0f, 0f, 100, default(Color), 1.5f)];
+                dust.velocity *= 1.4f;
+            }
+            int num2 = ModContent.GetInstance<Config>().lowDust ? 5 : 10;
+            for (int i = 0; i < num2; i++)
+            {
+                int dustID = dustIDs[Main.rand.Next(dustIDs.Length)];
+                Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID, 0f, 0f, 100, default(Color), 2.5f)];
+                dust.noGravity = true;
+                dust.velocity *= 5f;
+                int dustID2 = dustIDs[Main.rand.Next(dustIDs.Length)];
+                dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID2, 0f, 0f, 100, default(Color), 1.5f)];
+                dust.velocity *= 3f;
+            }
+            int num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore85 = Main.gore[num373];
+            gore85.velocity.X = gore85.velocity.X + 1f;
+            Gore gore86 = Main.gore[num373];
+            gore86.velocity.Y = gore86.velocity.Y + 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore87 = Main.gore[num373];
+            gore87.velocity.X = gore87.velocity.X - 1f;
+            Gore gore88 = Main.gore[num373];
+            gore88.velocity.Y = gore88.velocity.Y + 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore89 = Main.gore[num373];
+            gore89.velocity.X = gore89.velocity.X + 1f;
+            Gore gore90 = Main.gore[num373];
+            gore90.velocity.Y = gore90.velocity.Y - 1f;
+            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+            Main.gore[num373].velocity *= 0.4f;
+            Gore gore91 = Main.gore[num373];
+            gore91.velocity.X = gore91.velocity.X - 1f;
+            Gore gore92 = Main.gore[num373];
+            gore92.velocity.Y = gore92.velocity.Y - 1f;
         }
     }
 }

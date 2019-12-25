@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Donator.Crow
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "When an enemy is hit, green lightning strikes down from above them\nThe lightning heals the player";
-            player.GetModPlayer<MyPlayer>(mod).crowsArmor = true;
+            player.GetModPlayer<MyPlayer>().crowsArmor = true;
         }
 
         public override void AddRecipes()

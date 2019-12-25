@@ -19,7 +19,7 @@ namespace ElementsAwoken.Buffs
 		
 		public override void Update(Player player, ref int buffIndex)
 		{
-			player.GetModPlayer<MyPlayer>(mod).dashCooldown = true;
+			player.GetModPlayer<MyPlayer>().dashCooldown = true;
 		}
 	}
 }

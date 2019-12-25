@@ -11,19 +11,24 @@ namespace ElementsAwoken.Items.GemLasers.Tier2
     {
         public override void SetDefaults()
         {
-            item.CloneDefaults(ItemID.SpaceGun);
+            item.width = 54;
+            item.height = 28;
+
             item.ranged = true;
+            item.autoReuse = true;
+
             item.damage = 30;
+            item.knockBack = 4;
+
+            item.UseSound = SoundID.Item12;
             item.useTime = 13;
             item.useAnimation = 13;
-            item.knockBack = 4;
-            item.scale *= 1.2f;
+
             item.value = Item.buyPrice(0, 10, 0, 0);
             item.rare = 4;
-            item.UseSound = SoundID.Item12;
+
             item.shoot = mod.ProjectileType("TopazLaser");
             item.shootSpeed = 24f;
-            item.autoReuse = true;
         }
 
         public override void SetStaticDefaults()

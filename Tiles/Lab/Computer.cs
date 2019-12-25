@@ -42,7 +42,7 @@ namespace ElementsAwoken.Tiles.Lab
         {
             Main.PlaySound(SoundID.MenuTick);
             Player player = Main.LocalPlayer;
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             #region drive detection
             float distance = 3 * 16;
             Point topLeft = ((new Vector2(i * 16, j * 16) - new Vector2(distance, distance)) / 16).ToPoint();

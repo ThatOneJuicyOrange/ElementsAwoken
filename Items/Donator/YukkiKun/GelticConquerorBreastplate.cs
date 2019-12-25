@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Gel, 60);
+            recipe.AddIngredient(ItemID.Gel, 20);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

@@ -78,7 +78,7 @@ namespace ElementsAwoken.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (!hasGivenShield)
             {
                 modPlayer.shieldLife++;

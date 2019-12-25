@@ -15,6 +15,7 @@ using ReLogic.Graphics;
 using Terraria.Graphics.Effects;
 using ElementsAwoken.NPCs;
 using Terraria.GameContent.Achievements;
+using Microsoft.Xna.Framework.Input;
 
 namespace ElementsAwoken
 {
@@ -52,6 +53,8 @@ namespace ElementsAwoken
         public bool toyRobot = false;
         public bool miniVlevi = false;
         public bool corroder = false;
+        public bool crystalEntity = false;
+        public bool putridRipper = false;
         #endregion   
         #region pets
         public bool voidCrawler = false;
@@ -74,10 +77,12 @@ namespace ElementsAwoken
         public bool brokenWings = false;
         public bool chaosBurn = false;
         public bool acidBurn = false;
+        public bool superSlow = false;
         #endregion   
         #region buffs
         public bool extinctionCurseImbue = false;
         public bool discordantPotion = false;
+        public bool superSpeed = false;
         #endregion
         #region other
         public bool dashCooldown = false;
@@ -111,15 +116,40 @@ namespace ElementsAwoken
         public int cosmicGlassCD = 0;
         public bool sufferWithMe = false;
         public bool strangeUkulele = false;
-        #endregion
-
+        public bool crystallineLocket = false;
+        public int crystallineLocketCrit = 0;
+        public int archaicProtectionTimer = 0;
+        public Vector2 archaicProtectionPos = new Vector2();
+        public int noDamageCounter = 0;
         //amulet of despair
         public int voidEnergyCharge = 0;
         public int voidEnergyTimer = 0;
-
         //infinity guantlet and stones
         public int overInfinityCharged = 0;
         public bool infinityDeath = false;
+        #endregion
+        #region credits
+        public Vector2 desiredScPos = new Vector2();
+        public Vector2 playerStartPos = new Vector2();
+        public Vector2[] creditPoints = new Vector2[20];
+        public int pointsNotFound = 0;
+        public int startTime = 0;
+        public bool startDayTime = false;
+        public bool screenTransition = false;
+        public float screenTransAlpha = 0f;
+        public float screenTransTimer = 0f;
+        public int screenTransDuration = 60; // in frames
+        public int screenDuration = 60 * 9;
+        public int escHeldTimer = 0;
+        #endregion
+
+        //skyline whirlwind
+        public bool skylineFlying = false;
+        public float skylineAlpha = 0f;
+        public int skylineFrameTimer = 0;
+        public int skylineFrame = 0;
+
+        public bool[] mysteriousPotionsDrank;
 
         #region armor bonuses
         public bool aeroArmor = false;
@@ -234,6 +264,10 @@ namespace ElementsAwoken
 
         bool calamityEnabled = ModLoader.GetMod("CalamityMod") != null;
 
+        public override void Initialize()
+        {
+            mysteriousPotionsDrank = new bool[10];
+        }
         public override void ResetEffects()
         {
             #region minions
@@ -268,6 +302,8 @@ namespace ElementsAwoken
             toyRobot = false;
             miniVlevi = false;
             corroder = false;
+            crystalEntity = false;
+            putridRipper = false;
             #endregion
             #region pets
             lilOrange = false;
@@ -290,8 +326,9 @@ namespace ElementsAwoken
             brokenWings = false;
             chaosBurn = false;
             acidBurn = false;
+            superSlow = false;
             #endregion
-        
+
             dashCooldown = false;
             medicineCooldown = false;
             frozenGauntlet = false;
@@ -301,6 +338,7 @@ namespace ElementsAwoken
 
             extinctionCurseImbue = false;
             discordantPotion = false;
+            superSpeed = false;
 
             cantFly = false;
             cantROD = false;
@@ -318,11 +356,13 @@ namespace ElementsAwoken
             spikeBoots = false;
             sonicArm = false;
             nyanBoots = false;
+            skylineFlying = false;
             vleviAegis = false;
             theAntidote = false;
             cosmicGlass = false;
             sufferWithMe = false;
             strangeUkulele = false;
+            crystallineLocket = false;
 
             aeroArmor = false;
             oceanicArmor = false;
@@ -387,17 +427,18 @@ namespace ElementsAwoken
             packet.Write(lunarStarsUsed);
             packet.Send(toWho, fromWho);
         }
-
-
         public override TagCompound Save()
         {
-            return new TagCompound {
-                {"voidHeartsUsed", voidHeartsUsed},
-                {"chaosHeartsUsed", chaosHeartsUsed},
-                {"lunarStarsUsed", lunarStarsUsed},
-                {"voidCompressor", voidCompressor},
-                {"extraAccSlot", extraAccSlot},
+                TagCompound tag = new TagCompound {
+            {"voidHeartsUsed", voidHeartsUsed},
+            {"chaosHeartsUsed", chaosHeartsUsed},
+            {"lunarStarsUsed", lunarStarsUsed},
+            {"voidCompressor", voidCompressor},
+            {"extraAccSlot", extraAccSlot}
             };
+            var list = new List<bool>(mysteriousPotionsDrank);
+            tag.Add("mysteriousPotionsDrankList", list); // lists are easier to save and load than arrays
+            return tag;
         }
 
         public override void Load(TagCompound tag)
@@ -407,233 +448,52 @@ namespace ElementsAwoken
             lunarStarsUsed = tag.GetInt("lunarStarsUsed");
             voidCompressor = tag.GetBool("voidCompressor");
             extraAccSlot = tag.GetBool("extraAccSlot");
-        }
-        public override void PostUpdateBuffs()
-        {
-            if (oiniteStatue)
+            if (tag.ContainsKey("mysteriousPotionsDrankList"))
             {
-                // it is always checking all 22 slots no matter if its active, so we check if its active by player.buffTime[l] <= 0 - angry orang
-                for (int l = 0; l < Player.maxBuffs; l++)
-                {
-                    if (!doubledBuff[l])
-                    {
-                        if (player.buffType[l] != BuffID.PotionSickness &&
-                            player.buffType[l] != BuffID.ManaSickness &&
-                            !Main.buffNoTimeDisplay[l])
-                            player.buffTime[l] *= 2;
-                        doubledBuff[l] = true; // set the buff to doubled anyway so it stops checking          
-                    }
-                    if (player.buffTime[l] <= 0)
-                    {
-                        doubledBuff[l] = false;
-                    }
-                }
-            }
-            if (discordantPotion)
-            {
-                for (int l = 0; l < Player.maxBuffs; l++)
-                {
-                    if (!doubledBuff[l])
-                    {
-                        if (player.buffType[l] == BuffID.ChaosState)
-                            player.buffTime[l] = (int)(player.buffTime[l] * 0.75);
-                        doubledBuff[l] = true; // set the buff to doubled anyway so it stops checking                 
-                    }
-                    if (player.buffTime[l] <= 0)
-                    {
-                        doubledBuff[l] = false;
-                    }
-                }
+                var list = tag.GetList<bool>("mysteriousPotionsDrankList");
+                mysteriousPotionsDrank = new List<bool>(list).ToArray();
             }
         }
-
-        public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
-        {
-            Item item = new Item();
-            item.SetDefaults(mod.ItemType("ElementalCapsule"));
-            items.Add(item);
-            Item item2 = new Item();
-            item.SetDefaults(mod.ItemType("MysticGemstone"));
-            items.Add(item);
-        }
-        public override void OnEnterWorld(Player player)
-        {
-            if (player.whoAmI == Main.myPlayer)
-            {
-                if (!InstalledPack())
-                {
-                    Main.NewText("You dont have a music pack enabled! All EA bosses will have vanilla music themes. Consider installing:", Color.Red.R, Color.Red.G, Color.Red.B);
-                    Main.NewText("Elements Awoken Music", Color.Purple.R, Color.Purple.G, Color.Purple.B);
-                    Main.NewText("EA Retro Music", Color.Purple.R, Color.Purple.G, Color.Purple.B);
-                }
-            }
-        }
-
-        private bool InstalledPack()
-        {
-            if (ElementsAwoken.eaMusicEnabled)
-            {
-                return true;
-            }
-            if (ElementsAwoken.eaRetroMusicEnabled)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public override void PostItemCheck()
-        {
-            Item item = player.inventory[player.selectedItem];
-            if (item.type == mod.ItemType("LavaLeecher") || item.type == mod.ItemType("FireFlooder"))
-            {
-                if (!Main.GamepadDisableCursorItemIcon)
-                {
-                    player.showItemIcon = true;
-                    Main.ItemIconCacheUpdate(item.type);
-                }
-                if (player.itemTime == 0 && player.itemAnimation > 0 && player.controlUseItem)
-                {
-                    if (item.type == mod.ItemType("LavaLeecher") && Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType() == 1)
-                    {
-                        int num233 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType();
-                        int num234 = 0;
-                        for (int num235 = Player.tileTargetX - 1; num235 <= Player.tileTargetX + 1; num235++)
-                        {
-                            for (int num236 = Player.tileTargetY - 1; num236 <= Player.tileTargetY + 1; num236++)
-                            {
-                                if ((int)Main.tile[num235, num236].liquidType() == num233)
-                                {
-                                    num234 += (int)Main.tile[num235, num236].liquid;
-                                }
-                            }
-                        }
-                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid > 0 && (num234 > 100 || item.type == mod.ItemType("LavaLeecher")))
-                        {
-                            int liquidType = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType();
-
-                            Main.PlaySound(19, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
-                            player.itemTime = item.useTime;
-                            int num237 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquid;
-                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 0;
-                            Main.tile[Player.tileTargetX, Player.tileTargetY].lava(false);
-                            Main.tile[Player.tileTargetX, Player.tileTargetY].honey(false);
-                            WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
-                            if (Main.netMode == 1)
-                            {
-                                NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
-                            }
-                            else
-                            {
-                                Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
-                            }
-                            for (int xPos = Player.tileTargetX - 1; xPos <= Player.tileTargetX + 1; xPos++)
-                            {
-                                for (int yPos = Player.tileTargetY - 1; yPos <= Player.tileTargetY + 1; yPos++)
-                                {
-                                    if (num237 < 256 && (int)Main.tile[xPos, yPos].liquidType() == num233)
-                                    {
-                                        int num240 = (int)Main.tile[xPos, yPos].liquid; // which liquid type
-                                        if (num240 + num237 > 255)
-                                        {
-                                            num240 = 255 - num237;
-                                        }
-                                        num237 += num240;
-                                        Tile tile = Main.tile[xPos, yPos];
-                                        tile.liquid -= (byte)num240;
-                                        Main.tile[xPos, yPos].liquidType(liquidType);
-                                        if (Main.tile[xPos, yPos].liquid == 0)
-                                        {
-                                            Main.tile[xPos, yPos].lava(false);
-                                            Main.tile[xPos, yPos].honey(false);
-                                        }
-                                        WorldGen.SquareTileFrame(xPos, yPos, false);
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.sendWater(xPos, yPos);
-                                        }
-                                        else
-                                        {
-                                            Liquid.AddWater(xPos, yPos);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // place lava
-                    else if (item.type == mod.ItemType("FireFlooder") && Main.tile[Player.tileTargetX, Player.tileTargetY].liquid < 200 && (!Main.tile[Player.tileTargetX, Player.tileTargetY].nactive() || !Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || Main.tileSolidTop[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type]))
-                    {
-                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType() == 1)
-                        {
-                            Main.PlaySound(19, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
-                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType(1);
-                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
-                            WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
-                            player.itemTime = item.useTime;
-                            if (Main.netMode == 1)
-                            {
-                                NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            //catching the mystic bunny
-            if (item.type == 1991 || item.type == 3183)
-            {
-                Rectangle rectangle = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, 32, 32);
-
-                for (int n = 0; n < Main.npc.Length; n++)
-                {
-                    NPC bunny = Main.npc[n];
-                    if (bunny.active && bunny.type == mod.NPCType("MysticBunny"))
-                    {
-                        Rectangle value10 = new Rectangle((int)bunny.position.X, (int)bunny.position.Y, bunny.width, bunny.height);
-                        if (rectangle.Intersects(value10) && (bunny.noTileCollide || player.CanHit(bunny)))
-                        {
-                            if (!bunny.active)
-                            {
-                                return;
-                            }
-                            if (Main.rand.Next(29) == 0)
-                            {
-                                new Item().SetDefaults(mod.ItemType("PiohsPresent"), false);
-                                Item.NewItem((int)player.Center.X, (int)player.Center.Y, 0, 0, mod.ItemType("PiohsPresent"), 1, false, 0, true, false);
-                            }
-                            else if (Main.rand.Next(9) == 0)
-                            {
-                                new Item().SetDefaults(ItemID.FuzzyCarrot, false);
-                                Item.NewItem((int)player.Center.X, (int)player.Center.Y, 0, 0, ItemID.FuzzyCarrot, 1, false, 0, true, false);
-                            }
-                            else
-                            {
-                                Vector2 vector = bunny.Center - new Vector2(20f);
-                                Utils.PoofOfSmoke(vector);
-                                NetMessage.SendData(106, -1, -1, null, (int)vector.X, vector.Y, 0f, 0f, 0, 0, 0);
-                            }
-                            NetMessage.SendData(23, -1, -1, null, n, 0f, 0f, 0f, 0, 0, 0);
-                            bunny.active = false;
-
-                        }
-                    }
-                }
-            }
-        }
-        
-        public override void UpdateBiomes()
-        {
-            zoneTemple = (MyWorld.lizardTiles > 50);
-        }
-
+    
         public override void PostUpdateMiscEffects()
         {
-            if(cosmicGlass)
+            if (superSpeed)
             {
-                cosmicGlassCD--;
+                player.moveSpeed *= 3;
+                player.runAcceleration *= 10;
             }
+            if (superSlow)
+            {
+                player.moveSpeed *= 0.1f;
+            }
+            // timers
+            if (cosmicGlass) cosmicGlassCD--;
+            doubleDownWindow--;
+            hellsReflectionTimer--;
+            voidPortalCooldown--;
+            toyArmorCooldown--;
+            crowsArmorCooldown--;
+            crystallineLocketCrit--;
+            skylineFrameTimer++;
+
+            if (archaicProtectionTimer > 0)
+            {
+                archaicProtectionTimer--;
+                player.immune = true;
+                CantMove();
+                player.velocity = Vector2.Zero;
+                if (archaicProtectionPos == Vector2.Zero) archaicProtectionPos = player.Center;
+                else player.Center = archaicProtectionPos;
+                if (player.ownedProjectileCounts[mod.ProjectileType("ArchaicProtection")] == 0)
+                {
+                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("ArchaicProtection"), 0, 0f, player.whoAmI);
+                }
+
+            }
+            else archaicProtectionPos = Vector2.Zero;
+
+            if (brokenWings) player.wingTimeMax = 1;
+
             if (dryadsRadar)
             {
                 if (MyWorld.corruptionTiles > 0)
@@ -671,10 +531,7 @@ namespace ElementsAwoken
                     }
                 }
             }
-            if (doubleDownWindow > 0)
-            {
-                doubleDownWindow--;
-            }
+
             if (forgedShackled > 0)
             {
                 if (player.ownedProjectileCounts[mod.ProjectileType("ShackledBase")] == 0)
@@ -700,36 +557,24 @@ namespace ElementsAwoken
                 shackleFlingCooldown = 60;
             }
 
-            if (hellsReflectionTimer > 0)
+            if (skylineFlying)
             {
-                hellsReflectionTimer--;
+                if (skylineAlpha < 1) skylineAlpha += 0.05f;
             }
+            else
+            {
+                if (skylineAlpha > 0) skylineAlpha -= 0.05f;
+            }
+            if (skylineAlpha > 0)
+            {
+                if (skylineFrameTimer % 6 == 0) skylineFrame++;
+                if (skylineFrame > 3) skylineFrame = 0;
+            }
+            //Main.NewText("alpha " + skylineAlpha + " flying " + skylineFlying);
+            if (shieldLife > 100) shieldLife = 100;
+            if (shieldLife > 0 && Main.time % 60 == 0) shieldLife--;
 
-            if (voidPortalCooldown > 0)
-            {
-                voidPortalCooldown--;
-            }
-
-            if (toyArmor)
-            {
-                toyArmorCooldown--;
-            }
-
-            if (shieldLife > 100)
-            {
-                shieldLife = 100;
-            }
-            if (shieldLife > 0)
-            {
-                if (Main.time % 60 == 0)
-                {
-                    shieldLife--;
-                }
-            }
-            if (player.statLife <= player.statLifeMax2 - 5 && shieldHearts > 0)
-            {
-                shieldHearts--;
-            }
+            if (player.statLife <= player.statLifeMax2 - 5 && shieldHearts > 0) shieldHearts--;
 
             if (player.mount.Active && player.mount.Type == mod.MountType("ElementalDragonBunny") && Math.Abs(player.velocity.X) > player.mount.DashSpeed - player.mount.RunSpeed / 3f)
             {
@@ -747,9 +592,38 @@ namespace ElementsAwoken
                 CollideWithNPCs(rect, damage, knockback, nPCImmuneTime, playerImmuneTime);
             }
 
-            if (crowsArmor)
+            if (crystallineLocketCrit > 0)
             {
-                crowsArmorCooldown--;
+                player.magicCrit = 100;
+                player.meleeCrit = 100;
+                player.rangedCrit = 100;
+                player.thrownCrit = 100;
+                int dustID = mod.DustType("AncientRed");
+                switch (Main.rand.Next(4))
+                {
+                    case 0:
+                        dustID = mod.DustType("AncientRed");
+                        break;
+                    case 1:
+                        dustID = mod.DustType("AncientGreen");
+                        break;
+                    case 2:
+                        dustID = mod.DustType("AncientBlue");
+                        break;
+                    case 3:
+                        dustID = mod.DustType("AncientPink");
+                        break;
+                    default:
+                        dustID = mod.DustType("AncientRed");
+                        break;
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, dustID, 0f, 0f, 100, default(Color), 1.5f)];
+                    dust.noGravity = true;
+                    dust.velocity *= 0.75f;
+                    dust.fadeIn = 1.3f;
+                }
             }
 
             if (lightningCloud)
@@ -805,7 +679,7 @@ namespace ElementsAwoken
                         Main.dust[num5].position = player.Center - vector;
                     }
                 }
-                if(lightningCloudCharge > 300)
+                if (lightningCloudCharge > 300)
                 {
                     lightningCloudCharge = 300;
                 }
@@ -864,10 +738,6 @@ namespace ElementsAwoken
                 }
             }
 
-            if (brokenWings)
-            {
-                player.wingTimeMax = 1;
-            }
 
             if (masterSwordCharge > 0)
             {
@@ -1052,7 +922,7 @@ namespace ElementsAwoken
                 }
                 else
                 {
-                    EyeDust(player, DustID.PinkFlame);                   
+                    EyeDust(player, DustID.PinkFlame);
                 }
             }
             if (voidEnergyTimer > 0)
@@ -1101,8 +971,8 @@ namespace ElementsAwoken
                         int num5 = Dust.NewDust(player.position, player.width, player.height, dust, 0f, 0f, 200, default(Color), 0.5f);
                         Main.dust[num5].noGravity = true;
                         Main.dust[num5].velocity *= 0.75f;
-                            Main.dust[num5].fadeIn = 1.3f;
-                        
+                        Main.dust[num5].fadeIn = 1.3f;
+
                         Vector2 vector = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
                         vector.Normalize();
                         vector *= (float)Main.rand.Next(50, 100) * 0.04f;
@@ -1309,8 +1179,194 @@ namespace ElementsAwoken
 
             ComputerText();
 
+            if (MyWorld.credits)
+            {
+                player.immune = true;
+                player.statLife = player.statLifeMax2;
+                for (int i = 0; i < 22; i++)
+                {
+                    player.DelBuff(i);
+                }
+                player.hideMisc[0] = true;
+                player.hideMisc[1] = true;
+                player.mount._active = false;
+
+                CantMove();
+                player.controlInv = false;
+                player.controlMap = false;
+                player.releaseInventory = false;
+                Main.playerInventory = false;
+                Main.inputTextEnter = false;
+                Main.menuMode = 0;
+                for (int k = 0; k < Main.projectile.Length; k++)
+                {
+                    Main.projectile[k].Kill();
+                }
+                for (int k = 0; k < Main.dust.Length; k++)
+                {
+                    Dust dust = Main.dust[k];
+                    if (Vector2.Distance(dust.position, player.Center) < 90)
+                        dust.active = false;
+                }
+                // find keypoints
+                if (creditPoints[0].X == 0)
+                {
+                    for (int x = 0; x < Main.tile.GetLength(0); ++x)
+                    {
+                        for (int y = 0; y < Main.tile.GetLength(1); ++y)
+                        {
+                            //temple
+                            if (creditPoints[1].X != 0 && creditPoints[2].X != 0 && creditPoints[3].X != 0 && creditPoints[4].X != 0 && creditPoints[5].X != 0 && creditPoints[6].X != 0 && creditPoints[7].X != 0 && creditPoints[8].X != 0)
+                                break;
+                            if (Main.tile[x, y] == null) continue;
+                            else if (Main.tile[x, y].type == 237 && creditPoints[1].X == 0) // altar
+                            {
+                                creditPoints[1] = new Vector2(x * 16, y * 16);
+                            }
+                            // jungle with hive
+                            else if (Main.tile[x, y].type == 225 && creditPoints[2].X == 0) // hive
+                            {
+                                creditPoints[2] = new Vector2(x * 16, y * 16);
+                            }
+                            // spidernest
+                            else if (Main.tile[x, y].wall == 62 && creditPoints[3].X == 0) // spider wall
+                            {
+                                creditPoints[3] = new Vector2(x * 16, y * 16);
+                            }
+                            // sky island
+                            else if (Main.tile[x, y].type == 202 && creditPoints[4].X == 0) // sunplate
+                            {
+                                creditPoints[4] = new Vector2(x * 16, y * 16);
+                            }
+                            // hallow
+                            else if (Main.tile[x, y].type == 110 && creditPoints[5].X == 0) // hallowed grass
+                            {
+                                creditPoints[5] = new Vector2(x * 16, y * 16);
+                            }
+                            // evil
+                            else if (Main.tile[x, y].type == 201 && creditPoints[6].X == 0) // crim grass
+                            {
+                                if (WorldGen.crimson) creditPoints[6] = new Vector2(x * 16, y * 16);
+                            }
+                            else if (Main.tile[x, y].type == 24 && creditPoints[6].X == 0) // corrupt grass bits
+                            {
+                                if (!WorldGen.crimson) creditPoints[6] = new Vector2(x * 16, y * 16);
+                            }
+                            // mushroom 
+                            else if (Main.tile[x, y].type == 70 && creditPoints[7].X == 0) // mushroom grass
+                            {
+                                creditPoints[7] = new Vector2(x * 16, y * 16);
+                            }
+                            //snow
+                            else if (Main.tile[x, y].type == 147 && creditPoints[8].X == 0)
+                            {
+                                creditPoints[8] = new Vector2(x * 16, y * 16);
+                            }
+                            else continue;
+                        }
+                    }
+                    creditPoints[9] = new Vector2(Main.spawnTileX * 16 + 600, (Main.maxTilesY - 200) * 16); // hell
+                    creditPoints[10] = new Vector2(Main.dungeonX * 16, Main.dungeonY * 16); // dungeon
+                    creditPoints[11] = new Vector2(1800, (float)Main.worldSurface * 16 - 16 * 150); // ocean, doesnt run unless one is missing
+
+                    player.FindSpawn();
+                    creditPoints[0] = new Vector2(player.SpawnX * 16, player.SpawnY * 16);
+                    if (creditPoints[0].X < 0 || creditPoints[0].Y < 0) creditPoints[0] = new Vector2(Main.spawnTileX * 16, Main.spawnTileY * 16);
+                }
+                // spawn
+                if (MyWorld.creditsCounter == 0)
+                {
+                    playerStartPos = player.Center;
+                    startTime = (int)Main.time;
+                    screenTransition = true;
+                }
+                if (MyWorld.creditsCounter == screenTransDuration / 2)
+                {
+                    desiredScPos = creditPoints[0] - Vector2.One * 50;
+                    for (int k = 0; k < Main.npc.Length; k++)
+                    {
+                        NPC nPC = Main.npc[k];
+                        if (nPC.active && !nPC.friendly && nPC.damage > 0) Main.npc[k].active = false;
+                    }
+                }
+                if (MyWorld.creditsCounter > screenTransDuration / 2)
+                {
+                    player.Center = desiredScPos;
+                    Main.dayTime = true;
+                    Main.time = 27000;
+                }
+                if (MyWorld.creditsCounter > screenTransDuration / 2 && MyWorld.creditsCounter < screenDuration + screenTransDuration / 2) desiredScPos += new Vector2(1, 1);
+
+                int creditsLength = screenDuration * 11;
+                if (MyWorld.creditsCounter >= screenDuration && MyWorld.creditsCounter < creditsLength)
+                {
+                    int screenNum = pointsNotFound + (int)Math.Floor((decimal)(MyWorld.creditsCounter / screenDuration));
+                    if (creditPoints[screenNum].X == 0)
+                    {
+                        pointsNotFound++;
+                        screenNum = pointsNotFound + (int)Math.Floor((decimal)(MyWorld.creditsCounter / screenDuration));
+                    }
+                    Vector2 scroll = new Vector2(1, -1);
+                    if (screenNum == 1) scroll = new Vector2(0, -1);
+                    else if (screenNum == 2) scroll = new Vector2(1, 1);
+                    else if (screenNum == 3) scroll = new Vector2(1, -1);
+                    else if (screenNum == 4) scroll = new Vector2(-1, 1);
+                    else if (screenNum == 5) scroll = new Vector2(1, 1);
+                    else if (screenNum == 6) scroll = new Vector2(0, 1);
+                    else if (screenNum == 7) scroll = new Vector2(1, 0);
+                    else if (screenNum == 8) scroll = new Vector2(-0.5f, 2);
+                    else if (screenNum == 9) scroll = new Vector2(1, 1);
+                    else if (screenNum == 10) scroll = new Vector2(0, 1);
+                    else if (screenNum == 11) scroll = new Vector2(1, 0);
+                    CreditsScroll(screenNum, scroll, screenDuration);
+                }
+
+                Keys[] pressedKeys = Main.keyState.GetPressedKeys();
+
+                bool escPressed = false;
+                for (int j = 0; j < pressedKeys.Length; j++)
+                {
+                    Keys key = pressedKeys[j];
+                    if (key == Keys.Escape) escPressed = true;
+                }
+                if (escPressed && escHeldTimer <= 60) escHeldTimer++;
+                if (!escPressed && escHeldTimer > 0) escHeldTimer--;
+                if (escHeldTimer > 60) MyWorld.creditsCounter = creditsLength - 1;
+
+                MyWorld.creditsCounter++;
+                if (MyWorld.creditsCounter > creditsLength)
+                {
+                    screenTransition = true;
+                    if (MyWorld.creditsCounter - creditsLength == screenTransDuration / 2)
+                    {
+                        MyWorld.credits = false;
+                        MyWorld.creditsCounter = 0;
+                        player.hideMisc[0] = false;
+                        player.hideMisc[1] = false;
+                        desiredScPos = player.Center;
+                        player.Center = playerStartPos;
+                        Main.time = startTime;
+                        Main.dayTime = startDayTime;
+                    }
+                }
+            }
+            else
+            {
+                MyWorld.creditsCounter = 0;
+                escHeldTimer = 0;
+            }
+            if (screenTransition)
+            {
+                screenTransTimer += (float)(Math.PI / screenTransDuration);
+                screenTransAlpha = (float)Math.Sin(screenTransTimer);
+                if (screenTransTimer >= Math.PI)
+                {
+                    screenTransTimer = 0;
+                    screenTransition = false;
+                }
+            }
             #region PROMPTS!!
-            if (Config.bossPrompts)
+            if (!ModContent.GetInstance<Config>().promptsDisabled)
             {
                 NPC bossCheck = Main.npc[0];
                 for (int i = 0; i < Main.npc.Length; ++i)
@@ -1549,6 +1605,234 @@ namespace ElementsAwoken
             }
         }
 
+        public override void PostUpdateBuffs()
+        {
+            if (oiniteStatue)
+            {
+                // it is always checking all 22 slots no matter if its active, so we check if its active by player.buffTime[l] <= 0 - angry orang
+                for (int l = 0; l < Player.MaxBuffs; l++)
+                {
+                    if (!doubledBuff[l])
+                    {
+                        if (player.buffType[l] != BuffID.PotionSickness &&
+                            player.buffType[l] != BuffID.ManaSickness &&
+                            !Main.buffNoTimeDisplay[l])
+                            player.buffTime[l] *= 2;
+                        doubledBuff[l] = true; // set the buff to doubled anyway so it stops checking          
+                    }
+                    if (player.buffTime[l] <= 0)
+                    {
+                        doubledBuff[l] = false;
+                    }
+                }
+            }
+            if (discordantPotion)
+            {
+                for (int l = 0; l < Player.MaxBuffs; l++)
+                {
+                    if (!doubledBuff[l])
+                    {
+                        if (player.buffType[l] == BuffID.ChaosState)
+                            player.buffTime[l] = (int)(player.buffTime[l] * 0.75);
+                        doubledBuff[l] = true; // set the buff to doubled anyway so it stops checking                 
+                    }
+                    if (player.buffTime[l] <= 0)
+                    {
+                        doubledBuff[l] = false;
+                    }
+                }
+            }
+        }
+
+        public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+        {
+            Item item = new Item();
+            item.SetDefaults(mod.ItemType("ElementalCapsule"));
+            items.Add(item);
+            Item item2 = new Item();
+            item.SetDefaults(mod.ItemType("MysticGemstone"));
+            items.Add(item);
+        }
+        public override void OnEnterWorld(Player player)
+        {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                if (!InstalledPack())
+                {
+                    Main.NewText("You dont have a music pack enabled! All EA bosses will have vanilla music themes. Consider installing:", Color.Red.R, Color.Red.G, Color.Red.B);
+                    Main.NewText("Elements Awoken Music", Color.Purple.R, Color.Purple.G, Color.Purple.B);
+                    Main.NewText("EA Retro Music", Color.Purple.R, Color.Purple.G, Color.Purple.B);
+                }
+            }
+        }
+
+        private bool InstalledPack()
+        {
+            if (ElementsAwoken.eaMusicEnabled)
+            {
+                return true;
+            }
+            if (ElementsAwoken.eaRetroMusicEnabled)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override void PostItemCheck()
+        {
+            Item item = player.inventory[player.selectedItem];
+            if (item.type == mod.ItemType("LavaLeecher") || item.type == mod.ItemType("FireFlooder"))
+            {
+                if (!Main.GamepadDisableCursorItemIcon)
+                {
+                    player.showItemIcon = true;
+                    Main.ItemIconCacheUpdate(item.type);
+                }
+                if (player.itemTime == 0 && player.itemAnimation > 0 && player.controlUseItem)
+                {
+                    if (item.type == mod.ItemType("LavaLeecher") && Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType() == 1)
+                    {
+                        int num233 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType();
+                        int num234 = 0;
+                        for (int num235 = Player.tileTargetX - 1; num235 <= Player.tileTargetX + 1; num235++)
+                        {
+                            for (int num236 = Player.tileTargetY - 1; num236 <= Player.tileTargetY + 1; num236++)
+                            {
+                                if ((int)Main.tile[num235, num236].liquidType() == num233)
+                                {
+                                    num234 += (int)Main.tile[num235, num236].liquid;
+                                }
+                            }
+                        }
+                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid > 0 && (num234 > 100 || item.type == mod.ItemType("LavaLeecher")))
+                        {
+                            int liquidType = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType();
+
+                            Main.PlaySound(19, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
+                            player.itemTime = item.useTime;
+                            int num237 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquid;
+                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 0;
+                            Main.tile[Player.tileTargetX, Player.tileTargetY].lava(false);
+                            Main.tile[Player.tileTargetX, Player.tileTargetY].honey(false);
+                            WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
+                            if (Main.netMode == 1)
+                            {
+                                NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
+                            }
+                            else
+                            {
+                                Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
+                            }
+                            for (int xPos = Player.tileTargetX - 1; xPos <= Player.tileTargetX + 1; xPos++)
+                            {
+                                for (int yPos = Player.tileTargetY - 1; yPos <= Player.tileTargetY + 1; yPos++)
+                                {
+                                    if (num237 < 256 && (int)Main.tile[xPos, yPos].liquidType() == num233)
+                                    {
+                                        int num240 = (int)Main.tile[xPos, yPos].liquid; // which liquid type
+                                        if (num240 + num237 > 255)
+                                        {
+                                            num240 = 255 - num237;
+                                        }
+                                        num237 += num240;
+                                        Tile tile = Main.tile[xPos, yPos];
+                                        tile.liquid -= (byte)num240;
+                                        Main.tile[xPos, yPos].liquidType(liquidType);
+                                        if (Main.tile[xPos, yPos].liquid == 0)
+                                        {
+                                            Main.tile[xPos, yPos].lava(false);
+                                            Main.tile[xPos, yPos].honey(false);
+                                        }
+                                        WorldGen.SquareTileFrame(xPos, yPos, false);
+                                        if (Main.netMode == 1)
+                                        {
+                                            NetMessage.sendWater(xPos, yPos);
+                                        }
+                                        else
+                                        {
+                                            Liquid.AddWater(xPos, yPos);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // place lava
+                    else if (item.type == mod.ItemType("FireFlooder") && Main.tile[Player.tileTargetX, Player.tileTargetY].liquid < 200 && (!Main.tile[Player.tileTargetX, Player.tileTargetY].nactive() || !Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || Main.tileSolidTop[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type]))
+                    {
+                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType() == 1)
+                        {
+                            Main.PlaySound(19, (int)player.position.X, (int)player.position.Y, 1, 1f, 0f);
+                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquidType(1);
+                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
+                            WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
+                            player.itemTime = item.useTime;
+                            if (Main.netMode == 1)
+                            {
+                                NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            //catching the mystic bunny
+            if (item.type == 1991 || item.type == 3183)
+            {
+                Rectangle rectangle = new Rectangle((int)player.itemLocation.X, (int)player.itemLocation.Y, 32, 32);
+
+                for (int n = 0; n < Main.npc.Length; n++)
+                {
+                    NPC bunny = Main.npc[n];
+                    if (bunny.active && bunny.type == mod.NPCType("MysticBunny"))
+                    {
+                        Rectangle value10 = new Rectangle((int)bunny.position.X, (int)bunny.position.Y, bunny.width, bunny.height);
+                        if (rectangle.Intersects(value10) && (bunny.noTileCollide || player.CanHit(bunny)))
+                        {
+                            if (!bunny.active)
+                            {
+                                return;
+                            }
+                            if (Main.rand.Next(29) == 0)
+                            {
+                                new Item().SetDefaults(mod.ItemType("PiohsPresent"), false);
+                                Item.NewItem((int)player.Center.X, (int)player.Center.Y, 0, 0, mod.ItemType("PiohsPresent"), 1, false, 0, true, false);
+                            }
+                            else if (Main.rand.Next(9) == 0)
+                            {
+                                new Item().SetDefaults(ItemID.FuzzyCarrot, false);
+                                Item.NewItem((int)player.Center.X, (int)player.Center.Y, 0, 0, ItemID.FuzzyCarrot, 1, false, 0, true, false);
+                            }
+                            else
+                            {
+                                Vector2 vector = bunny.Center - new Vector2(20f);
+                                Utils.PoofOfSmoke(vector);
+                                NetMessage.SendData(106, -1, -1, null, (int)vector.X, vector.Y, 0f, 0f, 0, 0, 0);
+                            }
+                            NetMessage.SendData(23, -1, -1, null, n, 0f, 0f, 0f, 0, 0, 0);
+                            bunny.active = false;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public override void UpdateBiomes()
+        {
+            zoneTemple = (MyWorld.lizardTiles > 50);
+        }
+
+        private void CreditsScroll(int screenNum, Vector2 scroll, int screenDuration)
+        {
+            int counterN = screenDuration * (screenNum - pointsNotFound);
+            if (MyWorld.creditsCounter == counterN) screenTransition = true;
+            if (MyWorld.creditsCounter - counterN == screenTransDuration / 2) desiredScPos = creditPoints[screenNum];
+            if (MyWorld.creditsCounter - counterN > screenTransDuration / 2) player.Center = desiredScPos;
+            if (MyWorld.creditsCounter - counterN > screenTransDuration / 2 && MyWorld.creditsCounter > counterN && MyWorld.creditsCounter < screenDuration * (screenNum + 1) + screenTransDuration / 2) desiredScPos += scroll;
+        }
         private void ComputerText()
         {
             int num16 = (int)(((double)player.position.X + (double)player.width * 0.5) / 16.0);
@@ -1645,7 +1929,6 @@ namespace ElementsAwoken
                     return;
             }
         }
-
         public override void FrameEffects()
         {
             if (player.mount.Active && player.mount.Type == mod.MountType("ElementalDragonBunny") && Math.Abs(player.velocity.X) > player.mount.DashSpeed - player.mount.RunSpeed / 3f)
@@ -1663,7 +1946,6 @@ namespace ElementsAwoken
                 b *= 0.48f;
             }
         }
-
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             if (elementalArmor && !elementalArmorCooldown)
@@ -1706,7 +1988,7 @@ namespace ElementsAwoken
             }
             if (extinctionCurse || handsOfDespair)
             {
-                player.lifeRegen -= 30; 
+                player.lifeRegen -= 30;
             }
             if (chaosBurn || discordDebuff)
             {
@@ -1730,20 +2012,21 @@ namespace ElementsAwoken
                 }
                 player.wingTimeMax = 0;
                 player.wingTime = 0;
-            } 
+            }
             if (player.lifeRegen < 0 && theAntidote)
             {
                 player.lifeRegen /= 2;
             }
         }
-
+        public override void UpdateLifeRegen()
+        {
+            if (MyWorld.credits) player.lifeRegen = 0; // to stop suffocation in sand and other things            
+            if (archaicProtectionTimer > 0) player.lifeRegen = 0;
+        }
         public override void UpdateBiomeVisuals()
         {
             bool useLeviathan = NPC.AnyNPCs(mod.NPCType("VoidLeviathanHead"));
             player.ManageSpecialBiomeVisuals("ElementsAwoken:VoidLeviathanHead", useLeviathan);
-
-            bool useAqueous = NPC.AnyNPCs(mod.NPCType("Aqueous"));
-            player.ManageSpecialBiomeVisuals("ElementsAwoken:Aqueous", useAqueous);
 
             bool useInfernace = NPC.AnyNPCs(mod.NPCType("Infernace"));
             player.ManageSpecialBiomeVisuals("ElementsAwoken:Infernace", useInfernace);
@@ -1798,7 +2081,7 @@ namespace ElementsAwoken
 
             player.ManageSpecialBiomeVisuals("ElementsAwoken:RegarothIntense", useRegaroth == 3);
             player.ManageSpecialBiomeVisuals("ElementsAwoken:Regaroth2Intense", useRegaroth == 4);
-        
+
             bool useEncounter1 = MyWorld.encounter1;
             player.ManageSpecialBiomeVisuals("ElementsAwoken:Encounter1", useEncounter1);
             bool useEncounter2 = MyWorld.encounter2;
@@ -1809,26 +2092,14 @@ namespace ElementsAwoken
             bool useDespair = voidEnergyTimer > 0 || voidWalkerAura > 0;
             player.ManageSpecialBiomeVisuals("ElementsAwoken:Despair", useDespair);
 
-            NPC npc = Main.npc[0];
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].active)
-                {
-                    npc = Main.npc[i];
-                    break;
-                }
-                else
-                {
-                    npc = Main.npc[0];
-                }
-            }
+
 
             //Point point = player.Center.ToTileCoordinates();
-            bool useblizzard = MyWorld.hailStorm && player.ZoneOverworldHeight && !player.ZoneDesert && !npc.boss;
+            bool useblizzard = MyWorld.hailStorm && player.ZoneOverworldHeight && !player.ZoneDesert && !ActiveBoss();
             player.ManageSpecialBiomeVisuals("Blizzard", useblizzard, default(Vector2));
 
             // thanks misaro
-            bool useInfWrath = NPC.downedBoss3 && !MyWorld.downedInfernace && !npc.boss;
+            bool useInfWrath = NPC.downedBoss3 && !MyWorld.downedInfernace && !ActiveBoss();
             if (useInfWrath)
             {
                 SkyManager.Instance.Activate("ElementsAwoken:InfernacesWrath", player.Center);
@@ -1838,28 +2109,84 @@ namespace ElementsAwoken
                 SkyManager.Instance.Deactivate("ElementsAwoken:InfernacesWrath");
             }
 
+            NPC aqueous = null;
+            for (int i = 0; i < Main.npc.Length; ++i)
+            {
+                NPC npc = Main.npc[i];
+                if (npc.active && npc.type == mod.NPCType("Aqueous"))
+                {
+                    aqueous = npc;
+                    break;
+                }
+            }
 
-            bool useAqueousSky = npc.active && (npc.life <= npc.lifeMax * 0.65f) && npc.type == mod.NPCType("Aqueous");
-            if (useAqueousSky)
+            bool useAqueous = NPC.AnyNPCs(mod.NPCType("Aqueous"));
+            player.ManageSpecialBiomeVisuals("ElementsAwoken:Aqueous", useAqueous);
+            if (aqueous != null)
             {
-                SkyManager.Instance.Activate("ElementsAwoken:AqueousSky", player.Center);
+                bool useAqueousSky = aqueous.life <= aqueous.lifeMax * 0.65f;
+                if (useAqueousSky)
+                {
+                    SkyManager.Instance.Activate("ElementsAwoken:AqueousSky", player.Center);
+                }
+                else
+                {
+                    SkyManager.Instance.Deactivate("ElementsAwoken:AqueousSky");
+                }
             }
-            else
-            {
-                SkyManager.Instance.Deactivate("ElementsAwoken:AqueousSky");
-            }
+
             /*bool useCelestial = NPC.AnyNPCs(mod.NPCType("TheCelestial"));
             player.ManageSpecialBiomeVisuals("ElementsAwoken:TheCelestial", useCelestial);*/
         }
-
+        private bool ActiveBoss()
+        {
+            for (int i = 0; i < Main.npc.Length; ++i)
+            {
+                if (Main.npc[i].boss)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
         {
-            if (target.GetGlobalNPC<NPCsGLOBAL>(mod).impishCurse)
+            if (target.GetGlobalNPC<NPCsGLOBAL>().impishCurse)
             {
                 damage = (int)(damage * 1.75f);
             }
         }
-
+        public override void ModifyDrawLayers(List<PlayerLayer> layers)
+        {
+            MiscEffects.visible = true;
+            layers.Add(MiscEffects);
+            if (MyWorld.credits && MyWorld.creditsCounter > screenTransDuration / 2)
+            {
+                foreach (PlayerLayer layer in layers)
+                {
+                    layer.visible = false;
+                }
+            }
+        }
+        public static readonly PlayerLayer MiscEffects = new PlayerLayer("ElementsAwoken", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo) {
+            if (drawInfo.shadow != 0f)
+            {
+                return;
+            }
+            Player drawPlayer = drawInfo.drawPlayer;
+            Mod mod = ModLoader.GetMod("ElementsAwoken");
+            MyPlayer modPlayer = drawPlayer.GetModPlayer<MyPlayer>();
+            if (modPlayer.skylineAlpha > 0 && drawInfo.drawPlayer.active &&!drawInfo.drawPlayer.dead)
+            {
+                Texture2D texture = mod.GetTexture("Extra/SkylineWhirlwind");
+                int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f + 89 - Main.screenPosition.Y);
+                Color color = Lighting.GetColor((int)(drawPlayer.Center.X / 16), (int)(drawPlayer.Center.Y / 16)) * modPlayer.skylineAlpha;
+                Rectangle rect = new Rectangle(0, (texture.Height / 4) * modPlayer.skylineFrame, texture.Width, texture.Height / 4);
+                DrawData data = new DrawData(texture, new Vector2(drawX, drawY), rect, color, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1.3f, drawPlayer.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
+                Main.playerDrawData.Add(data);
+            }
+        });
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             if (ancientDecayWeapon)
@@ -2002,9 +2329,13 @@ namespace ElementsAwoken
                         float rotation = (float)Math.Atan2(player.Center.Y - target.Center.Y, player.Center.X - target.Center.X);
                         rotation += MathHelper.ToRadians(Main.rand.Next(-60, 60));
                         Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
-                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), 30, 3f, player.whoAmI, arcTarget.whoAmI);
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, speed.X, speed.Y, mod.ProjectileType("UkuleleArc"), (int)(item.damage * 0.5f), 3f, player.whoAmI, arcTarget.whoAmI);
                     }
                 }
+            }
+            if (noDamageCounter > 0)
+            {
+                noDamageCounter = 0;
             }
         }
 
@@ -2265,6 +2596,14 @@ namespace ElementsAwoken
                 flingToShackle = true;
             }
 
+            if (crystallineLocket && ElementsAwoken.specialAbility.JustPressed && player.FindBuffIndex(mod.BuffType("CrystallineLocketCD")) == -1)
+            {
+                crystallineLocketCrit = 600;
+                if (!ModContent.GetInstance<Config>().debugMode) player.AddBuff(mod.BuffType("CrystallineLocketCD"), 3600);
+                else player.AddBuff(mod.BuffType("CrystallineLocketCD"), 60);
+
+            }
+
             if (ElementsAwoken.armorAbility.JustPressed && voidWalkerCooldown <= 0 && voidWalkerArmor > 0)
             {
                 voidWalkerAura = 300;
@@ -2420,6 +2759,14 @@ namespace ElementsAwoken
             {
                 player.lastCreatureHit = num;
             }
+        }
+        private void CantMove()
+        {
+            player.controlUp = false;
+            player.controlLeft = false;
+            player.controlDown = false;
+            player.controlRight = false;
+            player.controlJump = false;
         }
     }
 }

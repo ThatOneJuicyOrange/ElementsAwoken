@@ -64,7 +64,6 @@ namespace ElementsAwoken.Items.Ancient.Xernon
             recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);
             recipe.AddRecipe();
-
         }
     }
 }

@@ -29,12 +29,12 @@ namespace ElementsAwoken.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.alchemistTimer = true;
         }
         public override void UpdateInventory(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.alchemistTimer = true;
         }
     }

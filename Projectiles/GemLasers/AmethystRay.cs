@@ -14,7 +14,7 @@ namespace ElementsAwoken.Projectiles.GemLasers
             projectile.height = 4;
             //projectile.aiStyle = 48;
             projectile.friendly = true;
-            projectile.magic = true;
+            projectile.ranged = true;
             projectile.penetrate = 5;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 320;

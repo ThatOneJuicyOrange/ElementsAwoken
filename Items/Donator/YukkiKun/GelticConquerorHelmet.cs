@@ -64,13 +64,13 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
             player.oldVelocity.Y = player.velocity.Y; // setting what the old velocity is after so it is the OLD velocity and not current
 
             player.jumpSpeedBoost += 2.0f;
-            player.GetModPlayer<MyPlayer>(mod).gelticConqueror = true;
+            player.GetModPlayer<MyPlayer>().gelticConqueror = true;
         }
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.Gel, 40);
+            recipe.AddIngredient(ItemID.Gel, 15);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

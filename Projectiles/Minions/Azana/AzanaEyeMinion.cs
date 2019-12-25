@@ -55,7 +55,7 @@ namespace ElementsAwoken.Projectiles.Minions.Azana
             projectile.rotation += projectile.velocity.X * 0.04f;
 
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("AzanaMinionBuff"), 3600);
             if (player.dead)
             {

@@ -16,7 +16,7 @@ namespace ElementsAwoken.Projectiles
             projectile.height = 4;
             projectile.friendly = true;
             projectile.ignoreWater = true;
-            projectile.magic = true;
+            projectile.melee = true;
             projectile.tileCollide = false;
             projectile.alpha = 255;
             projectile.penetrate = 1;

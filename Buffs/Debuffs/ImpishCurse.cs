@@ -21,7 +21,7 @@ namespace ElementsAwoken.Buffs.Debuffs
             Main.dust[num1].velocity *= 0.3f;
             Main.dust[num1].noGravity = true;
 
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).impishCurse = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().impishCurse = true;
         }
     }
 }

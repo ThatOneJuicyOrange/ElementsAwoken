@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).extinctionCurseImbue = true;
+            player.GetModPlayer<MyPlayer>().extinctionCurseImbue = true;
         }
     }
 }

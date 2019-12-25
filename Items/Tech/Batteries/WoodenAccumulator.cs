@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
         }
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             modPlayer.batteryEnergy += 10;
         }
         public override void AddRecipes()

@@ -9,24 +9,27 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
 {
     public class DragonSlime : ModNPC
     {
-        public float spikeTimer = 60f;
-
         public override void SetDefaults()
         {
-            npc.width = 30;
-            npc.height = 50;
+            npc.width = 42;
+            npc.height = 30;
+
+            npc.aiStyle = 1;
+            aiType = 1;
+            animationType = NPCID.BlueSlime;
+
             npc.damage = 24;
             npc.defense = 6;
             npc.lifeMax = 32;
+
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
-            npc.value = Item.buyPrice(0, 0, 20, 0);
+
+            npc.value = Item.buyPrice(0, 0, 2, 0);
             npc.knockBackResist = 0.5f;
-            npc.aiStyle = 1;
-            Main.npcFrameCount[npc.type] = 2;
-            aiType = 1;
-            animationType = NPCID.BlueSlime;
+
             npc.buffImmune[24] = true;
+
             banner = npc.type;
             bannerItem = mod.ItemType("DragonSlimeBanner");
         }
@@ -37,43 +40,26 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            int x = spawnInfo.spawnTileX;
-            int y = spawnInfo.spawnTileY;
-            int tile = (int)Main.tile[x, y].type;
-            bool oUnderworld = (y <= (Main.maxTilesY * 0.6f));
-            bool oRockLayer = (y >= (Main.maxTilesY * 0.4f));
-            return oUnderworld && oRockLayer && Main.evilTiles < 80 && Main.sandTiles < 80 && Main.dungeonTiles < 80 && !Main.hardMode ? 0.06f : 0f;
+            bool underworld = (spawnInfo.spawnTileY >= (Main.maxTilesY - 200));
+            bool rockLayer = (spawnInfo.spawnTileY >= (Main.maxTilesY * 0.4f));
+            return !underworld && rockLayer && Main.evilTiles < 80 && Main.sandTiles < 80 && Main.dungeonTiles < 80 && !Main.hardMode ? 0.06f : 0f;
         }
 
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
-            player.AddBuff(BuffID.OnFire, 180, false);
+            if (Main.expertMode) player.AddBuff(BuffID.OnFire, MyWorld.awakenedMode ? 300 : 120, false);
         }
 
         public override void NPCLoot()
         {
-
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Drakonite"), Main.rand.Next(3, 6)); //Item spawn
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Drakonite"), Main.rand.Next(1, 3));
         }
 
         public override void AI()
         {
-            Vector3 RGB = new Vector3(2.0f, 0.75f, 1.5f);
-            float multiplier = 1;
-            float max = 2.25f;
-            float min = 1.0f;
-            RGB *= multiplier;
-            if (RGB.X > max)
+            if (npc.localAI[1] > 0f)
             {
-                multiplier = 0.5f;
-            }
-            if (RGB.X < min)
-            {
-                multiplier = 1.5f;
-            }
-            if (spikeTimer > 0f)
-            {
-                spikeTimer -= 1f;
+                npc.localAI[1] -= 1f;
             }
             if (!npc.wet && !Main.player[npc.target].npcTypeNoAggro[npc.type])
             {
@@ -88,7 +74,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && spikeTimer == 0f)
+                    if (Main.netMode != 1 && npc.localAI[1] == 0f)
                     {
                         for (int n = 0; n < 5; n++)
                         {
@@ -98,7 +84,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                             vector4.Normalize();
                             vector4 *= 4f + (float)Main.rand.Next(-50, 51) * 0.01f;
                             Projectile.NewProjectile(vector3.X, vector3.Y, vector4.X, vector4.Y, mod.ProjectileType("DragonSlimeSpike"), 9, 0f, Main.myPlayer, 0f, 0f);
-                            spikeTimer = 30f;
+                            npc.localAI[1] = 30f;
                         }
                     }
                 }
@@ -109,14 +95,14 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && spikeTimer == 0f)
+                    if (Main.netMode != 1 && npc.localAI[1] == 0f)
                     {
                         num15 = Main.player[npc.target].position.Y - vector3.Y - (float)Main.rand.Next(0, 200);
                         num16 = (float)Math.Sqrt((double)(num14 * num14 + num15 * num15));
                         num16 = 4.5f / num16;
                         num14 *= num16;
                         num15 *= num16;
-                        spikeTimer = 50f;
+                        npc.localAI[1] = 50f;
                         Projectile.NewProjectile(vector3.X, vector3.Y, num14, num15, mod.ProjectileType("DragonSlimeSpike"), 9, 0f, Main.myPlayer, 0f, 0f);
                     }
                 }

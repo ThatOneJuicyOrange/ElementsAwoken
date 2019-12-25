@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Placeable
         }
         public override bool CanUseItem(Player player)
         {
-            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>();
             modPlayer.placingAutoDriller = 4;
             return base.CanUseItem(player);
         }

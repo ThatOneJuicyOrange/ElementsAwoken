@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items
         }
         public override bool CanUseItem(Item item, Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (modPlayer.energy < energy)
             {
                 return false;
@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items
         }
         public override bool Shoot(Item item, Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (energy > 0)
             {
                 modPlayer.energy -= energy;

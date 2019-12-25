@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using System.IO;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
 {
@@ -154,9 +155,9 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
 
         public override void Init()
         {
-            tailType = mod.NPCType<CrystalSerpentTail>();
-            bodyType = mod.NPCType<CrystalSerpentBody>();
-            headType = mod.NPCType<CrystalSerpentHead>();
+            tailType = NPCType<CrystalSerpentTail>();
+            bodyType = NPCType<CrystalSerpentBody>();
+            headType = NPCType<CrystalSerpentHead>();
 
             minLength = 8;
             maxLength = 12;

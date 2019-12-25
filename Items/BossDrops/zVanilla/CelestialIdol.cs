@@ -53,7 +53,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
                 }
             }
             player.magicDamage *= 1.2f;
-            player.GetModPlayer<MyPlayer>(mod).ancientDecayWeapon = true;
+            player.GetModPlayer<MyPlayer>().ancientDecayWeapon = true;
             player.statDefense += 10;
         }
     }

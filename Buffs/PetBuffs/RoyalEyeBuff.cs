@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
-            player.GetModPlayer<MyPlayer>(mod).royalEye = true;
+            player.GetModPlayer<MyPlayer>().royalEye = true;
             bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("RoyalEye")] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {

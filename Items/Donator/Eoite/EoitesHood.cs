@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
             player.setBonus = "15% increased magic damage\nDamage reduced by a further 10%";
             player.endurance *= 1.1f;
             player.magicDamage *= 1.15f;
-            //player.GetModPlayer<MyPlayer>(mod).voidArmor = true;
+            //player.GetModPlayer<MyPlayer>().voidArmor = true;
         }
 
         public override void AddRecipes()

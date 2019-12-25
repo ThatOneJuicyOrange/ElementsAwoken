@@ -16,7 +16,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
 		public override void Update(Player player, ref int buffIndex)
 		{
             player.endurance += 0.1f;
-			player.GetModPlayer<MyPlayer>(mod).puffFall = true;
+			player.GetModPlayer<MyPlayer>().puffFall = true;
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Donator.Superbaseball101
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.heartContainer = true;
             player.maxMinions += 1;
         }

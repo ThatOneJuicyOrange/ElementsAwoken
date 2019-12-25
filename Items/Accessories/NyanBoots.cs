@@ -45,24 +45,11 @@ namespace ElementsAwoken.Items.Accessories
             player.spikedBoots = 1;
             player.spikedBoots = 2;
             player.wingTimeMax = 300;
-            /*if (!hideVisual)
+            if (!hideVisual) player.GetModPlayer<MyPlayer>().nyanBoots = true;
+            if (player.ownedProjectileCounts[mod.ProjectileType("NyanBootsTrail")] < 1 && player.GetModPlayer<MyPlayer>().nyanBoots)
             {
-                if (player.ownedProjectileCounts[mod.ProjectileType("NyanBootsTrail")] < 1)
-                {
-                    Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("NyanBootsTrail"), 0, 0, player.whoAmI);
-                }
+                Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("NyanBootsTrail"), 0, 0, player.whoAmI);
             }
-            else
-            {
-                for (int k = 0; k < Main.projectile.Length; k++)
-                {
-                    Projectile other = Main.projectile[k];
-                    if (other.type == mod.ProjectileType("NyanBootsTrail") && other.owner == player.whoAmI)
-                    {
-                        other.active = false;
-                    }
-                }
-            }*/
         }
 
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,
@@ -93,12 +80,6 @@ namespace ElementsAwoken.Items.Accessories
                     Main.dust[dust2].scale *= 1.7f;
                 }
             }*/
-            if (player.ownedProjectileCounts[mod.ProjectileType("NyanBootsTrail")] < 1)
-            {
-                Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("NyanBootsTrail"), 0, 0, player.whoAmI);
-            }
-            player.GetModPlayer<MyPlayer>(mod).nyanBoots = true;
-
             base.WingUpdate(player, inUse);
             return false;
         }

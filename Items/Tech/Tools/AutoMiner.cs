@@ -59,7 +59,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void UpdateInventory(Player player)
         {
             int energyConsumed = 4;
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (enabled && modPlayer.energy > energyConsumed)
             {
                 digCooldown--;

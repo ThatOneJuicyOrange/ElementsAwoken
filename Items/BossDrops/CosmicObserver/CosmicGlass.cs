@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.BossDrops.CosmicObserver
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.magicCrit += 15;
             player.meleeCrit += 15;
             player.rangedCrit += 15;

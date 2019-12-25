@@ -35,7 +35,7 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             bool flag64 = projectile.type == mod.ProjectileType("CosmicObserver");
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("CosmicObserverBuff"), 3600);
             if (flag64)
             {

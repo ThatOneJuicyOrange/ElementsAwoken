@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(null, "ChaosPotion", 1);
             recipe.AddIngredient(ItemID.LunarOre, 1);
             recipe.AddIngredient(null, "NeutronFragment", 1);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

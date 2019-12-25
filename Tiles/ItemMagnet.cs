@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Microsoft.Xna.Framework.Graphics;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Tiles
 {
@@ -19,7 +20,7 @@ namespace ElementsAwoken.Tiles
             disableSmartCursor = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(mod.GetTileEntity<ItemMagnetEntity>().Hook_AfterPlacement, -1, 0, true);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(GetInstance<ItemMagnetEntity>().Hook_AfterPlacement, -1, 0, true);
 
             AddMapEntry(new Color(244, 237, 39));
 
@@ -29,7 +30,7 @@ namespace ElementsAwoken.Tiles
         }
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            mod.GetTileEntity<ItemMagnetEntity>().Kill(i, j);
+            GetInstance<ItemMagnetEntity>().Kill(i, j);
         }
         /*public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {

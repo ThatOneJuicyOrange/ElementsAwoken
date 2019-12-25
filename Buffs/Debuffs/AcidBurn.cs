@@ -19,7 +19,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).acidBurn = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().acidBurn = true;
             if (Main.rand.Next(10) == 0)
             {
                 Dust dust = Main.dust[Dust.NewDust(npc.position, npc.width, npc.height, 74, 0f, 0f, 150)];
@@ -32,7 +32,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).acidBurn = true;
+            player.GetModPlayer<MyPlayer>().acidBurn = true;
             if (Main.rand.Next(10) == 0)
             {
                 Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, 74, 0f, 0f, 150)];

@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
-            player.GetModPlayer<MyPlayer>(mod).possessedHand = true;
+            player.GetModPlayer<MyPlayer>().possessedHand = true;
             bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("PossessedHand")] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {

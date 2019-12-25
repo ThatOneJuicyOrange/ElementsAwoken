@@ -13,6 +13,8 @@ namespace ElementsAwoken.Items.Materials
             item.maxStack = 999;
             item.value = Item.sellPrice(0, 2, 0, 0);
 
+            item.consumable = true;
+
             item.rare = 11;
             item.GetGlobalItem<EARarity>().rare = 12;
 

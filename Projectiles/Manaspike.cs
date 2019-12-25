@@ -17,7 +17,7 @@ namespace ElementsAwoken.Projectiles
             projectile.friendly = true;
             projectile.hostile = false;
             projectile.ignoreWater = true;
-            projectile.ranged = true;
+            projectile.melee = true;
             projectile.penetrate = 1;
             projectile.extraUpdates = 2;
             projectile.timeLeft = 600;

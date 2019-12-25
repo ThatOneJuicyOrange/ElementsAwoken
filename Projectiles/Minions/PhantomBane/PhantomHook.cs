@@ -74,7 +74,7 @@ namespace ElementsAwoken.Projectiles.Minions.PhantomBane
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             bool flag64 = projectile.type == mod.ProjectileType("PhantomHook");
 
             if (!hasGivenBuff)

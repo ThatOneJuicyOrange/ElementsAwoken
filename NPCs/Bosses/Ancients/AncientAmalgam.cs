@@ -231,27 +231,33 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         if (npc.life > npc.lifeMax * 0.85f)
                         {
-                            attackNum = Main.rand.Next(0, 6);
+                            attackNum = Main.rand.Next(0, 7); // 0 - 6
                         }
-                        else if (npc.life < npc.lifeMax * 0.8f && npc.life > npc.lifeMax * 0.5f)
+                        else if (npc.life <= npc.lifeMax * 0.85f && npc.life > npc.lifeMax * 0.5f)
                         {
-                            attackNum = Main.rand.Next(1, 6);
+                            attackNum = Main.rand.Next(1, 7); // 1 - 6
                         }
-                        else if (npc.life < npc.lifeMax * 0.5f && npc.life > npc.lifeMax * 0.25f)
+                        else if (npc.life <= npc.lifeMax * 0.5f && npc.life > npc.lifeMax * 0.25f)
                         {
-                            attackNum = Main.rand.Next(2, 9);
+                            attackNum = Main.rand.Next(2, 10);// 2 - 9
                         }
-                        else if (npc.life < npc.lifeMax * 0.25f)
+                        else if (npc.life <= npc.lifeMax * 0.25f)
                         {
-                            attackNum = Main.rand.Next(3, 11);
+                            attackNum = Main.rand.Next(3, 12); // 3 - 11
                             while (attackNum == 4 || attackNum == 9)
                             {
-                                attackNum = Main.rand.Next(3, 11);
+                                attackNum = Main.rand.Next(3, 12); // 3 - 11
                             }
                             if (attackNum == 7)
                             {
                                 attackNum = 11;
                             }
+                        }
+                        else
+                        {
+                            attackNum = 0;
+                            ElementsAwoken.DebugModeText("Error selecting attack"); // this shouldnt occur anymore
+                            break;
                         }
                     }
                     if (npc.localAI[1] == 0)

@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Elements.Void
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            ModPlayer modPlayer = player.GetModPlayer<ModPlayer>(mod);
+            ModPlayer modPlayer = player.GetModPlayer<ModPlayer>();
             player.accRunSpeed = 21f;
             player.rocketBoots = 3;
             player.moveSpeed += 17f;

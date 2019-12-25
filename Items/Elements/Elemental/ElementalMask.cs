@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Elements.Elemental
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "If you are killed, you are revived back to half health\n45 second cooldown";
-            player.GetModPlayer<MyPlayer>(mod).elementalArmor = true;
+            player.GetModPlayer<MyPlayer>().elementalArmor = true;
         }
 
         public override void AddRecipes()

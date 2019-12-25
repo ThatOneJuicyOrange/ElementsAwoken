@@ -44,7 +44,7 @@ namespace ElementsAwoken.Projectiles.Pets.BabyShadeWyrm
                 return;
             }
 
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.dead)
             {
                 modPlayer.babyShadeWyrm = false;

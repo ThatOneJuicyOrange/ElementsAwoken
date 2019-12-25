@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
         {
             player.setBonus = "Melee attacks and projectiles inflict Dragonfire\nMaximum life increased by 50";
             player.statLifeMax2 += 50;
-            player.GetModPlayer<MyPlayer>(mod).dragonmailGreathelm = true;
+            player.GetModPlayer<MyPlayer>().dragonmailGreathelm = true;
         }
 
         public override void AddRecipes()

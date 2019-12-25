@@ -12,7 +12,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
         public override void SetDefaults()
         {
             npc.width = 48;
-            npc.height = 24;
+            npc.height = 88;
 
             npc.damage = 35;
             npc.defense = 35;
@@ -80,6 +80,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     npc.life = 0;
                     npc.HitEffect(0, 10.0);
                     npc.active = false;
+                    NetMessage.SendData(28, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
                 }
             }
             if (npc.life <= 0)

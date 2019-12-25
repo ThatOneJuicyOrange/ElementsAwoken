@@ -39,7 +39,7 @@ namespace ElementsAwoken.Projectiles.Minions.AqueousMinion
 
             bool flag64 = projectile.type == mod.ProjectileType("AqueousMinionFriendly1");
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             //player.AddBuff(mod.BuffType("AqueousMinions"), 3600);
             if (flag64)
             {

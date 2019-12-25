@@ -58,7 +58,7 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (enabled && modPlayer.energy < modPlayer.maxEnergy)
             {
                 for (int i = 0; i < 50; i++)

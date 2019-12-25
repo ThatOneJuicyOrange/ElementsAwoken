@@ -17,7 +17,6 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
     {
         int text = 0;
 
-        int despawnTimer = 0;
         public override void SetDefaults()
         {
             npc.lifeMax = 300000;
@@ -115,7 +114,6 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
         {
             Player P = Main.player[npc.target];
             bool expertMode = Main.expertMode;
-            npc.netUpdate = true;
             npc.TargetClosest(true);
 
             Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
@@ -188,15 +186,15 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 npc.TargetClosest(true);
                 if (!Main.player[npc.target].active || Main.player[npc.target].dead)
                 {
-                    despawnTimer++;
+                    npc.localAI[0]++;
                     npc.velocity.Y = npc.velocity.Y + 0.11f;
-                    if (despawnTimer >= 300)
+                    if (npc.localAI[0] >= 300)
                     {
                         npc.active = false;
                     }
                 }
                 else
-                    despawnTimer = 0;
+                    npc.localAI[0] = 0;
             }
             if (Main.dayTime || !P.active || P.dead)
             {
@@ -299,7 +297,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         npc.ai[3] += 0.5f;
                     }
 
-                    if (npc.ai[3] >= 60f)
+                    if (npc.ai[3] >= 60f && Main.netMode != 1)
                     {
                         int numberProjectiles = 3;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);

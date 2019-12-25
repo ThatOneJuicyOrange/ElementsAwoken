@@ -19,7 +19,7 @@ namespace ElementsAwoken.Projectiles
             projectile.penetrate = 1;
             projectile.tileCollide = false;
             projectile.timeLeft = 200;
-            projectile.magic = true;
+            projectile.melee = true;
         }
         public override void SetStaticDefaults()
         {

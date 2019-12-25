@@ -12,6 +12,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Tiles
 {
@@ -76,7 +77,7 @@ namespace ElementsAwoken.Tiles
 
             if (isPlayerActive)
             {
-                PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+                PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
                 //Console.WriteLine(modPlayer.energy);
                 if (enabled && modPlayer.energy >= 3)
                 {
@@ -152,7 +153,7 @@ namespace ElementsAwoken.Tiles
                 Player player = Main.player[k];
                 if (player.active)
                 {
-                    PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>(mod);
+                    PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>();
                     if(modPlayer.placingAutoDriller > 0)
                     {
                         tileOwner = player.name;
@@ -179,7 +180,7 @@ namespace ElementsAwoken.Tiles
         public override bool ValidTile(int i, int j)
         {
             Tile tile = Main.tile[i, j];
-            return tile.active() && tile.type == mod.TileType<AutoDriller>() && tile.frameX == 0 && tile.frameY == 0;
+            return tile.active() && tile.type == TileType<AutoDriller>() && tile.frameX == 0 && tile.frameY == 0;
         }
 
         public override int Hook_AfterPlacement(int i, int j, int type, int style, int direction)

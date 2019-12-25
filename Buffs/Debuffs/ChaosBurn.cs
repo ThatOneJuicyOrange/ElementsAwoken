@@ -19,7 +19,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).extinctionCurse = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().extinctionCurse = true;
             int num1 = Dust.NewDust(npc.position, npc.width, npc.height, 127);
             Main.dust[num1].scale = 1.9f;
             Main.dust[num1].velocity *= 2f;
@@ -27,7 +27,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).extinctionCurse = true;
+            player.GetModPlayer<MyPlayer>().extinctionCurse = true;
             int num1 = Dust.NewDust(player.position, player.width, player.height, 127);
             Main.dust[num1].scale = 1.9f;
             Main.dust[num1].velocity *= 2f;

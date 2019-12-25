@@ -31,7 +31,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             projectile.Center = new Vector2(player.Center.X, player.Center.Y - 60);
             if (player.direction == -1)
             {

@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.ScourgeFighter
                 dust.noGravity = true;
             }
             player.accRunSpeed *= 1.5f;
-            player.GetModPlayer<MyPlayer>(mod).scourgeDrive = true;
+            player.GetModPlayer<MyPlayer>().scourgeDrive = true;
         }
     }
 }

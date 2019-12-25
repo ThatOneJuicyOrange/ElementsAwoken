@@ -22,7 +22,7 @@ namespace ElementsAwoken.Buffs.TileBuffs
             player.rangedDamage *= 1.15f;
             player.thrownDamage *= 1.15f;
 
-            player.GetModPlayer<MyPlayer>(mod).damageTaken *= 1.5f;
+            player.GetModPlayer<MyPlayer>().damageTaken *= 1.5f;
             player.potionDelayTime = (int)(player.potionDelayTime * 1.25);
             player.restorationDelayTime = (int)(player.restorationDelayTime * 1.25);
         }

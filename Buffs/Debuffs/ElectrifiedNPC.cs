@@ -18,7 +18,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).electrified = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().electrified = true;
             int num1 = Dust.NewDust(npc.position, npc.width, npc.height, 226);
             Main.dust[num1].scale = 1f;
             Main.dust[num1].velocity *= 1f;

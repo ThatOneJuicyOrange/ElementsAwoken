@@ -99,8 +99,8 @@ namespace ElementsAwoken.Items.Developer
                     item.useStyle = 5;
                     player.AddBuff(mod.BuffType("DashCooldown"), 300);
                 }
-                player.GetModPlayer<MyPlayer>(mod).viridiumDash = true;
-                player.GetModPlayer<MyPlayer>(mod).dashDustTimer = 60;
+                player.GetModPlayer<MyPlayer>().viridiumDash = true;
+                player.GetModPlayer<MyPlayer>().dashDustTimer = 60;
                 Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("ViridiumExplosion"), 400, 10f, player.whoAmI, 0.0f, 0.0f);
 
                 for (int l = 0; l < 100; l++)

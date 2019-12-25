@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Other
         }
         public override bool CanUseItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             return player.lastDeathTime > DateTime.MinValue && modPlayer.hellsReflectionTimer > 0;
         }
@@ -47,7 +47,7 @@ namespace ElementsAwoken.Items.Other
         }
         public override void HoldItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (modPlayer.hellsReflectionTimer > 0)
             {
                 if (Main.rand.Next(2) == 0)

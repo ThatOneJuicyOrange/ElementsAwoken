@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.increasedObserverChance = true;
             modPlayer.observerChanceTimer = 3600;
             return true;

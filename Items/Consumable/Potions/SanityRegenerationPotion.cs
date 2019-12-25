@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(ItemID.BottledWater, 1);
             recipe.AddIngredient(ItemID.DemoniteOre, 4);
             recipe.AddIngredient(ItemID.SpecularFish, 1);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

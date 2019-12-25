@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(null, "ImpEar", 1);
             recipe.AddIngredient(ItemID.Hellstone, 1);
             recipe.AddIngredient(ItemID.ViciousPowder, 3);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
             recipe = new ModRecipe(mod);
@@ -49,7 +49,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(null, "ImpEar", 1);
             recipe.AddIngredient(ItemID.Hellstone, 1);
             recipe.AddIngredient(ItemID.VilePowder, 3);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

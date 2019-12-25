@@ -22,7 +22,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 	
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).brokenWings = true;
+            player.GetModPlayer<MyPlayer>().brokenWings = true;
         }
     }
 }

@@ -13,35 +13,35 @@ namespace ElementsAwoken.Items
         {
             if (item.type == ItemID.RodofDiscord)
             {
-                if (player.GetModPlayer<MyPlayer>(mod).cantROD == true)
+                if (player.GetModPlayer<MyPlayer>().cantROD == true)
                 {
                     return false;
                 }
             }
             if (item.type == ItemID.CellPhone)
             {
-                if (player.GetModPlayer<MyPlayer>(mod).cantMagicMirror == true)
+                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
                 {
                     return false;
                 }
             }
             if (item.type == ItemID.MagicMirror)
             {
-                if (player.GetModPlayer<MyPlayer>(mod).cantMagicMirror == true)
+                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
                 {
                     return false;
                 }
             }
             if (item.type == ItemID.IceMirror)
             {
-                if (player.GetModPlayer<MyPlayer>(mod).cantMagicMirror == true)
+                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
                 {
                     return false;
                 }
             }
             if (item.type == ItemID.GrapplingHook)
             {
-                if (player.GetModPlayer<MyPlayer>(mod).cantGrapple == true)
+                if (player.GetModPlayer<MyPlayer>().cantGrapple == true)
                 {
                     player.cGrapple = 1;
                     return false;
@@ -49,10 +49,11 @@ namespace ElementsAwoken.Items
             }
             if (MyWorld.encounter1)
             {
-                if (item.type == ItemID.MagicMirror || item.type == ItemID.RecallPotion || item.type == ItemID.WormholePotion || item.type == ItemID.CellPhone)
-                {
-                    return false;
-                }
+                if (item.type == ItemID.MagicMirror || item.type == ItemID.RecallPotion || item.type == ItemID.WormholePotion || item.type == ItemID.CellPhone)return false;
+            }
+            if (MyWorld.credits)
+            {
+                if (item.type != mod.ItemType("CreditsSetup")) return false;
             }
             return true;
         }

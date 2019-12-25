@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
-            player.GetModPlayer<MyPlayer>(mod).wyvernPet = true;
+            player.GetModPlayer<MyPlayer>().wyvernPet = true;
             bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("WyvernHead")] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {

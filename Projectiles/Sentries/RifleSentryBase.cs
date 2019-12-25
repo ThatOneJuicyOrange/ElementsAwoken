@@ -37,7 +37,7 @@ namespace ElementsAwoken.Projectiles.Sentries
         public override void AI()
         {
             Player player = Main.player[Main.myPlayer];
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             consumeEnergyTimer--;
             if (consumeEnergyTimer <= 0)
             {

@@ -53,7 +53,7 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void UpdateInventory(Player player)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             if (modPlayer.energy < modPlayer.maxEnergy && Main.dayTime)
             {
                 producePowerCooldownMax = (int)MathHelper.Lerp(30, 200, MathHelper.Distance((float)Main.time, 27000) / 27000);

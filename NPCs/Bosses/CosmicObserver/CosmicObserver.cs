@@ -322,7 +322,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                     if (Vector2.Distance(floatCenter, npc.Center) > 150) floatCenter = npc.Center;
                 }
 
-                if (Config.debugMode)
+                if (ModContent.GetInstance<Config>().debugMode)
                 {
                     Dust dust = Main.dust[Dust.NewDust(floatCenter, 2, 2, 6)];
                     dust.noGravity = true;

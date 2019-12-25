@@ -43,7 +43,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            NPCsGLOBAL modNPC = target.GetGlobalNPC<NPCsGLOBAL>(mod);
+            NPCsGLOBAL modNPC = target.GetGlobalNPC<NPCsGLOBAL>();
             if (!modNPC.shrunk)
             {
                 modNPC.shrinking = true;

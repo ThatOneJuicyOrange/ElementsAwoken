@@ -20,7 +20,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 		
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).dragonfire = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().dragonfire = true;
             int num1 = Dust.NewDust(npc.position, npc.width, npc.height, 127);
             Main.dust[num1].scale = (float)Main.rand.Next(70, 110) * 0.02f;
             Main.dust[num1].velocity *= 3f;
@@ -28,7 +28,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).dragonfire = true;
+            player.GetModPlayer<MyPlayer>().dragonfire = true;
             int num1 = Dust.NewDust(player.position, player.width, player.height, 127);
             Main.dust[num1].scale = (float)Main.rand.Next(70, 110) * 0.02f;
             Main.dust[num1].velocity *= 3f;

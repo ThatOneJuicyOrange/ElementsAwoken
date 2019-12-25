@@ -19,7 +19,7 @@ namespace ElementsAwoken.Buffs.Debuffs
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).corroding = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().corroding = true;
             if (Main.rand.Next(10) == 0)
             {
                 Dust dust = Main.dust[Dust.NewDust(npc.position, npc.width, npc.height, 74, 0f, 0f, 150)];

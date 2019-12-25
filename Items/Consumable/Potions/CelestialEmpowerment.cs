@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(ItemID.BottledWater, 1);
             recipe.AddIngredient(null, "Pyroplasm", 2);
             recipe.AddIngredient(ItemID.LunarOre, 4);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

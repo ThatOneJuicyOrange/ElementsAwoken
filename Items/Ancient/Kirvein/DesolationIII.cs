@@ -32,8 +32,8 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
             item.noMelee = true;
             item.autoReuse = true;
 
-            item.value = Item.sellPrice(0, 2, 0, 0);
-            item.rare = 3;
+            item.value = Item.sellPrice(0, 20, 0, 0);
+            item.rare = 10;
 
             item.shoot = ProjectileID.WoodenArrowFriendly;
             item.shootSpeed = 14f;
@@ -80,10 +80,17 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
             if (player.altFunctionUse == 2)
             {
                 mode++;
-                if (mode >= 2)
+                if (mode > 2)
                 {
                     mode = 0;
                 }
+                string text = "";
+                if (mode == 0) text = "Wave";
+                else if (mode == 1) text = "Charge";
+                else if (mode == 2) text = "Disc";
+
+                CombatText.NewText(player.getRect(), Color.DarkGreen, text, false, false);
+                
                 Main.PlaySound(12, (int)player.position.X, (int)player.position.Y, 0);
                 switch (mode)
                 {
@@ -159,7 +166,7 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
                 else
                 {
                     Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("DesolationDisc"), damage, knockBack, player.whoAmI, 0.1f, Main.rand.Next(-1, 2));
-                    discCooldown = 600;
+                    discCooldown = 540;
                 }
             }
             return false;

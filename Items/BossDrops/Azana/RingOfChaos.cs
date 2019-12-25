@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.chaosRing = true;
 
             player.magicCrit += 10;

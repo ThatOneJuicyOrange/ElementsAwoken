@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             drainLifeTimer--;
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             float maxDistance = 250f;
             if (player.whoAmI == Main.myPlayer)
             {
@@ -47,7 +47,7 @@ namespace ElementsAwoken.Items.Accessories
                     if (nPC.active && !nPC.friendly && nPC.damage > 0 && !nPC.dontTakeDamage && Vector2.Distance(player.Center, nPC.Center) <= maxDistance && nPC.life <= 1000 && !nPC.SpawnedFromStatue)
                     {
                         nPC.AddBuff(mod.BuffType("LifeDrain"), 5);
-                        nPC.GetGlobalNPC<NPCsGLOBAL>(mod).lifeDrainAmount = 5;
+                        nPC.GetGlobalNPC<NPCsGLOBAL>().lifeDrainAmount = 5;
                         if (drainLifeTimer <= 0)
                         {
                             float healAmount = Main.rand.Next(1, 2);

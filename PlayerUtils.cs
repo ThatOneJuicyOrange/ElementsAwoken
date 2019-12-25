@@ -233,9 +233,9 @@ namespace ElementsAwoken
         // check using potions, also works for quick buff idk why
         public override bool UseItem(Item item, Player player)
         {
-            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>();
 
-            if (item.buffType != 0 && item.useStyle == 2 && item.consumable)
+            if (item.buffType != 0 && item.useStyle == 2 && item.consumable && item.type != ItemID.Ale)
             {
                 for (int i = 0; i < modPlayer.potionConsumedCD.Length; i++)
                 {
@@ -259,7 +259,7 @@ namespace ElementsAwoken
         public override void NPCLoot(NPC npc)
         {
             Player player = Main.player[Main.myPlayer];
-            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>(mod);
+            PlayerUtils modPlayer = player.GetModPlayer<PlayerUtils>();
             if (npc.boss)
             {
                 for (int i = 0; i < modPlayer.bossKilledCD.Length; i++)

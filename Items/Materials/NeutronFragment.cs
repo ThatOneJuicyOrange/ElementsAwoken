@@ -28,6 +28,7 @@ namespace ElementsAwoken.Items.Materials
             recipe.AddIngredient(ItemID.FragmentSolar, 2);
             recipe.AddIngredient(ItemID.FragmentStardust, 2);
             recipe.AddIngredient(ItemID.FragmentVortex, 2);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

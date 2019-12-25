@@ -25,6 +25,8 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients.Gores
         {
             projectile.Center = Main.player[Main.myPlayer].Center + new Vector2(0, - 300);
 
+            if (!Main.player[Main.myPlayer].active || Main.player[Main.myPlayer].dead) projectile.Kill();
+
             if (!NPC.AnyNPCs(mod.NPCType("Izaris")) &&
             !NPC.AnyNPCs(mod.NPCType("Kirvein")) &&
             !NPC.AnyNPCs(mod.NPCType("Krecheus")) &&

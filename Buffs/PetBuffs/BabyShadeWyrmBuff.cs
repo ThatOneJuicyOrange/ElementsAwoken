@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void Update(Player player, ref int buffIndex)
         {
             player.buffTime[buffIndex] = 18000;
-            player.GetModPlayer<MyPlayer>(mod).babyShadeWyrm = true;
+            player.GetModPlayer<MyPlayer>().babyShadeWyrm = true;
             bool petProjectileNotSpawned = player.ownedProjectileCounts[mod.ProjectileType("BabyShadeWyrmHead")] <= 0;
             if (petProjectileNotSpawned && player.whoAmI == Main.myPlayer)
             {

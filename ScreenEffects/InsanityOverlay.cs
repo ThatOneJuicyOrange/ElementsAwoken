@@ -17,7 +17,7 @@ namespace ElementsAwoken.ScreenEffects
             if (Main.gameMenu) return;
             var mod = ModLoader.GetMod("ElementsAwoken");
             Player player = Main.player[Main.myPlayer];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
 
             transparency = MathHelper.Lerp(0.2f, 0f, modPlayer.sanity / (modPlayer.sanityMax * 0.5f));
             gbValues = (int)Math.Round(MathHelper.Lerp(155, 255, modPlayer.sanity / (modPlayer.sanityMax * 0.5f)));

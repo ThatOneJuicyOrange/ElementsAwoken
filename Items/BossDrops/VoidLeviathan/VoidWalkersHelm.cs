@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Press the armour ability key to activate psychosis aura\nThe psychosis aura confuses enemies and inflicts extinction curse";
-            player.GetModPlayer<MyPlayer>(mod).voidWalkerArmor = 4;
+            player.GetModPlayer<MyPlayer>().voidWalkerArmor = 4;
         }
 
         public override void AddRecipes()

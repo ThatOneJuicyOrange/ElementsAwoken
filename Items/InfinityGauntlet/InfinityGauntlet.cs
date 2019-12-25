@@ -162,7 +162,6 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                 Point tilePos = (targetPos / 16).ToPoint();
                 Tile tile = Framing.GetTileSafely(tilePos.X, tilePos.Y);
                 MapTile mapTile = Main.Map[tilePos.X, tilePos.Y];
-                Main.NewText(mapTile.Type);
                 if (ValidTile(tile) && DiscoveredArea(mapTile))
                 {
                     player.position = targetPos;
@@ -172,7 +171,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                         NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, targetPos.X, targetPos.Y, 1, 0, 0);
                     }
 
-                    if (!Config.debugMode)
+                    if (!ModContent.GetInstance<Config>().debugMode)
                     {
                         player.AddBuff(mod.BuffType("InfinityPortalCooldown"), 1800);
                     }
@@ -351,6 +350,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                 {
                     //Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("SkylineBolt"), damage * 3, knockBack, player.whoAmI);
                     Main.mapFullscreen = true;
+                    Main.playerInventory = false;
                 }
                 else if (gauntletMode == 3)
                 {
@@ -378,7 +378,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                                 }
                             }
                         }
-                        if (!Config.debugMode)
+                        if (!ModContent.GetInstance<Config>().debugMode)
                         {
                             player.AddBuff(mod.BuffType("InfinityBubbleCooldown"), 1200);
                         }
@@ -430,7 +430,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                                 }
                             }
                         }
-                        if (!Config.debugMode)
+                        if (!ModContent.GetInstance<Config>().debugMode)
                         {
                             player.AddBuff(mod.BuffType("InfinityVoidCooldown"), 2700);//2700
                         }

@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Storms brew around you";
-            player.GetModPlayer<MyPlayer>(mod).aeroArmor = true;
+            player.GetModPlayer<MyPlayer>().aeroArmor = true;
         }
 
         public override void AddRecipes()

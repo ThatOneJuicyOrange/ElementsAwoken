@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.immortalResolve = true;
             player.statLifeMax2 += 50;
             if (player.velocity.Y == 0f && player.velocity.X == 0f)

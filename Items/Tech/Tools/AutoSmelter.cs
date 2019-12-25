@@ -55,7 +55,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void UpdateInventory(Player player)
         {
             int energyConsumed = 2;
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             smeltCooldown--;
             if (enabled)
             {

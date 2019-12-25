@@ -50,7 +50,7 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             projectile.rotation += projectile.velocity.X * 0.04f;
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             if (player.dead)
             {

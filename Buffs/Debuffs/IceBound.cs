@@ -20,7 +20,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.GetGlobalNPC<NPCsGLOBAL>(mod).iceBound = true;
+            npc.GetGlobalNPC<NPCsGLOBAL>().iceBound = true;
             int num1 = Dust.NewDust(npc.position, npc.width, npc.height, 67);
             Main.dust[num1].scale = 1.2f;
             Main.dust[num1].velocity /= 1f;
@@ -28,7 +28,7 @@ namespace ElementsAwoken.Buffs.Debuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).iceBound = true;
+            player.GetModPlayer<MyPlayer>().iceBound = true;
             int num1 = Dust.NewDust(player.position, player.width, player.height, 67);
             Main.dust[num1].scale = 1.2f;
             Main.dust[num1].velocity /= 1f;

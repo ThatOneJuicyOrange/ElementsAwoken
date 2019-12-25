@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using System.IO;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.ArmoredTrencher
 {
@@ -168,9 +169,9 @@ namespace ElementsAwoken.NPCs.ArmoredTrencher
 
         public override void Init()
         {
-            tailType = mod.NPCType<ArmoredTrencherTail>();
-            bodyType = mod.NPCType<ArmoredTrencherBody>();
-            headType = mod.NPCType<ArmoredTrencherHead>();
+            tailType = NPCType<ArmoredTrencherTail>();
+            bodyType = NPCType<ArmoredTrencherBody>();
+            headType = NPCType<ArmoredTrencherHead>();
 
             minLength = 16;
             maxLength = 22;

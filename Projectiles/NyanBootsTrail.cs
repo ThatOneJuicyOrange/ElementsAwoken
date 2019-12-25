@@ -57,7 +57,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             projectile.position.X = player.Center.X;
             projectile.position.Y = player.Center.Y + 5;
             if (!player.active || !modPlayer.nyanBoots)

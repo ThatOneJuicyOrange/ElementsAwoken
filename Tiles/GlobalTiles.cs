@@ -24,7 +24,7 @@ namespace ElementsAwoken.Tiles
         public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
         {
             Player player = Main.player[Main.myPlayer];
-            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>(mod);
+            AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (player.position.Y > Main.maxTilesY * .25f * 16)
             {
                 modPlayer.mineTileCooldown = modPlayer.mineTileCooldownMax; // 3 minutes of not mining resets the mining countdown

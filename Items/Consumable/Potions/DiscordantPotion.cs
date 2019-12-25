@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddIngredient(ItemID.BottledWater, 1);
             recipe.AddIngredient(null, "DiscordantBar", 1);
             recipe.AddIngredient(null, "ChaoticFlare", 2);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

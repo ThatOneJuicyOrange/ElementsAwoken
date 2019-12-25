@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.vleviAegis = true;
 
             player.statLifeMax2 += 50;

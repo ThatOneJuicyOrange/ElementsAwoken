@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Elements.Water
         public override void UpdateArmorSet(Player player)
         {
             player.setBonus = "Taking more then 25 damage causes toxic water to spray";
-            player.GetModPlayer<MyPlayer>(mod).oceanicArmor = true;
+            player.GetModPlayer<MyPlayer>().oceanicArmor = true;
         }
 
         public override void AddRecipes()

@@ -23,7 +23,7 @@ namespace ElementsAwoken.NPCs.MutatedScorpion
             npc.knockBackResist = 0.3f;
             animationType = 257;
             aiType = NPCID.AnomuraFungus; // makes it so it doesnt despawn during day
-            npc.value = Item.buyPrice(0, 0, 5, 0);
+            npc.value = Item.buyPrice(0, 0, 2, 0);
             npc.HitSound = SoundID.NPCHit31;
             npc.DeathSound = SoundID.NPCDeath34;
             npc.catchItem = (short)mod.ItemType("WastelandSummon");

@@ -36,30 +36,9 @@ namespace ElementsAwoken.Items.Elements.Sky
             player.lavaMax += 420;
             player.wingTimeMax = 160;
             player.noFallDmg = true;
+            if (player.controlJump) player.GetModPlayer<MyPlayer>().skylineFlying = true;
         }
-        public override bool WingUpdate(Player player, bool inUse)
-        {
-            if (inUse)
-            {
-                float num98 = 16f;
-                int num99 = 0;
-                while ((float)num99 < num98)
-                {
-                    Vector2 vector11 = Vector2.UnitX * 0f;
-                    vector11 += -Vector2.UnitY.RotatedBy((double)((float)num99 * (6.28318548f / num98)), default(Vector2)) * new Vector2(1f, 4f);
-                    vector11 = vector11.RotatedBy((double)player.velocity.ToRotation(), default(Vector2));
-                    int num100 = Dust.NewDust(player.Center, 0, 0, 31, 0f, 0f, 0, default(Color), 1f);
-                    Main.dust[num100].scale = 1f;
-                    Main.dust[num100].noGravity = true;
-                    Main.dust[num100].position = new Vector2(player.position.X + 10, player.position.Y + 3f + 30);
-                    Main.dust[num100].velocity = player.velocity * 0f + vector11.SafeNormalize(Vector2.UnitY) * 1f;
-                    num99++;
-                }
-            }
-            base.WingUpdate(player, inUse);
-            return false;
-        }
-    public override void AddRecipes()
+        public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddRecipeGroup("WingGroup");

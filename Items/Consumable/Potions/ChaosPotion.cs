@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "HavocPotion", 1);
             recipe.AddIngredient(ItemID.Ectoplasm, 1);
-            recipe.AddTile(TileID.AlchemyTable);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

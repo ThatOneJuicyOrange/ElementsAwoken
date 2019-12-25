@@ -45,7 +45,7 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             bool flag64 = projectile.type == mod.ProjectileType("EyeballMinion");
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("Eyeball"), 3600);
             if (flag64)
             {

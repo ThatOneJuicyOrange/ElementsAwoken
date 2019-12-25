@@ -16,7 +16,7 @@ namespace ElementsAwoken.Buffs.TileBuffs
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).oiniteStatue = true;
+            player.GetModPlayer<MyPlayer>().oiniteStatue = true;
         }
     }
 }

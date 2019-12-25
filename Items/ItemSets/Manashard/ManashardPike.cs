@@ -43,5 +43,13 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
         {
             DisplayName.SetDefault("Manashard Pike");
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "Manashard", 8);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }

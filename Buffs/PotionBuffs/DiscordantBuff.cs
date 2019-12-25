@@ -15,7 +15,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<MyPlayer>(mod).discordantPotion = true;
+            player.GetModPlayer<MyPlayer>().discordantPotion = true;
         }
     }
 }

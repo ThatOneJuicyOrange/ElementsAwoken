@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ElementsAwoken.Projectiles.Minions
 {
@@ -31,12 +32,25 @@ namespace ElementsAwoken.Projectiles.Minions
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Miniature Sandstorm");
+            Main.projFrames[projectile.type] = 5;
+        }
+        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        {
+            projectile.frameCounter++;
+            if (projectile.frameCounter >= 16)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+                if (projectile.frame > 4)
+                    projectile.frame = 0;
+            }
+            return true;
         }
         public override void AI()
         {
             bool flag64 = projectile.type == mod.ProjectileType("MiniatureSandstorm");
             Player player = Main.player[projectile.owner];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>(mod);
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("MiniSandstormBuff"), 3600);
             if (flag64)
             {

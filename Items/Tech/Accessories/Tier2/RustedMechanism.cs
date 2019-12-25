@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Tech.Accessories.Tier2
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>(mod);
+            PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
 
             int ammoType = 0;
             int whichSlot = 0;
