@@ -15,14 +15,16 @@ namespace ElementsAwoken.Projectiles.Spears
             projectile.height = 20;
             projectile.scale = 1f;
             projectile.aiStyle = 19;
+
             projectile.friendly = true;
-            projectile.hostile = false;
             projectile.tileCollide = false;
-            projectile.penetrate = -1;
+            projectile.hide = true;
             projectile.ownerHitCheck = true;
             projectile.melee = true;
+            
+            projectile.penetrate = -1;
+
             projectile.timeLeft = 90;
-            projectile.hide = true;
         }
         public override void SetStaticDefaults()
         {
@@ -42,11 +44,11 @@ namespace ElementsAwoken.Projectiles.Spears
             }
             if (Main.player[projectile.owner].itemAnimation < Main.player[projectile.owner].itemAnimationMax / 3)
             {
-                projectile.ai[0] -= 1.1f;
+                projectile.ai[0] -= 1.8f;
             }
             else
             {
-                projectile.ai[0] += 0.6f;
+                projectile.ai[0] += 1.5f;
             }
 
             if (Main.player[projectile.owner].itemAnimation == 0)

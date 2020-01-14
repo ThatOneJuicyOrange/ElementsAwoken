@@ -14,6 +14,10 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
 {
     public class ProjectileGlobal : GlobalProjectile
     {
+        public static int[] cantHit = {
+            NPCID.TargetDummy
+        };
+        public bool dontScaleDamage = false;
         public override bool InstancePerEntity
         {
             get
@@ -22,9 +26,16 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
             }
         }
 
-        public static int[] cantHit = {
-            NPCID.TargetDummy
-        };
+        public override void SetDefaults(Projectile projectile)
+        {
+            if (projectile.hostile)
+            {
+                if (MyWorld.awakenedMode && !dontScaleDamage)
+                {
+                    projectile.damage = (int)(projectile.damage * 1.5f);
+                }
+            }
+        }
         public override void OnHitPlayer(Projectile projectile, Player target, int damage, bool crit)
         {
             if (target.FindBuffIndex(mod.BuffType("FrostShield")) != -1 && damage > 0 && projectile.active && !projectile.friendly && projectile.hostile)
@@ -35,6 +46,14 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
                     projectile.velocity.X = -projectile.velocity.X;
                     projectile.velocity.Y = -projectile.velocity.Y;
                 }
+            }
+
+        }
+        public override void ModifyHitPlayer(Projectile projectile, Player target, ref int damage, ref bool crit)
+        {
+            if (Main.expertMode && dontScaleDamage && projectile.hostile)
+            {
+                damage = (int)(damage * 0.5f); // cut damage in half in expert 
             }
         }
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -69,11 +88,11 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
                 {
                     if (target.type != nPC && !target.SpawnedFromStatue)
                     {
-                        if (Main.rand.Next(5) == 0)
+                        if (modPlayer.voidArmorHealCD <= 0)
                         {
                             float healAmount = Main.rand.Next(2, 8);
-                            int num1 = projectile.owner;
-                            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("VoidHeal"), 0, 0f, projectile.owner, (float)num1, healAmount); // ai 1 is how much it heals
+                            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("VoidHeal"), 0, 0f, projectile.owner, projectile.owner, healAmount); // ai 1 is how much it heals
+                            modPlayer.voidArmorHealCD = Main.rand.Next(15,45);
                         }
                     }
                 }
@@ -256,18 +275,16 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
                 }
             }
         }
-        public override void SetDefaults(Projectile projectile)
-        {
-            if (MyWorld.awakenedMode)
-            {
-                projectile.damage = (int)(projectile.damage * 1.5f);
-            }
-        }
 
-        public static void Explosion(Projectile projectile, int[] dustIDs, int damage)
+
+        public static void Explosion(Projectile projectile, int[] dustIDs, int damage, string damageType = "normal")
         {
             var mod = ModLoader.GetMod("ElementsAwoken");
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("Explosion"), damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            Projectile exp = Main.projectile[Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("Explosion"), damage, projectile.knockBack, projectile.owner, 0f, 0f)];
+            exp.melee = damageType == "melee" ? true : false;
+            exp.ranged = damageType == "ranged" ? true : false;
+            exp.thrown = damageType == "thrown" ? true : false;
+            exp.magic = damageType == "magic" ? true : false;
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
             int num = ModContent.GetInstance<Config>().lowDust ? 10 : 20;
             for (int i = 0; i < num; i++)
@@ -357,6 +374,40 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
             gore91.velocity.X = gore91.velocity.X - 1f;
             Gore gore92 = Main.gore[num373];
             gore92.velocity.Y = gore92.velocity.Y - 1f;
+        }
+        public static void Home(Projectile projectile, float speed)
+        {
+            float targetX = projectile.Center.X;
+            float targetY = projectile.Center.Y;
+            float closestEntity = 400f;
+            bool home = false;
+            for (int i = 0; i < 200; i++)
+            {
+                NPC nPC = Main.npc[i];
+                if (nPC.CanBeChasedBy(projectile, false) && Collision.CanHit(projectile.Center, 1, 1, nPC.Center, 1, 1))
+                {
+                    float dist = Math.Abs(projectile.Center.X - nPC.Center.X) + Math.Abs(projectile.Center.Y - nPC.Center.Y);
+                    if (dist < closestEntity)
+                    {
+                        closestEntity = dist;
+                        targetX = nPC.Center.X;
+                        targetY = nPC.Center.Y;
+                        home = true;
+                    }
+                }
+            }
+            if (home)
+            {
+                float goToX = targetX - projectile.Center.X;
+                float goToY = targetY - projectile.Center.Y;
+                float dist = (float)Math.Sqrt((double)(goToX * goToX + goToY * goToY));
+                dist = speed / dist;
+                goToX *= dist;
+                goToY *= dist;
+                projectile.velocity.X = (projectile.velocity.X * 20f + goToX) / 21f;
+                projectile.velocity.Y = (projectile.velocity.Y * 20f + goToY) / 21f;
+                return;
+            }
         }
     }
 }

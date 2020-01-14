@@ -29,7 +29,9 @@ namespace ElementsAwoken.Items.Elements.Void
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            ModPlayer modPlayer = player.GetModPlayer<ModPlayer>();
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            //player.dash = 1;
+            modPlayer.eaDash = 1;
             player.accRunSpeed = 21f;
             player.rocketBoots = 3;
             player.moveSpeed += 17f;
@@ -38,7 +40,6 @@ namespace ElementsAwoken.Items.Elements.Void
             player.fireWalk = true;
             player.lavaImmune = true;
             player.noFallDmg = true;
-            player.dash = 1;
             player.blackBelt = true;
             player.spikedBoots = 1;
             player.spikedBoots = 2;
@@ -81,7 +82,7 @@ namespace ElementsAwoken.Items.Elements.Void
             recipe.AddIngredient(null, "VoidEssence", 10);
             recipe.AddIngredient(ItemID.LunarBar, 8);
             recipe.AddIngredient(null, "AqueousWaders");
-            recipe.AddRecipeGroup("LunarWings");
+            recipe.AddRecipeGroup("ElementsAwoken:LunarWings");
             recipe.AddIngredient(ItemID.MasterNinjaGear, 1);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);

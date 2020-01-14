@@ -70,6 +70,18 @@ namespace ElementsAwoken.NPCs
             }
         }
 
+        public static void ImmuneAllEABuffs(NPC npc)
+        {
+            Mod mod = ModLoader.GetMod("ElementsAwoken");
+            npc.buffImmune[mod.BuffType("IceBound")] = true;
+            npc.buffImmune[mod.BuffType("ExtinctionCurse")] = true;
+            npc.buffImmune[mod.BuffType("HandsOfDespair")] = true;
+            npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.buffImmune[mod.BuffType("AncientDecay")] = true;
+            npc.buffImmune[mod.BuffType("SoulInferno")] = true;
+            npc.buffImmune[mod.BuffType("DragonFire")] = true;
+            npc.buffImmune[mod.BuffType("Discord")] = true;
+        }
         public override void AI(NPC npc)
         {
             bool immune = false;
@@ -637,7 +649,7 @@ namespace ElementsAwoken.NPCs
             {
                 if (Main.hardMode)
                 {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("ThrowableDictionary"));
+                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Dictionary"));
                     shop.item[nextSlot].shopCustomPrice = 800;
                     nextSlot++;
                 }

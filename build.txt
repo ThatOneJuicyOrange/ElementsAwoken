@@ -1,6 +1,6 @@
 author = ThatOneJuicyOrange_
 
-version = 1.3.8
+version = 1.3.9
 displayName = Elements Awoken
 homepage = https://forums.terraria.org/index.php?threads/elements-awoken-wip.54553/
 hideCode = true

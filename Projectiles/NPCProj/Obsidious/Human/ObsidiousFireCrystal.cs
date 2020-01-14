@@ -19,6 +19,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Obsidious.Human
             projectile.penetrate = 1;
             projectile.tileCollide = true;
             projectile.timeLeft = 220;
+            projectile.light = 2f;
             drawOffsetX = -10;
             drawOriginOffsetY = -10;
         }

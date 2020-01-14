@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Placeable
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("GoldBar", 1);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 1);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

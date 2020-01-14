@@ -162,7 +162,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheCelestial
             }
             projectile.damage = 0;
             projectile.velocity *= 0;
-            target.AddBuff(BuffID.VortexDebuff, 120, false);
+            if (MyWorld.awakenedMode) target.AddBuff(BuffID.VortexDebuff, 120, false);
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

@@ -38,6 +38,12 @@ namespace ElementsAwoken.Items.BossSummons
             !Main.dayTime &&
             !NPC.AnyNPCs(mod.NPCType("ScourgeFighter"));
         }
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ScourgeFighter"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Main.NewText(player.position);

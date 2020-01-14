@@ -196,7 +196,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                 npc.ai[0] = 0f;
             }
 
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.ai[0] += 1f;
                 npc.ai[1]--;
@@ -227,7 +227,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                 {
                     if (npc.ai[1] <= 0)
                     {
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             AquaticBolts(P, 14f, projectileBaseDamage + 10);
 
@@ -244,7 +244,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                     npc.velocity = Vector2.Zero;
                     if (npc.ai[1] <= 0)
                     {
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             WaterKnives(P, 7.5f, projectileBaseDamage, 2 + Main.rand.Next(1, 3));
                             npc.ai[1] = enraged ? 10 : 35;
@@ -296,7 +296,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                     }
                     if (npc.ai[1] <= 0)
                     {
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             HomingKnives(P, 6f, projectileBaseDamage - 15);
                             npc.ai[1] = enraged ? 20 : 80;
@@ -316,7 +316,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                     {
                         if (Collision.CanHit(npc.position, npc.width, npc.height, P.position, P.width, P.height))
                         {
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 WaterKnives(P, 7.5f, projectileBaseDamage, 3 + Main.rand.Next(1, 3));
 
@@ -335,7 +335,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                         AquaticBolts(P, 14f, projectileBaseDamage + 10);
 
                         npc.ai[1] = enraged ? 10 : 30;
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             npc.ai[1] += Main.rand.Next(1, 20);
                             npc.netUpdate = true;
@@ -356,7 +356,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                     Aquanados(damage);
 
                     npc.ai[2] = enraged ? 100 : (Main.expertMode ? 450 : 600);
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         npc.ai[2] += Main.rand.Next(0, 200);
                         npc.netUpdate = true;
@@ -406,7 +406,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                 }
                 if (npc.alpha >= 255)
                 {
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         int distance = 400;
                         double angle = Main.rand.NextDouble() * 2d * Math.PI;

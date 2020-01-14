@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,39 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
 {
     public class ObsidiousHand : ModNPC
     {
-        float handSwipeTimer = 0;
-        bool hasOverlay = false;
-        bool hasRocks = false;
+        private float handSwipeTimer = 0;
+        private float direction
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float swipeAI
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float aiTimer
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(handSwipeTimer);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            handSwipeTimer = reader.ReadSingle();
+        }
         public override void SetDefaults()
         {
             npc.lifeMax = 10000;
             npc.damage = 90;
             npc.defense = 25;
             npc.knockBackResist = 0f;
+
+            npc.aiStyle = -1;
 
             npc.width = 52;
             npc.height = 76;
@@ -98,22 +123,21 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
             Lighting.AddLight(npc.Center, 0.5f, 0.5f, 0.5f);
             NPC parent = Main.npc[(int)npc.ai[1]];
             Player player = Main.player[npc.target];
-            if (!parent.active)
-            {
-                npc.active = false;
-            }
-            if (!hasOverlay)
+            npc.active = parent.active;
+            if (npc.localAI[0] == 0)
             {
                 // bad way to do this probably :lul:
                 Projectile.NewProjectile(npc.position.X, npc.position.Y, 0, 0, mod.ProjectileType("ObsidiousHandOverlay"), 0, 0, 0, 0, npc.whoAmI);
                 npc.alpha = 255; // so u cant see the weird ass offset :shruggy:
-                hasOverlay = true;
+                npc.localAI[0]++;
+                npc.netUpdate = true;
             }
             if (parent.ai[1] == 2)
             {
-                hasRocks = false;
+                npc.localAI[1] = 0;
+                npc.netUpdate = true;
             }
-            if (parent.ai[1] == 1 && !hasRocks)
+            if (parent.ai[1] == 1 && npc.localAI[1] == 0)
             {
                 int orbitalCount = 3;
                 for (int l = 0; l < orbitalCount; l++)
@@ -121,23 +145,24 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     int distance = 360 / orbitalCount;
                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousRockOrbital"), npc.damage, 0f, 0, l * distance, npc.whoAmI);
                 }
-                hasRocks = true;
+                npc.localAI[1]++;
+                npc.netUpdate = true;
             }
-                if (parent.ai[3] != 1)
+            if (parent.ai[3] != 1)
             {
-                npc.ai[3]++;
-                if (npc.ai[3] >= 300)
+                aiTimer++;
+                if (aiTimer >= 300)
                 {
-                    npc.ai[3] = 0;
-                    npc.ai[2]++;
+                    aiTimer = 0;
+                    swipeAI++;
                 }
-                if (npc.ai[2] > 1)
+                if (swipeAI > 1)
                 {
-                    npc.ai[2] = 0;
+                    swipeAI = 0;
                 }
-                if (npc.ai[2] == 0)
+                if (swipeAI == 0)
                 {
-                    float targetX = parent.Center.X + 110 * npc.ai[0] - (npc.width * 0.5f) * npc.ai[0];
+                    float targetX = parent.Center.X + 110 * direction - (npc.width * 0.5f) * direction;
                     float targetY = parent.Center.Y + 50 - (npc.height * 0.5f);
                     int maxDist = 1000;
                     if (Vector2.Distance(new Vector2(targetX, targetY), npc.Center) >= maxDist)
@@ -199,11 +224,11 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                         }
                     }
                     npc.rotation = 0;
-                    npc.spriteDirection = (int)npc.ai[0];
+                    npc.spriteDirection = (int)direction;
                 }
-                if (npc.ai[2] == 1)
+                if (swipeAI == 1)
                 {
-                    Projectile.NewProjectile(npc.Center.X + 10 * npc.ai[0], npc.Center.Y - 20, 0, 0, mod.ProjectileType("ObsidiousHandTrail"), (int)(npc.damage / 2), 1, Main.myPlayer, parent.ai[1]);
+                    Projectile.NewProjectile(npc.Center.X + 10 * direction, npc.Center.Y - 20, 0, 0, mod.ProjectileType("ObsidiousHandTrail"), (int)(npc.damage / 2), 1, Main.myPlayer, parent.ai[1]);
 
                     handSwipeTimer++;
 
@@ -216,7 +241,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     npc.velocity.Y = num26 * num27;
                     if (handSwipeTimer >= 30)
                     {
-                        npc.ai[2]++;
+                        swipeAI++;
                         handSwipeTimer = 0;
                         if (parent.ai[1] == 2)
                         {
@@ -230,12 +255,12 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                         }
                     }
                     npc.rotation = (float)Math.Atan2((double)npc.velocity.Y, (double)npc.velocity.X) - 1.57f;
-                    Vector2 direction = player.Center - npc.Center;
-                    if (direction.X > 0f)
+                    Vector2 playerDir = player.Center - npc.Center;
+                    if (playerDir.X > 0f)
                     {
                         npc.spriteDirection = 1;
                     }
-                    if (direction.X < 0f)
+                    if (playerDir.X < 0f)
                     {
                         npc.spriteDirection = -1;
                     }
@@ -243,7 +268,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
             }
             else
             {            
-                float targetX = parent.Center.X + 80 * npc.ai[0] - (npc.width * 0.5f) * npc.ai[0];
+                float targetX = parent.Center.X + 80 * direction - (npc.width * 0.5f) * direction;
                 float targetY = parent.Center.Y + 60 - (npc.height * 0.5f);
                 int maxDist = 1000;
                 if (Vector2.Distance(new Vector2(targetX, targetY), npc.Center) >= maxDist)
@@ -305,7 +330,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     }
                 }
                 npc.rotation = 0;
-                npc.spriteDirection = (int)npc.ai[0];
+                npc.spriteDirection = (int)direction;
             }
         }
 

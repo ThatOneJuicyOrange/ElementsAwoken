@@ -9,20 +9,25 @@ namespace ElementsAwoken.Items.ItemSets.Floral
     {
         public override void SetDefaults()
         {
-            item.damage = 40;
-            item.crit = 1;
-            item.melee = true;
             item.width = 60;
-            item.height = 60;
-            item.useTime = 50;
-            item.useAnimation = 50;
-            item.useStyle = 1;
-            item.knockBack = 12;
-            item.value = Item.buyPrice(0, 1, 0, 0);
-            item.rare = 1;
-            item.UseSound = SoundID.Item1;
+            item.height = 60; 
+            
+            item.damage = 45;
+            item.crit = 4;
+
+            item.melee = true;
             item.autoReuse = true;
             item.useTurn = true;
+            item.useStyle = 1;
+
+            item.UseSound = SoundID.Item1;
+            item.useTime = 30;
+            item.useAnimation = 30;
+            item.knockBack = 12;
+
+            item.value = Item.buyPrice(0, 1, 0, 0);
+            item.rare = 1;
+
             item.scale *= 1.3f;
         }
 

@@ -35,7 +35,6 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {
@@ -54,6 +53,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
                 player.QuickSpawnItem(mod.ItemType("ChitinStaff"));
             }
             player.QuickSpawnItem(mod.ItemType("VenomSample"));
+            if (MyWorld.awakenedMode) player.QuickSpawnItem(mod.ItemType("TheAntidote")); 
             if (Main.rand.Next(10) == 0)
             {
                 player.QuickSpawnItem(mod.ItemType("WastelandMask"));

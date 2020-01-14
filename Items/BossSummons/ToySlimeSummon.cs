@@ -48,7 +48,7 @@ namespace ElementsAwoken.Items.BossSummons
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Gel, 30);
-            recipe.AddRecipeGroup("CopperBar", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:CopperBar", 4);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

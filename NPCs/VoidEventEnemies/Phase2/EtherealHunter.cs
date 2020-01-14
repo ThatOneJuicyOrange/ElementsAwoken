@@ -31,8 +31,8 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2
 
             aiType = NPCID.FloatyGross;
 
-            //banner = npc.type;
-            //bannerItem = mod.ItemType("VoidElementalBanner");
+            banner = npc.type;
+            bannerItem = mod.ItemType("EtherealHunterBanner");
 
             NPCID.Sets.TrailCacheLength[npc.type] = 8;
             NPCID.Sets.TrailingMode[npc.type] = 0;

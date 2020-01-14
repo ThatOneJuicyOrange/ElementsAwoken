@@ -65,6 +65,8 @@ namespace ElementsAwoken.Items.BossDrops.Volcanox
             {
                 player.QuickSpawnItem(mod.ItemType("VolcanoxTrophy"));
             }
+            player.QuickSpawnItem(mod.ItemType("Pyroplasm"), Main.rand.Next(10, 60));
+            player.QuickSpawnItem(mod.ItemType("VolcanicStone"), Main.rand.Next(10, 25));
         }
     }
 }

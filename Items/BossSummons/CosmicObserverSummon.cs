@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            //item.shoot = mod.ProjectileType("ToySlimeSpawn");
         }
 
         public override void SetStaticDefaults()

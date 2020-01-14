@@ -10,8 +10,8 @@ namespace ElementsAwoken.NPCs
 {
     public class VoidEventNPCsGLOBAL : GlobalNPC
     {
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
-        {        
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo) // run on clients only
+        {
             if (MyWorld.voidInvasionUp && (Main.invasionX == Main.spawnTileX)) //If the invasion is up and the invasion has reached the spawn pos
             {
                 pool.Clear();
@@ -19,76 +19,34 @@ namespace ElementsAwoken.NPCs
                 {
                     pool.Clear();
                     int numCasters = NPC.CountNPCS(mod.NPCType("ReaverSlime"));
-                    if (numCasters > 7)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.0f);
-                    }
-                    else if (numCasters > 5)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.01f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.3f);
-                    }
+                    if (numCasters > 7) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.0f);
+                    else if (numCasters > 5) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.01f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ZergCaster"), 0.3f);
 
                     int numSlimes = NPC.CountNPCS(mod.NPCType("ReaverSlime"));
-                    if (numSlimes > 15)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ReaverSlime"), 0.0f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ReaverSlime"), 0.4f);
-                    }
+                    if (numSlimes > 15) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ReaverSlime"), 0.0f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ReaverSlime"), 0.4f);
 
                     int numKnights = NPC.CountNPCS(mod.NPCType("VoidKnight"));
-                    if (numKnights > 10)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidKnight"), 0.0f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidKnight"), 0.4f);
-                    }
+                    if (numKnights > 10) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidKnight"), 0.0f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidKnight"), 0.4f);
 
                     int numImmolators = NPC.CountNPCS(mod.NPCType("Immolator"));
-                    if (numImmolators > 6)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.0f);
-                    }
-                    else if (numImmolators > 3)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.1f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.5f);
-                    }
+                    if (numImmolators > 6) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.0f);
+                    else if (numImmolators > 3) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.1f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("Immolator"), 0.5f);
 
                     int numElementals = NPC.CountNPCS(mod.NPCType("VoidElemental"));
-                    if (numElementals > 10)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.0f);
-                    }
-                    else if (numElementals > 5)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.2f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.6f);
-                    }
+                    if (numElementals > 10) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.0f);
+                    else if (numElementals > 5) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.2f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidElemental"), 0.6f);
                 }
                 else // after midnight
                 {
                     pool.Clear();
 
                     //int numWyrms = NPC.CountNPCS(mod.NPCType("ShadeWyrmHead"));
-                    if (!NPC.AnyNPCs(mod.NPCType("ShadeWyrmHead"))) // no wyrms
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ShadeWyrmHead"), 0.0001f);
-                    }
+                    if (!NPC.AnyNPCs(mod.NPCType("ShadeWyrmHead"))) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ShadeWyrmHead"), 0.0001f);
                     /*else if (numWyrms == 1) // 1 wyrms
                     {
                         pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("ShadeWyrmHead"), 0.002f);
@@ -103,46 +61,19 @@ namespace ElementsAwoken.NPCs
                     }*/
 
                     int numGolems = NPC.CountNPCS(mod.NPCType("VoidGolem"));
-                    if (numGolems > 10)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.0f);
-                    }
-                    else if (numGolems > 5)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.1f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.5f);
-                    }
+                    if (numGolems > 10) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.0f);
+                    else if (numGolems > 5) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.1f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidGolem"), 0.5f);
 
                     int numHunters = NPC.CountNPCS(mod.NPCType("EtherealHunter"));
-                    if (numHunters > 10)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.0f);
-                    }
-                    else if (numHunters > 5)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.1f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.5f);
-                    }
+                    if (numHunters > 10) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.0f);
+                    else if (numHunters > 5) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.1f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("EtherealHunter"), 0.5f);
 
-                    int NumCrawlers = NPC.CountNPCS(mod.NPCType("VoidCrawler"));
-                    if (NumCrawlers > 10)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.0f);
-                    }
-                    else if (NumCrawlers > 5)
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.1f);
-                    }
-                    else
-                    {
-                        pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.5f);
-                    }
+                    int numCrawlers = NPC.CountNPCS(mod.NPCType("VoidCrawler"));
+                    if (numCrawlers > 10) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.0f);
+                    else if (numCrawlers > 5) pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.1f);
+                    else pool.Add(ModLoader.GetMod("ElementsAwoken").NPCType("VoidCrawler"), 0.5f);
                 }
             }
         }

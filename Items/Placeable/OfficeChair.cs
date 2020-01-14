@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Placeable
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Office Chair");
-            Tooltip.SetDefault("Dont sit down or you wont stop swiveling");
+            Tooltip.SetDefault("Don't sit down or you wont stop swiveling");
         }
     }
 }

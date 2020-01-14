@@ -53,7 +53,7 @@ namespace ElementsAwoken.Items
             if (modItem.energy > 0)
             {
                 TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Energy", "Uses " + energy + " energy");
-                tooltips.Insert(5, tip);
+                tooltips.Add(tip);
             }
         }
     }

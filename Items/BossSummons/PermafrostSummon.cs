@@ -23,13 +23,12 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("PermafrostSpawn");
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Ice Crystal");
-            Tooltip.SetDefault("An eternity of time has passed around this crystal\nSummons Permafrost on use");
+            DisplayName.SetDefault("Enchanted Ice Crystal");
+            Tooltip.SetDefault("Harbours immense amounts of ice magic\nSummons Permafrost on use");
         }
 
         public override bool CanUseItem(Player player)
@@ -38,7 +37,12 @@ namespace ElementsAwoken.Items.BossSummons
             player.ZoneSnow && 
             !NPC.AnyNPCs(mod.NPCType("Permafrost"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Permafrost"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

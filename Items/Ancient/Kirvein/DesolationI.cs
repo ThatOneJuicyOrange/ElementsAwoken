@@ -57,7 +57,7 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "MysticGemstone", 1);
             recipe.AddIngredient(ItemID.Bone, 25);
-            recipe.AddIngredient(ItemID.GoldBar, 10);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 10);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

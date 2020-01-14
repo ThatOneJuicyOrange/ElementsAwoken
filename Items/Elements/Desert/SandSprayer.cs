@@ -12,19 +12,24 @@ namespace ElementsAwoken.Items.Elements.Desert
     {
         public override void SetDefaults()
         {
-            item.damage = 25;
-            item.ranged = true;
             item.width = 42;
-            item.height = 16;
-            item.useTime = 4;
-            item.useAnimation = 10;
-            item.useStyle = 5;
-            item.noMelee = true;
+            item.height = 16; 
+            
+            item.damage = 8;
             item.knockBack = 3.25f;
+
+            item.ranged = true;
+            item.noMelee = true;
+            item.autoReuse = true;
+
+            item.useTime = 12;
+            item.useAnimation = 12;
+            item.useStyle = 5;
             item.UseSound = SoundID.Item34;
+
             item.value = Item.buyPrice(0, 5, 0, 0);
             item.rare = 3;
-            item.autoReuse = true;
+
             item.shoot = mod.ProjectileType("SandSpray");
             item.shootSpeed = 4.5f;
             item.useAmmo = AmmoID.Sand;
@@ -33,7 +38,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sand Sprayer");
-            Tooltip.SetDefault("Sprays coarse sand at your enemies... Useful\n80% chance to not consume ammo");
+            Tooltip.SetDefault("Sprays coarse sand at your enemies... Useful\n20% chance to not consume ammo");
         }
 
 
@@ -45,8 +50,8 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
-            recipe.AddRecipeGroup("SandGroup", 25);
-            recipe.AddRecipeGroup("SandstoneGroup", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 25);
+            recipe.AddRecipeGroup("ElementsAwoken:SandstoneGroup", 10);
             recipe.AddIngredient(ItemID.Sandgun);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);

@@ -39,7 +39,7 @@ namespace ElementsAwoken.Projectiles
                 }
                 projectile.ai[0] = 1;
             }
-            int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 60, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 0, default(Color), 3.75f);
+            int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 127, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 0, default(Color), 3.75f);
             Main.dust[dust].velocity *= 0.1f;
             Main.dust[dust].scale *= 0.6f;
             Main.dust[dust].noGravity = true;

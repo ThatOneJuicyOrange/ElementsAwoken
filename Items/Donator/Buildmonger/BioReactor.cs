@@ -63,7 +63,7 @@ namespace ElementsAwoken.Items.Donator.Buildmonger
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("EvilBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 8);
             recipe.AddIngredient(null, "GoldWire", 10);
             recipe.AddIngredient(ItemID.JungleSpores, 8);
             recipe.AddIngredient(ItemID.Stinger, 3);

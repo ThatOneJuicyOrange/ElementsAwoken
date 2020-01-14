@@ -12,9 +12,10 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 4;
             projectile.height = 4;
-            //projectile.aiStyle = 48;
+
             projectile.friendly = true;
             projectile.magic = true;
+
             projectile.penetrate = 1;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 320;
@@ -36,24 +37,25 @@ namespace ElementsAwoken.Projectiles
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
             projectile.localAI[0] += 1f;
-            if (projectile.localAI[0] > 9f)
+            if (projectile.localAI[0] > 4f)
             {
-                for (int num447 = 0; num447 < 4; num447++)
+                for (int i = 0; i < 4; i++)
                 {
-                    if (Main.rand.Next(2) == 0)
-                    {
                         Vector2 vector33 = projectile.position;
-                        vector33 -= projectile.velocity * ((float)num447 * 0.25f);
+                        vector33 -= projectile.velocity * ((float)i * 0.25f);
                         projectile.alpha = 255;
                         int num448 = Dust.NewDust(vector33, 1, 1, 135, 0f, 0f, 0, default(Color), 0.75f);
                         Main.dust[num448].position = vector33;
                         Main.dust[num448].scale = (float)Main.rand.Next(70, 110) * 0.013f;
                         Main.dust[num448].velocity *= 0.05f;
                         Main.dust[num448].noGravity = true;
-                    }
                 }
                 return;
             }
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(mod.BuffType("IceBound"), 200);
         }
     }
 }

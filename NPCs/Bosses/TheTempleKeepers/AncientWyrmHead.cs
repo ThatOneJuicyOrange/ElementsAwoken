@@ -53,6 +53,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
 
             bossBag = mod.ItemType("TempleKeepersBag");
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
@@ -185,7 +186,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 }
             }
             //worm stuff
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0)
                 {

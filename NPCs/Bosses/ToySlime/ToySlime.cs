@@ -142,7 +142,7 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
             {
                 npc.ai[3] = (float)npc.lifeMax;
             }
-            if (npc.localAI[3] == 0f && Main.netMode != 1)
+            if (npc.localAI[3] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.ai[0] = -100f;
                 npc.localAI[3] = 1f;
@@ -178,7 +178,7 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                 npc.ai[0] = 0f; // jump timer
                 npc.ai[1] = 5f; // ai 'phase' (whether jumping, teleporting etc), 5 is teleport
                 // collision checking for teleport
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     npc.TargetClosest(false);
                     Point npcTileCoord = npc.Center.ToTileCoordinates();
@@ -287,7 +287,7 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                     //Gore.NewGore(npc.Center + new Vector2(-40f, (float)(-(float)npc.height / 2)), npc.velocity, 734, 1f);
                 }
                 // teleport
-                if (npc.ai[0] >= 60f && Main.netMode != 1)
+                if (npc.ai[0] >= 60f && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     npc.Bottom = new Vector2(npc.localAI[1], npc.localAI[2]);
                     npc.ai[1] = 6f;
@@ -316,7 +316,7 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
 
                 num234 = MathHelper.Clamp(npc.ai[0] / 30f, 0f, 1f);
                 num234 = 0.5f + num234 * 0.5f;
-                if (npc.ai[0] >= 30f && Main.netMode != 1)
+                if (npc.ai[0] >= 30f && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     npc.ai[1] = 0f;
                     npc.ai[0] = 0f;

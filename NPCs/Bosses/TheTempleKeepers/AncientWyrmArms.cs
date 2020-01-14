@@ -39,6 +39,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
             npc.buffImmune[mod.BuffType("ExtinctionCurse")] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
 
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
@@ -83,7 +84,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 npc.TargetClosest(true);
             if (Main.player[npc.target].dead)
                 npc.timeLeft = 50;
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!Main.npc[(int)npc.ai[1]].active)
                 {

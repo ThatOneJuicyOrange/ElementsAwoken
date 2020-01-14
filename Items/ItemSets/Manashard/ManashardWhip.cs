@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
         }
         public override bool CanUseItem(Player player)
         {
-            int maxThrown = 4;
+            int maxThrown = 3;
             if (player.ownedProjectileCounts[mod.ProjectileType("ManashardWhipP")] >= maxThrown)
             {
                 return false;

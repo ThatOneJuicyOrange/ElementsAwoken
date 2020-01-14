@@ -10,7 +10,6 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheCelestial
 {
     public class CelestialIllusions : ModProjectile
     {
-        int distance = 200;
         public override void SetDefaults()
         {
             projectile.width = 120;
@@ -72,45 +71,41 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheCelestial
             int max = 300;
             if (projectile.localAI[0] == 0)
             {
-                distance -= 3;
-                if (distance <= min)
+                projectile.ai[1] -= 3;
+                if (projectile.ai[1] <= min)
                 {
                     projectile.localAI[0]++;
                 }
             }
             else
             {
-                distance += 3;
-                if (distance >= max)
+                projectile.ai[1] += 3;
+                if (projectile.ai[1] >= max)
                 {
                     projectile.localAI[0] = 0;
                 }
             }
             if (projectile.ai[0] == 0)
             {
-                projectile.position.X = player.Center.X + distance - projectile.width / 2;
-                projectile.position.Y = player.Center.Y + distance - projectile.height / 2;
+                projectile.position.X = player.Center.X + projectile.ai[1] - projectile.width / 2;
+                projectile.position.Y = player.Center.Y + projectile.ai[1] - projectile.height / 2;
             }
             if (projectile.ai[0] == 1)
             {
-                projectile.position.X = player.Center.X - distance - projectile.width / 2;
-                projectile.position.Y = player.Center.Y + distance - projectile.height / 2;
+                projectile.position.X = player.Center.X - projectile.ai[1] - projectile.width / 2;
+                projectile.position.Y = player.Center.Y + projectile.ai[1] - projectile.height / 2;
             }
             if (projectile.ai[0] == 2)
             {
-                projectile.position.X = player.Center.X + distance - projectile.width / 2;
-                projectile.position.Y = player.Center.Y - distance - projectile.height / 2;
+                projectile.position.X = player.Center.X + projectile.ai[1] - projectile.width / 2;
+                projectile.position.Y = player.Center.Y - projectile.ai[1] - projectile.height / 2;
             }
             if (projectile.ai[0] == 3)
             {
-                projectile.position.X = player.Center.X - distance - projectile.width / 2;
-                projectile.position.Y = player.Center.Y - distance - projectile.height / 2;
+                projectile.position.X = player.Center.X - projectile.ai[1] - projectile.width / 2;
+                projectile.position.Y = player.Center.Y - projectile.ai[1] - projectile.height / 2;
             }
-            if (player.dead || !NPC.AnyNPCs(mod.NPCType("TheCelestial")))
-            {
-                projectile.Kill();
-            }
-            if (!player.active)
+            if (!NPC.AnyNPCs(mod.NPCType("Astra")))
             {
                 projectile.Kill();
             }

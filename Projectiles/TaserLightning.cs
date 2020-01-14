@@ -11,6 +11,8 @@ namespace ElementsAwoken.Projectiles
 {
     public class TaserLightning : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LightningSprite"; } }
+
         float timeTillStop = 60;
         public override void SetDefaults()
         {

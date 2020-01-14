@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Materials
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.BottledWater, 1);
             recipe.AddIngredient(ItemID.Mushroom, 1);
-            recipe.AddIngredient(ItemID.DemoniteOre, 1);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilOre", 1);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

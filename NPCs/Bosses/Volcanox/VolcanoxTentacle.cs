@@ -80,7 +80,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                     break;
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.localAI[0] -= 1f;
                 if (npc.localAI[0] <= 0f)

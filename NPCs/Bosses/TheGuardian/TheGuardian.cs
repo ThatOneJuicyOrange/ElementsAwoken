@@ -103,7 +103,8 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
         {
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
             Player P = Main.player[npc.target];
-            # region despawning
+            MyPlayer modPlayer = P.GetModPlayer<MyPlayer>();
+            #region despawning
             if (Main.dayTime)
             {
                 npc.localAI[0]++;
@@ -161,7 +162,10 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                     if (npc.velocity.Y == 0f)
                     {
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                        ElementsAwoken.screenshakeAmount = 8;
+
+                        if (Main.netMode == 0) modPlayer.screenshakeAmount = 8;                       
+                        else ElementsAwoken.NPCApplyScreenShakeToAll(npc.whoAmI, 8, 2000);
+
                         for (int k = 0; k < 200; k++)
                         {
                             int dust = Dust.NewDust(new Vector2(npc.position.X, npc.Center.Y + 45), npc.width, 8, 0, 0f, 0f, 100, default(Color), 2f);

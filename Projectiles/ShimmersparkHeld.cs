@@ -33,6 +33,7 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Player player = Main.player[projectile.owner];
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter, true);
 
             float chargeLevel = 120f;
@@ -102,7 +103,7 @@ namespace ElementsAwoken.Projectiles
                         }
                         Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, vector16.X, vector16.Y, mod.ProjectileType("ShimmersparkStrike"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
                         Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/BigExplosion"), 1f);
-                        ElementsAwoken.screenshakeAmount = 4f;
+                        modPlayer.screenshakeAmount = 4f;
                         projectile.ai[0] = 0;
                     }
                 }

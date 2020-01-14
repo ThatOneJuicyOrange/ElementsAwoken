@@ -11,6 +11,8 @@ namespace ElementsAwoken.Projectiles
 {
     public class ViridiumLightning : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LightningSprite"; } }
+
         public override void SetDefaults()
         {
             projectile.width = 14;

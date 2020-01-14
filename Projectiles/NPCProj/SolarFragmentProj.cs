@@ -65,7 +65,9 @@ namespace ElementsAwoken.Projectiles.NPCProj
                 hitbox2.X = (int)projectile.oldPos[num67].X;
 
                 hitbox2.Y = (int)projectile.oldPos[num67].Y;
-                for (int i = 0; i < 3; i++) // normally 5
+                int dustAmount = 3;
+                if (ModContent.GetInstance<Config>().lowDust) dustAmount = 1;
+                for (int i = 0; i < dustAmount; i++) // normally 5
                 {
                     int num69 = Utils.SelectRandom<int>(Main.rand, new int[]
                     {
@@ -115,8 +117,10 @@ namespace ElementsAwoken.Projectiles.NPCProj
             // dust
             if (projectile.localAI[0] == 0f)
             {
-                projectile.localAI[0] = 1f;
-                for (int i = 0; i < 3; i++)// normally 13 but wtf vanilla
+                projectile.localAI[0] = 1f; 
+                int dustAmount = 3;
+                if (ModContent.GetInstance<Config>().lowDust) dustAmount = 1;
+                for (int i = 0; i < dustAmount; i++)// normally 13 but wtf vanilla
                 {
                     int num1489 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 90, default(Color), 2.5f);
                     Main.dust[num1489].noGravity = true;
@@ -126,29 +130,28 @@ namespace ElementsAwoken.Projectiles.NPCProj
                     Main.dust[num1489].noLight = true;
                 }
             }
-            for (int i = 0; i < 3; i++)
-            {
-                if (Main.rand.Next(3) < 2)
-                {
-                    int num1491 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 90, default(Color), 2.5f);
-                    Main.dust[num1491].noGravity = true;
-                    Dust dust = Main.dust[num1491];
-                    dust.velocity *= 0.2f;
-                    Main.dust[num1491].fadeIn = 1f;
-                    if (Main.rand.Next(6) == 0)
-                    {
-                        dust = Main.dust[num1491];
-                        dust.velocity *= 10f; // normally 30 but wtf vanilla
-                        Main.dust[num1491].noGravity = false;
-                        Main.dust[num1491].noLight = true;
-                    }
-                    else
-                    {
-                        Main.dust[num1491].velocity = projectile.DirectionFrom(Main.dust[num1491].position) * Main.dust[num1491].velocity.Length();
-                    }
-                }
-            }
+            if (!ModContent.GetInstance<Config>().lowDust) for (int i = 0; i < 3; i++) CreateDust();
+            else if (Main.rand.Next(3) == 0) CreateDust();
             return;
+        }
+        private void CreateDust()
+        {
+            int num1491 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 90, default(Color), 2.5f);
+            Main.dust[num1491].noGravity = true;
+            Dust dust = Main.dust[num1491];
+            dust.velocity *= 0.2f;
+            Main.dust[num1491].fadeIn = 1f;
+            if (Main.rand.Next(6) == 0)
+            {
+                dust = Main.dust[num1491];
+                dust.velocity *= 10f; // normally 30 but wtf vanilla
+                Main.dust[num1491].noGravity = false;
+                Main.dust[num1491].noLight = true;
+            }
+            else
+            {
+                Main.dust[num1491].velocity = projectile.DirectionFrom(Main.dust[num1491].position) * Main.dust[num1491].velocity.Length();
+            }
         }
     }
 }

@@ -180,7 +180,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 {
                     Move(P, 0.2f, P.Center.X - npc.Center.X - 400, P.Center.Y - npc.Center.Y - 300);
                 }
-                if (Main.netMode != 1 && npc.ai[0] <= 0 && orbCooldown <= 25)
+                if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[0] <= 0 && orbCooldown <= 25)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("GuardianOrb"), projectileBaseDamage, 0f, 0);

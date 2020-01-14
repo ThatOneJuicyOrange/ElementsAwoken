@@ -36,6 +36,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
             }
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
@@ -77,7 +78,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 npc.TargetClosest(true);
             if (Main.player[npc.target].dead)
                 npc.timeLeft = 50;
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!Main.npc[(int)npc.ai[1]].active)
                 {

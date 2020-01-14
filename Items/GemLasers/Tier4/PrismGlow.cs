@@ -17,43 +17,45 @@ namespace ElementsAwoken.Items.GemLasers.Tier4
             item.ranged = true;
             item.autoReuse = true;
 
-            item.UseSound = SoundID.Item12;
             item.damage = 85;
             item.knockBack = 4;
 
             item.useTime = 5;
             item.useAnimation = 5;
+            item.useStyle = 5;
 
             item.value = Item.buyPrice(0, 50, 0, 0);
             item.rare = 10;
 
-            item.shoot = mod.ProjectileType("AmberRay");
-            item.shootSpeed = 24f;
-        }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            int numberProjectiles = 1 + Main.rand.Next(2); 
-            for (int i = 0; i < numberProjectiles; i++)
-            {
-                switch (Main.rand.Next(7))
-                {
-                    case 0: type = mod.ProjectileType("AmberLaserHoming"); break;
-                    case 1: type = mod.ProjectileType("AmethystLaserHoming"); break;
-                    case 2: type = mod.ProjectileType("DiamondLaserHoming"); break;
-                    case 3: type = mod.ProjectileType("EmeraldLaserHoming"); break;
-                    case 4: type = mod.ProjectileType("RubyLaserHoming"); break;
-                    case 5: type = mod.ProjectileType("SapphireLaserHoming"); break;
-                    case 6: type = mod.ProjectileType("TopazLaserHoming"); break;
-                }
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(7)) * 1.2f;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
-            }
-            return false;
+            item.shoot = mod.ProjectileType("GemLaserHoming");
+            item.shootSpeed = 28f;
+
+            item.useAmmo = AmmoID.Bullet;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Prism Glow");
+            Tooltip.SetDefault("Charges musket balls with mystical light");
         }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            int ai = 0;
+            if (type == ProjectileID.Bullet)
+            {
+                type = mod.ProjectileType("GemLaserHoming");
+                Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 12);
+                ai = Main.rand.Next(7);
+            }
+            else Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 11);
+            int numberProjectiles = 1 + Main.rand.Next(2); 
+            for (int i = 0; i < numberProjectiles; i++)
+            {
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(7));
+                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI,ai);
+            }
+            return false;
+        }
+
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

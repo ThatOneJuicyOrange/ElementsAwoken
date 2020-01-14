@@ -14,7 +14,6 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
 {
     public class HealingHearth : ModNPC
     {
-        Vector2 prevPos = new Vector2();
         public override void SetDefaults()
         {
             npc.width = 14;

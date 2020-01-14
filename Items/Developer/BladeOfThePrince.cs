@@ -47,7 +47,7 @@ namespace ElementsAwoken.Items.Developer
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "Pyroplasm", 25);
             recipe.AddIngredient(null, "Armageddon", 1);
-            recipe.AddRecipeGroup("GoldBar", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 10);
             recipe.AddIngredient(ItemID.BrokenHeroSword, 1);
             recipe.AddIngredient(ItemID.LunarBar, 8);
             recipe.AddIngredient(null, "VoiditeBar", 8);

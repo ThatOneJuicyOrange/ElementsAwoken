@@ -70,7 +70,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.IronBar, 12);
+            recipe.AddRecipeGroup("IronBar", 12);
             recipe.AddIngredient(ItemID.HellstoneBar, 4);
             recipe.AddIngredient(ItemID.Glass, 18);
             recipe.AddIngredient(null, "CopperWire", 8);

@@ -22,7 +22,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("ObsidiousSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -38,7 +37,12 @@ namespace ElementsAwoken.Items.BossSummons
             !NPC.AnyNPCs(mod.NPCType("Obsidious")) &&
             !NPC.AnyNPCs(mod.NPCType("ObsidiousHuman"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ObsidiousHuman"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

@@ -54,6 +54,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
             npc.buffImmune[BuffID.Frozen] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
@@ -171,7 +172,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
             }
 
             //worm stuff starts here
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0)
                 {

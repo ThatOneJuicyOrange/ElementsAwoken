@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("WingGroup");
+            recipe.AddRecipeGroup("ElementsAwoken:WingGroup");
             recipe.AddIngredient(ItemID.LuckyHorseshoe, 1);
             recipe.AddIngredient(null, "FireTreads", 1);
             recipe.AddIngredient(null, "SkyEssence", 6);
@@ -51,7 +51,7 @@ namespace ElementsAwoken.Items.Elements.Sky
             recipe.SetResult(this);
             recipe.AddRecipe();
             recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("WingGroup");
+            recipe.AddRecipeGroup("ElementsAwoken:WingGroup");
             recipe.AddIngredient(ItemID.ObsidianHorseshoe, 1);
             recipe.AddIngredient(null, "FireTreads", 1);
             recipe.AddIngredient(null, "SkyEssence", 6);

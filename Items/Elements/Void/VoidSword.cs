@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Elements.Void
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Holocaust");
+            DisplayName.SetDefault("Blade of the Depths");
             Tooltip.SetDefault("The edge of the blade gleams with red light");
         }
 

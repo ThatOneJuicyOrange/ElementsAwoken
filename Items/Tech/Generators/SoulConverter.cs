@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Wood, 24);
-            recipe.AddRecipeGroup("EvilBar", 12);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 12);
             recipe.AddIngredient(null, "GoldWire", 8);
             recipe.AddIngredient(null, "Capacitor", 1);
             recipe.AddTile(TileID.Anvils);

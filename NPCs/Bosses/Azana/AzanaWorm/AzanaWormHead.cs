@@ -81,7 +81,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana.AzanaWorm
                     npc.active = false;
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0)
                 {

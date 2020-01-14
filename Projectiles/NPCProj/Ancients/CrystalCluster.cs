@@ -62,7 +62,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients
                     Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 27);
                 }
             }
-            if (Main.rand.Next(3) == 0)
+            if (Main.rand.Next(3) == 0 && !ModContent.GetInstance<Config>().lowDust)
             {
                 int dustBoxWidth = (int)(projectile.width * projectile.scale);
                 int dust = Dust.NewDust(projectile.Center - new Vector2(dustBoxWidth / 2, dustBoxWidth / 2), dustBoxWidth, dustBoxWidth, GetDustID(), 0f, 0f, 100, default(Color));
@@ -88,10 +88,13 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients
         }
         public override void Kill(int timeLeft)
         {
-            for (int k = 0; k < 12; k++)
+            if (!ModContent.GetInstance<Config>().lowDust)
             {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, GetDustID(), 0f, 0f, 100, default(Color));
-                Main.dust[dust].noGravity = true;
+                for (int k = 0; k < 12; k++)
+                {
+                    int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, GetDustID(), 0f, 0f, 100, default(Color));
+                    Main.dust[dust].noGravity = true;
+                }
             }
         }
     }

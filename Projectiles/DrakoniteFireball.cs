@@ -12,40 +12,35 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 16;
             projectile.height = 16;
-            projectile.aiStyle = 1;
+
             projectile.friendly = true;
             projectile.magic = true;
             projectile.ignoreWater = false;
+
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
             projectile.alpha = 0;
-            projectile.light = 1f;    // projectile light
-            projectile.extraUpdates = 1;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
-            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
-            aiType = ProjectileID.Bullet;
+            projectile.light = 1f;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Drakonite Fireball");
         }
-        public override void AI()           //this make that the projectile will face the corect way
+        public override void AI()
         {
             int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 130, default(Color), 3.75f);   //this defines the flames dust and color, change DustID to wat dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
             Main.dust[dust].velocity *= 0.2f;
             Main.dust[dust].scale *= 0.5f;
             Main.dust[dust].noGravity = true;
-            projectile.velocity.Y += 0.05f;
+            projectile.ai[0]++;
+            if (projectile.ai[0] > 20) projectile.velocity.Y += 0.07f;
         }
         public override void Kill(int timeLeft)
         {
-            for (int k = 0; k < 2; k++) //2 is the number of projectiles released on hit
-            {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 174, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
-                Projectile.NewProjectile( projectile.position.X, projectile.position.Y, (float)Main.rand.Next(-35, 36) * 0.2f, (float)Main.rand.Next(-35, 36) * 0.2f, mod.ProjectileType("GreekFire"),
-                (int)((double)projectile.damage * 0.3), (float)((int)((double)projectile.knockBack * 0.35)), Main.myPlayer, 0f, 0f);
-            }
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
+            Projectile proj = Main.projectile[Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.NextFloat(-3f,3f), Main.rand.NextFloat(-3f, 3f), mod.ProjectileType("GreekFire"), (int)(projectile.damage * 0.3f), projectile.knockBack * 0.35f, Main.myPlayer, 0f, 0f)];
+            proj.timeLeft = 180;
+            proj.magic = true;
         }
     }
 }

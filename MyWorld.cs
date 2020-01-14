@@ -17,6 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Reflection;
 using System.Linq;
 using ElementsAwoken.Items.Consumable.Potions;
+using Terraria.Localization;
 
 namespace ElementsAwoken
 {
@@ -69,10 +70,8 @@ namespace ElementsAwoken
         // void event
         public static bool voidInvasionUp = false;
         public static bool willStartVoidInvasion = false;
-        public static bool voidInvasionJustFinished = false;
         public static int justFinishedTimer = 0;
         // hailstorm
-        public static bool hailStorm = false;
         public static int hailStormTime = 0;
         // tiles
         public static int SkyTiles = 0;
@@ -108,6 +107,16 @@ namespace ElementsAwoken
         public static bool voidLeviathanDrive = false;
         public static bool volcanoxDrive = false;
         public static bool wastelandDrive = false;
+
+        // boss prompts
+        public static int desertPrompt = 0;
+        public static int firePrompt = 0;
+        public static int skyPrompt = 0;
+        public static int frostPrompt = 0;
+        public static int waterPrompt = 0;
+        public static int voidPrompt = 0;
+
+        public static int skyPromptRainCD = 0;
 
         public override void Initialize()
         {
@@ -145,13 +154,11 @@ namespace ElementsAwoken
             downedAncients = false;
             downedCosmicObserver = false;
 
-            hailStorm = false;
 
             Main.invasionSize = 0;
 
             voidInvasionUp = false;
             willStartVoidInvasion = false;
-            voidInvasionJustFinished = false;
 
             darkMoon = false;
 
@@ -231,6 +238,14 @@ namespace ElementsAwoken
             tag["volcanoxDrive"] = volcanoxDrive;
             tag["wastelandDrive"] = wastelandDrive;
 
+            tag["desertPrompt"] = desertPrompt;
+            tag["firePrompt"] = firePrompt;
+            tag["skyPrompt"] = skyPrompt;
+            tag["frostPrompt"] = frostPrompt;
+            tag["waterPrompt"] = waterPrompt;
+            tag["voidPrompt"] = voidPrompt;
+
+
             for (int i = 0; i < mysteriousPotionColours.Length; i++)
             {
                 tag["potColours" + i] = mysteriousPotionColours[i];
@@ -289,6 +304,14 @@ namespace ElementsAwoken
             voidLeviathanDrive = tag.GetBool("voidLeviathanDrive");
             volcanoxDrive = tag.GetBool("volcanoxDrive");
             wastelandDrive = tag.GetBool("wastelandDrive");
+
+            desertPrompt = tag.GetInt("desertPrompt");
+            firePrompt = tag.GetInt("firePrompt");
+            skyPrompt = tag.GetInt("skyPrompt");
+            frostPrompt = tag.GetInt("frostPrompt");
+            waterPrompt = tag.GetInt("waterPrompt");
+            voidPrompt = tag.GetInt("voidPrompt");
+
             for (int i = 0; i < mysteriousPotionColours.Length; i++)
             {
                 mysteriousPotionColours[i] = tag.GetString("potColours" + i);
@@ -359,6 +382,7 @@ namespace ElementsAwoken
             //random
             BitsByte flags7 = new BitsByte();
             flags7[0] = awakenedMode;
+            writer.Write(flags7);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -420,32 +444,6 @@ namespace ElementsAwoken
             awakenedMode = flags7[0];
         }
 
-        // allows pre tml0.9 content to be loaded
-        /*public override void LoadLegacy(BinaryReader reader)
-        {
-            reader.ReadInt32();
-            byte flags = reader.ReadByte();
-            downedAqueous = ((flags & 1) == 1);
-            downedVoidLeviathan = ((flags & 2) == 2);
-            downedInfernace = ((flags & 3) == 3);
-            downedScourgeFighter = ((flags & 4) == 4);
-            downedRegaroth = ((flags & 5) == 5);
-            downedCelestial = ((flags & 6) == 6);
-            downedWasteland = ((flags & 7) == 7);
-            downedPermafrost = ((flags & 8) == 8);
-            downedGuardian = ((flags & 9) == 9);
-            downedEye = ((flags & 10) == 10);
-            downedAncientWyrm = ((flags & 11) == 11);
-            downedObsidious = ((flags & 12) == 12);
-            downedShadeWyrm = ((flags & 13) == 13);
-            downedVolcanox = ((flags & 14) == 14);
-            downedVoidEvent = ((flags & 15) == 15);
-            downedToySlime = ((flags & 16) == 16);
-            downedAzana = ((flags & 17) == 17);
-            downedAncients = ((flags & 18) == 18);
-            downedCosmicObserver = ((flags & 19) == 19);
-        }*/
-
         // adding item in chests
         public override void PostWorldGen()
         {
@@ -497,6 +495,44 @@ namespace ElementsAwoken
             Player player = Main.player[Main.myPlayer];
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
+            if (!ModContent.GetInstance<Config>().promptsDisabled)
+            {
+                if (NPC.downedBoss1 && !downedWasteland) desertPrompt++;
+                else desertPrompt = 0;
+                if (NPC.downedBoss3 && !downedInfernace) firePrompt++;
+                else firePrompt = 0;
+                if (NPC.downedMechBossAny && !downedRegaroth) skyPrompt++;
+                else skyPrompt = 0;
+                if (NPC.downedPlantBoss && !downedPermafrost) frostPrompt++;
+                else frostPrompt = 0;
+                if (NPC.downedFishron && !downedAqueous) waterPrompt++;
+                else waterPrompt = 0;
+                if (downedVolcanox && !downedVoidLeviathan) voidPrompt++;
+                else voidPrompt = 0;
+                if (skyPrompt > 108000)
+                {
+                    if (!Main.raining && skyPromptRainCD <= 0)
+                    {
+                        skyPromptRainCD = 3600; 
+                        Main.raining = true;
+                        Main.rainTime = 18000;
+                        ElementsAwoken.DebugModeText("Sky Prompt Rain Started");
+                    }
+                    if (Main.raining) skyPromptRainCD--;
+                }
+                if (frostPrompt > 108000)
+                {
+                    if (hailStormTime <= 0 && Main.rand.Next(40000) == 0)
+                    {
+                        hailStormTime = Main.rand.Next(1800, 7200);
+                    }
+                }
+
+                if (hailStormTime > 0)
+                {
+                    hailStormTime--;
+                }
+            }
             if (ElementsAwoken.calamityEnabled)
             {
                 /*if (CalamityModRevengeance)
@@ -550,11 +586,9 @@ namespace ElementsAwoken
             }
             if (encounter1)
             {
-                ElementsAwoken.screenshakeAmount = 5f;
-                if (encounterTimer <= 1600)
-                {
-                    encounterTimer = 0; // cut the time of the event in half 
-                }
+                if (Main.netMode == 0) modPlayer.screenshakeAmount = 5f;
+                else ElementsAwoken.ApplyScreenShakeToAll(5f);
+                if (encounterTimer <= 1600)encounterTimer = 0; // cut the time of the event in half 
             }
             if (encounter2)
             {               
@@ -583,6 +617,8 @@ namespace ElementsAwoken
             }
             if (modPlayer.encounterTextTimer > 0 || encounter3)
             {
+                ElementsAwoken.DebugModeText("Encounter Text Timer: " + modPlayer.encounterTextTimer);
+                //if (encounterTimer % 3 == 0) ElementsAwoken.DebugModeText("encounter moonlord shake. encounter 3: " + encounter3);
                 float intensity = MathHelper.Clamp((float)Math.Sin((modPlayer.encounterTextTimer / 19.99f)) * 0.5f, 0f, 1f); // sin makes it pulsate. must divided by a float or it goes wonky
                 if (encounter3)
                 {
@@ -602,7 +638,6 @@ namespace ElementsAwoken
             if (justFinishedTimer <= 0)
             {
                 justFinishedTimer = 0;
-                voidInvasionJustFinished = false;
             }
 
             if (voidInvasionUp)
@@ -662,17 +697,17 @@ namespace ElementsAwoken
                     }
                     if (allDead)
                     {
-                        Main.NewText("Laughs echo throughout the world", 182, 15, 15, false);
+                        if (Main.netMode == 0)Main.NewText("Laughs echo throughout the world", 182, 15, 15, false);
+                        if (Main.netMode == 2) NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("Laughs echo throughout the world"), new Color(182, 15, 15));
                         Main.PlaySound(29, (int)Main.player[i].position.X, (int)Main.player[i].position.Y, 105, 1f, 0f);
                         voidInvasionUp = false;
-                        voidInvasionJustFinished = true;
                         justFinishedTimer = 200;
                     }
                 }
             }
             else // no void invasion
             {
-                if (voidInvasionJustFinished)
+                if (justFinishedTimer > 0)
                 {
                     for (int k = 0; k < Main.npc.Length; k++)
                     {

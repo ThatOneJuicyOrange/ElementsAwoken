@@ -11,7 +11,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class LightningArc : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LightningSprite"; } }
         public override void SetDefaults()
         {
             projectile.width = 14;

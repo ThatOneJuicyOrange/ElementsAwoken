@@ -21,6 +21,15 @@ namespace ElementsAwoken.Projectiles.Arrows
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(BuffID.Poisoned, 200);
+            target.AddBuff(BuffID.Venom, 200);
+        }
+        public override void AI()
+        {
+            if (projectile.ai[1] == 0 && projectile.penetrate == 1)
+            {
+                projectile.damage = (int)(projectile.damage * 0.4f);
+                projectile.ai[1]++;
+            }
         }
     }
 }

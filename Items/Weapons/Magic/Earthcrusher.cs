@@ -52,7 +52,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("MythrilBar", 15);
+            recipe.AddRecipeGroup("ElementsAwoken:MythrilBar", 15);
             recipe.AddIngredient(ItemID.SoulofMight, 8);
             recipe.AddIngredient(ItemID.SoulofNight, 8);
             recipe.AddTile(TileID.MythrilAnvil);

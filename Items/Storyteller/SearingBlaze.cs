@@ -23,8 +23,8 @@ namespace ElementsAwoken.Items.Storyteller
             item.noMelee = true;
             item.autoReuse = true;
 
-            item.useTime = 22;
-            item.useAnimation = 22;
+            item.useTime = 26;
+            item.useAnimation = 26;
             item.UseSound = SoundID.Item5;
             item.useStyle = 5;
 

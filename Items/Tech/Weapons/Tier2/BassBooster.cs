@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier2
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("GoldBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 8);
             recipe.AddIngredient(null, "CopperWire", 10);
             recipe.AddIngredient(null, "GoldWire", 10);
             recipe.AddTile(TileID.Anvils);

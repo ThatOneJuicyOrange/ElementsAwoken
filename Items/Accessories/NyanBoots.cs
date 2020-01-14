@@ -31,6 +31,8 @@ namespace ElementsAwoken.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            modPlayer.eaDash = 2;
 
             player.accRunSpeed = 25f;
             player.rocketBoots = 3;
@@ -40,7 +42,6 @@ namespace ElementsAwoken.Items.Accessories
             player.fireWalk = true;
             player.lavaImmune = true;
             player.noFallDmg = true;
-            player.dash = 1;
             player.blackBelt = true;
             player.spikedBoots = 1;
             player.spikedBoots = 2;
@@ -90,7 +91,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(null, "VoiditeBar", 8);
             recipe.AddIngredient(null, "Pyroplasm", 50);
             recipe.AddIngredient(null, "ElementalEssence", 5);
-            recipe.AddIngredient(ItemID.IntenseRainbowDye, 1);
+            recipe.AddIngredient(ItemID.RainbowDye, 1);
             recipe.AddIngredient(ItemID.RainbowBrick, 10);
             recipe.AddIngredient(null, "VoidBoots");
             recipe.AddTile(null, "ElementalForge");

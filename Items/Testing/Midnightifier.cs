@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Testing
 
         public override bool UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Main.dayTime = false;
                 Main.time = 16220;

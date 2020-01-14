@@ -16,14 +16,17 @@ namespace ElementsAwoken.Items.BossSummons
         {
             item.width = 28;
             item.height = 18;
+
             item.maxStack = 20;
+
             item.rare = 2;
+
             item.useAnimation = 45;
             item.useTime = 45;
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
+
             item.consumable = true;
-            item.shoot = mod.ProjectileType("WastelandSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -38,6 +41,12 @@ namespace ElementsAwoken.Items.BossSummons
             return 
             player.ZoneDesert && 
             !NPC.AnyNPCs(mod.NPCType("Wasteland"));
+        }
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Wasteland"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
         }
     }
 }

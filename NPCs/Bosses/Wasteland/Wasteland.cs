@@ -393,7 +393,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                     // shoot stingers
                     int under = 12;
                     if (MyWorld.awakenedMode) under = 24;
-                    if (Main.netMode != 1 && burstTimer <= 0f && shootTimer <= under) // 0 , 6 , 12 = 3 shots
+                    if (Main.netMode != NetmodeID.MultiplayerClient && burstTimer <= 0f && shootTimer <= under) // 0 , 6 , 12 = 3 shots
                     {
                         float speed = 8f;
                         int add = npc.direction == 1 ? -40 : 40;
@@ -893,7 +893,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                             npc.ai[1] = 10f;
                         }
                         WorldGen.KillTile(num170, num171 - 1, true, false, false);
-                        if ((Main.netMode != 1 || !flag23) && flag23 && Main.netMode != 1)
+                        if ((Main.netMode != NetmodeID.MultiplayerClient || !flag23) && flag23 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             if (Main.tile[num170, num171 - 1].type == 10)
                             {

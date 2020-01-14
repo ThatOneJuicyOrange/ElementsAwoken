@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "AABattery", 2);
-            recipe.AddRecipeGroup("EvilBar", 12);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 12);
             recipe.AddIngredient(null, "GoldWire", 5);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

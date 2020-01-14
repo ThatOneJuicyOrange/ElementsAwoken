@@ -254,6 +254,20 @@ namespace ElementsAwoken.NPCs
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Warhorn"));
                 }
             }
+            if (npc.type == NPCID.Shark)
+            {
+                if (Main.rand.Next(15) == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BabyShark"));
+                }
+            }
+            if (npc.type >= NPCID.Salamander && npc.type <= NPCID.Salamander9)
+            {
+                if (Main.rand.Next(15) == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AxolotlMask"));
+                }
+            }
             if (npc.type == NPCID.Penguin || npc.type == NPCID.CrimsonPenguin || npc.type == NPCID.CorruptPenguin || npc.type == NPCID.PenguinBlack)
             {
                 if (Main.rand.Next(3) == 0)
@@ -412,7 +426,7 @@ namespace ElementsAwoken.NPCs
             }
             if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
             {
-                if (Main.rand.Next(99) == 0)
+                if (Main.rand.Next(400) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AssassinsKnife"), 1);
                 }
@@ -569,18 +583,6 @@ namespace ElementsAwoken.NPCs
                     int y = WorldGen.genRand.Next((int)(Main.maxTilesY * .6f), Main.maxTilesY - 200); // WorldGen.worldSurfaceLow is actually the highest surface tile. In practice you might want to use WorldGen.rockLayer or other WorldGen values.
 
                     WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), TileID.LunarOre);
-                }
-            }
-            if (npc.type == mod.NPCType("VoidLeviathanHead") && MyWorld.voidLeviathanKills < 3)
-            {
-                MyWorld.voidLeviathanKills++;
-                Main.NewText("The world has been blessed with Voidite!", Color.DeepPink);
-                for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 4E-05); k++) // xE-05 x is how many veins will spawn
-                {
-                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                    int y = WorldGen.genRand.Next((int)(Main.maxTilesY * .4f), Main.maxTilesY - 200);
-
-                    WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), (ushort)mod.TileType("Voidite"));
                 }
             }
         }

@@ -190,7 +190,7 @@ namespace ElementsAwoken.NPCs
         {
             if (MyWorld.awakenedMode)
             {
-                if (!npc.boss && !dontExtraScale)
+                if (!npc.boss && !dontExtraScale && !BossParts(npc))
                 {
                     npc.lifeMax = (int)(npc.lifeMax * 1.75f);
                     npc.damage = (int)(npc.damage * 1.75f);
@@ -215,183 +215,203 @@ namespace ElementsAwoken.NPCs
                 }
             }
         }
+        private bool BossParts(NPC npc)
+        {
+            if (npc.type == NPCID.TheDestroyer) return true;
+            else if (npc.type == NPCID.TheDestroyerBody) return true;
+            else if (npc.type == NPCID.TheDestroyerTail) return true;
+            else if (npc.type == NPCID.EaterofWorldsHead) return true;
+            else if (npc.type == NPCID.EaterofWorldsBody) return true;
+            else if (npc.type == NPCID.EaterofWorldsTail) return true;
+            else if (npc.type == NPCID.PrimeCannon) return true;
+            else if (npc.type == NPCID.PrimeLaser) return true;
+            else if (npc.type == NPCID.PrimeSaw) return true;
+            else if (npc.type == NPCID.PrimeVice) return true;
+            else if (npc.type == NPCID.GolemFistLeft) return true;
+            else if (npc.type == NPCID.GolemFistRight) return true;
+            else if (npc.type == NPCID.GolemHeadFree) return true;
+            else if (npc.type == NPCID.GolemHead) return true;
+            else if (npc.type == NPCID.MoonLordHand) return true;
+            else if (npc.type == NPCID.MoonLordHead) return true;
+            return false;
+        }
         private void ScaleBossStats(NPC npc)
         {
             if (npc.type == NPCID.KingSlime)
             {
-                npc.lifeMax = 3600;
-                npc.damage = 80;
-                npc.defense = 15;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.EyeofCthulhu)
             {
-                npc.lifeMax = 4800;
-                npc.damage = 45;
-                npc.defense = 17;
+                npc.lifeMax = (int)(npc.lifeMax * 1.32f);
+                npc.damage = (int)(npc.damage * 1.5f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.EaterofWorldsHead)
             {
-                npc.lifeMax = 120;
-                npc.damage = 60;
-                npc.defense = 6;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.EaterofWorldsBody)
             {
-                npc.lifeMax = 350;
-                npc.damage = 25;
-                npc.defense = 9;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.EaterofWorldsTail)
             {
-                npc.lifeMax = 450;
-                npc.damage = 23;
-                npc.defense = 15;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.BrainofCthulhu)
             {
-                npc.lifeMax = 2500;
-                npc.damage = 60;
-                npc.defense = 20;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.4f);
             }
             if (npc.type == NPCID.QueenBee)
             {
-                npc.lifeMax = 6500;
-                npc.damage = 65;
+                npc.lifeMax = (int)(npc.lifeMax * 1.35f);
+                npc.damage = (int)(npc.damage * 1.20f);
             }
             if (npc.type == NPCID.SkeletronHead)
             {
-                npc.lifeMax = 11000;
-                npc.damage = 90;
+                npc.lifeMax = (int)(npc.lifeMax * 1.25f);
+                npc.damage = (int)(npc.damage * 1.3f);
             }
             if (npc.type == NPCID.SkeletronHand)
             {
-                npc.lifeMax = 2000;
-                npc.damage = 65;
-                npc.defense = 20;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.5f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.WallofFlesh)
             {
-                npc.lifeMax = 15000;
-                npc.damage = 200;
-                npc.defense = 25;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.33f);
+                npc.defense = (int)(npc.defense * 1.4f);
             }
             if (npc.type == NPCID.WallofFleshEye)
             {
-                npc.lifeMax = 15000;
-                npc.damage = 200;
-                npc.defense = 9;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.33f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.Retinazer)
             {
-                npc.lifeMax = 45000;
-                npc.damage = 90;
-                npc.defense = 15;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.22f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.Spazmatism)
             {
-                npc.lifeMax = 53500;
-                npc.damage = 100;
-                npc.defense = 15;
+                npc.lifeMax = (int)(npc.lifeMax * 1.3f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.TheDestroyer)
             {
-                npc.lifeMax = 175000;
-                npc.damage = 350;
+                npc.lifeMax = (int)(npc.lifeMax * 1.25f);
+                npc.damage = (int)(npc.damage * 1.25f);
                 npc.defense = 5;
             }
             if (npc.type == NPCID.TheDestroyerBody)
             {
-                npc.damage = 110;
-                npc.defense = 40;
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.TheDestroyerTail)
             {
-                npc.damage = 80;
-                npc.defense = 45;
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.SkeletronPrime)
             {
-                npc.lifeMax = 60000;
-                npc.damage = 90;
+                npc.lifeMax = (int)(npc.lifeMax * 1.2f);
+                npc.damage = (int)(npc.damage * 1.15f);
             }
             if (npc.type == NPCID.PrimeCannon)
             {
-                npc.lifeMax = 15000;
-                npc.damage = 60;
-                npc.defense = 30;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.3f);
             }
             if (npc.type == NPCID.PrimeLaser)
             {
-                npc.lifeMax = 13000;
-                npc.damage = 60;
-                npc.defense = 30;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.3f);
             }
             if (npc.type == NPCID.PrimeSaw)
             {
-                npc.lifeMax = 17500;
-                npc.damage = 120;
-                npc.defense = 45;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.2f);
             }
             if (npc.type == NPCID.PrimeVice)
             {
-                npc.lifeMax = 17500;
-                npc.damage = 120;
-                npc.defense = 42;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.36f);
+                npc.defense = (int)(npc.defense * 1.2f);
             }
             if (npc.type == NPCID.Plantera)
             {
-                npc.lifeMax = 60000;
-                npc.damage = 130;
-                npc.defense = 24;
+                npc.lifeMax = (int)(npc.lifeMax * 1.42f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.GolemHead)
             {
-                npc.lifeMax = 35000;
-                npc.damage = 130;
-                npc.defense = 25;
+                npc.lifeMax = (int)(npc.lifeMax * 1.45f);
+                npc.damage = (int)(npc.damage * 1.3f);
+                npc.defense = (int)(npc.defense * 1.25f);
             }
             if (npc.type == NPCID.GolemFistLeft || npc.type == NPCID.GolemFistRight)
             {
-                npc.lifeMax = 15000;
-                npc.damage = 120;
-                npc.defense = 35;
+                npc.lifeMax = (int)(npc.lifeMax * 1.5f);
+                npc.damage = (int)(npc.damage * 1.25f);
+                npc.defense = (int)(npc.defense * 1.25f);
             }
             if (npc.type == NPCID.Golem)
             {
-                npc.lifeMax = 20000;
-                npc.damage = 140;
-                npc.defense = 35;
+                npc.lifeMax = (int)(npc.lifeMax * 1.48f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.34f);
             }
             if (npc.type == NPCID.GolemHeadFree)
             {
-                npc.damage = 140;
+                npc.damage = (int)(npc.damage * 1.1f);
             }
             if (npc.type == NPCID.DukeFishron)
             {
-                npc.lifeMax = 75000;
-                npc.damage = 170;
-                npc.defense = 60;
+                npc.lifeMax = (int)(npc.lifeMax * 1.25f);
+                npc.damage = (int)(npc.damage * 1.2f);
+                npc.defense = (int)(npc.defense * 1.2f);
             }
             if (npc.type == NPCID.CultistBoss)
             {
-                npc.lifeMax = 75000;
-                npc.damage = 120;
-                npc.defense = 60;
+                npc.lifeMax = (int)(npc.lifeMax * 1.8f);
+                npc.damage = (int)(npc.damage * 1.6f);
+                npc.defense = (int)(npc.defense * 1.5f);
             }
             if (npc.type == NPCID.MoonLordCore)
             {
-                npc.lifeMax = 100000;
-                npc.defense = 90;
+                npc.lifeMax = (int)(npc.lifeMax * 1.33f);
+                npc.defense = (int)(npc.defense * 1.3f);
             }
             if (npc.type == NPCID.MoonLordHand)
             {
-                npc.lifeMax = 50000;
-                npc.defense = 55;
+                npc.lifeMax = (int)(npc.lifeMax * 1.33f);
+                npc.defense = (int)(npc.defense * 1.375f);
             }
             if (npc.type == NPCID.MoonLordHead)
             {
-                npc.lifeMax = 75000;
-                npc.defense = 65;
+                npc.lifeMax = (int)(npc.lifeMax * 1.2f);
+                npc.defense = (int)(npc.defense * 1.3f);
             }
         }
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)

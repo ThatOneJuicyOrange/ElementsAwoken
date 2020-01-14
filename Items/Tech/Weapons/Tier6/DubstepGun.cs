@@ -15,12 +15,12 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
             item.width = 60;
             item.height = 34;
 
-            item.damage = 60;
+            item.damage = 110;
             item.knockBack = 3.75f;
-            item.GetGlobalItem<ItemEnergy>().energy = 18;
+            item.GetGlobalItem<ItemEnergy>().energy = 3;
 
-            item.useTime = 12;
-            item.useAnimation = 12;
+            item.useTime = 10;
+            item.useAnimation = 10;
             item.useStyle = 5;
             item.UseSound = SoundID.Item15;
 

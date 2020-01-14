@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Energy", "Uses " + 5 + " energy");
-            tooltips.Insert(5, tip);
+            tooltips.Add(tip);
         }
         public override void SetStaticDefaults()
         {

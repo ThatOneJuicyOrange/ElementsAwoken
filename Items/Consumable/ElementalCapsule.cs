@@ -19,7 +19,6 @@ namespace ElementsAwoken.Items.Consumable
 
             item.rare = 11;
             item.expert = true;
-            item.consumable = true;
 
             item.useAnimation = 45;
             item.useTime = 45;
@@ -37,9 +36,16 @@ namespace ElementsAwoken.Items.Consumable
         {
             if (Main.expertMode)
             {
-                Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
-                MyWorld.awakenedMode = true;
-                item.stack--;
+                if (MyWorld.awakenedMode)
+                {
+                    Main.NewText("The forces of the world settle.", Color.DeepPink);
+                    MyWorld.awakenedMode = false;
+                }
+                else
+                {
+                    Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
+                    MyWorld.awakenedMode = true;
+                }
                 return true;
             }
             return false;

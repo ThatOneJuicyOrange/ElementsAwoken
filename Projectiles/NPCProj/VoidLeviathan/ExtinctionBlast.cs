@@ -58,7 +58,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
             Lighting.AddLight(projectile.Center, 1.1f, 0.0f, 0.9f);
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int num3 = -1;
                 float num4 = 2000f;

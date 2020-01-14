@@ -52,9 +52,9 @@ namespace ElementsAwoken.Items.Weapons.Summon
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.IronBar, 12);
+            recipe.AddRecipeGroup("IronBar", 12);
             recipe.AddIngredient(ItemID.Bone, 16);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

@@ -10,26 +10,31 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
     {
         public override void SetDefaults()
         {
-            item.damage = 32;
-            item.melee = true;
             item.width = 70;
             item.height = 70;
-            item.useTime = 19;
-            item.useTurn = true;
-            item.useAnimation = 19;
-            item.useStyle = 1;
+            
+            item.damage = 26;
             item.knockBack = 5;
+
+            item.UseSound = SoundID.Item1;
+            item.useTime = 24;
+            item.useAnimation = 24;
+            item.useStyle = 1;
+
+            item.useTurn = true;
+            item.melee = true;
+            item.autoReuse = true;
+
             item.value = Item.buyPrice(0, 10, 0, 0);
             item.rare = 3;
-            item.UseSound = SoundID.Item1;
-            item.autoReuse = true;
+
             item.shoot = mod.ProjectileType("FireBlade");
-            item.shootSpeed = 12f;
+            item.shootSpeed = 10f;
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Sword");
+            DisplayName.SetDefault("Blade of Ashes");
             Tooltip.SetDefault("");
         }
 

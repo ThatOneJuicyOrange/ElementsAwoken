@@ -28,12 +28,12 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("A Cosmic Observer");
-            Main.npcFrameCount[npc.type] = 2;
+            Main.npcFrameCount[npc.type] = 4;
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            float spawnchance = MyWorld.downedCosmicObserver ? 0.0f : 0.02f; // around half the spawn chance of the wyvern
             MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>();
+            float spawnchance = 0.04f / 6; //0.04 is the wyvern chance
 
             if (modPlayer.increasedObserverChance && !NPC.AnyNPCs(mod.NPCType("CosmicObserver")))
             {
@@ -41,9 +41,9 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             }
             if (MyWorld.downedCosmicObserver)
             {
-                return 0.0f;
+                return 0.00005f;
             }
-            return spawnInfo.player.ZoneSkyHeight && !NPC.AnyNPCs(mod.NPCType("CosmicObserver")) && Main.hardMode ? spawnchance : 0f;
+            return spawnInfo.player.ZoneSkyHeight && !spawnInfo.playerInTown && !NPC.AnyNPCs(mod.NPCType("CosmicObserver")) && Main.hardMode ? spawnchance : 0f;
         }
 
         public override void AI()

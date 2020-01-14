@@ -9,12 +9,13 @@ namespace ElementsAwoken.Projectiles.Flails
 {
     public class ManashardWhipP : ModProjectile
     {
+        public int colldedNPCs = 0;
         public override void SetDefaults()
         {
             projectile.width = 28;
             projectile.height = 28;
             projectile.friendly = true;
-            projectile.penetrate = 2;
+            projectile.penetrate = -1;
             projectile.melee = true;
             //projectile.aiStyle = 13;
         }
@@ -92,7 +93,11 @@ namespace ElementsAwoken.Projectiles.Flails
                 }
             }
         }
-
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            projectile.ai[0] = 1f;
+            return false;
+        }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             // So set the correct path here to load the chain texture. 'YourModName' is of course the name of your mod.
@@ -133,14 +138,15 @@ namespace ElementsAwoken.Projectiles.Flails
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
+            colldedNPCs++;
+            if (colldedNPCs >= 2) projectile.ai[0] = 1;
             if (Main.rand.Next(3) == 0)
             {
                 Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 27);
                 int numberProjectiles = 2;
                 for (int i = 0; i < numberProjectiles; i++)
                 {
-                    Vector2 value15 = new Vector2((float)Main.rand.Next(-9, 9), (float)Main.rand.Next(-9, 9));
-                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, value15.X, value15.Y, mod.ProjectileType("Manashatter"), projectile.damage / 2, 2f, projectile.owner, 0f, 0f);
+                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.NextFloat(-9f,9f), Main.rand.NextFloat(-9f, 9f), mod.ProjectileType("Manashatter"), projectile.damage / 2, 2f, projectile.owner, 0f, 0f);
                 }
             }
         }

@@ -51,7 +51,7 @@ namespace ElementsAwoken.Items.Other
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Book, 1);
-            recipe.AddIngredient(ItemID.DemoniteBar, 2);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 2);
             recipe.AddTile(TileID.WorkBenches);
             recipe.SetResult(this);
             recipe.AddRecipe();

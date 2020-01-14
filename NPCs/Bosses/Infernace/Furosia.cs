@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,51 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
     [AutoloadBossHead]
     public class Furosia : ModNPC
     {
-        int projectileBaseDamage = 35;
+        private int projectileBaseDamage = 35;
+        private const int tpDuration = 40;
+
+        private float telePosX = 0;
+        private float telePosY = 0;
+
+        public float dashAI = 0;
+        private float aiTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float shootTimer
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float tpAlphaChangeTimer
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float tpDir
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(telePosX);
+            writer.Write(telePosY);
+            writer.Write(dashAI);
+        }
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            telePosX = reader.ReadSingle();
+            telePosY = reader.ReadSingle();
+            dashAI = reader.ReadSingle();
+        }
         public override void SetDefaults()
         {
             npc.width = 188;
             npc.height = 190;
+
+            npc.aiStyle = -1;
 
             npc.lifeMax = 5000;
             npc.damage = 15;
@@ -42,6 +83,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             npc.buffImmune[BuffID.Frozen] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
@@ -85,58 +127,94 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         public override void AI()
         {
             Player P = Main.player[npc.target];
+            if (!P.active || P.dead) npc.TargetClosest(true);
+            npc.direction = Math.Sign(P.Center.X - npc.Center.X);
             npc.spriteDirection = npc.direction;
-            // despawn if no players
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-            {
-                npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-                {
-                    npc.ai[0]++;
-                    npc.velocity.Y = npc.velocity.Y + 0.11f;
-                    if (npc.ai[0] >= 300)
-                    {
-                        npc.active = false;
-                    }
-                }
-                else
-                    npc.ai[0] = 0;
-            }
-            if (!NPC.AnyNPCs(mod.NPCType("Infernace")))
-            {
-                npc.active = false;
-            }
-
             Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.4f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
+            if (!NPC.AnyNPCs(mod.NPCType("Infernace")))npc.active = false;
+
             int dust = Dust.NewDust(npc.position, npc.width, npc.height, 6);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].scale = 1f;
             Main.dust[dust].velocity *= 0.1f;
 
-            Move(P, 4f);
-            npc.ai[1]--;
-            if (npc.ai[1] <= 0)
+            if (tpAlphaChangeTimer > 0)
             {
-                Fireball(P, 9.5f, projectileBaseDamage);
-                npc.ai[1] = 50f;
+                tpAlphaChangeTimer--;
+                if (tpAlphaChangeTimer > (int)(tpDuration / 2))
+                {
+                    npc.alpha += 26;
+                }
+                if (tpAlphaChangeTimer == (int)(tpDuration / 2) && Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    npc.position.X = telePosX - npc.width / 2;
+                    npc.position.Y = telePosY - npc.height / 2;
+                    npc.netUpdate = true;
+                }
+                if (tpAlphaChangeTimer < (int)(tpDuration / 2))
+                {
+                    npc.alpha -= 26;
+                    if (npc.alpha <= 0)
+                    {
+                        tpAlphaChangeTimer = 0;
+                    }
+                }
+            }
+
+            aiTimer++;
+            if (aiTimer < 300)
+            {
+                dashAI++;
+                if (dashAI == 30)
+                {
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+                    float dashSpeed = Main.expertMode ? 7 : 5;
+                    if (MyWorld.awakenedMode) dashSpeed = 9;
+                    Dash(P, dashSpeed);
+                }
+                if(dashAI > 70) npc.velocity *= 0.96f;
+                if (dashAI >= 120) dashAI = 0;
+            }
+            else
+            {
+                npc.velocity =  Vector2.Zero;
+                if (aiTimer == 300)
+                {
+                    tpDir = Main.rand.Next(2) == 0 ? -1 : 1;
+                    Teleport(P.Center.X + 600 * tpDir, P.Center.Y);
+                }
+                if ((aiTimer == 380 || (aiTimer == 390 && Main.expertMode) || (aiTimer == 400 && MyWorld.awakenedMode)) && Main.netMode != NetmodeID.MultiplayerClient)
+                {
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
+                    float projSpeed = Main.expertMode ? 14 : 10;
+                    if (MyWorld.awakenedMode) projSpeed = 18;
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -tpDir * projSpeed, 0, mod.ProjectileType("FurosiaSpike"), projectileBaseDamage, 0f, 0);
+                }
+                if (aiTimer == 420)
+                {
+                    Teleport(P.Center.X + Main.rand.Next(400, 400), P.Center.Y - 200);
+                    aiTimer = 0;
+                }
             }
         }
-        private void Move(Player P, float moveSpeed)
+        private void Dash(Player P,float dashSpeed)
         {
             Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
             toTarget.Normalize();
-            npc.velocity = toTarget * moveSpeed;
+            npc.velocity = toTarget * dashSpeed;
         }
-        private void Fireball(Player P, float speed, int damage)
+        private void Shoot(Player P, float speed, int damage,int type)
         {
-            Vector2 npcCenter = new Vector2(npc.Center.X, npc.Center.Y);
-            int type = mod.ProjectileType("FurosiaFireball");
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-            float rotation = (float)Math.Atan2(npcCenter.Y - P.Center.Y, npcCenter.X - P.Center.X);
+            float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
             Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 30, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, 0);
         }
-
+        private void Teleport(float posX, float posY)
+        {
+            tpAlphaChangeTimer = tpDuration;
+            telePosX = posX;
+            telePosY = posY;
+        }
         public override bool CheckActive()
         {
             return false;

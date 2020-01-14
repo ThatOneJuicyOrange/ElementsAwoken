@@ -302,7 +302,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 #region escape           
                 if (Vector2.Distance(P.Center, npc.Center) >= 2500)
                 {
-                    if (Main.netMode != 1)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         string escapeText = "Trying to escape so early?";
                         if (halfLife && !lowLife)
@@ -310,7 +310,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             int choice = Main.rand.Next(3);
                             if (choice == 0)
                             {
-                                escapeText = "Dont try to run away!";
+                                escapeText = "Don't try to run away!";
                             }
                             if (choice == 1)
                             {
@@ -343,7 +343,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     }
                 }
                 #endregion
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     npc.ai[1]++;
                     npc.ai[2]--;
@@ -369,7 +369,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     if (npc.ai[1] < 1000)
                     {
 
-                        if (halfLife && Main.netMode != 1)
+                        if (halfLife && Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             npc.ai[2] -= 0.5f;
                         }
@@ -415,7 +415,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             }
                             if (npc.ai[2] <= 0)
                             {
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     int distance = Main.rand.Next(200, 800);
                                     double angle = Main.rand.NextDouble() * 2d * Math.PI;
@@ -441,7 +441,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         npc.velocity.X = 0f;
                         npc.velocity.Y = 0f;
 
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             if (halfLife) npc.ai[3] += 0.5f;
                             if (lowLife) npc.ai[3] += 0.5f;
@@ -450,7 +450,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         //teleport
                         if (npc.ai[3] >= 20 && npc.ai[0] == 0)
                         {
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 int distance = Main.rand.Next(200, 800);
                                 double angle = Main.rand.NextDouble() * 2d * Math.PI;
@@ -499,7 +499,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             npc.velocity.Y = -movespeed;
                             if (npc.ai[2] <= 0)
                             {
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed, 0f, type, projectileBaseDamage, 0f, 0);
@@ -517,7 +517,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             npc.velocity.Y = -movespeed;
                             if (npc.ai[2] <= 0)
                             {
-                                if (Main.netMode != 1)
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
                                 {
                                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -speed, 0f, type, projectileBaseDamage, 0f, 0);
@@ -539,7 +539,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         float playerY = P.Center.Y - 500f - npc.Center.Y;
                         Move(P, speed, playerX, playerY);
 
-                        if (Main.netMode != 1)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             int randValue = lowLife ? 6 : 8;
                             if (Main.rand.Next(randValue) == 0)
@@ -563,7 +563,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
 
                         if (npc.ai[2] <= 0)
                         {
-                            if (Main.netMode != 1)
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
                             {
                                 float projSpeed = halfLife ? 20f : 18f;
                                 int damage = projectileBaseDamage + 25;

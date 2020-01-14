@@ -12,20 +12,25 @@ namespace ElementsAwoken.Items.ItemSets.Floral
     {
         public override void SetDefaults()
         {
-            item.damage = 6;
-            item.magic = true;
+            item.width = 28;
+            item.height = 30; 
+            
+            item.damage = 8;
             item.mana = 3;
-            item.width = 14;
-            item.height = 20;
-            item.useTime = 5;
-            item.useAnimation = 15;
-            item.useStyle = 5;
+            item.knockBack = 1;
+
+            item.magic = true;
             item.noMelee = true;
-            item.knockBack = 3;
+            item.autoReuse = true;
+
+            item.useTime = 8;
+            item.useAnimation = 24;
+            item.useStyle = 5;
+
             item.value = Item.buyPrice(0, 2, 0, 0);
             item.rare = 3;
+
             item.UseSound = SoundID.Item20;
-            item.autoReuse = true;
             item.shoot = mod.ProjectileType("FlowerPowerProj");
             item.shootSpeed = 16f;
         }
@@ -38,7 +43,7 @@ namespace ElementsAwoken.Items.ItemSets.Floral
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            int numberProjectiles = 3 + Main.rand.Next(2);
+            int numberProjectiles = Main.rand.Next(2,5);
             for (int i = 0; i < numberProjectiles; i++)
             {
                 Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(10));

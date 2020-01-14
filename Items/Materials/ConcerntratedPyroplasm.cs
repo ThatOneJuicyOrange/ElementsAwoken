@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.Materials
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Concerntrated Pyroplasm");
+            DisplayName.SetDefault("Concentrated Pyroplasm");
             Tooltip.SetDefault("Used to craft Blightfire");
         }
         public override void AddRecipes()

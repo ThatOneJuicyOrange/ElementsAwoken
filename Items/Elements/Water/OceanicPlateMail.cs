@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Elements.Water
             item.height = 18;
             item.value = Item.buyPrice(0, 75, 0, 0);
             item.rare = 8;
-            item.defense = 17;
+            item.defense = 19;
         }
         public override void SetStaticDefaults()
         {

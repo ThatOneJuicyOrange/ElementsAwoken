@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("AncientWyrmSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -39,7 +38,13 @@ namespace ElementsAwoken.Items.BossSummons
             !NPC.AnyNPCs(mod.NPCType("TheEye")) &&
             !NPC.AnyNPCs(mod.NPCType("AncientWyrmHead"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheEye"));
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("AncientWyrmHead"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

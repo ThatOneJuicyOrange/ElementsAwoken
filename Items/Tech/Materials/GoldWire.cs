@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Tech.Materials
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("GoldBar", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 4);
             recipe.AddIngredient(null, "CopperWire", 5);
             recipe.AddIngredient(null, "LensFragment", 1);
             recipe.AddTile(TileID.Anvils);

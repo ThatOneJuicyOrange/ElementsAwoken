@@ -10,16 +10,15 @@ namespace ElementsAwoken.Projectiles
 {
     public class AeroStorm : ModProjectile
     {
-        public int shootTimer = 5;
-        public int shootTimer2 = 5;
         public override void SetDefaults()
         {
-            projectile.width = 38;
-            projectile.height = 38;
+            projectile.width = 54;
+            projectile.height = 28;
+
             projectile.friendly = true;
             projectile.ignoreWater = true;
-            projectile.magic = true;
             projectile.tileCollide = false;
+
             projectile.penetrate = -1;
             projectile.extraUpdates = 2;
             projectile.timeLeft = 600;
@@ -44,24 +43,24 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            shootTimer--;
-            shootTimer2--;
-            if (shootTimer <= 0)
+            projectile.ai[0]--;
+            projectile.ai[1]--;
+            int spawnWidth = projectile.width - 4;
+            if (projectile.ai[0] <= 0)
             {
-                int rand = Main.rand.Next(-18, 18);
-                Projectile.NewProjectile(projectile.Center.X + rand, projectile.Center.Y + 10, 0, 10, ProjectileID.RainFriendly, projectile.damage, 0, projectile.owner);
-                shootTimer = 15;
+                Projectile.NewProjectile(projectile.Center.X + Main.rand.Next(-spawnWidth / 2, spawnWidth / 2), projectile.position.Y + projectile.height, 0, 10, ProjectileID.RainFriendly, projectile.damage, 0, projectile.owner);
+                projectile.ai[0] = 15;
             }
-            if (shootTimer2 <= 0)
+            if (projectile.ai[1] <= 0)
             {
-                int rand = Main.rand.Next(-18, 18);
-                int rand2 = Main.rand.Next(-2, 2);
-                Projectile.NewProjectile(projectile.Center.X + rand, projectile.Center.Y, rand2, 10, mod.ProjectileType("AeroLightning"), projectile.damage * 2, 0, projectile.owner);
-                shootTimer2 = 60 + Main.rand.Next(0, 90);
+                Projectile.NewProjectile(projectile.Center.X + Main.rand.Next(-spawnWidth / 2, spawnWidth / 2), projectile.position.Y + projectile.height, Main.rand.NextFloat(-2, 2), 10, mod.ProjectileType("AeroLightning"), projectile.damage * 2, 0, projectile.owner);
+                projectile.ai[1] = Main.rand.Next(60, 120);
+                projectile.netUpdate = true;
             }
             if (projectile.timeLeft <= 100)
             {
-                projectile.alpha += 3;
+                projectile.alpha += 255 / 60;
+                if (projectile.alpha >= 255) projectile.Kill();
             }
         }
     }

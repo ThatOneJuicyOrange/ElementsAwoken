@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Embryo of Existance");
+            DisplayName.SetDefault("Embryo of Existence");
             Tooltip.SetDefault("Summons the guardian of the void");
         }
 
@@ -36,7 +36,12 @@ namespace ElementsAwoken.Items.BossSummons
             return !Main.dayTime &&
             !NPC.AnyNPCs(mod.NPCType("VoidLeviathanHead")); ;
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("VoidLeviathanHead"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

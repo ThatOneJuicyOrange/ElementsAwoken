@@ -46,7 +46,13 @@ namespace ElementsAwoken.Projectiles.Spears
             }
             else
             {
-                projectile.ai[0] += 0.6f;
+                projectile.ai[0] += 0.8f;
+            }
+
+            if (Main.player[projectile.owner].itemAnimation == Main.player[projectile.owner].itemAnimationMax / 3)
+            {
+                Vector2 projPos = projectile.Center - Vector2.Normalize(new Vector2(projectile.velocity.X, projectile.velocity.Y)) * 2;
+                Projectile.NewProjectile(projPos.X, projPos.Y, projectile.velocity.X, projectile.velocity.Y, mod.ProjectileType("PetalPikeStem"), projectile.damage / 3, projectile.knockBack, projectile.owner);
             }
 
             if (Main.player[projectile.owner].itemAnimation == 0)

@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             if (crankCooldown <= 0 && modPlayer.energy < modPlayer.maxEnergy)
             {
                 Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/HandCrank"), 1, 0);
-                modPlayer.energy += 1;
+                modPlayer.energy += 3;
                 crankCooldown = 20;
             }
             item.stack++;

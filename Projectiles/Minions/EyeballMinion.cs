@@ -11,11 +11,10 @@ namespace ElementsAwoken.Projectiles.Minions
     public class EyeballMinion : ModProjectile
     {
         public float shootTimer = 0f;
-        public int type = 0;
         public override void SetDefaults()
         {
-            projectile.width = 34;
-            projectile.height = 34;
+            projectile.width = 64;
+            projectile.height = 64;
 
             projectile.netImportant = true;
             projectile.friendly = true;
@@ -38,32 +37,31 @@ namespace ElementsAwoken.Projectiles.Minions
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {
-            projectile.frame = type;
-            return true;
+            projectile.frameCounter++;
+            if (projectile.frameCounter >= 16)
+            {
+                projectile.frame++;
+                projectile.frameCounter = 0;
+                if (projectile.frame > 3)
+                    projectile.frame = 0;
+            }
+            return true; 
         }
         public override void AI()
         {
-            bool flag64 = projectile.type == mod.ProjectileType("EyeballMinion");
             Player player = Main.player[projectile.owner];
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.AddBuff(mod.BuffType("Eyeball"), 3600);
-            if (flag64)
+
+            if (player.dead)
             {
-                if (player.dead)
-                {
-                    modPlayer.eyeballMinion = false;
-                }
-                if (modPlayer.eyeballMinion)
-                {
-                    projectile.timeLeft = 2;
-                }
+                modPlayer.eyeballMinion = false;
             }
-            if (projectile.localAI[0] == 0)
+            if (modPlayer.eyeballMinion)
             {
-                type = (int)projectile.ai[0];
-                projectile.ai[0] = 0f;
-                projectile.localAI[0]++;
+                projectile.timeLeft = 2;
             }
+        
             Lighting.AddLight(projectile.Center, 0.3f, 0.3f, 0.3f);
 
             shootTimer--;
@@ -81,7 +79,7 @@ namespace ElementsAwoken.Projectiles.Minions
                         {
                             Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
                             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 12);
-                            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("CelestialBoltFriendly"), 30, projectile.knockBack, projectile.owner, 0f, type);
+                            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("CelestialBoltFriendly"), 30, projectile.knockBack, projectile.owner, 0f, Main.rand.Next(4));
                             shootTimer = 30;
                         }
                     }

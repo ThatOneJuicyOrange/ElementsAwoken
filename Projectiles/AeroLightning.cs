@@ -14,9 +14,10 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 4;
             projectile.height = 4;
-            //projectile.aiStyle = 48;
+
             projectile.friendly = true;
             projectile.magic = true;
+
             projectile.penetrate = 1;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 320;
@@ -37,18 +38,13 @@ namespace ElementsAwoken.Projectiles
                 projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 2; i++)
             {
-                if (Main.rand.Next(2) == 0)
-                {
-                    Vector2 vector33 = projectile.position;
-                    vector33 -= projectile.velocity * ((float)i * 0.25f);
-                    projectile.alpha = 255;
-                    int dust = Dust.NewDust(vector33, 1, 1, 15, 0f, 0f, 0, default(Color), 0.75f);
-                    Main.dust[dust].position = vector33;
-                    Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-                    Main.dust[dust].velocity *= 0.05f;
-                }
+                Dust dust = Main.dust[Dust.NewDust(projectile.position, 1, 1, 226, 0f, 0f, 0, default(Color), 0.75f)];
+                dust.position = projectile.position - projectile.velocity * ((float)i * 0.25f);
+                dust.scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                dust.velocity *= 0.05f;
+                dust.noGravity = true;
             }
             return;
         }

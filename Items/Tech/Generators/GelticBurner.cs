@@ -116,7 +116,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Gel, 12);
             recipe.AddIngredient(ItemID.PinkGel, 6);
-            recipe.AddRecipeGroup("GoldBar", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 4);
             recipe.AddIngredient(null, "GoldWire", 2);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

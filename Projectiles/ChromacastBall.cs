@@ -61,7 +61,11 @@ namespace ElementsAwoken.Projectiles
 
             projectile.damage = (int)(startingDamage * MathHelper.Lerp(0.05f, 2, (float)projectile.timeLeft / 300f));
         }
-
+        public override bool? CanHitNPC(NPC target)
+        {
+            if (target.townNPC) return false;
+            return base.CanHitNPC(target);
+        }
         public override void Kill(int timeLeft)
         {
             // big boom

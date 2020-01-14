@@ -78,7 +78,7 @@ namespace ElementsAwoken.Items.Testing
         {
             if (player.altFunctionUse != 2)
             {
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     switch (timeMode)
                     {

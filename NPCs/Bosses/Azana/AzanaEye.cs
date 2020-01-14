@@ -297,7 +297,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         npc.ai[3] += 0.5f;
                     }
 
-                    if (npc.ai[3] >= 60f && Main.netMode != 1)
+                    if (npc.ai[3] >= 60f && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         int numberProjectiles = 3;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);

@@ -14,15 +14,15 @@ namespace ElementsAwoken.Items.BossDrops.Azana
             item.width = 70;
             item.height = 70;
 
-            item.damage = 340;
+            item.damage = 440;
             item.knockBack = 5;
 
             item.melee = true;
             item.autoReuse = true;
             item.useTurn = true;
 
-            item.useTime = 15;
-            item.useAnimation = 15;
+            item.useTime = 9;
+            item.useAnimation = 9;
             item.useStyle = 1;
 
             item.rare = 11;

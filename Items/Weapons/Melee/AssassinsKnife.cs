@@ -10,31 +10,38 @@ namespace ElementsAwoken.Items.Weapons.Melee
 {
     public class AssassinsKnife : ModItem
     {
-
         public override void SetDefaults()
         {
-            item.useStyle = 3;
-            item.useTurn = false;
-            item.useAnimation = 4;
-            item.useTime = 4;
             item.width = 20;
             item.height = 20;
-            item.damage = 16;
+
+            item.damage = 8;
+            item.knockBack = 2f;
+
             item.melee = true;
-            item.knockBack = 5f;
-            item.UseSound = SoundID.Item1;
             item.useTurn = true;
             item.autoReuse = true;
-            item.maxStack = 1;
-            item.value = Item.buyPrice(0, 1, 0, 0);
+            item.useTurn = false;
+
+            item.UseSound = SoundID.Item1;
+            item.useStyle = 3;
+            item.useAnimation = 5;
+            item.useTime = 5;
+
             item.rare = 3;
+            item.value = Item.sellPrice(0, 0, 10, 0);
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Assassin's Knife");
+            Tooltip.SetDefault("While holding the item, damage taken is increased by 2x");
         }
 
+        public override void HoldItem(Player player)
+        {
+            player.GetModPlayer<MyPlayer>().damageTaken *= 2f;
+        }
 
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

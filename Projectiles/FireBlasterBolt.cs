@@ -14,7 +14,7 @@ namespace ElementsAwoken.Projectiles
             projectile.height = 4;
 
             projectile.friendly = true;
-            projectile.magic = true;
+            projectile.ranged = true;
 
             projectile.penetrate = 1;
             projectile.timeLeft = 600;
@@ -30,11 +30,11 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            for (int num121 = 0; num121 < 5; num121++)
+            for (int i = 0; i < 3; i++)
             {
                 Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 6)];
                 dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f * (float)num121;
+                dust.position -= projectile.velocity / 3f * (float)i;
                 dust.noGravity = true;
                 dust.scale = 1f;
             }
@@ -43,8 +43,9 @@ namespace ElementsAwoken.Projectiles
         {
             for (int k = 0; k < 2; k++)
             {
-                Projectile proj = Main.projectile[Projectile.NewProjectile(projectile.position.X, projectile.position.Y, (float)Main.rand.Next(-50, 50) * 0.15f, (float)Main.rand.Next(-50, 50) * 0.15f, mod.ProjectileType("GreekFire"), (int)(projectile.damage * 0.7), 1f, Main.myPlayer)];
-                proj.timeLeft = 90;
+                Projectile proj = Main.projectile[Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.NextFloat(-6f, 6f), Main.rand.NextFloat(-6f, 6f), mod.ProjectileType("GreekFire"), (int)(projectile.damage * 0.4f), projectile.knockBack * 0.35f, Main.myPlayer, 0f, 0f)];
+                proj.timeLeft = 120;
+                proj.ranged = true;
             }
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
         }

@@ -38,8 +38,8 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
-            recipe.AddRecipeGroup("SandGroup", 25);
-            recipe.AddRecipeGroup("SandstoneGroup", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 25);
+            recipe.AddRecipeGroup("ElementsAwoken:SandstoneGroup", 10);
             recipe.AddIngredient(ItemID.LightningBoots);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
@@ -47,8 +47,8 @@ namespace ElementsAwoken.Items.Elements.Desert
 
             recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
-            recipe.AddRecipeGroup("SandGroup", 25);
-            recipe.AddRecipeGroup("SandstoneGroup", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 25);
+            recipe.AddRecipeGroup("ElementsAwoken:SandstoneGroup", 10);
             recipe.AddIngredient(ItemID.FrostsparkBoots);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);

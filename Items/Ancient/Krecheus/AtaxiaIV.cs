@@ -16,14 +16,14 @@ namespace ElementsAwoken.Items.Ancient.Krecheus
             item.width = 40;
             item.height = 40;
 
-            item.damage = 520;
+            item.damage = 580;
 
             item.melee = true;
             item.useTurn = true;
             item.autoReuse = true;
 
-            item.useTime = 12;
-            item.useAnimation = 12;
+            item.useTime = 8;
+            item.useAnimation = 8;
 
             item.useStyle = 1;
             item.knockBack = 5;

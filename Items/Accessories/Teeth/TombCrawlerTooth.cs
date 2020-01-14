@@ -19,7 +19,7 @@ namespace ElementsAwoken.Items.Accessories.Teeth
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tomb Crawler Tooth");
+            DisplayName.SetDefault("Dune Splicer Tooth");
             Tooltip.SetDefault("Mining speed increased by 25%");
         }
 

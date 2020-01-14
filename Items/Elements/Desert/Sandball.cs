@@ -12,24 +12,28 @@ namespace ElementsAwoken.Items.Elements.Desert
     {
         public override void SetDefaults()
         {
+            item.width = 16;
+            item.height = 16;
 
-            item.width = 18;
-            item.damage = 20;
+            item.damage = 14;
+            item.knockBack = 2f;
+
             item.thrown = true;
             item.noMelee = true;
             item.noUseGraphic = true;
+            item.consumable = true;
+            item.autoReuse = true;
+
+            item.useTime = 16;
             item.useAnimation = 16;
             item.useStyle = 1;
-            item.useTime = 16;
-            item.consumable = true;
-
-            item.knockBack = 3f;
             item.UseSound = SoundID.Item39;
-            item.autoReuse = true;
-            item.height = 20;
+
             item.maxStack = 999;
+
             item.value = Item.buyPrice(0, 0, 1, 0);
             item.rare = 3;
+
             item.shoot = mod.ProjectileType("Sandball");
             item.shootSpeed = 13f;
         }
@@ -45,8 +49,8 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
-            recipe.AddRecipeGroup("SandGroup", 25);
-            recipe.AddRecipeGroup("SandstoneGroup", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 25);
+            recipe.AddRecipeGroup("ElementsAwoken:SandstoneGroup", 10);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this, 450);
             recipe.AddRecipe();

@@ -48,9 +48,6 @@ namespace ElementsAwoken
         public static bool eaMusicEnabled;
         public static bool eaRetroMusicEnabled;
 
-        public static float screenshakeAmount = 0; // dont go above 15 unless you want to have a seizure
-        private static int screenshakeTimer = 0;
-
         public static int[] screenTextTimer = new int[5];
         public static int[] screenTextDuration = new int[5];
         public static float[] screenTextAlpha = new float[5];
@@ -189,7 +186,7 @@ namespace ElementsAwoken
                 ItemType("BubblePack"),
                 ItemType("SkylineWings")
             });
-            RecipeGroup.RegisterGroup("WingGroup", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:WingGroup", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Lunar Wings"), new int[]
             {
@@ -198,14 +195,14 @@ namespace ElementsAwoken
                 3470,
                 3471
             });
-            RecipeGroup.RegisterGroup("LunarWings", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:LunarWings", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Silver or Tungsten Sword"), new int[]
             {
                 ItemID.SilverBroadsword,
                 ItemID.TungstenBroadsword,
             });
-            RecipeGroup.RegisterGroup("SilverSword", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:SilverSword", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Sand"), new int[]
             {
@@ -214,7 +211,7 @@ namespace ElementsAwoken
                 ItemID.EbonsandBlock,
                 ItemID.PearlsandBlock,
             });
-            RecipeGroup.RegisterGroup("SandGroup", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:SandGroup", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Sandstone"), new int[]
             {
@@ -223,7 +220,7 @@ namespace ElementsAwoken
                 ItemID.CorruptSandstone,
                 ItemID.HallowSandstone,
             });
-            RecipeGroup.RegisterGroup("SandstoneGroup", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:SandstoneGroup", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Ice Block"), new int[]
             {
@@ -232,7 +229,7 @@ namespace ElementsAwoken
                 ItemID.PurpleIceBlock,
                 ItemID.PinkIceBlock,
             });
-            RecipeGroup.RegisterGroup("IceGroup", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:IceGroup", group);
 
             // bars
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Copper Bar"), new int[]
@@ -240,49 +237,56 @@ namespace ElementsAwoken
                 ItemID.CopperBar,
                 ItemID.TinBar,
             });
-            RecipeGroup.RegisterGroup("CopperBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:CopperBar", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Silver Bar"), new int[]
             {
                 ItemID.SilverBar,
                 ItemID.TungstenBar,
             });
-            RecipeGroup.RegisterGroup("SilverBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:SilverBar", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Gold Bar"), new int[]
             {
                 ItemID.GoldBar,
                 ItemID.PlatinumBar,
             });
-            RecipeGroup.RegisterGroup("GoldBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:GoldBar", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Evil Bar"), new int[]
             {
                 ItemID.DemoniteBar,
                 ItemID.CrimtaneBar,
             });
-            RecipeGroup.RegisterGroup("EvilBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:EvilBar", group);
+
+            group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Evil Ore"), new int[]
+            {
+                ItemID.DemoniteOre,
+                ItemID.CrimtaneOre,
+            });
+            RecipeGroup.RegisterGroup("ElementsAwoken:EvilOre", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Cobalt Bar"), new int[]
             {
                 ItemID.CobaltBar,
                 ItemID.PalladiumBar,
             });
-            RecipeGroup.RegisterGroup("CobaltBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:CobaltBar", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Mythril Bar"), new int[]
             {
                 ItemID.MythrilBar,
                 ItemID.OrichalcumBar,
             });
-            RecipeGroup.RegisterGroup("MythrilBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:MythrilBar", group);
 
             group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + (" Adamantite Bar"), new int[]
             {
                 ItemID.AdamantiteBar,
                 ItemID.TitaniumBar,
             });
-            RecipeGroup.RegisterGroup("AdamantiteBar", group);
+            RecipeGroup.RegisterGroup("ElementsAwoken:AdamantiteBar", group);
         }
         // screenshaders, boss heads, config, loaded mod checks and hotkeys
         public override void Unload()
@@ -318,7 +322,6 @@ namespace ElementsAwoken
             AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_1");
             AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_2");
             AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_3");
-            AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_4");
             //HOTKEYS
             neovirtuo = RegisterHotKey("Neovirtuo", "C");
             specialAbility = RegisterHotKey("Special Ability", "Z");
@@ -326,7 +329,7 @@ namespace ElementsAwoken
             dash2 = RegisterHotKey("Secondary Dash", "F");
             if (!Main.dedServ)
             {
-                Filters.Scene["ElementsAwoken:VoidLeviathanHead"] = new Filter(new VoidLeviathanScreenShaderData("FilterMiniTower").UseColor(1.0f, 0.2f, 0.65f).UseOpacity(0.7f), EffectPriority.VeryHigh);
+                Filters.Scene["ElementsAwoken:VoidLeviathanHead"] = new Filter(new VoidLeviathanScreenShaderData("FilterMiniTower").UseColor(1.0f, 0.2f, 0.55f).UseOpacity(0.4f), EffectPriority.VeryHigh);
                 Filters.Scene["ElementsAwoken:Aqueous"] = new Filter(new AqueousScreenShaderData("FilterMiniTower").UseColor(0.4f, 0.7f, 1.0f).UseOpacity(0.5f), EffectPriority.VeryHigh);
                 SkyManager.Instance["ElementsAwoken:AqueousSky"] = new AqueousSky();
                 Filters.Scene["ElementsAwoken:Infernace"] = new Filter(new InfernaceScreenShaderData("FilterMiniTower").UseColor(1f, 0.4f, 0f).UseOpacity(0.5f), EffectPriority.VeryHigh);
@@ -362,6 +365,14 @@ namespace ElementsAwoken
             }
             // config
             //Config.Load();
+
+            Mod yabhb = ModLoader.GetMod("FKBossHealthBar");
+            if (yabhb != null)
+            {
+                // Set up a normal Small health bar
+                Call("RegisterHealthBarMini", ModContent.NPCType<VoidLeviathanOrb>());
+                //Call("RegisterHealthBarMini", NPCType("ElderShadeWyrmHead"));
+            }
 
             // go away null
             for (int i = 0; i < screenText.Length; i++)
@@ -687,7 +698,7 @@ namespace ElementsAwoken
                     Main.rainTexture = Main.instance.OurLoad<Texture2D>("Images" + Path.DirectorySeparatorChar.ToString() + "Rain");
                 }
                 // infernace clouds
-                if (NPC.downedBoss3 && !MyWorld.downedInfernace)
+                if (MyWorld.firePrompt > 108000)
                 {
                     for (int cloud = 0; cloud < 22; cloud++)
                     {
@@ -792,6 +803,7 @@ namespace ElementsAwoken
             }
             // statLifeMax2 is the actual player life, it equals statLifeMax plus bonuses
             int playerLife = player.statLifeMax2 - player.statLifeMax;
+            if (lifeForHeart == 0) lifeForHeart = 1; // shouldnt happen but failsafe
             lifePerHeart += playerLife / lifeForHeart;
 
             var info = typeof(Main).GetField("UI_ScreenAnchorX", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
@@ -1462,13 +1474,14 @@ namespace ElementsAwoken
 
         public void Credits()
         {
+            Vector2 monitorScale =  new Vector2((float)Main.screenWidth / 1920f, (float)Main.screenHeight / 1080f);
             var mod = ModLoader.GetMod("ElementsAwoken");
             var player = Main.player[Main.myPlayer].GetModPlayer<MyPlayer>();
-            if (MyWorld.creditsCounter > player.screenDuration * 2) DrawStringOutlined(Main.spriteBatch, "Hold 'Escape' to skip", new Vector2 (Main.screenWidth - 220, Main.screenHeight - 35), Color.White * (player.escHeldTimer > 0 ? 1 : 0.4f), 0.5f);
+            if (MyWorld.creditsCounter > player.screenDuration * 2) DrawStringOutlined(Main.spriteBatch, "Hold 'Escape' to skip", new Vector2 (Main.screenWidth - 220 * monitorScale.X, Main.screenHeight - 35 * monitorScale.Y), Color.White * (player.escHeldTimer > 0 ? 1 : 0.4f), 0.5f * monitorScale.Y);
             if (MyWorld.creditsCounter > 180 && MyWorld.creditsCounter < 480)
             {
                 var logo = GetTexture("Extra/ElementsAwoken");
-                float scale = 1.4f;
+                float scale = 1.4f * monitorScale.Y;
                 Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - 180, 300); // old: (float)Math.Sin(MathHelper.Lerp(0, (float)Math.PI, ((float)MyWorld.creditsCounter - 300f) / 180f))
                 Main.spriteBatch.Draw(logo, new Vector2(Main.screenWidth / 2 - ((logo.Width * scale) / 2), Main.screenHeight / 2 - 200 - ((logo.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
@@ -1476,8 +1489,8 @@ namespace ElementsAwoken
             if (MyWorld.creditsCounter == player.screenDuration + 60)
             {
                 string text = "Created by ThatOneJuicyOrange_";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 300);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 300 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             int statueDuration = player.screenDuration - 60 * 3;
@@ -1485,169 +1498,169 @@ namespace ElementsAwoken
             if (MyWorld.creditsCounter > player.screenDuration + statueOffset && MyWorld.creditsCounter < player.screenDuration * 2 - statueOffset)
             {
                 var statue = GetTexture("Extra/Credits/ThatOneJuicyOrangeStatue");
-                float scale = 1.5f;
+                float scale = 1.5f * monitorScale.Y;
                 Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration - statueOffset, statueDuration);
-                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
             #endregion
             #region slide 2
             if (MyWorld.creditsCounter == player.screenDuration * 2 + 60)
             {
                 string text = "Music by";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 2 + 90)
             {
                 string text = "Ranipla";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 2 + 120)
             {
                 string text = "GENIH WAT";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text,scale), Main.screenHeight / 2 - 160);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text,scale), Main.screenHeight / 2 - 160 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 90, scale, pos);
             }
             if (MyWorld.creditsCounter > player.screenDuration * 2 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 3 - statueOffset)
             {
                 var statue = GetTexture("Extra/Credits/RaniplaStatue");
                 var statue2 = GetTexture("Extra/Credits/GenihWatStatue");
-                float scale = 1.5f;
+                float scale = 1.5f * monitorScale.Y;
                 Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 2 - statueOffset, statueDuration);
-                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(statue2, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(statue2, new Vector2(200 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 2) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
             }
             #endregion
             #region slide 3
             if (MyWorld.creditsCounter == player.screenDuration * 3 + 60)
             {
                 string text = "Lore by";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 3 + 90)
             {
                 string text = "Burst";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 3 + 120)
             {
                 string text = "Amadis";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 90, scale, pos);
             }
             if (MyWorld.creditsCounter > player.screenDuration * 3 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 4 - statueOffset)
             {
                 var statue = GetTexture("Extra/Credits/BurstStatue");
                 var statue2 = GetTexture("Extra/Credits/AmadisStatue");
-                float scale = 1.5f;
+                float scale = 1.5f * monitorScale.Y;
                 Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 3 - statueOffset, statueDuration);
-                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 - (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(statue2, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+                Main.spriteBatch.Draw(statue, new Vector2(Main.screenWidth - 200 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue.Width * scale) / 2), Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(statue2, new Vector2(200 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 3) / 2 - ((statue2.Width * scale) / 2), Main.screenHeight / 2 - ((statue2.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
             }
             #endregion
             #region slide 4
             if (MyWorld.creditsCounter == player.screenDuration * 4 + 60)
             {
                 string text = "Sprites By";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 4 + 90)
             {
                 string text = "Silvestre";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter > player.screenDuration * 4 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 5 - statueOffset)
             {
                 var statue = GetTexture("Extra/Credits/Azana");
-                float scale = 1.2f;
+                float scale = 1.2f * monitorScale.Y;
                 Color color = Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 4 - statueOffset, statueDuration);
-                Main.spriteBatch.Draw(statue, new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 4) / 2, Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
+                Main.spriteBatch.Draw(statue, new Vector2(200 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 4) / 2, Main.screenHeight / 2 - ((statue.Height * scale) / 2)), null, color, 0f, Vector2.Zero, scale, SpriteEffects.FlipHorizontally, 0f);
             }
             #endregion
             #region slide 5
             if (MyWorld.creditsCounter == player.screenDuration * 5 + 60)
             {
                 string text = "Sprites By";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 5 + 90)
             {
                 string text = "Aloe";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter > player.screenDuration * 5 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 6 - statueOffset)
             {
-                float scale = 1.5f;
+                float scale = 1.5f * monitorScale.Y;
                 int offset = 30;
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Shimmerspark"), new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 5 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/SolarGeneratorIV"), new Vector2(Main.screenWidth - 500 - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 - 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 5 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertGun"), new Vector2(500 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2- player.screenDuration * 5 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientsSword"), new Vector2(Main.screenWidth - 400 - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 100), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 3 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 3), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/BurnerGenerator"), new Vector2(900 + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 300), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 4 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 4), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertTrailers"), new Vector2(150 + (MyWorld.creditsCounter - player.screenDuration * 5) / 2, 100), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 5 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 5), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Shimmerspark"), new Vector2(200 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 200 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 5 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/SolarGeneratorIV"), new Vector2(Main.screenWidth - 500 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 - 200 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 5 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertGun"), new Vector2(500 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2- player.screenDuration * 5 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientsSword"), new Vector2(Main.screenWidth - 400 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 100 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 3 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 3), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/BurnerGenerator"), new Vector2(900 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 5) / 3, Main.screenHeight / 2 + 300 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 4 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 4), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/DesertTrailers"), new Vector2(150 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 5) / 2, 100 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 5 - player.screenDuration * 5 - statueOffset, statueDuration - offset * 5), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
             #endregion
             #region slide 6
             if (MyWorld.creditsCounter == player.screenDuration * 6 + 60)
             {
                 string text = "Sprites By";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 6 + 90)
             {
                 string text = "NnickykunN";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 6 + 105)
             {
                 string text = "Darkpuppey";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 160 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 75, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 6 + 120)
             {
                 string text = "Skeletony";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 100);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 100 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 90, scale, pos);
             }
             if (MyWorld.creditsCounter > player.screenDuration * 6 + statueOffset && MyWorld.creditsCounter < player.screenDuration * 7 - statueOffset)
             {
-                float scale = 1.1f;
+                float scale = 1.1f * monitorScale.Y;
                 int offset = 45;
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientAmalgam"), new Vector2(200 + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 + 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 6 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/ScourgeFighter"), new Vector2(Main.screenWidth - 500 - (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 200), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 6 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Permafrost"), new Vector2(300 + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 250), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2 - player.screenDuration * 6 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);               
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/AncientAmalgam"), new Vector2(200 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 + 200 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - player.screenDuration * 6 - statueOffset, statueDuration), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/ScourgeFighter"), new Vector2(Main.screenWidth - 500 * monitorScale.X - (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 200 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset - player.screenDuration * 6 - statueOffset, statueDuration - offset), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+                Main.spriteBatch.Draw(GetTexture("Extra/Credits/Permafrost"), new Vector2(300 * monitorScale.X + (MyWorld.creditsCounter - player.screenDuration * 6) / 3, Main.screenHeight / 2 - 250 * monitorScale.Y), null, Color.White * GetFadeAlpha(MyWorld.creditsCounter - offset * 2 - player.screenDuration * 6 - statueOffset, statueDuration - offset * 2), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);               
             }
             #endregion
             #region slide 7
             if (MyWorld.creditsCounter == player.screenDuration * 7 + 60)
             {
                 string text = "Donators";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 7 + 90)
@@ -1660,8 +1673,8 @@ namespace ElementsAwoken
                     "Superbaseball101\n" +
                     "Crow\n" +
                     "Lantard";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 45, Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 45, Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             #endregion
@@ -1669,8 +1682,8 @@ namespace ElementsAwoken
             if (MyWorld.creditsCounter == player.screenDuration * 8 + 60)
             {
                 string text = "Helpers";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 8 + 90)
@@ -1682,8 +1695,8 @@ namespace ElementsAwoken
                     "ReedemtheD3ad!\n" +
                     "Oinite12\n" +
                     "And many more";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             #endregion
@@ -1691,8 +1704,8 @@ namespace ElementsAwoken
             if (MyWorld.creditsCounter == player.screenDuration * 9 + 60)
             {
                 string text = "Special Thanks To";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 330 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 9 + 90)
@@ -1702,8 +1715,8 @@ namespace ElementsAwoken
                     "Gameraiders101 for getting me into modding\n" +
                     "FuryForged for showcasing the mod\n" +
                     "Gameraiders101 again for showcasing the mod";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 60, Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 60, Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             #endregion
@@ -1711,29 +1724,29 @@ namespace ElementsAwoken
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 60)
             {
                 string text = "Biggest Thanks";
-                float scale = 1.3f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 360);
+                float scale = 1.3f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 360 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 90)
             {
                 string text = "To YOU";
-                float scale = 1.4f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 290);
+                float scale = 1.4f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 290 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 120)
             {
                 string text = "Seriously, thank you so much for playing Elements Awoken.\nIt means a lot to me and all of the dev team that you can enjoy\nsomething we spent so much time on.";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 90, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 180)
             {
                 string text = "From- ThatOneJuicyOrange_ and the team <3";
-                float scale = 1f;
-                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 300, Main.screenHeight / 2 + 40);
+                float scale = 1f * monitorScale.Y;
+                Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 300, Main.screenHeight / 2 + 40 * monitorScale.Y);
                 DrawScreenText(text, 5 * 60, scale, pos);
             }
             #endregion
@@ -1878,6 +1891,7 @@ namespace ElementsAwoken
         //boss checklist
         public override void PostSetupContent()
         {
+
             Mod bossChecklist = ModLoader.GetMod("BossChecklist");
             if (bossChecklist != null)
             {
@@ -1897,24 +1911,114 @@ namespace ElementsAwoken
                 * LunaticCultist = 13f;
                 * Moonlord = 14f;
                 **/
-                bossChecklist.Call("AddMiniBossWithInfo", "Toy Slime", 0.1f, (Func<bool>)(() => MyWorld.downedToySlime), "Use a [i:" + ItemType("ToySlimeSummon") + "] to increase the chance of it spawning");
-                bossChecklist.Call("AddBossWithInfo", "Wasteland", 2.5f, (Func<bool>)(() => MyWorld.downedWasteland), "Catch and use a [i:" + ItemType("WastelandSummon") + "] in the desert");
-                bossChecklist.Call("AddBossWithInfo", "Infernace", 5.5f, (Func<bool>)(() => MyWorld.downedInfernace), "Use a [i:" + ItemType("InfernaceSummon") + "] in the underworld");
-                bossChecklist.Call("AddMiniBossWithInfo", "Cosmic Observer", 6.1f, (Func<bool>)(() => MyWorld.downedCosmicObserver), "Use a [i:" + ItemType("CosmicObserverSummon") + "] to increase the chance of it spawning");
-                bossChecklist.Call("AddBossWithInfo", "Scourge Fighter", 9.3f, (Func<bool>)(() => MyWorld.downedScourgeFighter), "Use a [i:" + ItemType("ScourgeFighterSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "Regaroth", 9.4f, (Func<bool>)(() => MyWorld.downedRegaroth), "Use a [i:" + ItemType("RegarothSummon") + "] on a sky island");
-                bossChecklist.Call("AddBossWithInfo", "The Celestials", 10.99f, (Func<bool>)(() => MyWorld.downedCelestial), "Use an [i:" + ItemType("CelestialSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "Obsidious", 11.2f, (Func<bool>)(() => MyWorld.downedObsidious), "Use an [i:" + ItemType("ObsidiousSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "Permafrost", 11.1f, (Func<bool>)(() => MyWorld.downedPermafrost), "Use an [i:" + ItemType("PermafrostSummon") + "] in the snow");
-                bossChecklist.Call("AddBossWithInfo", "Aqueous", 12.1f, (Func<bool>)(() => MyWorld.downedAqueous), "Use a [i:" + ItemType("AqueousSummon") + "] in the ocean");
-                bossChecklist.Call("AddBossWithInfo", "Temple Keepers", 14.1f, (Func<bool>)(() => (MyWorld.downedAncientWyrm && MyWorld.downedEye)), "Use the [i:" + ItemType("AncientDragonSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "The Guardian", 14.2f, (Func<bool>)(() => MyWorld.downedGuardian), "Use an [i:" + ItemType("GuardianSummon") + "] at nighttime");
-                bossChecklist.Call("AddEventWithInfo", "Dawn of the Void", 14.4f, (Func<bool>)(() => MyWorld.downedVoidEvent), "Use a [i:" + ItemType("VoidEventSummon") + "] at nighttime");
-                bossChecklist.Call("AddMiniBossWithInfo", "Shade Wyrm", 14.4f, (Func<bool>)(() => MyWorld.downedShadeWyrm), "Kill a Shade Wyrm during the Dawn of the Void");
-                bossChecklist.Call("AddBossWithInfo", "Volcanox", 14.5f, (Func<bool>)(() => MyWorld.downedVolcanox), "Use a [i:" + ItemType("VolcanoxSummon") + "] in the underworld");
-                bossChecklist.Call("AddBossWithInfo", "Void Leviathan", 15f, (Func<bool>)(() => MyWorld.downedVoidLeviathan), "Use a [i:" + ItemType("VoidLeviathanSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "Azana", 15.5f, (Func<bool>)(() => MyWorld.downedAzana), "Use a [i:" + ItemType("AzanaSummon") + "] at nighttime");
-                bossChecklist.Call("AddBossWithInfo", "The Ancients", 16f, (Func<bool>)(() => MyWorld.downedAncients), "Speak to the storyteller or use an [i:" + ItemType("AncientsSummon") + "]");
+                bossChecklist.Call("AddMiniBoss", 0.1f, NPCType("ToySlime"), this, "Toy Slime", (Func<bool>)(() => MyWorld.downedToySlime), ItemType("ToySlimeSummon"), 
+                    default,
+                    new List<int>() { ItemType("ToyBlade"), ItemType("ToyBow"), ItemType("ToyWand"), ItemType("ToyRobotControlRod"), ItemType("ToyPickaxe"), ItemType("ToyHelm"), ItemType("ToyBreastplate"), ItemType("ToyLeggings") },
+                    "The Toy Slime spawns naturally if it has not been defeated already and the player has atleast 140 life and 7 defence. Use a[i: " + ItemType("ToySlimeSummon") + "] to increase the chance of it spawning",
+                    "The Toy Slime hops away.", default, default, true);
+
+                bossChecklist.Call("AddBoss", 2.5f, NPCType("Wasteland"), this, "Wasteland", (Func<bool>)(() => MyWorld.downedWasteland), ItemType("WastelandSummon"), 
+                    new List<int>() { ItemType("WastelandMask"), ItemType("WastelandTrophy") },
+                    new List<int>() { ItemType("TheAntidote"), ItemType("Pincer"), ItemType("ScorpionBlade"), ItemType("Stinger"), ItemType("ChitinStaff"), ItemType("VenomSample"), ItemType("WastelandBag") },
+                    "Catch and use a [i:" + ItemType("WastelandSummon") + "] in the desert. They spawn naturally in the desert after the Eye of Cthulhu has been defeated",
+                    "Wasteland burrows back into the sand...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 5.5f, NPCType("Infernace"), this, "Infernace", (Func<bool>)(() => MyWorld.downedInfernace), ItemType("InfernaceSummon"),
+                    new List<int>() { ItemType("InfernaceMask"), ItemType("InfernaceTrophy") },
+                    new List<int>() { ItemType("FireBlaster"), ItemType("FireHarpyStaff"), ItemType("FireHeart"), ItemType("FlareSword"), ItemType("InfernaceBag") },
+                    "Use the [i:" + ItemType("InfernaceSummon") + "] in the underworld. An obsidian platform arena is reccomended on expert mode because of the lava slimes.",
+                    "Infernace fades into the heatwaves...", default, default, true);
+
+                bossChecklist.Call("AddMiniBoss", 6.1f, NPCType("CosmicObserver"), this, "Cosmic Observer", (Func<bool>)(() => MyWorld.downedCosmicObserver), ItemType("CosmicObserverSummon"),
+                    default,
+                    new List<int>() { ItemType("CosmicGlass"), ItemType("ChargeRifle"), ItemType("CosmicCrusher"), ItemType("CosmicObserverStaff"), ItemType("Demolecularizer"), ItemType("EnergyFork"), ItemType("OrionsBelt"), ItemType("PlanetaryWave"), ItemType("CosmicalusVisor"), ItemType("CosmicalusBreastplate"), ItemType("CosmicalusLeggings") },
+                    "The Cosmic Observer spawns naturally in the sky in hardmode. Use a[i: " + ItemType("CosmicObserverSummon") + "] to increase the chance of it spawning",
+                    "The Cosmic Observer retreats into the clouds...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 9.3f, NPCType("ScourgeFighter"), this, "Scourge Fighter", (Func<bool>)(() => MyWorld.downedScourgeFighter), ItemType("ScourgeFighterSummon"),
+                    new List<int>() { ItemType("ScourgeFighterTrophy") },
+                    new List<int>() { ItemType("ScourgeDrive"), ItemType("ScourgeSword"), ItemType("ScourgeFighterMachineGun"), ItemType("ScourgeFighterRocketLauncher"), ItemType("SignalBooster"), ItemType("ScourgeFighterBag") },
+                    "Use the [i:" + ItemType("ScourgeFighterSummon") + "] at nighttime.",
+                    "The Scourge Fighter flies into the night...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 9.4f, NPCType("RegarothHead"), this, "Regaroth", (Func<bool>)(() => MyWorld.downedRegaroth), ItemType("RegarothSummon"),
+                    new List<int>() { ItemType("RegarothMask"), ItemType("RegarothTrophy") },
+                    new List<int>() { ItemType("EnergyStaff"), ItemType("EyeOfRegaroth"), ItemType("Starstruck"), ItemType("StoneOfHope"), ItemType("EnergyWeaversHelm"), ItemType("EnergyWeaversBreastplate"), ItemType("EnergyWeaversLeggings"), ItemType("RegarothBag") },
+                    "Use a [i:" + ItemType("RegarothSummon") + "] on a sky island",
+                    "Regaroth retreats into the clouds", default, default, true);
+
+                bossChecklist.Call("AddBoss", 10.99f, NPCType("Astra"), this, "The Celestials", (Func<bool>)(() => MyWorld.downedCelestial), ItemType("CelestialSummon"),
+                    new List<int>() { ItemType("CelestialsMask"), ItemType("TheCelestialTrophy"), ItemType("CelestialCrown") },
+                    new List<int>() { ItemType("Celestia"), ItemType("CelestialInferno"), ItemType("EyeballStaff"), ItemType("Solus"), ItemType("CelestialFlame"), ItemType("RegarothBag") },
+                    "Use an [i:" + ItemType("CelestialSummon") + "] at nighttime",
+                    "The Celestials dissapate into energy...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 11.2f, NPCType("Obsidious"), this, "Obsidious", (Func<bool>)(() => MyWorld.downedObsidious), ItemType("ObsidiousSummon"),
+                    new List<int>() { ItemType("ObsidiousMask"), ItemType("ObsidiousTrophy"), ItemType("ObsidiousRobes"), ItemType("ObsidiousPants")},
+                    new List<int>() { ItemType("ObsidiousWings"), ItemType("Magmarox"), ItemType("TerreneScepter"), ItemType("Ultramarine"), ItemType("VioletEdge"), ItemType("SacredCrystal"), ItemType("ObsidiousBag") },
+                    "Use an [i:" + ItemType("ObsidiousSummon") + "] at nighttime",
+                    "Obsidious siezes the crystal...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 11.1f, NPCType("Permafrost"), this, "Permafrost", (Func<bool>)(() => MyWorld.downedPermafrost), ItemType("PermafrostSummon"),
+                    new List<int>() { ItemType("PermafrostMask"), ItemType("PermafrostTrophy") },
+                    new List<int>() { ItemType("Flurry"), ItemType("Frigidblaster"), ItemType("IceReaver"), ItemType("IceWrath"), ItemType("Snowdrift"), ItemType("SoulOfTheFrost"), ItemType("PermafrostBag") },
+                    "Use an[i: " + ItemType("PermafrostSummon") + "] in the snow",
+                    "Permafrost fades into a blizzard...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 12.1f, NPCType("Aqueous"), this, "Aqueous", (Func<bool>)(() => MyWorld.downedAqueous), ItemType("AqueousSummon"),
+                    new List<int>() { ItemType("AqueousTrophy") },
+                    new List<int>() { ItemType("BrinyBuster"), ItemType("BubblePopper"), ItemType("HighTide"), ItemType("OceansRazor"), ItemType("TheWave"), ItemType("Varee"), ItemType("AqueousMask"), ItemType("AqueousBag") },
+                    "Use a [i:" + ItemType("AqueousSummon") + "] in the ocean",
+                    "Aqueous sinks deep into the ocean...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 14.1f, new List<int>() { NPCType("TheEye"), NPCType("AncientWyrmHead") }, this, "Temple Keepers", (Func<bool>)(() => (MyWorld.downedAncientWyrm && MyWorld.downedEye)), ItemType("AncientDragonSummon"),
+                    default,
+                    new List<int>() { ItemType("TemplesCrystal"), ItemType("TheAllSeer"), ItemType("WyrmClaw"), ItemType("GazeOfInferno"), ItemType("Flare"), ItemType("TempleKeepersBag") },
+                    "Use the [i:" + ItemType("AncientDragonSummon") + "] at nighttime",
+                    default, default, default, true);
+
+                bossChecklist.Call("AddBoss", 14.2f, new List<int>() { NPCType("TheGuardian"), NPCType("TheGuardianFly") }, this, "The Guardian", (Func<bool>)(() => MyWorld.downedGuardian), ItemType("GuardianSummon"),
+                    new List<int>() { ItemType("TheGuardianMask"), ItemType("TheGuardianTrophy") },
+                    new List<int>() { ItemType("Godslayer"), ItemType("InfernoStorm"), ItemType("TemplesWrath"), ItemType("FieryCore"), ItemType("GuardianBag")},
+                    "Use an [i:" + ItemType("GuardianSummon") + "] at nighttime",
+                    "Aqueous sinks deep into the ocean...", default, default, true);
+
+                bossChecklist.Call("AddEvent", 14.4f, new List<int>() { NPCType("Immolator"), NPCType("ReaverSlime"), NPCType("ZergCaster"), NPCType("VoidKnight"), NPCType("EtherealHunter"), NPCType("VoidCrawler"), NPCType("VoidGolem") },
+                    this, "Dawn of the Void", (Func<bool>)(() => MyWorld.downedVoidEvent), ItemType("VoidEventSummon"), ItemType("ShadeEgg"), new List<int>() { ItemType("CastersCurse"), ItemType("CrimsonShade"), ItemType("LifesLament"), ItemType("CrimsonShade"), ItemType("VoidJelly") },
+                    "Use a [i:" + ItemType("VoidEventSummon") + "] at nighttime before 10pm. The item can be used during the day but the event wont start until night time, where it will start instantly.",
+                    default, default, /*"ElementsAwoken/NPCs/VoidEventEnemies/Phase2/ShadeWyrm/ShadeWyrmHead_Head_Boss"*/default, default);
+
+
+                bossChecklist.Call("AddMiniBoss", 14.4f, NPCType("ShadeWyrmHead"), this, "Shade Wyrm", (Func<bool>)(() => MyWorld.downedShadeWyrm), ItemType("VoidEventSummon"),
+                    ItemType("ShadeEgg"),
+                    new List<int>() { ItemType("LifesLament"), ItemType("CrimsonShade") },
+                    "The Shade Wyrm spawns during the Dawn of the Void after midnight",
+                    default, default, default, true);
+
+                bossChecklist.Call("AddBoss", 14.5f, NPCType("Volcanox"), this, "Volcanox", (Func<bool>)(() => MyWorld.downedVolcanox), ItemType("VolcanoxSummon"),
+                    new List<int>() { ItemType("VolcanoxMask"), ItemType("VolcanoxTrophy") },
+                    new List<int>() { ItemType("Combustia"), ItemType("EmberBurst"), ItemType("FatesFlame"), ItemType("FirestarterStaff"), ItemType("Hearth"), ItemType("CharredInsignia"), ItemType("VolcanoxBag") },
+                    "Use a [i:" + ItemType("VolcanoxSummon") + "] in the underworld",
+                    "Volcanox sinks into the lava...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 15f, NPCType("VoidLeviathanHead"), this, "Void Leviathan", (Func<bool>)(() => MyWorld.downedVoidLeviathan), ItemType("VoidLeviathanSummon"),
+                    new List<int>() { ItemType("VoidLeviathanMask"), ItemType("VoidLeviathanTrophy") },
+                    new List<int>() { ItemType("BladeOfTheNight"), ItemType("BreathOfDarkness"), ItemType("CosmicWrath"), ItemType("EndlessAbyssBlaster"), ItemType("ExtinctionBow"), ItemType("LightsAffliction"), ItemType("PikeOfEternalDespair"), ItemType("Reaperstorm"), ItemType("VoidLeviathansAegis"), ItemType("AmuletOfDestruction"), ItemType("VoidLeviathanBag"), ItemType("VoidWalkersGreatmask"), ItemType("VoidWalkersHelm"), ItemType("VoidWalkersVisage"), ItemType("VoidWalkersHood"), ItemType("VoidWalkersBreastplate"), ItemType("VoidWalkersLeggings") },
+                    "Use a [i:" + ItemType("VoidLeviathanSummon") + "] at nighttime",
+                    "The Void Leviathan descends into shadows...", default, default, true);
+
+                bossChecklist.Call("AddBoss", 15.5f, new List<int>() { NPCType("Azana"), NPCType("AzanaEye") }, this, "Azana", (Func<bool>)(() => MyWorld.downedAzana), ItemType("AzanaSummon"),
+                    new List<int>() { ItemType("AzanaMask"), ItemType("AzanaTrophy") },
+                    new List<int>() { ItemType("Anarchy"), ItemType("ChaoticGaze"), ItemType("ChaoticImpaler"), ItemType("EntropicCoating"), ItemType("GleamOfAnnhialation"), ItemType("Pandemonium"), ItemType("PurgeRifle"), ItemType("RingOfChaos") },
+                    "Use a [i:" + ItemType("AzanaSummon") + "] in at nighttime",
+                    default, default, default, true);
+
+                bossChecklist.Call("AddBoss", 16f, new List<int>() { NPCType("AncientAmalgam"), NPCType("Izaris"), NPCType("Kirvein"), NPCType("Xernon"), NPCType("Krecheus") }, this, "The Ancients", (Func<bool>)(() => MyWorld.downedAncients), ItemType("AncientsSummon"),
+                    default,
+                    new List<int>() { ItemType("GiftOfTheArchaic"), ItemType("Chromacast"), ItemType("Shimmerspark"), ItemType("TheFundamentals"), ItemType("CrystallineLocket"), ItemType("AncientsBag") },
+                    "Speak to the storyteller or use a [i:" + ItemType("AncientsSummon") + "]",
+                    "The Ancients return to their slumber", default, default, true);
+
             }
             Mod mystaria = ModLoader.GetMod("Mystaria");
             if (mystaria != null)
@@ -1935,6 +2039,7 @@ namespace ElementsAwoken
                 }
                 censusMod.Call("TownNPCCondition", NPCType("Storyteller"), "Always available");
             }
+
         }
 
         internal static void DrawStringOutlined(SpriteBatch spriteBatch, string text, Vector2 position, Color color, float scale)
@@ -1950,50 +2055,62 @@ namespace ElementsAwoken
         // shake shake
         public override void ModifyTransformMatrix(ref SpriteViewMatrix Transform)
         {
-            Player player = Main.LocalPlayer;
-            if (MyWorld.credits)
+            if (!Main.gameMenu)
             {
-                if (!Main.gameMenu)
+                Player player = Main.LocalPlayer;
+                MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+                if (MyWorld.credits)
                 {
-                    MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
-
-                    if (MyWorld.creditsCounter > modPlayer.screenTransDuration / 2)                    // so the screen doesnt go to the top corner before the transition happens
+                    if (!Main.gameMenu)
                     {
-                        Main.screenPosition = modPlayer.desiredScPos - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2); // t he player gets stuck on blocks so this makes it smooth
+                        if (MyWorld.creditsCounter > modPlayer.screenTransDuration / 2)                    // so the screen doesnt go to the top corner before the transition happens
+                        {
+                            Main.screenPosition = modPlayer.desiredScPos - new Vector2(Main.screenWidth / 2, Main.screenHeight / 2); // t he player gets stuck on blocks so this makes it smooth
+                        }
                     }
                 }
-            }
-            //if (!ModContent.GetInstance<Config>().screenshake)
-            {
-                // basically simple example mod code?? idk i dont understand the example :lul:
-                if (!Main.gameMenu)
+                if (!ModContent.GetInstance<Config>().screenshakeDisabled)
                 {
-                    if (!ModContent.GetInstance<Config>().screenshakeDisabled)
+                    if (modPlayer.screenshakeAmount >= 0)
                     {
-                        screenshakeTimer++;
-                        if (screenshakeAmount >= 0 && screenshakeTimer >= 5) // so it doesnt immediately decrease
-                        {
-                            screenshakeAmount -= 0.1f;
-                        }
-                        if (screenshakeAmount < 0)
-                        {
-                            screenshakeAmount = 0;
-                        }
-                        Main.screenPosition += new Vector2(screenshakeAmount * Main.rand.NextFloat(), screenshakeAmount * Main.rand.NextFloat()); //NextFloat creates a random value between 0 and 1, multiply screenshake amount for a bit of variety
+                        modPlayer.screenshakeTimer++;
+                        if (modPlayer.screenshakeTimer >= 5) modPlayer.screenshakeAmount -= 0.1f;
                     }
-                }
-                else // dont shake on the menu
-                {
-                    screenshakeAmount = 0;
-                    screenshakeTimer = 0;
+                    if (modPlayer.screenshakeAmount < 0)
+                    {
+                        modPlayer.screenshakeAmount = 0;
+                        modPlayer.screenshakeTimer = 0;
+                    }
+                    Main.screenPosition += new Vector2(modPlayer.screenshakeAmount * Main.rand.NextFloat(), modPlayer.screenshakeAmount * Main.rand.NextFloat()); //NextFloat creates a random value between 0 and 1, multiply screenshake amount for a bit of variety
                 }
             }
-            /*else
-            {
-                screenshakeAmount = 0;
-            }*/
         }
-
+        public static void NPCApplyScreenShakeToAll(int whoAmI, float amount, float range = -1, bool lerped = false)
+        {
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                NPC npc = Main.npc[whoAmI];
+                Player player = Main.player[i];
+                MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+                if (lerped && range != -1) amount = MathHelper.Lerp(amount, 0, MathHelper.Clamp(Vector2.Distance(npc.Center, player.Center) / range, 0, 1));
+                if (player.active && (Vector2.Distance(npc.Center, player.Center) < range || range == -1))
+                {
+                    modPlayer.screenshakeAmount = amount;
+                }
+            }
+        }
+        public static void ApplyScreenShakeToAll(float amount)
+        {
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                Player player = Main.player[i];
+                MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+                if (player.active)
+                {
+                    modPlayer.screenshakeAmount = amount;
+                }
+            }
+        }
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             ElementsAwokenMessageType msgType = (ElementsAwokenMessageType)reader.ReadByte();
@@ -2001,24 +2118,37 @@ namespace ElementsAwoken
             {
                 case ElementsAwokenMessageType.StarHeartSync:
                     byte playernumber = reader.ReadByte();
-                    Player starHeartPlayer = Main.player[playernumber];
+                    MyPlayer starHeartPlayer = Main.player[playernumber].GetModPlayer<MyPlayer>();
                     int voidHeartsUsed = reader.ReadInt32();
                     int chaosHeartsUsed = reader.ReadInt32();
                     int lunarStarsUsed = reader.ReadInt32();
-                    starHeartPlayer.GetModPlayer<MyPlayer>().voidHeartsUsed = voidHeartsUsed;
-                    starHeartPlayer.GetModPlayer<MyPlayer>().chaosHeartsUsed = chaosHeartsUsed;
-                    starHeartPlayer.GetModPlayer<MyPlayer>().lunarStarsUsed = lunarStarsUsed;
+                    starHeartPlayer.voidHeartsUsed = voidHeartsUsed;
+                    starHeartPlayer.chaosHeartsUsed = chaosHeartsUsed;
+                    starHeartPlayer.lunarStarsUsed = lunarStarsUsed;
+                    break;
+                case ElementsAwokenMessageType.AwakenedSync:
+                    playernumber = reader.ReadByte();
+                    AwakenedPlayer awakenedPlayer = Main.player[playernumber].GetModPlayer<AwakenedPlayer>();
+                    int sanity = reader.ReadInt32();
+                    awakenedPlayer.sanity = sanity;
+                    break;
+                case ElementsAwokenMessageType.EnergySync:
+                    playernumber = reader.ReadByte();
+                    PlayerEnergy energyPlayer = Main.player[playernumber].GetModPlayer<PlayerEnergy>();
+                    int energy = reader.ReadInt32();
+                    energyPlayer.energy = energy;
                     break;
                 default:
-                    ErrorLogger.Log("Elements Awoken: Unknown Message type: " + msgType);
+                    Logger.WarnFormat("Elements Awoken: Unknown Message type: {0}", msgType);
                     break;
             }
         }
-
     }
 
     enum ElementsAwokenMessageType : byte
     {
         StarHeartSync,
+        AwakenedSync,
+        EnergySync,
     }
 }

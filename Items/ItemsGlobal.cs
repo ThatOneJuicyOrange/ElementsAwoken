@@ -57,7 +57,24 @@ namespace ElementsAwoken.Items
             }
             return true;
         }
-
+        public override bool CanEquipAccessory(Item item, Player player, int slot)
+        {
+            if (slot < 10)
+            {
+                int maxAccessoryIndex = 5 + player.extraAccessorySlots;
+                for (int i = 3; i < 3 + maxAccessoryIndex; i++)
+                {
+                    if (slot != i)
+                    {
+                        if (item.type == ItemID.SorcererEmblem && player.armor[i].type == mod.ItemType("NebulaEmblem")) return false;
+                        if (item.type == ItemID.WarriorEmblem && player.armor[i].type == mod.ItemType("SolarEmblem")) return false;
+                        if (item.type == ItemID.RangerEmblem && player.armor[i].type == mod.ItemType("VortexEmblem")) return false;
+                        if (item.type == ItemID.SummonerEmblem && player.armor[i].type == mod.ItemType("StardustEmblem")) return false;
+                    }
+                }
+            }
+            return base.CanEquipAccessory(item, player, slot);
+        }
         public override void OpenVanillaBag(string context, Player player, int arg)
         {
             if (context == "bossBag" && arg == ItemID.WallOfFleshBossBag && Main.rand.Next(4) == 0)

@@ -690,7 +690,7 @@ namespace ElementsAwoken.NPCs.Town
                 }
                 else
                 {
-                    return "You look weary, " + player.name + ". Go pay a visit to the nurse. Oh wait... We dont have one";
+                    return "You look weary, " + player.name + ". Go pay a visit to the nurse. Oh wait... We don't have one";
                 }
             }
 
@@ -702,7 +702,7 @@ namespace ElementsAwoken.NPCs.Town
                 case 3: return "Hope you enjoy what I'm selling. Who am I kidding, of course you will!";
                 case 4: return "Hmph. Sometimes standing around and mingling with all these people gets boring. I miss the days of war.";
                 case 5: return "You want help crafting? I'm a storyteller! I deal legends not knowledge.";
-                case 6: return "Why dont I kill the monsters myself? Uh, I'm awfully busy and you look like a strong young man.";
+                case 6: return "Why don't I kill the monsters myself? Uh, I'm awfully busy and you look like a strong young man.";
                 case 7: return "I despise cookies. They are way too sweet for me. Honestly, I prefer the spicy stuff.";
                 default:
                     return "potaot";

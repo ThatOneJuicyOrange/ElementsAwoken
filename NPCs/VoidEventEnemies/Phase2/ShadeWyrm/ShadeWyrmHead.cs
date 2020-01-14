@@ -123,7 +123,7 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2.ShadeWyrm
                 npc.active = false;
             }
             //worm stuff
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0)
                 {

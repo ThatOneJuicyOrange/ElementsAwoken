@@ -9,7 +9,7 @@ namespace ElementsAwoken.Buffs.MinionBuffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Corroder");
-            Description.SetDefault("Dont try pet it.");
+            Description.SetDefault("Don't try pet it.");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
 

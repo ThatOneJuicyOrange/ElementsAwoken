@@ -32,10 +32,10 @@ namespace ElementsAwoken.Items.Placeable
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Furnace, 1);
-            recipe.AddRecipeGroup("SandGroup", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 4);
             recipe.AddIngredient(ItemID.Torch, 4);
             recipe.AddIngredient(ItemID.Cloud, 4);
-            recipe.AddRecipeGroup("IceGroup", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:IceGroup", 4);
             recipe.AddIngredient(ItemID.WaterBucket, 4);
             recipe.AddIngredient(ItemID.EbonstoneBlock, 4);
             recipe.AddTile(TileID.Anvils);
@@ -44,10 +44,10 @@ namespace ElementsAwoken.Items.Placeable
 
             recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Furnace, 1);
-            recipe.AddRecipeGroup("SandGroup", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 4);
             recipe.AddIngredient(ItemID.Torch, 4);
             recipe.AddIngredient(ItemID.Cloud, 4);
-            recipe.AddRecipeGroup("IceGroup", 4);
+            recipe.AddRecipeGroup("ElementsAwoken:IceGroup", 4);
             recipe.AddIngredient(ItemID.WaterBucket, 4);
             recipe.AddIngredient(ItemID.CrimstoneBlock, 4);
             recipe.AddTile(TileID.Anvils);

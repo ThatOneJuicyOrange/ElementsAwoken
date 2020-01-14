@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,20 +16,51 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
     [AutoloadBossHead]
     public class TheCelestial : ModNPC
     {
-        bool reset = true;
-        int moveAi = 0;
-        int text = 0;
+        private int projectileBaseDamage = NPC.downedMoonlord ? 60 : 45;
+        private int baseDefense = NPC.downedMoonlord ? 50 : 30;
 
-        int projectileBaseDamage = NPC.downedMoonlord ? 60 : 45;
-        int baseDefense = NPC.downedMoonlord ? 50 : 30;
+        private float moveSpeed = 0.15f;
 
-        float moveSpeed = 0.15f;
+        private float awakenedAttacks = 0f;
+        private float despawnTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float phase
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float shootTimer
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float moveAI
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(moveSpeed);
+            writer.Write(awakenedAttacks);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            moveSpeed = reader.ReadSingle();
+            awakenedAttacks = reader.ReadSingle();
+        }
         public override void SetDefaults()
         {
             npc.width = 100;
-            npc.height = 184;
+            npc.height = 202;
 
-            npc.lifeMax = NPC.downedMoonlord ? 225000 : 40000;
+            npc.aiStyle = -1;
+
+            npc.lifeMax = NPC.downedMoonlord ? 180000 : 32000;
             npc.damage = NPC.downedMoonlord ? 90 : 60;
             npc.defense = 30;
             npc.knockBackResist = 0f;
@@ -56,50 +88,35 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             npc.buffImmune[BuffID.Frozen] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+
+            moveSpeed =  0.06f;
+            npc.defense = baseDefense + 10;
+            npc.GivenName = "Ember";
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Celestials");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[npc.type] = 4;
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = NPC.downedMoonlord ? 300000 : 60000;
+            npc.lifeMax = NPC.downedMoonlord ? 240000 : 48000;
             npc.damage = NPC.downedMoonlord ? 120 : 90;
             if (MyWorld.awakenedMode)
             {
-                npc.lifeMax = NPC.downedMoonlord ? 450000 : 75000;
+                npc.lifeMax = NPC.downedMoonlord ? 460000 : 60000;
                 npc.damage = NPC.downedMoonlord ? 150 : 110;
                 npc.defense = NPC.downedMoonlord ? 60 : 40;
             }
         }
         public override void BossHeadSlot(ref int index)
         {
-            if (npc.ai[1] == 0)
-            {
-                index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss");
-            }
-            if (npc.ai[1] == 1)
-            {
-                index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_1");
-            }
-            if (npc.ai[1] == 2)
-            {
-                index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_2");
-            }
-            if (npc.ai[1] == 3)
-            {
-                index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_3");
-            }
-            if (npc.ai[1] == 4)
-            {
-                index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_4");
-            }
+            if (phase == 0)index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss");
+            else if (phase > 0) index = NPCHeadLoader.GetBossHeadSlot("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_" + phase);
         }
-
         public override void FindFrame(int frameHeight)
         {
-            int frameWidth = 120;
+            int frameWidth = 100;
             npc.frame.Width = frameWidth;
             npc.frameCounter += 1;
 
@@ -109,40 +126,26 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 npc.frameCounter = 0.0;
             }
 
-            if (npc.ai[1] != 4)
-            {
                 if (npc.frame.X > frameWidth * 3)
                 {
                     npc.frame.X = 0;
                 }
-            }
-            else
-            {
-                if (npc.frame.X > frameWidth * 4)
-                {
-                    npc.frame.X = 0;
-                }
-            }
 
-            if (npc.ai[1] == 0) // solar
+            if (phase == 0) // solar
             {
                 npc.frame.Y = 0;
             }
-            else if (npc.ai[1] == 1) // stardust
+            else if (phase == 1) // stardust
             {
                 npc.frame.Y = frameHeight * 1;
             }
-            else if (npc.ai[1] == 2) // vortex
+            else if (phase == 2) // vortex
             {
                 npc.frame.Y = frameHeight * 2;
             }
-            else if (npc.ai[1] == 3) // nebula
+            else if (phase == 3) // nebula
             {
                 npc.frame.Y = frameHeight * 3;
-            }
-            else if (npc.ai[1] == 4) // astra
-            {
-                npc.frame.Y = frameHeight * 4;
             }
         }
 
@@ -158,287 +161,183 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
 
         public override void NPCLoot()
         {
-            if (Main.rand.Next(10) == 0)
+            if (!Main.expertMode)
             {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TheCelestialTrophy"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CelestialCrown"));
-            }
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            else
-            {
-                int choice = Main.rand.Next(3);
-                if (choice == 0)
+                int choice = Main.rand.Next(4);
+                if (choice == 0) choice = mod.ItemType("Celestia");
+                else if (choice == 1) choice = mod.ItemType("EyeballStaff");
+                else if(choice == 2) choice = mod.ItemType("CelestialInferno");
+                else if(choice == 3) choice = mod.ItemType("Solus");
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, choice);
+
+                if (Main.rand.Next(10) == 0)
                 {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CelestialInferno"));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CelestialsMask"));
                 }
-                if (choice == 1)
+                if (Main.rand.Next(10) == 0)
                 {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeOfTheCelestial"));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TheCelestialTrophy"));
                 }
-                if (choice == 2)
+                if (Main.rand.Next(10) == 0)
                 {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EyeballStaff"));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CelestialCrown"));
+                }
+                MyWorld.downedCelestial = true;
+                if (!NPC.downedMoonlord)
+                {
+                    Main.NewText("You cant stop whats already been started...", new Color(255, 101, 73));
+                    Main.NewText("You cant stop whats already been started...", new Color(89, 110, 230));
+                    Main.NewText("You cant stop whats already been started...", new Color(51, 247, 165));
+                    Main.NewText("You cant stop whats already been started...", new Color(223, 146, 244));
+                    Main.PlaySound(29, (int)npc.position.X, (int)npc.position.Y, 105);
+                }
+                else
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentNebula, Main.rand.Next(5, 10));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentSolar, Main.rand.Next(5, 10));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentStardust, Main.rand.Next(5, 10));
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentVortex, Main.rand.Next(5, 10));
                 }
             }
-            MyWorld.downedCelestial = true;
-            if (!NPC.downedMoonlord)
-            {
-                Main.NewText("You cant stop whats already been started...", new Color(255, 101, 73));
-                Main.NewText("You cant stop whats already been started...", new Color(89, 110, 230));
-                Main.NewText("You cant stop whats already been started...", new Color(51, 247, 165));
-                Main.NewText("You cant stop whats already been started...", new Color(223, 146, 244));
-                Main.PlaySound(29, (int)npc.position.X, (int)npc.position.Y, 105);
-            }
-            else
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentNebula, Main.rand.Next(5, 20));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentSolar, Main.rand.Next(5, 20));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentStardust, Main.rand.Next(5, 20));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentVortex, Main.rand.Next(5, 20));
-            }
+            else NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Astra"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
-            potionType = ItemID.GreaterHealingPotion;
+            if (!Main.expertMode) potionType = ItemID.GreaterHealingPotion;
         }
         public override void AI()
         {
             Player P = Main.player[npc.target];
+            npc.direction = Math.Sign(P.Center.X - npc.Center.X);
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
             if (!Main.player[npc.target].active || Main.player[npc.target].dead)
             {
                 npc.TargetClosest(true);
                 if (!Main.player[npc.target].active || Main.player[npc.target].dead)
                 {
-                    npc.ai[0]++;
+                    despawnTimer++;
                     npc.velocity.Y = npc.velocity.Y + 0.11f;
-                    if (npc.ai[0] >= 300)
+                    if (despawnTimer >= 300)
                     {
                         npc.active = false;
                     }
                 }
                 else
-                    npc.ai[0] = 0;
+                    despawnTimer = 0;
             }
             if (Main.dayTime)
             {
-                npc.ai[0]++;
+                despawnTimer++;
                 npc.velocity.Y = npc.velocity.Y + 0.11f;
-                if (npc.ai[0] >= 300)
+                if (despawnTimer >= 300)
                 {
                     npc.active = false;
                 }
             }
             #region orbitals, names & ai changes
             int moonlordBonus = NPC.downedMoonlord ? 2 : 1;
-            if (reset)
-            {
-                moveSpeed = NPC.downedMoonlord ? 0.1f : 0.06f;
-                npc.defense = baseDefense + 10 * moonlordBonus;
-                npc.GivenName = "Ember";
+            bool createOrbitals = false;
 
-                reset = false;
-            }
-            // orbitals
             if (npc.localAI[0] == 0)
             {
-                int orbitalcount = Main.expertMode ? 9 : 7;
-                for (int l = 0; l < orbitalcount; l++)
-                {
-                    //cos = y, sin = x
-                    int distance = 360 / orbitalcount;
-                    int orbital = NPC.NewNPC((int)(npc.Center.X + (Math.Sin(l * distance) * 150)), (int)(npc.Center.Y + (Math.Cos(l * distance) * 150)), mod.NPCType("TheCelestialMinion"), npc.whoAmI, l * distance, npc.whoAmI, npc.ai[1]);
-                }
-                npc.localAI[0] = 1;
+                createOrbitals = true;
+                npc.localAI[0]++;
+                //npc.netUpdate = true;
             }
-            // astra minions
-            if (npc.localAI[1] == 1)
+            if (npc.life <= npc.lifeMax * 0.75f && phase == 0)
             {
-                int orbitalcount = Main.expertMode ? 9 : 7;
-                for (int l = 0; l < orbitalcount; l++)
-                {
-                    //cos = y, sin = x
-                    int distance = 360 / orbitalcount;
-                    int orbital = NPC.NewNPC((int)(npc.Center.X + (Math.Sin(l * distance) * 150)), (int)(npc.Center.Y + (Math.Cos(l * distance) * 150)), mod.NPCType("AstraMinion"), npc.whoAmI, 0, Main.rand.Next(0, 300));
-                }
-                npc.localAI[1] = 0;
-            }
-            if (npc.life <= npc.lifeMax * 0.9f && text == 0)
-            {
-                //Main.NewText("", new Color(255, 101, 73));
-                text++;
-            }
-            if (npc.life <= npc.lifeMax * 0.8f && npc.ai[1] == 0)
-            {
-                moveSpeed = NPC.downedMoonlord ? 0.25f : 0.2f;
+                moveSpeed = 0.2f;
                 npc.defense = baseDefense + 5 * moonlordBonus;
                 npc.GivenName = "Nova";
-
-                npc.ai[1]++;
-                npc.localAI[0] = 0;
+                if (Main.netMode != NetmodeID.MultiplayerClient) phase++;
+                npc.netUpdate = true;
+                createOrbitals = true;
             }
-            if (npc.life <= npc.lifeMax * 0.7f && text == 1)
+            if (npc.life <= npc.lifeMax * 0.5f && phase == 1)
             {
-               // Main.NewText("", new Color(89, 110, 230));
-                text++;
-            }
-            if (npc.life <= npc.lifeMax * 0.6f && npc.ai[1] == 1)
-            {
-                moveSpeed = NPC.downedMoonlord ? 0.2f : 0.15f;
+                moveSpeed =  0.15f;
                 npc.defense = baseDefense;
                 npc.GivenName = "Aquila";
 
-                npc.ai[1]++;
-                npc.localAI[0] = 0;
+                if (Main.netMode != NetmodeID.MultiplayerClient) phase++;
+                npc.netUpdate = true;
+                createOrbitals = true;
             }
-            if (npc.life <= npc.lifeMax * 0.5f && text == 2)
+            if (npc.life <= npc.lifeMax * 0.25f && phase == 2)
             {
-                //Main.NewText("", new Color(51, 247, 165));
-                text++;
-            }
-            if (npc.life <= npc.lifeMax * 0.4f && npc.ai[1] == 2)
-            {
-                moveSpeed = NPC.downedMoonlord ? 0.2f : 0.15f;
-                npc.defense = baseDefense -10 * moonlordBonus;
+                moveSpeed = 0.15f;
+                npc.defense = baseDefense - 10 * moonlordBonus;
                 projectileBaseDamage += 20 * moonlordBonus;
                 npc.damage += 20;
                 npc.GivenName = "Carina";
 
-                npc.ai[1]++;
-                npc.localAI[0] = 0;
+                if (Main.netMode != NetmodeID.MultiplayerClient) phase++;
+                npc.netUpdate = true;
+                createOrbitals = true;
             }
-            if (npc.life <= npc.lifeMax * 0.2f && text == 3)
+            if (createOrbitals)
             {
-                //Main.NewText("", new Color(223, 146, 244));
-                text++;
-            }
-            if (npc.life <= npc.lifeMax * 0.2f && npc.ai[1] == 3)
-            {
-                moveSpeed = NPC.downedMoonlord ? 0.25f : 0.2f;
-                npc.defense = baseDefense + 5 * moonlordBonus;
-                projectileBaseDamage -= 20 * moonlordBonus; // return to normal
-                npc.GivenName = "Astra";
-
-                npc.ai[1]++;
-                npc.localAI[1] = 1;
+                int orbitalcount = Main.expertMode ? 9 : 7;
+                for (int l = 0; l < orbitalcount; l++)
+                {
+                    //cos = y, sin = x
+                    int distance = 360 / orbitalcount;
+                    NPC orbital = Main.npc[NPC.NewNPC((int)(npc.Center.X + (Math.Sin(l * distance) * 150)), (int)(npc.Center.Y + (Math.Cos(l * distance) * 150)), mod.NPCType("TheCelestialMinion"), npc.whoAmI, l * distance, npc.whoAmI, phase, Main.rand.Next(0,200))];
+                    orbital.netUpdate = true;
+                    //npc.netUpdate = true;
+                }
             }
             #endregion
 
             //movement
-            float playerX = P.Center.X - npc.Center.X;
-            float playerY = P.Center.Y - npc.Center.Y;
-            if (moveAi == 0)
+            Vector2 target = P.Center + new Vector2(700f * moveAI, 0);
+            if (moveAI == 0) moveAI = -1;
+            if (MathHelper.Distance(target.X,npc.Center.X) <= 20)
             {
-                playerX = P.Center.X - 700f - npc.Center.X;
-                if (Math.Abs(playerX) <= 20)
-                {
-                    moveAi = 1;
-                }
+                moveAI *= -1;
             }
-            if (moveAi == 1)
+            Move(P, moveSpeed, target);
+
+            if (ModContent.GetInstance<Config>().debugMode)
             {
-                playerX = P.Center.X + 700f - npc.Center.X;
-                if (Math.Abs(playerX) <= 20)
-                {
-                    moveAi = 0;
-                }
+                int dust = Dust.NewDust(P.Center + new Vector2(700f * moveAI, 0) - new Vector2(8,8), 16, 16, 6);
+                Main.dust[dust].noGravity = true;
+                Main.dust[dust].scale = 1f;
+                Main.dust[dust].velocity *= 0.1f;
             }
-            Move(P, moveSpeed, playerX, playerY);
-        
-            npc.ai[2]--;
+
+            shootTimer--;
+            awakenedAttacks--;
             // solar
-            if (npc.ai[1] == 0)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                if (npc.ai[2] <= 0)
+                if (shootTimer <= 0)
                 {
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                    MeteorShower(P, 11, projectileBaseDamage, Main.rand.Next(5,8));
-                    npc.ai[2] = 240;
-                }
-            }
-            // stardust
-            if (npc.ai[1] == 1)
-            {
-                if (npc.ai[2] <= 0)
-                {
-                    Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 7, 1f, 0f);
-                    StarShower(P, 8, projectileBaseDamage + 30, Main.rand.Next(3, 4));
-                    npc.ai[2] = 240;
-                }
-            }
-            // vortex
-            if (npc.ai[1] == 2)
-            {
-                if (Main.rand.Next(150) == 0)
-                {
-                    int type = mod.ProjectileType("CelestialVortexPortal");
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), type, projectileBaseDamage, 0f, 0);
-                }
-            }
-            // nebula
-            if (npc.ai[1] == 3)
-            {
-                if (npc.ai[2] <= 0)
-                {
-                    int numberProjectiles = 3;
-                    float Speed = 5f;
-                    float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    for (int i = 0; i < numberProjectiles; i++)
-                    {
-                        Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1)).RotatedByRandom(MathHelper.ToRadians(50));
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialNebulaPortal"), projectileBaseDamage, 0f, Main.myPlayer, 0f, 0f);
-                    }
-                    npc.ai[2] = 240;
-                }
-            }
-            // astral
-            if (npc.ai[1] == 4)
-            {
-                if (NPC.AnyNPCs(mod.NPCType("AstraMinion")))
-                {
-                    if (npc.ai[2] <= 0)
-                    {
-                        AstraShots(P, 12f, projectileBaseDamage + 35, Main.rand.Next(3, 4));
-                        npc.ai[2] = Main.rand.Next(60, 180);
-                    }
-                    npc.immortal = true;
-                    npc.dontTakeDamage = true;
-                }
-                else
-                {
-                    if (npc.ai[2] <= 0)
-                    {
-                        AstraShots(P, 12f, projectileBaseDamage, Main.rand.Next(3, 4));
-                        npc.ai[2] =  Main.rand.Next(20, 140);
-                    }
-                    npc.immortal = false;
-                    npc.dontTakeDamage = false;
-                }
-                npc.ai[3]--;
-                if (npc.ai[3] <= 0)
-                {
-                    int attackType = Main.rand.Next(3);
-                    // solar
-                    if (attackType == 0)
+                    if (phase == 0)
                     {
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
                         MeteorShower(P, 11, projectileBaseDamage, Main.rand.Next(5, 8));
+                        shootTimer = 240;
                     }
                     // stardust
-                    if (attackType == 1)
+                    else if (phase == 1)
                     {
                         Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 7, 1f, 0f);
                         StarShower(P, 8, projectileBaseDamage + 30, Main.rand.Next(3, 4));
+                        shootTimer = 240;
+                    }
+                    // vortex
+                    else if(phase == 2)
+                    {
+                        int type = mod.ProjectileType("CelestialVortexPortal");
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), type, projectileBaseDamage, 0f, 0);
+                        shootTimer = Main.rand.Next(120, 360);
+                        if (MyWorld.awakenedMode) shootTimer = Main.rand.Next(60, 180);
+                        //npc.netUpdate = true; // apprently doesnt need to be done, spawning of projectiles & timers related to that dont need to be synced?
                     }
                     // nebula
-                    if (attackType == 2)
+                    else if(phase == 3)
                     {
                         int numberProjectiles = 3;
                         float Speed = 5f;
@@ -448,128 +347,110 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                             Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1)).RotatedByRandom(MathHelper.ToRadians(50));
                             Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialNebulaPortal"), projectileBaseDamage, 0f, Main.myPlayer, 0f, 0f);
                         }
+                        shootTimer = 240;
                     }
-                    if (Main.rand.Next(150) == 0)
-                    {
-                        int type = mod.ProjectileType("CelestialVortexPortal");
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), type, projectileBaseDamage, 0f, 0);
-                    }
-                    npc.ai[3] = 240;
+                    if (Main.expertMode) shootTimer -= 25;
+                    if (MyWorld.awakenedMode) shootTimer -= 45;
                 }
-                if (npc.localAI[2] == 0)
+                if (awakenedAttacks <= 0 && MyWorld.awakenedMode)
                 {
-                    if (P.ownedProjectileCounts[mod.ProjectileType("CelestialIllusions")] == 0)
+                    if (phase == 0)
                     {
-                        for (int i = 0; i < 4; i++)
-                        {
-                            Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("CelestialIllusions"), 0, 0f, Main.myPlayer, i, 0f);
-                        }
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-750,750), P.Center.Y - 1500, Main.rand.NextFloat(-2f,2f), -6f, mod.ProjectileType("SolarFragmentProj"), projectileBaseDamage, 0f, 0)];
+                        awakenedAttacks = 120;
+                    }
+                    // stardust
+                    else if (phase == 1)
+                    {
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X + Main.rand.Next(-1500, 1500), npc.Center.Y + Main.rand.Next(-700, 700), Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f), mod.ProjectileType("CelestialStar"), projectileBaseDamage / 2, 0f, 0)];
+                        awakenedAttacks = 180;
+                    }
+                    // nebula
+                    else if (phase == 3)
+                    {
+
                     }
                 }
             }
-            int dustType = 6;
-            if (npc.ai[1] == 0)
+            if (!ModContent.GetInstance<Config>().lowDust)
             {
-                dustType = 6;
-            }
-            else if (npc.ai[1] == 1)
-            {
-                dustType = 197;
-            }
-            else if (npc.ai[1] == 2)
-            {
-                dustType = 229;
-            }
-            else if (npc.ai[1] == 3)
-            {
-                dustType = 242;
-            }
-            else if (npc.ai[1] == 4)
-            {
-                switch (Main.rand.Next(4))
+                int dustType = 6;
+                if (phase == 0) dustType = 6;
+                else if (phase == 1) dustType = 197;
+                else if (phase == 2) dustType = 229;
+                else if (phase == 3) dustType = 242;
+                for (int i = 0; i < 2; i++)
                 {
-                    case 0:
-                        dustType = 6;
-                        break;
-                    case 1:
-                        dustType = 197;
-                        break;
-                    case 2:
-                        dustType = 229;
-                        break;
-                    case 3:
-                        dustType = 242;
-                        break;
-                    default: break;
+                    int dust = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
+                    Main.dust[dust].noGravity = true;
+                    Main.dust[dust].scale = 1f;
+                    Main.dust[dust].velocity *= 0.1f;
                 }
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                int dust = Dust.NewDust(npc.position, npc.width, npc.height, dustType);
-                Main.dust[dust].noGravity = true;
-                Main.dust[dust].scale = 1f;
-                Main.dust[dust].velocity *= 0.1f;
             }
         }
 
-        private void Move(Player P, float speed, float playerX, float playerY)
+        private void Move(Player P, float speed, Vector2 target)
         {
-            float moonlordYSpeedScale = NPC.downedMoonlord ? 0.6f : 1f;
+            Vector2 desiredVelocity = target - npc.Center;
+            if (Main.expertMode) speed *= 1.1f;
+            if (MyWorld.awakenedMode) speed *= 1.1f;
+            if (NPC.downedMoonlord) speed *= 1.25f;
+            if (Vector2.Distance(P.Center, npc.Center) >= 2500) speed = 2;
 
-            int maxDist = 1000;
-            if (Vector2.Distance(P.Center, npc.Center) >= maxDist)
+            if (npc.velocity.X < desiredVelocity.X)
             {
-                float moveSpeed = 14f;
-                Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget.Normalize();
-                npc.velocity = toTarget * moveSpeed;
+                npc.velocity.X = npc.velocity.X + speed;
+                if (npc.velocity.X < 0f && desiredVelocity.X > 0f)
+                {
+                    npc.velocity.X = npc.velocity.X + speed;
+                }
             }
-            else
+            else if (npc.velocity.X > desiredVelocity.X)
             {
-                if (Main.expertMode)
+                npc.velocity.X = npc.velocity.X - speed;
+                if (npc.velocity.X > 0f && desiredVelocity.X < 0f)
                 {
-                    speed += 0.1f;
+                    npc.velocity.X = npc.velocity.X - speed;
                 }
-                if (npc.velocity.X < playerX)
-                {
-                    npc.velocity.X = npc.velocity.X + speed * 2;
-                }
-                else if (npc.velocity.X > playerX)
-                {
-                    npc.velocity.X = npc.velocity.X - speed * 2;
-                }
-                if (npc.velocity.Y < playerY)
+            }
+            if (npc.velocity.Y < desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y + speed;
+                if (npc.velocity.Y < 0f && desiredVelocity.Y > 0f)
                 {
                     npc.velocity.Y = npc.velocity.Y + speed;
-                    if (npc.velocity.Y < 0f && playerY > 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y + speed;
-                        return;
-                    }
+                    return;
                 }
-                else if (npc.velocity.Y > playerY)
+            }
+            else if (npc.velocity.Y > desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y - speed;
+                if (npc.velocity.Y > 0f && desiredVelocity.Y < 0f)
                 {
-                    npc.velocity.Y = npc.velocity.Y - speed * moonlordYSpeedScale;
-                    if (npc.velocity.Y > 0f && playerY < 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y - speed * moonlordYSpeedScale;
-                        return;
-                    }
+                    npc.velocity.Y = npc.velocity.Y - speed;
+                    return;
                 }
+            }
+            float slowSpeed = Main.expertMode ? 0.93f : 0.95f;
+            if (MyWorld.awakenedMode) slowSpeed = 0.92f;
+            int xSign = Math.Sign(desiredVelocity.X);
+            if ((npc.velocity.X < xSign && xSign == 1) || (npc.velocity.X > xSign && xSign == -1)) npc.velocity.X *= slowSpeed;
+
+            int ySign = Math.Sign(desiredVelocity.Y);
+            if (MathHelper.Distance(target.Y, npc.Center.Y) > 1000)
+            {
+                if ((npc.velocity.X < ySign && ySign == 1) || (npc.velocity.X > ySign && ySign == -1)) npc.velocity.Y *= slowSpeed;
             }
         }
 
         private void MeteorShower(Player P, float speed, int damage, int numberProj)
         {
-            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
             float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
             for (int i = 0; i < numberProj; i++)
             {
                 speed += Main.rand.NextFloat(-2, 2);
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - 2).RotatedByRandom(MathHelper.ToRadians(20));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, 0);
+                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, 0)];
             }
         }
 
@@ -581,18 +462,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             {
                 speed += Main.rand.NextFloat();
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(10));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, 0);
-            }
-        }
-
-        private void AstraShots(Player P, float speed, int damage, int numberProj)
-        {
-            Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 7, 1f, 0f);
-            float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-            for (int i = 0; i < numberProj; i++)
-            {
-                Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(5));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("AstraShot"), damage, 0f, Main.myPlayer, 0f, 0f);
+                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, 0)];
             }
         }
 

@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("VolcanoxSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -39,7 +38,12 @@ namespace ElementsAwoken.Items.BossSummons
             player.ZoneUnderworldHeight && 
             !NPC.AnyNPCs(mod.NPCType("Volcanox"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Volcanox"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

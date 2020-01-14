@@ -37,10 +37,5 @@ namespace ElementsAwoken.Items.BossDrops.TheCelestial
             DisplayName.SetDefault("Starlight Staff");
             Tooltip.SetDefault("Summons a celestial watcher to serve you");
         }
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("EyeballMinion"), damage, knockBack, player.whoAmI, Main.rand.Next(4));
-            return false;
-        }
     }
 }

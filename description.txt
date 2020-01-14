@@ -17,6 +17,121 @@ Donations are on the forum allowing you to get your own custom weapon, accessory
 Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
+1.3.9 (fixing the damn versioning)
+-Additions
+   - The Boots of the Void and Nyan now both have their own special dashes
+   - Gravity Core- consumes energy to set the players gravity
+-Changes
+   - Void Leviathan Rework!
+   - Void Leviathan's Aegis now says the hotkey in the tooltip
+   - Ancient Ice Crystal is now Enchanted Ice Crystal
+   - Furosia Rework
+   - Infernace AI improved
+-Bug Fixes
+   - Fixed a few PlayerUtils bugs
+1.3.8.5
+-Additions
+   - Boss Highlights Support
+-Bug Fixes
+   - Void Leviathan now doesnt despawn in multiplayer
+   - Void Leviathan now has the correct defence
+   - Item Magnet no longer puts Stars and Hearts in chests
+-Changes
+   - Boss Prompts now only happen after 30 minutes and have been changed
+   - Infernaces Wrath now spawns Infernace's Guardians instead of setting the player on fire
+   - Boss Prompts reworked slightly
+   - Tomb Crawler tooth renamed Dune Splicer Tooth
+   - Reduced the drop rate of the Assassins Knife from 1/100 to 1/400  
+   - Elemental Capsule can now toggle Awakened Mode
+   - Awakened Mode items now say "Awakened" at the end of the tooltip
+   - Reduced the health of Astra's Gazers
+1.3.8.4
+- Fixed a fatal error in the despawning of The Celestials
+1.3.8.3
+-Additions
+  - Lihzahrdian Explorer's Boots to allow you to walk on wooden spikes
+  - Sky armour helmets for each class
+-Bug Fixes
+  - Fixed multiplayer life breaking MK 2 :(
+  - Fixed multiplayer DOTV?
+  - Fixed Gem Lasers not shooting and made them consume ammo
+  - Ancient items can now be made with platinum
+  - The Ancients now drop their treasure bag correctly
+  - Screenshake now works slightly differently, correcting multiplayer
+  - Manashard whip now works correctly
+  - Chromacast no longer kills town npcs
+  - Fixed The Celestials not dropping the correct items
+  - The Celestials should work a bit better in multiplayer?
+  - Fixed mod sounds not scaling with game volume
+  - Fixed all Demonite using items not being able to be crafted with crimtane
+Changes
+  - Astra & The Celestials items got a resprite
+  - The Celestials have had a slight rework and have some awakened exclusive attacks
+  - Buffed Viridium Greatsword
+  - Buffed Pandemonium
+  - Infernaces monoliths now spawn on platforms too
+  - Nerfed Gust Strike
+  - Reduced amount of Cosmic Shards dropped by the Cosmic Observer
+  - Nerfed Stinger
+  - Reduced Hell Katanas swing speed
+  - Buffed Ataxia IV
+  - Nerfed Sandstorm Staff
+  - Renamed Flare Sword to Blade of Ashes and nerfed it
+  - Buffed Sky Scraper
+  - Nerfed Searing Blaze
+  - Nerfed Void Armours Set Bonus
+  - Increased Lunar Emblem damage reduction
+  - Decreased Flower Power fire rate but increased damage
+  - Boots of Nyan now require Rainbow Dye instead of Intense Rainbow Dye
+  - Stat increases are no longer craftable with Calamity Enabled
+  - Changed the way Awakened Mode scales bosses (now percentage rather than static)
+  - Renamed Aero Armor to Empyrean Armor
+  - Buffed Oceanic Armors defence
+  - Nerfed Drakonite Items 
+  - Buffed Drakonite pickaxe slightly
+  - Nerfed Charged Blaster Repeater
+  - Nerfed Sanguine
+  - Buffed Petal Pike
+  - Buffed Petal Battleaxe
+  - Nerfed Sandballs
+  - Nerfed Dragon's Breath
+  - Nerfed Bonfire Pummel
+  - Nerfed/Reworked Blazing Trisword (and an ID change)
+  - Nerfed/Reworked Scythe of Eternal Flame
+  - Buffed Incinirator
+  - Buffed Blaze Fury
+  - Nerfed Fire Blaster
+1.3.8.2- Happy New Years <3
+-Bug Fixes
+  - Energy items should no longer crash
+  - Awakened mode item now spawns in the inventory
+  - In awakened mode, random text no longer appears
+  - Fixed and improved Astra's Flare being only one colour and targetting friendlies
+  - You can no longer get dev armour out of Pre-HM bags
+  - Lightning Rod and Solar Generator I can now be crafted with lead too
+  - The Ancient Amalgamate no longer makes minions hostile
+  - There are now more backup scenes in the credits
+  - Credits now work better in different resolutions
+  - Fixed some worm bosses scaling extra in awakened mode
+  - Wasteland now drops his Awakened item
+Changes
+  - Fixed typos
+  - Volcanox now drops Pyroplasm and Volcanic stone out of its treasure bag in Expert Mode
+  - Nerfed a few Awakened Mode bosses
+  - Nerfed Sky Fury
+  - Nerfed Assasins Knife
+  - Reworked and nerfed Gust Strike
+  - Nerfed Armageddon and made it harder to obtain
+  - Buffed the Dubstep Gun
+  - Buffed Hallowed Radiance
+1.3.8.1
+-Bug Fixes
+  - Reworked recipe groups, hopefully fixing a few mod conflicts
+  - Fixed infernace in non-awakened mode
+  - AA now has the correct amount of health
+  - Multiplayer now works again- but chaotic hearts, empty vessels and lunar stars can no longer be used due to some server bugs
+-Changes
+  - Boss prompt buffs now say they can be disabled in config
 1.3.8- Ancients Awakened update ;)
 -Note: there is a small amount of content that isnt included in the update that will be coming out over the next few weeks hopefully. Merry Christmas from the team <3
 -Additions
@@ -68,203 +183,3 @@ Hope you enjoy playing my mod :)
   - Desert item & elemental resprites
   - Infinity Stone resprites
   - Various resprites
-1.3.7.6 - I DID AN OOPSIE!
--Fixed multiplayer
-1.3.7.5 - More Bug Fixes
--Changes
-  - Bio Reactor is now a ranged weapon
-  - Nerfed Infernace & Furosia slightly
-  - Sol, Jupitor and Void Singularity Morter no longer tears through worm bosses
-  - Luminite ore spawns deeper
--Bug Fixes
-  - Scourge fighter no longer spams numbers
-  - Boss checklist updates properly in multiplayer again
-  - Lightning cloud is no longer bugged in multiplayer (possibly still is)
-  - Ancient Wyrm now drops the Dragon Heart
-  - Core Charm skulls dont vanish
-  - Boots of Nyan rainbow vanishes when taken off
-  - Lightning Cloud effect vanishes when taken off
-  - Rusted Mechanism no longer eats items when theres no ammo and wont eat infinite items
-  - Luminite ore now shows when using spelunker potion and the name appears when hovering over it on the map
-  - Other fixes
--Resprites
-  - Random resprites
-1.3.7.4 - The Community Update Part 2- Adding most good suggestions
--Additions:
-  - Manashard Pike
-  - Demonic Magnet- Sucks in nearby items
-  - Mirror of Insight- Crafted earlygame, shows the players stats
-  - Dungeon Walker's Boots- spikes no longer damage the player
-  - The Celestial gets buffed after the Moonlord is defeated and drops pillar fragments
-  - The Storyteller now sells the Lab Drives after you obtain them
-  - The Cyborg sells the lab furniture
-  - Chaotic Crucible for post Azana crafting
-  - The Solar System Yoyos- a yoyo upgrade chain going from very early game to post Azana
-  - Crow's donator items  
-  - Chamcham's donator items  
-  - Buildmonger's donator items 
-  - Hardmode Whips
-  - Crystal Cracker to crack open Infinity Crystals
-  - Luminite now spawns for the first 5 moonlord kills
-  - Tech materials now have a progression chain
-  - New armour and a few new weapons for the Void Leviathan
-  - New enemy that spawns post moonlord
-  - Other minor additions
--Changes:
-  - Strange plant wands now only require 1 strange plant instead of 3
-  - Lightning Cloud resprite and rework
-  - Nerfed Frostmine
-  - Scourge Remote now requires souls from all 3 mechanical bosses
-  - Desert Trailers can now be crafted with Frostspark Boots in case you accidentally make them
-  - Buffed lategame debuffs
-  - Infernace now flies closer to the player and slower during the Last Breaths stage
-  - Beacon of the Eternal Abyss now is reusable
-  - Aqueous dialogue has changed
-  - The enchanted trio emits less light
-  - Azana and her drops now inflicts "Chaos Burn"
-  - Dying Azure now requires the Kindle Crusher
-  - Volcanox now drops Pyroplasm
-  - Volcanox and Infernace now make a box when they die
-  - Void Knights damage decreased so they dont "instagib" you
-  - Volcanox lab lore now makes sense chronologically
-  - Scourge Fighter now moves faster when creating napalm
-  - Astras minions are faster
-  - Astra now uses the attacks of the other Celestials
-  - Drives and computer are now obtainable
-  - The Storytellers Scourge Fighter text has been changed
-  - The Scourge Remote now puts the players coordinates in chat
-  - Hypothermia applies debuffs less frequently
-  - Decreased freqency of hailstorms
-  - Removed the Laserblades and Laser Core
-  - Increased the spawnrate of the Inferno Spirit
-  - Some whips cant be auto used anymore
-  - Enemies dont spawn during boss fights :D
-  - DotV banners updated
-  - Sky Essence is now only obtainable post mech bosses
-  - Void Leviathan can now be hit by the last prism but it does much less damage
-  - Hail stops during bossfights now
-  - Toy Slime now takes 7 defence to spawn instead of 5
-  - Regaroth has a minor second phase + a resprite :D
-  - You can now tell when Regaroth is enraged
--Resprites:
-  - Touched up Astras animation
-  - Floral & Manashard resprites
-  - Mortemite resprites
-  - Aqueous Item resprites
-  - Void Leviathan & item resprites
-  - Azana Animation
-  - Infinity Crystals
-  - Other resprites
--Bug Fixes:
-  - Warhorn no longer requires bullets to be used
-  - Encounters will no longer start after downloading an update (i think)
-  - Immortal resolve has a cooldown now
-  - Ancient Rune now only stacks up to 1
-  - Waternados and Lightning from the prompts no longer spawn while underground
-  - Mighty wind no longer happens underground during a hailstorm
-  - Volcanox now drops Volcanic Stone correctly
-  - Rarities no longer raise infinitely or lower infinitely
-  - Other minor fixes
-
-
-1.3.7.3- Bug Fixes Galore
--Additions:
-  - You can now throw the tomato at Azana
-  - Obsidious Wings
--Changes:
-  - Changed the way the infinity gauntlet blacklist works
-  - The Temple Keepers are now classified as a miniboss
-  - Infernaces wrath meteors spawn more frequently and do slightly more damage
-  - Infernaces wrath now sets the player on fire more frequently when approaching hell
-  - Scourge Fighter trophy is now finally updated
-  - Asuterosaberu DX now uses Infamy in its recipe instead of the cutlass
-  - Hailstorms are now more deadly
-  - Changed Soul of Infernace spawn message
-  - Azana resprite (no animation yet)
--Bug Fixes:
-  - Fixed the Wasteland vanishing bug?
-  - Dying Azure now uses the infinity gauntlet blacklist
-  - Nordic Warhorn accidental recipe removed
-  - Petal pike now has the correct use sprite
-  - Infernaces Wrath no longer spawns meteors under the world
-1.3.7.2
--Additions:
-  -Rarities 12-15
-  -Minor Additions
-  -Pre hardmode whip weapons
-  -Mini events called "Encounters" that occur after some bosses
-  -New pets :D
--Changes:
-  -Aqueous Prompt tornadoes no longer spawn when the player is in a town
-  -Nerfed Dragonfire with regular bullet
-  -Nerfed Prototype X-51
-  -Nerfed pre-hm tools
-  -The Guardians Portals no longer spawn on the player sometimes
-  -Desert items can now be crafted with any sand or sandstone
-  -Resprites for the Shade Wyrm and Pre Midnight DotV enemies, Astra
-  -Resprites for some items
--Bug Fixes:
-  -Fixed NPCs moving into labs
-  -Other minor fixes
-  -Void mode on the Infinity Gauntlet now has an enemy blacklist
-  -Fixed the Old Ones army not working
-  -Nerfed Eye of the Storm and made it harder to craft
-1.3.7.1
-- Stellarium enemies and items rework & resprites
-- New hardmode miniboss
-- The Large Slimeball now makes the Toy Slime spawn even more frequently
-- Fire treads now has fire particles for the boots
-- Some reworks and resprites to the vanilla boss weapons
-- Bosses that shoot lasers now charge them so they grow overtime instead of shooting you in the face immediately 
-- Infernace and Aqueous can no longer hurt the player when their transparent
-- Better items for the Scourge Fighter, Obsidious and The Celestials
-- Statue for Oinite :)
-- Minor Additions & Changes
-- Bug fixes
-1.3.7
-- Dawn of the Void is hopefully no longer laggy and is much cooler
-- The Call of the Void has been renamed to Dark Pearl
-- Bosses have all been buffed
-- The Dark Pearl can be used during daytime, but wont start DotV until night hits. It also cannot be used past 10pm
-- Elementals now use their respective elemental palette
-- Darkstone furniture for phase 2 DotV
-- More Voidstone furniture
-- Storyteller now has the correct head
-- Census - Town NPC Checklist compatibility added
-- Ultra rare labs now spawn, containing an entry of lore about each boss. Only 12 generate in each world
-- If you download this mod late or have already generated a world, the labs can be generated by crafting a "Mysterious Tablet"
-- Essence alerts should now only happen the first time you defeat a boss
-- Items & Armour for our new donator: Superbaseball101!
-- You can no longer stack the lunar emblems with the WoF emblems
-- There is a retro music pack on the mod browser for people who like the old music (Called "EA Retro Music")
-- Boss Prompts are now able to be disabled in the config
-- Void leviathan makes the screen shake slightly and rumble the Earth when it tunnels though the ground
-- Storyteller now displays the bosses summon item in chat
-- Toy slime now spawns naturally and becomes rarer after you defeat it once (Chance can be increased by "Large Slimeball")
-- Added some currently unobtainable life and mana increases
-- Statues for all the developers that can be upgraded post Plantera into buff giving statues
-- Infinity gauntlet shows all the functions of it and can Thanos snap properly now
-- Bug fixes
-- Other additions/changes
-1.3.6.1
-- Artifacts can no longer be equiped with the Elemental Arcanium and vice versa
-- Fixed balancing on The Gun That Shot Time (i think)
-- Finished Oinite's Discordant Staff
-- Wasteland now has a boss prompt
-- Boss prompt balancing
-- Hypothermia (Permafrost Prompt) now causes hailstorms
-- Storyteller items have been resprited, reworked or entirely changed
-- Town NPC resprites and dialogue/name changes
-- Immortal Resolve balancing
-- Chlorophyte no longer required in the Strange Shell
-- Drakonite enemies spawn after Plantera like they should now
-- Most weapons that change the projectile shot only change the base ammunition (wood arrows, musket balls, etc)
-- Aqueous no longer gets flung across the universe when moving far away
-1.3.6
-- New Post Moonlord Boss: Azana
-- Refined Drakonite items & Greater Drakonite enemies
-- Resprites galore!
-- Minor Wasteland ajustments
-- More donator items for Eoite
-- Bug Fixes
-- Water & Void Infinity Gauntlet reworks

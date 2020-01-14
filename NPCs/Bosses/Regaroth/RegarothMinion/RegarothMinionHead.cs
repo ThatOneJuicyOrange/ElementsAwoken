@@ -70,7 +70,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth.RegarothMinion
                     npc.active = false;
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0)
                 {

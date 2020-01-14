@@ -58,7 +58,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
         {
             Player P = Main.player[npc.target];
             shootTimer -= 1f;
-            if (Main.netMode != 1 && shootTimer == 0f && Collision.CanHit(npc.position, npc.width, npc.height, P.position, P.width, P.height))
+            if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer == 0f && Collision.CanHit(npc.position, npc.width, npc.height, P.position, P.width, P.height))
             {
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                 float Speed = 6f;

@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.StrangePlant
             recipe.AddIngredient(null, "StrangeWand3", 1);
             recipe.AddIngredient(null, "StrangeWand4", 1);
             recipe.AddIngredient(ItemID.HellstoneBar, 10);
-            recipe.AddRecipeGroup("EvilBar", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 10);
             recipe.AddTile(TileID.DemonAltar);
             recipe.SetResult(this);
             recipe.AddRecipe();

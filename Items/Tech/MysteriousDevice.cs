@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Tech
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("EvilBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 8);
             recipe.AddIngredient(null, "Capacitor", 1);
             recipe.AddIngredient(null, "GoldWire", 10);
             recipe.AddIngredient(null, "SiliconBoard", 3);

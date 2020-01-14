@@ -25,7 +25,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
 
-            item.shoot = mod.ProjectileType("AzanaSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -41,7 +40,12 @@ namespace ElementsAwoken.Items.BossSummons
             !NPC.AnyNPCs(mod.NPCType("AzanaEye")) &&
             !NPC.AnyNPCs(mod.NPCType("Azana"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("AzanaEye"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

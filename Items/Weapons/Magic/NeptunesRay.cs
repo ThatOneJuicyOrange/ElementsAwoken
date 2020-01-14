@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
             recipe.AddIngredient(ItemID.Seashell, 6);
             recipe.AddIngredient(ItemID.Coral, 8);
             recipe.AddIngredient(ItemID.Starfish, 3);
-            recipe.AddRecipeGroup("EvilBar", 10);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 10);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

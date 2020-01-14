@@ -131,7 +131,7 @@ namespace ElementsAwoken.Items.Tech.Tools
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "AutoMiner", 1);
             recipe.AddIngredient(ItemID.MythrilPickaxe, 1);
-            recipe.AddRecipeGroup("AdamantiteBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:AdamantiteBar", 8);
             recipe.AddIngredient(null, "GoldWire", 6);
             recipe.AddIngredient(null, "SiliconBoard", 3);
             recipe.AddTile(TileID.Anvils);
@@ -140,7 +140,7 @@ namespace ElementsAwoken.Items.Tech.Tools
             recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "AutoMiner", 1);
             recipe.AddIngredient(ItemID.OrichalcumPickaxe, 1);
-            recipe.AddRecipeGroup("AdamantiteBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:AdamantiteBar", 8);
             recipe.AddIngredient(null, "GoldWire", 6);
             recipe.AddIngredient(null, "SiliconBoard", 3);
             recipe.AddTile(TileID.Anvils);

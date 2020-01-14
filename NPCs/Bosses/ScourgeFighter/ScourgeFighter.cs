@@ -37,6 +37,8 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
             npc.width = 96;
             npc.height = 92;
 
+            npc.aiStyle = -1;
+
             npc.lifeMax = 35000;
             npc.damage = 60;
             npc.defense = 35;
@@ -217,7 +219,7 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
             if (npc.ai[2] <= 720f)
             {
                 Move(P, 6.5f);
-                if (Main.netMode != 1 && burstTimer <= 0f && shootCooldown <= 30)
+                if (Main.netMode != NetmodeID.MultiplayerClient && burstTimer <= 0f && shootCooldown <= 30)
                 {
                     BulletBurst(P, 10f, projectileBaseDamage);
                     burstTimer = 6f;
@@ -278,7 +280,7 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
             // homing missiles
             if (npc.ai[2] >= 1320f && npc.ai[2] <= 1520f)
             {
-                if (Main.netMode != 1 && homingMissileTimer <= 0)
+                if (Main.netMode != NetmodeID.MultiplayerClient && homingMissileTimer <= 0)
                 {
                     float Speed = 6f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 72);

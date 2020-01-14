@@ -10,7 +10,7 @@ namespace ElementsAwoken.Buffs.Prompts
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Darkened Skies");
-            Description.SetDefault("Lightning strikes from the sky\nStorms happens more frequently\nDefeat Regaroth to stop this effect");
+            Description.SetDefault("Lightning strikes from the sky\nStorms happens more frequently\nDefeat Regaroth to stop this effect\nDisable this effect in the config");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

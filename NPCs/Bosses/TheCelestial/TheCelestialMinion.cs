@@ -8,12 +8,27 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
 {
     public class TheCelestialMinion : ModNPC
     {
-        public float shootTimer1 = 180f;
-
+        private float spinAI
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float type
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float shootTimer
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
         public override void SetDefaults()
         {
             npc.width = 40;
             npc.height = 40;
+
+            npc.aiStyle = -1;
 
             npc.npcSlots = 0f;
 
@@ -27,11 +42,12 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             npc.buffImmune[24] = true;
             npc.noTileCollide = true;
             npc.noGravity = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Celestial Watcher");
-            Main.npcFrameCount[npc.type] = 4;
+            Main.npcFrameCount[npc.type] = 16;
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
@@ -50,25 +66,20 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
         }
         public override void FindFrame(int frameHeight)
         {
-            if (npc.ai[2] == 0) // solar
+            npc.spriteDirection = npc.direction;
+
+            npc.frameCounter++;
+            if (npc.frameCounter > 6)
             {
-                npc.frame.Y = 0;
+                npc.frame.Y = npc.frame.Y + frameHeight;
+                npc.frameCounter = 0.0;
             }
-            else if (npc.ai[2] == 1) // stardust
-            {
-                npc.frame.Y = 1 * frameHeight;
-            }
-            else if (npc.ai[2] == 2) // vortex
-            {
-                npc.frame.Y = 2 * frameHeight;
-            }
-            else if (npc.ai[2] == 3) // nebula
-            {
-                npc.frame.Y = 3 * frameHeight;
-            }
+            if (npc.frame.Y >= ((type + 1) * frameHeight) * 4) npc.frame.Y = (int)(type * frameHeight) * 4;
+            if (npc.frame.Y < (type * frameHeight) * 4) npc.frame.Y = (int)(type * frameHeight) * 4;
         }
         public override void AI()
         {
+            npc.TargetClosest(false);
             Player P = Main.player[npc.target];
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
             if (npc.velocity.X >= 0f)
@@ -83,18 +94,30 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 Vector2 direction = Main.player[npc.target].Center - npc.Center;
                 npc.rotation = direction.ToRotation() - 3.14f;
             }
-            if (Main.rand.Next(200) == 0)
+            shootTimer--;
+            if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
-                float Speed = 4f;
-                int damage = 60;
-                float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("TheCelestialLaser"), damage, 0f, 0, npc.ai[2]);
+                float Speed = 4f;
+                float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("TheCelestialLaser"), 60, 0f, 0, type);
+                shootTimer = Main.rand.Next(60, 450);
+                if (MyWorld.awakenedMode) shootTimer = Main.rand.Next(5, 240);
+                else if (Main.expertMode) shootTimer = Main.rand.Next(20, 360);
+                npc.netUpdate = true;
             }
-            for (int i = 0; i < 2; i++)
+            // spin
+            NPC parent = Main.npc[(int)npc.ai[1]];
+            spinAI += 3f; // speed
+            int distance = 150;
+            double rad = spinAI * (Math.PI / 180); // angle to radians
+            npc.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - npc.width / 2;
+            npc.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - npc.height / 2;
+            if (!parent.active || parent.ai[1] > type) npc.active = false;
+            if (!ModContent.GetInstance<Config>().lowDust)
             {
                 int dustType = 6;
-                switch ((int)npc.ai[2])
+                switch ((int)type)
                 {
                     case 0:
                         dustType = 6;
@@ -114,49 +137,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.1f;
             }
-            // spin
-            NPC parent = Main.npc[(int)npc.ai[1]];
-            npc.ai[0] += 3f; // speed
-            int distance = 150;
-            double rad = npc.ai[0] * (Math.PI / 180); // angle to radians
-            npc.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - npc.width / 2;
-            npc.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - npc.height / 2;
-            if (!parent.active || (npc.ai[2] == 0 && parent.ai[1] > 0) || (npc.ai[2] == 1 && parent.ai[1] > 1) || (npc.ai[2] == 2 && parent.ai[1] > 2) || (npc.ai[2] == 3 && parent.ai[1] > 3))
-            {
-                npc.active = false;
-            }
-            // old code
-            /*
-            NPC center = Main.npc[0];
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].type == mod.NPCType("TheCelestial"))
-                {
-                    center = Main.npc[i];
-                    break;
-                }
-            }
-            Vector2 offset = new Vector2(200, 0);
-            if (center != Main.npc[0])
-            {
-                npc.ai[0] += 0.05f;
-                npc.Center = center.Center + offset.RotatedBy(npc.ai[0] + npc.ai[1] * (Math.PI * 2 / 8));
-            }
-            if (!NPC.AnyNPCs(mod.NPCType("TheCelestial")))
-            {
-                npc.active = false;
-            }
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].type == mod.NPCType("TheCelestial"))
-                {
-                    if (Main.npc[i].ai[1] > 1)
-                    {
-                        npc.active = false;
-                    }
-                    break;
-                }
-            }*/
         }
     }
 }

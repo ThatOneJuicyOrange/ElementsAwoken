@@ -57,7 +57,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
 
         public override void CustomBehavior()
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (attackCounter > 0)
                     attackCounter--;
@@ -209,7 +209,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
             {
                 npc.timeLeft = 300;
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!tail && npc.ai[0] == 0f)
                 {
@@ -290,7 +290,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
                                 {
                                     WorldGen.KillTile(num184, num185, true, true, false);
                                 }
-                                if (Main.netMode != 1 && Main.tile[num184, num185].type == 2)
+                                if (Main.netMode != NetmodeID.MultiplayerClient && Main.tile[num184, num185].type == 2)
                                 {
                                     ushort arg_BFCA_0 = Main.tile[num184, num185 - 1].type;
                                 }
@@ -454,7 +454,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
                         }
                         if (flag20)
                         {
-                            if (Main.netMode != 1 && (double)(npc.position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
+                            if (Main.netMode != NetmodeID.MultiplayerClient && (double)(npc.position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
                             {
                                 npc.active = false;
                                 int num200 = (int)npc.ai[0];

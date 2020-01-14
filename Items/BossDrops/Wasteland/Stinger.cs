@@ -9,22 +9,27 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
     {
         public override void SetDefaults()
         {
-            item.damage = 21;
-            item.magic = true;
             item.width = 50;
-            item.height = 50;
-            item.useTime = 3;
-            item.reuseDelay = 16;
-            item.useAnimation = 9;
-            Item.staff[item.type] = true;
-            item.useStyle = 5;
-            item.noMelee = true;
+            item.height = 50; 
+            
+            item.damage = 14;
             item.knockBack = 2;
+            item.mana = 16;
+
+            item.useTime = 4;
+            item.useAnimation = 12;
+            item.reuseDelay = 24;
+            item.useStyle = 5;
+            item.UseSound = SoundID.Item8;
+
+            Item.staff[item.type] = true;
+            item.magic = true;
+            item.noMelee = true;
+            item.autoReuse = true;
+
             item.value = Item.buyPrice(0, 5, 0, 0);
             item.rare = 2;
-            item.mana = 5;
-            item.UseSound = SoundID.Item8;
-            item.autoReuse = true;
+
             item.shoot = mod.ProjectileType("WastelandStingerFriendly");
             item.shootSpeed = 12f;
         }

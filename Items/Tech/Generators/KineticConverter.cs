@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.SoulofFlight, 8);
             recipe.AddIngredient(ItemID.SoulofLight, 12);
-            recipe.AddRecipeGroup("GoldBar", 12);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 12);
             recipe.AddIngredient(null, "SiliconBoard", 4);
             recipe.AddIngredient(null, "GoldWire", 8);
             recipe.AddTile(TileID.Anvils);

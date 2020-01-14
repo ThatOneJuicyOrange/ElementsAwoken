@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Placeable
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Glass, 10);
-            recipe.AddRecipeGroup("GoldBar", 15);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 15);
             recipe.AddIngredient(null, "Stardust", 16);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

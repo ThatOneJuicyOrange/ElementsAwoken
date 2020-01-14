@@ -54,7 +54,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth.RegarothMinion
                 npc.TargetClosest(true);
             if (Main.player[npc.target].dead)
                 npc.timeLeft = 50;
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!Main.npc[(int)npc.ai[1]].active)
                 {

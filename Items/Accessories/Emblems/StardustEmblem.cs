@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Stardust Emblem");
-            Tooltip.SetDefault("30% increased summon damage\n30% decreased non-summon damage");
+            Tooltip.SetDefault("30% increased summon damage\n75% decreased non-summon damage");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -44,9 +44,9 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.meleeDamage -= 0.3f;
-            player.rangedDamage -= 0.3f;
-            player.magicDamage -= 0.3f;
+            player.meleeDamage -= 0.75f;
+            player.rangedDamage -= 0.75f;
+            player.magicDamage -= 0.75f;
             player.minionDamage += 0.3f;
         }
         public override void AddRecipes()

@@ -13,9 +13,11 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 12;
             projectile.height = 12;
+
             projectile.friendly = true;
             projectile.ignoreWater = true;
-            projectile.ranged = true;
+            projectile.magic = true;
+
             projectile.penetrate = 2;
             projectile.timeLeft = 125;
             projectile.extraUpdates = 3;
@@ -26,7 +28,6 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            Lighting.AddLight(projectile.Center, ((255 - projectile.alpha) * 0.15f) / 255f, ((255 - projectile.alpha) * 0.45f) / 255f, ((255 - projectile.alpha) * 0.05f) / 255f);
             if (projectile.timeLeft > 125)
             {
                 projectile.timeLeft = 125;

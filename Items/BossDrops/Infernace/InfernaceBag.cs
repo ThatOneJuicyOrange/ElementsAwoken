@@ -34,7 +34,6 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
             player.QuickSpawnItem(mod.ItemType("FireHeart"));
             int choice = Main.rand.Next(4);
             if (choice == 0)

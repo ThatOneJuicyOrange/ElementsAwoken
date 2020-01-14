@@ -116,11 +116,14 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
        
         public override void NPCLoot()
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicShard"), Main.rand.Next(20, 35)); //Item spawn
+            int numShards = Main.rand.Next(8, 12);
+            if (Main.expertMode) numShards = Main.rand.Next(12, 19);
             if (MyWorld.awakenedMode)
             {
+                numShards = Main.rand.Next(16, 26);
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicGlass"), 1);
             }
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicShard"), numShards); //Item spawn
             MyWorld.downedCosmicObserver = true;
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
@@ -263,7 +266,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 }
                 else
                 {
-                    if (Main.netMode != 1 && npc.ai[0] <= 0 && npc.ai[2] <= 18)
+                    if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[0] <= 0 && npc.ai[2] <= 18)
                     {
                         Laser(P, 4f, projectileBaseDamage);
                         npc.ai[0] = 6;
@@ -440,7 +443,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                     npc.ai[1] = 0;
                 }
             }
-            if (!spawnedHands && Main.netMode != 1)
+            if (!spawnedHands && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.TargetClosest(true);
                 spawnedHands = true;

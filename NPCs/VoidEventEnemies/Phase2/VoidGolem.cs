@@ -30,8 +30,8 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2
             //animationType = NPCID.PossessedArmor;
             npc.buffImmune[24] = true;
 
-            //banner = npc.type;
-            //bannerItem = mod.ItemType("DragonWarriorBanner");
+            banner = npc.type;
+            bannerItem = mod.ItemType("VoidGolemBanner");
         }
         public override void SetStaticDefaults()
         {
@@ -64,6 +64,7 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2
         {
             Lighting.AddLight(npc.Center, 0.1f, 0.1f, 0.5f);
             Player P = Main.player[npc.target];
+            MyPlayer modPlayer = P.GetModPlayer<MyPlayer>();
             npc.TargetClosest(true);
             // jump up if the player is above and near:
             // x check, must be within 400 pix
@@ -80,10 +81,9 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2
                     }
                 }
             }
-            if (Vector2.Distance(P.Center, npc.Center) <= 200)
-            {
-                ElementsAwoken.screenshakeAmount = 4;
-            }
+            if (Main.netMode == 0)
+            { if (Vector2.Distance(P.Center, npc.Center) <= 200) modPlayer.screenshakeAmount = MathHelper.Lerp(4, 0, MathHelper.Clamp(Vector2.Distance(npc.Center, P.Center) / 200, 0, 1)); }
+            else ElementsAwoken.NPCApplyScreenShakeToAll(npc.whoAmI,4f, 200, true);
         }
         public override void FindFrame(int frameHeight)
         {

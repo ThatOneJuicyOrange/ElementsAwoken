@@ -76,7 +76,8 @@ namespace ElementsAwoken
             if (Main.netMode == 2)
             {
                 //Sync with net
-                NetMessage.SendData(25, -1, -1, NetworkText.FromLiteral(text), 255, 175f, 75f, 255f, 0, 0, 0);
+                //NetMessage.SendData(25, -1, -1, NetworkText.FromLiteral(text), 255, 175f, 75f, 255f, 0, 0, 0);
+                NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), new Color(182, 15, 15));
             }
         }
 
@@ -91,7 +92,6 @@ namespace ElementsAwoken
                     Main.invasionDelay = 0;
                     MyWorld.downedVoidEvent = true;
                     MyWorld.voidInvasionUp = false;
-                    MyWorld.voidInvasionJustFinished = true;
                     MyWorld.justFinishedTimer = 200;
                 }
                 //Do not do the rest if invasion already at spawn

@@ -10,38 +10,36 @@ namespace ElementsAwoken.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            item.damage = 67;
-            item.melee = true;
             item.width = 70;
             item.height = 70;
-            item.useTime = 12;
-            item.useTurn = true;
-            item.useAnimation = 12;
-            item.useStyle = 1;
+            
+            item.damage = 67;
             item.knockBack = 5;
-            item.value = Item.buyPrice(0, 50, 0, 0);
-            item.rare = 6;
-            item.UseSound = SoundID.Item1;
+
+            item.useTurn = true;
+            item.melee = true;
             item.autoReuse = true;
-            item.shoot = mod.ProjectileType("ArmageddonBlast1");
+
+            item.UseSound = SoundID.Item1;
+            item.useAnimation = 18;
+            item.useTime = 25;
+            item.useStyle = 1;
+
+            item.value = Item.sellPrice(0, 0, 5, 0);
+            item.rare = 6;
+
+            item.shoot = mod.ProjectileType("ArmageddonBlade");
             item.shootSpeed = 18f;
         }
-
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Armageddon");
-            Tooltip.SetDefault("Shoots out waves of destruction");
+            Tooltip.SetDefault("Shoots out blades of destruction");
         }
-
+        public override bool OnlyShootOnSwing => true;
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            switch (Main.rand.Next(3))
-            {
-                case 0: type = mod.ProjectileType("ArmageddonBlast1"); break;
-                case 1: type = mod.ProjectileType("ArmageddonBlast2"); break;
-                case 2: type = mod.ProjectileType("ArmageddonBlast3"); break;
-            }
-            int projectile = Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, Main.myPlayer);
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, Main.myPlayer,Main.rand.Next(3));
             return false;
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
@@ -53,10 +51,10 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HallowedBar, 8);
-            recipe.AddIngredient(ItemID.CursedFlame, 6);
-            recipe.AddIngredient(ItemID.FrostCore, 1);
-            recipe.AddIngredient(ItemID.LivingFireBlock, 6);
+            recipe.AddIngredient(ItemID.HallowedBar, 15);
+            recipe.AddIngredient(ItemID.CursedFlame, 12);
+            recipe.AddIngredient(ItemID.FrostCore, 3);
+            recipe.AddIngredient(ItemID.LivingFireBlock, 12);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

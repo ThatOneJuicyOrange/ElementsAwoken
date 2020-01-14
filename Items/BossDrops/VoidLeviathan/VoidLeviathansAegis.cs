@@ -25,9 +25,19 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Leviathan's Aegis");
-            Tooltip.SetDefault("Life increased by 50\nWhen under half health defense is increased by 5%\nAllows the player to perform a secondary dash\nFor 15 seconds after taking 500 total damage:\nMovement speed increased by 40%\nDamage increased by 20%");
+            Tooltip.SetDefault("");
         }
-
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            string baseTooltip = "Life increased by 50\nWhen under half health defense is increased by 5%\nAllows the player to perform a secondary dash using the " + ElementsAwoken.dash2.GetAssignedKeys()[0] + " key\nFor 15 seconds after taking 500 total damage:\nMovement speed increased by 40%\nDamage increased by 20%";
+            foreach (TooltipLine line2 in tooltips)
+            {
+                if (line2.mod == "Terraria" && line2.Name.StartsWith("Tooltip"))
+                {
+                    line2.text = baseTooltip;
+                }
+            }
+        }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();

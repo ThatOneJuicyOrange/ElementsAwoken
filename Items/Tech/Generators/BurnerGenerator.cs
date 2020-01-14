@@ -116,7 +116,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Wood, 24);
             recipe.AddRecipeGroup("IronBar", 12);
-            recipe.AddRecipeGroup("SilverBar", 3);
+            recipe.AddRecipeGroup("ElementsAwoken:SilverBar", 3);
             recipe.AddIngredient(null, "CopperWire", 2);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

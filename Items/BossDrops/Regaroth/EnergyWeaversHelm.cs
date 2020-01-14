@@ -22,7 +22,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energy Weaver's Helm");
-            Tooltip.SetDefault("Damage increased the closer it is to midday\nCritical strike chance incresaed by 7");
+            Tooltip.SetDefault("Damage increased the closer it is to midday\nCritical strike chance increased by 7");
         }
 
         public override void UpdateEquip(Player player)

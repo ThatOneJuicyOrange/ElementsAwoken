@@ -61,7 +61,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier2
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("EvilBar", 2);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 2);
             recipe.AddRecipeGroup("IronBar", 8);
             recipe.AddIngredient(null, "GoldWire", 10);
             recipe.AddTile(TileID.Anvils);

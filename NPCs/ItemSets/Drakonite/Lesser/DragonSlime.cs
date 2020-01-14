@@ -74,7 +74,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && npc.localAI[1] == 0f)
+                    if (Main.netMode != NetmodeID.MultiplayerClient && npc.localAI[1] == 0f)
                     {
                         for (int n = 0; n < 5; n++)
                         {
@@ -95,7 +95,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && npc.localAI[1] == 0f)
+                    if (Main.netMode != NetmodeID.MultiplayerClient && npc.localAI[1] == 0f)
                     {
                         num15 = Main.player[npc.target].position.Y - vector3.Y - (float)Main.rand.Next(0, 200);
                         num16 = (float)Math.Sqrt((double)(num14 * num14 + num15 * num15));

@@ -12,19 +12,24 @@ namespace ElementsAwoken.Items.Developer
 
         public override void SetDefaults()
         {
+            item.width = 80;
+            item.height = 80; 
+            
             item.damage = 300;
-            item.melee = true;
-            item.width = 46;
-            item.height = 48;
+            item.knockBack = 6;
+
+            item.UseSound = SoundID.Item1;
             item.useTime = 12;
             item.useAnimation = 12;
             item.useStyle = 1;
-            item.knockBack = 6;
+
             item.value = Item.buyPrice(1, 0, 0, 0);
             item.rare = 11;
-            item.UseSound = SoundID.Item1;
+
             item.autoReuse = true;
             item.useTurn = true;
+            item.melee = true;
+
             item.shoot = mod.ProjectileType("ViridiumLightning");
             item.shootSpeed = 32f;
 
@@ -54,7 +59,7 @@ namespace ElementsAwoken.Items.Developer
                     Vector2 vector94 = new Vector2(speedX, speedY);
                     float ai = (float)Main.rand.Next(100);
                     Vector2 vector95 = Vector2.Normalize(vector94.RotatedByRandom(0.78539818525314331)) * 4f;
-                    Projectile.NewProjectile(position.X, position.Y, vector95.X, vector95.Y, mod.ProjectileType("ViridiumLightning"), (int)((250 + velocity * 15) * player.meleeDamage), 0f, Main.myPlayer, vector94.ToRotation(), ai);
+                    Projectile.NewProjectile(position.X, position.Y, vector95.X, vector95.Y, mod.ProjectileType("ViridiumLightning"), damage, 0f, Main.myPlayer, vector94.ToRotation(), ai);
                 }
             }
             return false;
@@ -135,7 +140,7 @@ namespace ElementsAwoken.Items.Developer
             {
                 velocity *= -1;
             }
-            damage = (int)((300 + velocity * 25) * player.meleeDamage);
+            damage = (int)((400 + velocity * 28) * player.meleeDamage);
         }
         public override void AddRecipes()
         {

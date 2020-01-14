@@ -92,7 +92,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                     npc.ai[1] = (float)((int)(npc.Center.X / 16f));
                 }
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (npc.ai[0] == 0f || npc.ai[1] == 0f)
                 {

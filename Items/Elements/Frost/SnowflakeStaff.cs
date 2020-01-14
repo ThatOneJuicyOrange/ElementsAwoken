@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Elements.Frost
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "FrostEssence", 7);
-            recipe.AddRecipeGroup("IceGroup", 5);
+            recipe.AddRecipeGroup("ElementsAwoken:IceGroup", 5);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 5);
             recipe.AddIngredient(ItemID.MagicMissile);
             recipe.AddTile(null, "ElementalForge");

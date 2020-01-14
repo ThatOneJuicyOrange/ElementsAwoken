@@ -60,7 +60,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
             {
                 shootTimer -= 1f;
             }
-            if (Main.netMode != 1 && shootTimer == 0f)
+            if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer == 0f)
             {
                 float Speed = 3.5f;  //projectile speed
                 Vector2 vector8 = new Vector2(npc.position.X + (npc.width / 2), npc.position.Y + (npc.height / 2));

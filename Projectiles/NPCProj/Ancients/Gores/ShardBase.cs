@@ -23,25 +23,62 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients.Gores
         }
         public override void AI()
         {
-            projectile.Center = Main.player[Main.myPlayer].Center + new Vector2(0, - 300);
-
-            if (!Main.player[Main.myPlayer].active || Main.player[Main.myPlayer].dead) projectile.Kill();
-
-            if (!NPC.AnyNPCs(mod.NPCType("Izaris")) &&
-            !NPC.AnyNPCs(mod.NPCType("Kirvein")) &&
-            !NPC.AnyNPCs(mod.NPCType("Krecheus")) &&
-            !NPC.AnyNPCs(mod.NPCType("Xernon")))
+            Player player = Main.LocalPlayer;
+           // Main.NewText(Main.netMode);
+            if (Main.netMode == 0)
             {
-                projectile.localAI[0]++;
-                if (projectile.localAI[0] == 180)
+                if (!player.active || player.dead) projectile.Kill();
+            }
+            else
+            {
+                if (projectile.ai[0] == -1) projectile.Kill();
+                else
+                {
+                    player = Main.player[(int)projectile.ai[0]];
+                }
+                if (!player.active || player.dead)
+                {
+                    projectile.ai[0] = FindActivePlayer();
+                }
+            }
+            projectile.Center = player.Center + new Vector2(0, -300);
+            if (!AnyAncients())
+            {
+                projectile.ai[1]++;
+                if (projectile.ai[1] == 180)
                 {
                     Main.PlaySound(SoundLoader.customSoundType, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/AncientMergeRise"));
                 }
-                if (projectile.localAI[0] == 300)
+                if (projectile.ai[1] == 300)
                 {
-                    NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, mod.NPCType("AncientAmalgam"));
+                    if (Main.autoPause == true)
+                    {
+                        Main.NewText("Using autopause huh? What a wimp", Color.LightCyan.R, Color.LightCyan.G, Color.LightCyan.B);
+                    }
+                    NPC aa = Main.npc[NPC.NewNPC((int)projectile.Center.X, (int)projectile.Center.Y, mod.NPCType("AncientAmalgam"))];
+                    aa.netUpdate = true;
                 }
             }
-        }      
+        }
+        private int FindActivePlayer()
+        {
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                Player p = Main.player[i];
+                if (p.active)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        private bool AnyAncients()
+        {
+            if (NPC.AnyNPCs(mod.NPCType("Izaris"))) return true;
+            if (NPC.AnyNPCs(mod.NPCType("Kirvein"))) return true;
+            if (NPC.AnyNPCs(mod.NPCType("Krecheus"))) return true;
+            if (NPC.AnyNPCs(mod.NPCType("Xernon"))) return true;
+            return false;
+        }
     }
 }

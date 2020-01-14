@@ -149,6 +149,7 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
             {
                 MyWorld.encounter2 = true;
                 MyWorld.encounterTimer = 3600;
+                ElementsAwoken.DebugModeText("encounter 2 start");
             }
             MyWorld.downedPermafrost = true;
 

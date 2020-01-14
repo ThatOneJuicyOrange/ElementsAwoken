@@ -9,21 +9,26 @@ namespace ElementsAwoken.Items.Elements.Fire
     {
         public override void SetDefaults()
         {
-            item.damage = 24;
-            item.magic = true;
             item.width = 50;
             item.height = 50;
+            
+            item.damage = 24;
+            item.knockBack = 2;
+            item.mana = 16;
+
             item.useTime = 30;
             item.useAnimation = 30;
-            Item.staff[item.type] = true;
             item.useStyle = 5;
+            item.UseSound = SoundID.Item42;
+
+            Item.staff[item.type] = true;
+            item.magic = true;
             item.noMelee = true;
-            item.knockBack = 2;
+            item.autoReuse = true;
+
             item.value = Item.buyPrice(0, 7, 0, 0);
             item.rare = 4;
-            item.mana = 5;
-            item.UseSound = SoundID.Item42;
-            item.autoReuse = true;
+
             item.shoot = mod.ProjectileType("FireBall");
             item.shootSpeed = 13f;
         }
@@ -33,7 +38,6 @@ namespace ElementsAwoken.Items.Elements.Fire
             DisplayName.SetDefault("Bonfire Pummel");
             Tooltip.SetDefault("Fires an exploding fireball");
         }
-
 
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

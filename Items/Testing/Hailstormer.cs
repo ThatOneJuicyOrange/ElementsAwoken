@@ -32,8 +32,7 @@ namespace ElementsAwoken.Items.Testing
 
         public override bool UseItem(Player player)
         {
-            MyWorld.hailStorm = true;
-            MyWorld.hailStormTime = 3600 + Main.rand.Next(0, 3600);
+            MyWorld.hailStormTime = Main.rand.Next(1800, 7200);
             return true;
         }
     }

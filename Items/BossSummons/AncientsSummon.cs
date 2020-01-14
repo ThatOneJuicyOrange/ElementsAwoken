@@ -26,8 +26,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.UseSound = SoundID.Item44;
             item.consumable = true;
             item.maxStack = 20;
-
-            item.shoot = mod.ProjectileType("AncientSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -45,7 +43,70 @@ namespace ElementsAwoken.Items.BossSummons
             !NPC.AnyNPCs(mod.NPCType("Xernon"))&& 
             !NPC.AnyNPCs(mod.NPCType("AncientAmalgam"));
         }
+        public override bool UseItem(Player player)
+        {
+            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Izaris"));
+            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Kirvein"));
+            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Krecheus"));
+            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Xernon"));
 
+            if (!MyWorld.downedAncients)
+            {
+                if (MyWorld.ancientSummons == 0)
+                {
+                    Main.NewText("I've waited centuries for this!", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 1)
+                {
+                    Main.NewText("Back for more?", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 2)
+                {
+                    Main.NewText("I could do this all day!", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 3)
+                {
+                    Main.NewText("You should have gone for the head...", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 4)
+                {
+                    Main.NewText("Really? Still trying?", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 5)
+                {
+                    Main.NewText("Give up already.", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons > 5 && MyWorld.ancientSummons < 10)
+                {
+                    Main.NewText("Are you seriously gonna keep dying?", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 10)
+                {
+                    Main.NewText("As much fun slaying you is, there are better things to do with both our lives.", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 20)
+                {
+                    Main.NewText("Lunatic.", new Color(3, 188, 127));
+                }
+                if (MyWorld.ancientSummons == 100)
+                {
+                    Main.NewText("I just don't think you are cut out to do this... Go find some other hobby.", new Color(3, 188, 127));
+                }
+            }
+            else
+            {
+                //if (MyWorld.ancientKills > 0)
+                {
+                    Main.NewText("You bring me back to this awful land... Why?", new Color(3, 188, 127));
+                }
+            }
+            Projectile.NewProjectile(player.Center.X, player.Center.Y - 300, 0f, 0f, mod.ProjectileType("ShardBase"), 0, 0f, player.whoAmI);
+
+            MyWorld.ancientSummons++;
+            
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

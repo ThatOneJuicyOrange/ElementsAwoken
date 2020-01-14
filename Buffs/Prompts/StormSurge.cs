@@ -10,7 +10,7 @@ namespace ElementsAwoken.Buffs.Prompts
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Storm Surge");
-            Description.SetDefault("Waternados sprout from the ground\nRain happens more frequently\nDefeat Aqueous to stop this effect");
+            Description.SetDefault("Waternados sprout from the ground\nRain happens more frequently\nDefeat Aqueous to stop this effect\nDisable this effect in the config");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

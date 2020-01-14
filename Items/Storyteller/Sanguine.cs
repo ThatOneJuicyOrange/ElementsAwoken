@@ -19,8 +19,8 @@ namespace ElementsAwoken.Items.Storyteller
             item.knockBack = 2;
             item.mana = 6;
 
-            item.useTime = 8;
-            item.useAnimation = 8;
+            item.useTime = 14;
+            item.useAnimation = 14;
             item.useStyle = 5;
             Item.staff[item.type] = true;
 
@@ -39,6 +39,13 @@ namespace ElementsAwoken.Items.Storyteller
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sanguine");
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(12));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
+            return true;
         }
     }
 }

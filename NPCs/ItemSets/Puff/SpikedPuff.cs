@@ -77,7 +77,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && spikeTimer <= 0f)
+                    if (Main.netMode != NetmodeID.MultiplayerClient && spikeTimer <= 0f)
                     {
                         for (int i = 0; i < 5; i++)
                         {
@@ -99,7 +99,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                     {
                         npc.velocity.X = npc.velocity.X * 0.9f;
                     }
-                    if (Main.netMode != 1 && spikeTimer <= 0f)
+                    if (Main.netMode != NetmodeID.MultiplayerClient && spikeTimer <= 0f)
                     {
                         num9 = Main.player[npc.target].position.Y - vector.Y - (float)Main.rand.Next(0, 200);
                         num10 = (float)Math.Sqrt((double)(num8 * num8 + num9 * num9));

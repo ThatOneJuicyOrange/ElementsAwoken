@@ -31,8 +31,8 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase1
 
             npc.buffImmune[24] = true;
 
-            //banner = npc.type;
-            //bannerItem = mod.ItemType("VoidKnightBanner");
+            banner = npc.type;
+            bannerItem = mod.ItemType("VoidKnightBanner");
         }
         public override void SetStaticDefaults()
         {

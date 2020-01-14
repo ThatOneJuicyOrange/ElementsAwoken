@@ -40,6 +40,7 @@ namespace ElementsAwoken.Items
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             EATooltip modItem = item.GetGlobalItem<EATooltip>();
+            EARarity eaRarity = item.GetGlobalItem<EARarity>();
             if (!item.expert)
             {
                 if (modItem.donator)
@@ -65,6 +66,11 @@ namespace ElementsAwoken.Items
                     TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "-Youtuber Item-");
                     tip.overrideColor = new Color(3, 160, 92);
                     tooltips.Insert(1, tip);
+                }
+                if (eaRarity.awakened)
+                {
+                    TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "Awakened");
+                    tooltips.Add(tip);
                 }
             }
         }   

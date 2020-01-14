@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
 
 namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
 {
@@ -13,14 +14,12 @@ namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
 
         public override void SetDefaults()
         {
-            projectile.width = 2;
-            projectile.height = 2;
+            projectile.width = 6;
+            projectile.height = 6;
             projectile.penetrate = -1;
+            projectile.scale *= 1.4f;
 
             projectile.hostile = true;
-            projectile.friendly = false;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
 
             projectile.timeLeft = 300;
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 12;
@@ -28,19 +27,21 @@ namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Bolt");
+            DisplayName.SetDefault("Void Leviathan Bolt");
         }
         public override void AI()
         {
+            Lighting.AddLight(projectile.Center, 1f, 0.2f, 0.55f);
+
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-
-            Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.PinkFlame)];
-            dust.velocity = Vector2.Zero;
-            dust.position -= projectile.velocity / 6f;
-            dust.noGravity = true;
-            dust.scale = 1f;
-
-            Lighting.AddLight(projectile.Center, 1f, 0f, 0.7f);
+            if (!ModContent.GetInstance<Config>().lowDust && Main.rand.Next(2) == 0)
+            {
+                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.PinkFlame)];
+                dust.velocity = Vector2.Zero;
+                dust.position -= projectile.velocity / 6f;
+                dust.noGravity = true;
+                dust.scale = 1f;
+            }
         }
 
         public override void OnHitPlayer(Player player, int damage, bool crit)

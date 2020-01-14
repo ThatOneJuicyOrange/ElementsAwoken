@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Weapons.Melee.Whips
             item.noMelee = true;
             item.noUseGraphic = true;
             item.melee = true;
-            item.autoReuse = false;
+            item.autoReuse = true;
             item.noMelee = true;
 
             item.shoot = mod.ProjectileType("HallowedRadianceP");

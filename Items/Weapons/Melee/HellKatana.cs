@@ -10,19 +10,24 @@ namespace ElementsAwoken.Items.Weapons.Melee
     {
         public override void SetDefaults()
         {
-            item.damage = 32;
-            item.melee = true;
             item.width = 58;
-            item.height = 58;
-            item.useTime = 13;
-            item.useTurn = true;
-            item.useAnimation = 13;
-            item.useStyle = 1;
+            item.height = 58; 
+            
+            item.damage = 32;
             item.knockBack = 5;
+
+            item.UseSound = SoundID.Item1;
+            item.useTime = 18;
+            item.useAnimation = 18;
+            item.useStyle = 1;
+
+            item.useTurn = true;
+            item.melee = true;
+            item.autoReuse = true;
+
+
             item.value = Item.buyPrice(0, 2, 20, 0);
             item.rare = 3;
-            item.UseSound = SoundID.Item1;
-            item.autoReuse = true;
         }
 
         public override void SetStaticDefaults()

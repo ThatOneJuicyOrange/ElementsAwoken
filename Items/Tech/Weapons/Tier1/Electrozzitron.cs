@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier1
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("CopperBar", 3);
+            recipe.AddRecipeGroup("ElementsAwoken:CopperBar", 3);
             recipe.AddRecipeGroup("IronBar", 8);
             recipe.AddIngredient(null, "CopperWire", 10);
             recipe.AddTile(TileID.Anvils);

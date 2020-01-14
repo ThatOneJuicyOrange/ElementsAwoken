@@ -12,16 +12,17 @@ namespace ElementsAwoken.Projectiles.NPCProj.Infernace
         public override void SetDefaults()
         {
             projectile.scale = 1.0f;
-            projectile.width = 32;
-            projectile.height = 32;
-            projectile.magic = true;
+
+            projectile.width = 58;
+            projectile.height = 58;
+
             projectile.penetrate = -1;
+
             projectile.hostile = true;
-            projectile.friendly = false;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.alpha = 0;
+            projectile.tileCollide = false;
+
             projectile.timeLeft = 600;
+
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
@@ -32,15 +33,11 @@ namespace ElementsAwoken.Projectiles.NPCProj.Infernace
         public override void AI()
         {
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            if (projectile.localAI[0] == 0f)
-            {
-                projectile.localAI[0] = 1f;
-            }
+
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].scale = 1f;
             Main.dust[dust].velocity *= 0.1f;
-            projectile.velocity *= 1.01f;
         }
 
         public override void OnHitPlayer(Player player, int damage, bool crit)

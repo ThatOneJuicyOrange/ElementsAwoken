@@ -17,11 +17,11 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
             item.height = 60;
 
             item.damage = 5;
-            item.pick = 40;
+            item.pick = 45;
             item.knockBack = 4.5f;
 
-            item.useTime = 20;
-            item.useAnimation = 20;
+            item.useTime = 18;
+            item.useAnimation = 18;
             item.useStyle = 1;
             item.UseSound = SoundID.Item1;
 

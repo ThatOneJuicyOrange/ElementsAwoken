@@ -78,6 +78,8 @@ namespace ElementsAwoken
         public bool chaosBurn = false;
         public bool acidBurn = false;
         public bool superSlow = false;
+        public int behemothGazeTimer = 0;
+        public int leviathanDist = 0;
         #endregion   
         #region buffs
         public bool extinctionCurseImbue = false;
@@ -109,6 +111,7 @@ namespace ElementsAwoken
         public bool scourgeDrive = false;
         public bool scourgeSpeed = false;
         public bool spikeBoots = false;
+        public bool templeSpikeBoots = false;
         public bool sonicArm = false;
         public bool nyanBoots = false;
         public bool theAntidote = false;
@@ -142,19 +145,19 @@ namespace ElementsAwoken
         public int screenDuration = 60 * 9;
         public int escHeldTimer = 0;
         #endregion
-
-        //skyline whirlwind
+        #region skyline whirlwind
         public bool skylineFlying = false;
         public float skylineAlpha = 0f;
         public int skylineFrameTimer = 0;
         public int skylineFrame = 0;
+        #endregion
 
         public bool[] mysteriousPotionsDrank;
-
         #region armor bonuses
-        public bool aeroArmor = false;
+        public int empyreanCloudCD = 0;
         public bool oceanicArmor = false;
         public bool voidArmor = false;
+        public int voidArmorHealCD = 0;
         public bool dragonmailGreathelm = false;
         public bool dragonmailHood = false;
         public bool dragonmailMask = false;
@@ -220,21 +223,20 @@ namespace ElementsAwoken
         public int observerChanceTimer = 0;
         // damage modifiers
         public float damageTaken = 1f;
-        // life fruits
-        //private const int maxEmptyVessels = 10;
-        //private const int maxChaosHearts = 10;
+        #region stat increases
+
         public int voidHeartsUsed = 0;
         public int chaosHeartsUsed = 0;
-
-        public bool extraAccSlot = false;
-
-        public bool voidCompressor = false;
-
         public int lunarStarsUsed = 0;
         public int statManaMax3 = 0;
 
         public int shieldHearts = 0;
         public int shieldLife = 0;
+
+        public bool extraAccSlot = false;
+
+        public bool voidCompressor = false;
+        #endregion
 
         // oinite statue
         public bool oiniteStatue = false;
@@ -254,6 +256,10 @@ namespace ElementsAwoken
         public int encounterTextAlphaChange = 0;
         public bool finalText = false;
 
+        // screenshake
+        public float screenshakeAmount = 0; // dont go above 15 unless you want to have a seizure
+        public int screenshakeTimer = 0;
+
         //double tapping down
         public bool doubleTappedDown = false;
         public int doubleDownWindow = 0;
@@ -262,11 +268,18 @@ namespace ElementsAwoken
         public bool controlLeftArrow = false;
         public bool controlRightArrow = false;
 
+        public int eaDash = 0;
+        public int eaDashTime = 0;
+        public int eaDashDelay = 0;
+
         bool calamityEnabled = ModLoader.GetMod("CalamityMod") != null;
 
         public override void Initialize()
         {
             mysteriousPotionsDrank = new bool[10];
+            voidHeartsUsed = 0;
+            chaosHeartsUsed = 0;
+            lunarStarsUsed = 0;
         }
         public override void ResetEffects()
         {
@@ -354,6 +367,7 @@ namespace ElementsAwoken
             flare = false;
             scourgeDrive = false;
             spikeBoots = false;
+            templeSpikeBoots = false;
             sonicArm = false;
             nyanBoots = false;
             skylineFlying = false;
@@ -364,7 +378,6 @@ namespace ElementsAwoken
             strangeUkulele = false;
             crystallineLocket = false;
 
-            aeroArmor = false;
             oceanicArmor = false;
             voidArmor = false;
             dragonmailGreathelm = false;
@@ -394,6 +407,7 @@ namespace ElementsAwoken
             {
                 player.statLifeMax2 += (voidHeartsUsed * 10) + (chaosHeartsUsed * 10);
                 player.statManaMax2 += lunarStarsUsed * 100;
+
                 if (Main.expertMode)
                 {
                     if (player.extraAccessory)
@@ -405,12 +419,15 @@ namespace ElementsAwoken
                         }
                     }
                 }
+
             }
             shieldHearts = shieldLife / 5;
             player.statLifeMax2 += shieldLife;
 
             buffDPS = buffDPSCount;
             buffDPSCount = 0;
+
+            eaDash = 0;
         }
         // for the bonus life
         public override void clientClone(ModPlayer clientClone)
@@ -420,8 +437,8 @@ namespace ElementsAwoken
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
             ModPacket packet = mod.GetPacket();
-            packet.Write((byte)player.whoAmI);
             packet.Write((byte)ElementsAwokenMessageType.StarHeartSync);
+            packet.Write((byte)player.whoAmI);
             packet.Write(voidHeartsUsed);
             packet.Write(chaosHeartsUsed);
             packet.Write(lunarStarsUsed);
@@ -429,7 +446,7 @@ namespace ElementsAwoken
         }
         public override TagCompound Save()
         {
-                TagCompound tag = new TagCompound {
+            TagCompound tag = new TagCompound {
             {"voidHeartsUsed", voidHeartsUsed},
             {"chaosHeartsUsed", chaosHeartsUsed},
             {"lunarStarsUsed", lunarStarsUsed},
@@ -454,9 +471,40 @@ namespace ElementsAwoken
                 mysteriousPotionsDrank = new List<bool>(list).ToArray();
             }
         }
-    
         public override void PostUpdateMiscEffects()
         {
+
+            // timers
+            if (cosmicGlass) cosmicGlassCD--;
+            doubleDownWindow--;
+            hellsReflectionTimer--;
+            voidPortalCooldown--;
+            toyArmorCooldown--;
+            crowsArmorCooldown--;
+            crystallineLocketCrit--;
+            voidArmorHealCD--;
+            skylineFrameTimer++;
+
+            if (!NPC.AnyNPCs(mod.NPCType("VoidLeviathanHead"))) behemothGazeTimer = 0;
+            if (behemothGazeTimer > 600)
+            {
+                float amount = MathHelper.Clamp((float)(leviathanDist - 3000) / 9000f, 0, 1);
+                player.accRunSpeed *= MathHelper.Lerp(0, 1.5f, amount);
+                player.moveSpeed *= MathHelper.Lerp(0, 2, amount);
+                player.statDefense = (int)(player.statDefense * MathHelper.Lerp(1, 0.2f, amount));
+                player.allDamage *= MathHelper.Lerp(1, 0.2f, amount);
+            }
+            else if (behemothGazeTimer > 0)
+            {
+                int num = (int)MathHelper.Lerp(1, 8, (float)(leviathanDist - 3000) / 9000f);
+                if (ModContent.GetInstance<Config>().lowDust) num = 1;
+                for (int l = 0; l < num; l++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, DustID.PinkFlame, 0f, 0f, 100, default(Color), 1.4f)];
+                    dust.noGravity = true;
+                }
+            }
+
             if (superSpeed)
             {
                 player.moveSpeed *= 3;
@@ -466,16 +514,145 @@ namespace ElementsAwoken
             {
                 player.moveSpeed *= 0.1f;
             }
-            // timers
-            if (cosmicGlass) cosmicGlassCD--;
-            doubleDownWindow--;
-            hellsReflectionTimer--;
-            voidPortalCooldown--;
-            toyArmorCooldown--;
-            crowsArmorCooldown--;
-            crystallineLocketCrit--;
-            skylineFrameTimer++;
-
+            #region dashes
+            if (eaDashDelay > 0)
+            {
+                eaDashDelay--;
+                return;
+            }
+            if (eaDashDelay < 0)
+            {
+                float maxDashSpeed = 18f;
+                float maxSpeed = Math.Max(player.accRunSpeed, player.maxRunSpeed);
+                float slowdown1 = 0.985f;
+                float slowdown2 = 0.94f;
+                int dashDelayAmount = 20;
+                if (eaDash == 1 || eaDash == 2)
+                {
+                    int dustID = 127;
+                    if (eaDash == 2)
+                    {
+                        dustID = 63;
+                        maxDashSpeed = 24f;
+                    }
+                    for (int k = 0; k < 3; k++)
+                    {
+                        int num12;
+                        if (player.velocity.Y == 0f)
+                        {
+                            num12 = Dust.NewDust(new Vector2(player.position.X, player.position.Y + (float)player.height - 4f), player.width, 8, dustID, 0f, 0f, 100, default(Color), 2f);
+                        }
+                        else
+                        {
+                            num12 = Dust.NewDust(new Vector2(player.position.X, player.position.Y + (float)(player.height / 2) - 8f), player.width, 16, dustID, 0f, 0f, 100, default(Color), 2f);
+                        }
+                        Dust dust = Main.dust[num12];
+                        dust.velocity *= 0.1f;
+                        dust.scale *= 1f + (float)Main.rand.NextFloat(-0.4f, 0.4f);
+                        dust.shader = GameShaders.Armor.GetSecondaryShader(player.cShoe, player);
+                        dust.noGravity = true;
+                        if (eaDash == 2) dust.color = Main.DiscoColor;
+                    }
+                }
+                if (eaDash > 0)
+                {
+                    player.vortexStealthActive = false;
+                    if (player.velocity.X > maxDashSpeed || player.velocity.X < -maxDashSpeed)
+                    {
+                        player.velocity.X = player.velocity.X * slowdown1;
+                        return;
+                    }
+                    if (player.velocity.X > maxSpeed || player.velocity.X < -maxSpeed)
+                    {
+                        player.velocity.X = player.velocity.X * slowdown2;
+                        return;
+                    }
+                    eaDashDelay = dashDelayAmount;
+                    if (player.velocity.X < 0f)
+                    {
+                        player.velocity.X = -maxSpeed;
+                        return;
+                    }
+                    if (player.velocity.X > 0f)
+                    {
+                        player.velocity.X = maxSpeed;
+                        return;
+                    }
+                }
+            }
+            else if (eaDash > 0 && !player.mount.Active)
+            {
+                int dashDir = 0;
+                bool flag = false;
+                if (eaDashTime > 0) eaDashTime--;
+                if (eaDashTime < 0) eaDashTime++;
+                if (player.controlRight && player.releaseRight)
+                {
+                    if (eaDashTime > 0)
+                    {
+                        dashDir = 1;
+                        flag = true;
+                        eaDashTime = 0;
+                    }
+                    else eaDashTime = 15;
+                }
+                else if (player.controlLeft && player.releaseLeft)
+                {
+                    if (eaDashTime < 0)
+                    {
+                        dashDir = -1;
+                        flag = true;
+                        eaDashTime = 0;
+                    }
+                    else eaDashTime = -15;
+                }
+                if (flag)
+                {
+                    if (eaDash == 1)
+                    {
+                        player.velocity.X = 26f * (float)dashDir;
+                        Point point = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), player.gravDir * (float)(-(float)player.height) / 2f + player.gravDir * 2f)).ToTileCoordinates();
+                        Point point2 = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), 0f)).ToTileCoordinates();
+                        if (WorldGen.SolidOrSlopedTile(point.X, point.Y) || WorldGen.SolidOrSlopedTile(point2.X, point2.Y))
+                        {
+                            player.velocity.X = player.velocity.X / 2f;
+                        }
+                        eaDashDelay = -1;
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 127, 0f, 0f, 100, default(Color), 2f)];
+                            dust.position.X = dust.position.X + (float)Main.rand.Next(-5, 6);
+                            dust.position.Y = dust.position.Y + (float)Main.rand.Next(-5, 6);
+                            dust.velocity *= 3f;
+                            dust.scale *= 1f + (float)Main.rand.NextFloat(-0.4f, 0.4f);
+                            dust.shader = GameShaders.Armor.GetSecondaryShader(player.cShoe, player);
+                            dust.noGravity = true;
+                        }
+                    }
+                    if (eaDash == 2)
+                    {
+                        player.velocity.X = 26f * (float)dashDir;
+                        Point point = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), player.gravDir * (float)(-(float)player.height) / 2f + player.gravDir * 2f)).ToTileCoordinates();
+                        Point point2 = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), 0f)).ToTileCoordinates();
+                        if (WorldGen.SolidOrSlopedTile(point.X, point.Y) || WorldGen.SolidOrSlopedTile(point2.X, point2.Y))
+                        {
+                            player.velocity.X = player.velocity.X / 2f;
+                        }
+                        eaDashDelay = -1;
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 127, 0f, 0f, 100, default(Color), 2f)];
+                            dust.position.X = dust.position.X + (float)Main.rand.Next(-5, 6);
+                            dust.position.Y = dust.position.Y + (float)Main.rand.Next(-5, 6);
+                            dust.velocity *= 3f;
+                            dust.scale *= 1f + (float)Main.rand.NextFloat(-0.4f, 0.4f);
+                            dust.shader = GameShaders.Armor.GetSecondaryShader(player.cShoe, player);
+                            dust.noGravity = true;
+                        }
+                    }
+                }
+            }
+            #endregion
             if (archaicProtectionTimer > 0)
             {
                 archaicProtectionTimer--;
@@ -757,12 +934,10 @@ namespace ElementsAwoken
                 }
             }
 
-            if (aeroArmor)
+            if (empyreanCloudCD < 0)
             {
-                if (Main.rand.Next(120) == 0)
-                {
-                    Projectile.NewProjectile(player.Center.X + Main.rand.Next(-120, 120), player.Center.Y - Main.rand.Next(15, 50), 0f, 0f, mod.ProjectileType("AeroStorm"), 30, 1.25f, Main.myPlayer, 0f, 0f);
-                }
+                Projectile.NewProjectile(player.Center.X + Main.rand.Next(-120, 120), player.Center.Y - Main.rand.Next(15, 50), 0f, 0f, mod.ProjectileType("AeroStorm"), 30, 1.25f, Main.myPlayer, 0f, 0f);
+                empyreanCloudCD = Main.rand.Next(60, 300);
             }
 
             if (ninjaDash)
@@ -1262,6 +1437,22 @@ namespace ElementsAwoken
                             {
                                 creditPoints[8] = new Vector2(x * 16, y * 16);
                             }
+                            else if (Main.tile[x, y].type == TileID.Marble && creditPoints[12].X == 0 && x > Main.spawnTileX - 200)
+                            {
+                                creditPoints[12] = new Vector2(x * 16, y * 16);
+                            }
+                            else if (Main.tile[x, y].type == TileID.Granite && creditPoints[13].X == 0 && x > Main.spawnTileX - 200)
+                            {
+                                creditPoints[13] = new Vector2(x * 16, y * 16);
+                            }
+                            else if (Main.tile[x, y].type == TileID.LivingMahogany && creditPoints[14].X == 0)
+                            {
+                                creditPoints[14] = new Vector2(x * 16, y * 16);
+                            }
+                            else if (Main.tile[x, y].type == TileID.LeafBlock && creditPoints[15].X == 0 && x > Main.spawnTileX - 200)
+                            {
+                                creditPoints[15] = new Vector2(x * 16, y * 16);
+                            }
                             else continue;
                         }
                     }
@@ -1318,6 +1509,10 @@ namespace ElementsAwoken
                     else if (screenNum == 9) scroll = new Vector2(1, 1);
                     else if (screenNum == 10) scroll = new Vector2(0, 1);
                     else if (screenNum == 11) scroll = new Vector2(1, 0);
+                    else if (screenNum == 12) scroll = new Vector2(1, 0.5f);
+                    else if (screenNum == 13) scroll = new Vector2(1, -0.25f);
+                    else if (screenNum == 14) scroll = new Vector2(2, 1);
+                    else if (screenNum == 15) scroll = new Vector2(0.2f, 1);
                     CreditsScroll(screenNum, scroll, screenDuration);
                 }
 
@@ -1368,37 +1563,32 @@ namespace ElementsAwoken
             #region PROMPTS!!
             if (!ModContent.GetInstance<Config>().promptsDisabled)
             {
-                NPC bossCheck = Main.npc[0];
+                bool activeBoss = false;
+                bool inTown = false;
                 for (int i = 0; i < Main.npc.Length; ++i)
                 {
-                    if (Main.npc[i].boss && Main.npc[i].active)
+                    NPC nPC = Main.npc[i];
+
+                    if (nPC.townNPC && nPC.active && Vector2.Distance(player.Center, nPC.Center) <= 2000)
                     {
-                        bossCheck = Main.npc[i];
-                        break;
+                        inTown = true;
+                    }
+                    if (nPC.boss && nPC.active)
+                    {
+                        activeBoss = true;
                     }
                 }
                 bool underground = player.Center.Y / 16 > Main.maxTilesY * 0.225;
 
-                bool inTown = false;
-                for (int i = 0; i < Main.npc.Length; i++)
+                if (!activeBoss)
                 {
-                    NPC nPC = Main.npc[i];
-                    if (nPC.townNPC && Vector2.Distance(player.Center, nPC.Center) <= 2000)
-                    {
-                        inTown = true;
-                    }
-                }
-
-                if (!bossCheck.boss)
-                {
-                    // wasteland prompt
-                    if (NPC.downedBoss1 && !MyWorld.downedWasteland)
+                    // only happens after 30 minutes
+                    if (MyWorld.desertPrompt > 108000)
                     {
                         player.AddBuff(mod.BuffType("ScorpionBreakout"), 60);
                         // spawn code in the scorpion code
                     }
-                    // infernace prompt
-                    if (NPC.downedBoss3 && !MyWorld.downedInfernace)
+                    if (MyWorld.firePrompt > 108000)
                     {
                         player.AddBuff(mod.BuffType("InfernacesWrath"), 60);
                         if (!underground)
@@ -1406,7 +1596,7 @@ namespace ElementsAwoken
                             float num13 = MathHelper.Lerp(0.2f, 0.35f, 0.5f);
                             float num14 = MathHelper.Lerp(0.5f, 0.7f, 0.5f);
                             Vector2 speed = new Vector2(Main.windSpeed * 10f, 3f);
-                            if (Main.rand.Next(3) == 0)
+                            if (Main.rand.Next(3) == 0 && !ModContent.GetInstance<Config>().lowDust)
                             {
                                 Dust ash = Main.dust[Dust.NewDust(new Vector2(player.Center.X - Main.screenWidth / 2, player.Center.Y - Main.screenHeight / 2), Main.screenWidth, Main.screenHeight, 31, speed.X, speed.Y, 0, default(Color), 1f)];
                                 ash.scale = 1.2f;
@@ -1415,7 +1605,7 @@ namespace ElementsAwoken
                                 ash.velocity *= 1f + num13;
                             }
 
-                            if (Main.rand.Next(120) == 0)
+                            if (Main.rand.Next(120) == 0 && !inTown)
                             {
                                 int add2 = Main.rand.Next(1000, 2000); // y
                                 int add1 = 0;
@@ -1446,19 +1636,14 @@ namespace ElementsAwoken
                             }
                         }
                     }
-                    // regaroth prompt
-                    if (NPC.downedMechBossAny && !MyWorld.downedRegaroth)
+                    if (MyWorld.skyPrompt > 108000)
                     {
                         player.AddBuff(mod.BuffType("DarkenedSkies"), 60);
 
-                        if (!Main.raining && Main.rand.Next(3500) == 0)
-                        {
-                            Main.raining = true;
-                            Main.rainTime = 18000;
-                        }
+
                         if (!underground)
                         {
-                            if (Main.raining && Main.rainTime > 0 && Main.rand.Next(250) == 0)
+                            if (Main.raining && Main.rainTime > 0 && Main.rand.Next(250) == 0 && !inTown)
                             {
                                 int add2 = Main.rand.Next(1000, 2000);
                                 int add1 = 0;
@@ -1477,8 +1662,7 @@ namespace ElementsAwoken
                             }
                         }
                     }
-                    // permafrost prompt
-                    if (NPC.downedPlantBoss && !MyWorld.downedPermafrost)
+                    if (MyWorld.frostPrompt > 108000)
                     {
                         //dividing by 16 gets the TILE position
                         Point topLeft = ((player.position - new Vector2(112f, 112f)) / 16).ToPoint();
@@ -1491,120 +1675,168 @@ namespace ElementsAwoken
                             Main.dust[dust].velocity *= 0.01f;
                         }*/
                         // needs to check all of the tiles 
+                        bool nearHotTile = false;
                         for (int i = topLeft.X; i <= bottomRight.X; i++)
                         {
                             for (int j = topLeft.Y; j <= bottomRight.Y; j++)
                             {
                                 Tile t = Framing.GetTileSafely(i, j);
-                                if (t.type == TileID.Campfire || t.lava())
+                                if (HotTile(t) || t.lava())
                                 {
-                                    canGetHypo = false;
+                                    nearHotTile = true;
                                     canGetHypoTimer = 240;
                                     //Main.NewText("AAAAA TOO HOT", 182, 15, 15, false);
                                 }
-                                else
+                            }
+                            if (nearHotTile)
+                            {
+                                player.AddBuff(mod.BuffType("Hypothermia"), 30);
+                                if (Main.rand.Next(1000) == 0)
                                 {
-                                    if (canGetHypoTimer <= 0)
+                                    player.AddBuff(BuffID.Chilled, Main.rand.Next(120, 900));
+                                }
+                            }
+                        }
+                        if (MyWorld.waterPrompt > 108000)
+                        {
+                            player.AddBuff(mod.BuffType("StormSurge"), 60);
+
+                            if (!Main.raining && Main.rand.Next(5000) == 0)
+                            {
+                                Main.raining = true;
+                                Main.rainTime = 18000;
+                            }
+
+                            if (!underground)
+                            {
+                                if (player.ZoneBeach)
+                                {
+                                    if (Main.rand.Next(100) == 0)
                                     {
-                                        canGetHypo = true;
+                                        float ai0 = Main.rand.NextFloat(1, 2);
+                                        int add1 = 0;
+                                        int choice = Main.rand.Next(2);
+                                        if (choice == 0)
+                                        {
+                                            add1 = Main.rand.Next(750, 2000);
+                                        }
+                                        if (choice == 1)
+                                        {
+                                            add1 = Main.rand.Next(-2000, -750);
+                                        }
+                                        Projectile.NewProjectile(player.Center.X + add1, player.Center.Y - 300, 0f, 6f, mod.ProjectileType("WaternadoBolt"), 90, 10f, player.whoAmI, ai0, 0.0f);
+                                    }
+                                }
+                                else if (!inTown)
+                                {
+                                    if (Main.rand.Next(3000) == 0)
+                                    {
+                                        float ai0 = Main.rand.NextFloat(1, 2);
+                                        int add1 = 0;
+                                        int choice = Main.rand.Next(2);
+                                        if (choice == 0)
+                                        {
+                                            add1 = Main.rand.Next(750, 2000);
+                                        }
+                                        if (choice == 1)
+                                        {
+                                            add1 = Main.rand.Next(-2000, -750);
+                                        }
+                                        Projectile.NewProjectile(player.Center.X + add1, player.Center.Y - 300, 0f, 6f, mod.ProjectileType("WaternadoBolt"), 90, 10f, player.whoAmI, ai0, 0.0f);
                                     }
                                 }
                             }
                         }
-                        canGetHypoTimer--;
-                        if (canGetHypo)
+                        if (MyWorld.voidPrompt > 108000)
                         {
-                            player.AddBuff(mod.BuffType("Hypothermia"), 30);
-                        }
-                        if (!MyWorld.hailStorm && Main.rand.Next(40000) == 0 && !player.ZoneDesert)
-                        {
-                            MyWorld.hailStorm = true;
-                            MyWorld.hailStormTime = 3600 + Main.rand.Next(0, 3600);
-                        }
-                    }
-                    // aqueous prompt
-                    if (NPC.downedFishron && !MyWorld.downedAqueous)
-                    {
-                        player.AddBuff(mod.BuffType("StormSurge"), 60);
+                            player.AddBuff(mod.BuffType("Psychosis"), 60);
 
-                        if (!Main.raining && Main.rand.Next(5000) == 0)
-                        {
-                            Main.raining = true;
-                            Main.rainTime = 18000;
-                        }
-
-                        if (!underground)
-                        {
-                            if (player.ZoneBeach)
+                            if (Main.rand.Next(20) == 0)
                             {
-                                if (Main.rand.Next(100) == 0)
+                                int num1 = Dust.NewDust(player.position, player.width, player.height, 14);
+                                Main.dust[num1].scale = 1.5f;
+                                Main.dust[num1].velocity *= 3f;
+                                Main.dust[num1].noGravity = true;
+                            }
+
+                            if (Main.rand.Next(2000) == 0)
+                            {
+                                int choice = Main.rand.Next(12);
+                                if (choice == 0)
                                 {
-                                    float ai0 = Main.rand.NextFloat(1, 2);
-                                    int add1 = 0;
-                                    int choice = Main.rand.Next(2);
-                                    if (choice == 0)
+                                    Main.NewText("Death will consume all.", Color.Purple.R, Color.Purple.G, Color.Purple.B);
+                                    Main.NewText("Void Leviathan has awoken!", Color.MediumPurple.R, Color.MediumPurple.G, Color.MediumPurple.B);
+                                    Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 0, 1f, 0f);
+                                }
+                                else if (choice == 1) Main.NewText("Impending doom approaches...", Color.PaleGreen.R, Color.PaleGreen.G, Color.PaleGreen.B);
+                                else if (choice == 2) Main.NewText("You're not ready for this", Color.Red.R, Color.Red.G, Color.Red.B);
+                                else if (choice == 3) Main.NewText("Leave", Color.Red.R, Color.Red.G, Color.Red.B);
+                                else if (choice == 4) Main.PlaySound(4, (int)player.Center.X, (int)player.Center.Y, 62, 1f, 0f);
+                                else if (choice == 5) Main.PlaySound(4, (int)player.Center.X, (int)player.Center.Y, 59, 1f, 0f);
+                                else if (choice == 6) Main.PlaySound(4, (int)player.Center.X, (int)player.Center.Y, 51, 1f, 0f);
+                                else if (choice == 7) Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 0, 1f, 0f);
+                                else if (choice == 8) Main.PlaySound(15, (int)player.Center.X, (int)player.Center.Y, 2, 1f, 0f);
+                                else if (choice == 9) Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 105, 1f, 0f);
+                                else if (choice == 10) Main.PlaySound(29, (int)player.Center.X, (int)player.Center.Y, 104, 1f, 0f);
+                                else if (choice == 11)
+                                {
+                                    int guide = NPC.FindFirstNPC(NPCID.Guide);
+                                    if (guide >= 0 && Main.rand.Next(5) == 0)
                                     {
-                                        add1 = Main.rand.Next(750, 2000);
+                                        Main.NewText(Main.npc[guide].GivenName + "the Guide was slain...", Color.Red.R, Color.Red.G, Color.Red.B);
                                     }
-                                    if (choice == 1)
-                                    {
-                                        add1 = Main.rand.Next(-2000, -750);
-                                    }
-                                    Projectile.NewProjectile(player.Center.X + add1, player.Center.Y - 300, 0f, 6f, mod.ProjectileType("WaternadoBolt"), 90, 10f, player.whoAmI, ai0, 0.0f);
                                 }
                             }
-                            else if (!inTown)
+                            if (Main.rand.Next(1500) == 0)
                             {
-                                if (Main.rand.Next(3000) == 0)
+                                int add1 = 0;
+                                int choice = Main.rand.Next(2);
+                                if (choice == 0) add1 = Main.rand.Next(750, 2000);
+                                else if (choice == 1) add1 = Main.rand.Next(-2000, -750);
+
+                                int type = 0;
+                                int choice2 = Main.rand.Next(6);
+                                if (choice2 == 0) type = 524; // ghoul
+                                else if (choice2 == 1) type = 524; // ghoul
+                                else if (choice2 == 2) type = 258; // ladybug
+                                else if (choice2 == 3) type = 93; // giant bat
+                                else if (choice2 == 4) type = 78; // mummy
+                                else if (choice2 == 5) type = 34; // cursed skull
+                                NPC npc = Main.npc[NPC.NewNPC((int)player.Center.X + add1, (int)player.Center.Y - 800, type)];
+                                npc.color = new Color(66, 66, 66);
+                                npc.alpha = 200;
+                                npc.damage = 0;
+                                npc.lifeMax = 10;
+                                npc.life = 10;
+                                npc.DeathSound = SoundID.NPCDeath6;
+                            }
+                        }
+
+                        //HAILSTORM
+                        if (MyWorld.hailStormTime > 0 && !player.ZoneDesert)
+                        {
+                            if (!underground)
+                            {
+                                player.AddBuff(BuffID.WindPushed, 60);
+                                if (Main.rand.Next(5) == 0)
                                 {
-                                    float ai0 = Main.rand.NextFloat(1, 2);
-                                    int add1 = 0;
-                                    int choice = Main.rand.Next(2);
-                                    if (choice == 0)
-                                    {
-                                        add1 = Main.rand.Next(750, 2000);
-                                    }
-                                    if (choice == 1)
-                                    {
-                                        add1 = Main.rand.Next(-2000, -750);
-                                    }
-                                    Projectile.NewProjectile(player.Center.X + add1, player.Center.Y - 300, 0f, 6f, mod.ProjectileType("WaternadoBolt"), 90, 10f, player.whoAmI, ai0, 0.0f);
+                                    Vector2 speed = new Vector2(Main.windSpeed * 12f, 14f);
+                                    int damage = Main.expertMode ? 30 : 45;
+                                    Projectile.NewProjectile(player.Center.X + Main.rand.Next(-2000, 2000), player.Center.Y - 1000, speed.X * 8, speed.Y, mod.ProjectileType("HailPellet"), damage, 10f, player.whoAmI);
                                 }
                             }
                         }
                     }
-                    // void leviathan prompt
-                    if (MyWorld.downedVolcanox && !MyWorld.downedVoidLeviathan)
-                    {
-                        player.AddBuff(mod.BuffType("Psychosis"), 60);
-                    }
-
-                    //HAILSTORM
-                    if (MyWorld.hailStorm && !player.ZoneDesert)
-                    {
-                        MyWorld.hailStormTime--;
-
-                        if (MyWorld.hailStormTime <= 0)
-                        {
-                            MyWorld.hailStorm = false;
-                        }
-                        if (!underground)
-                        {
-                            player.AddBuff(BuffID.WindPushed, 60);
-
-                            if (Main.rand.Next(5) == 0)
-                            {
-                                Vector2 speed = new Vector2(Main.windSpeed * 12f, 14f);
-                                int damage = Main.expertMode ? 30 : 45;
-                                Projectile.NewProjectile(player.Center.X + Main.rand.Next(-2000, 2000), player.Center.Y - 1000, speed.X * 8, speed.Y, mod.ProjectileType("HailPellet"), damage, 10f, player.whoAmI);
-                            }
-                        }
-                    }
+                    #endregion
                 }
-                #endregion
             }
         }
-
+            private static bool HotTile(Tile t)
+            {
+                if (t.type == TileID.Campfire ||
+                    t.type == TileID.Fireplace) return true;
+                return false;
+            }
         public override void PostUpdateBuffs()
         {
             if (oiniteStatue)
@@ -1650,8 +1882,8 @@ namespace ElementsAwoken
             item.SetDefaults(mod.ItemType("ElementalCapsule"));
             items.Add(item);
             Item item2 = new Item();
-            item.SetDefaults(mod.ItemType("MysticGemstone"));
-            items.Add(item);
+            item2.SetDefaults(mod.ItemType("MysticGemstone"));
+            items.Add(item2);
         }
         public override void OnEnterWorld(Player player)
         {
@@ -1935,6 +2167,10 @@ namespace ElementsAwoken
             {
                 player.armorEffectDrawShadow = true;
             }
+            if (eaDashDelay < 0)
+            {
+                player.armorEffectDrawShadow = true;
+            }
         }
 
         public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -1970,7 +2206,12 @@ namespace ElementsAwoken
             }
             return true;
         }
-
+        /*public override void PreUpdate() // to fix broken players
+{
+    lunarStarsUsed = 0;
+    chaosHeartsUsed = 0;
+    voidHeartsUsed = 0;
+}*/
         public override void UpdateBadLifeRegen()
         {
             neovirtuoTimer--; // wtf is this doin ghere
@@ -1995,6 +2236,11 @@ namespace ElementsAwoken
                 player.lifeRegen -= 40;
             }
 
+            if (behemothGazeTimer > 600)
+            {
+                int amount = (int)MathHelper.Lerp(0, 80, (float)(leviathanDist - 3000) / 9000f);
+                player.lifeRegen -= amount;
+            }
             if (endlessTears)
             {
                 player.velocity *= 0.8f;
@@ -2095,19 +2341,13 @@ namespace ElementsAwoken
 
 
             //Point point = player.Center.ToTileCoordinates();
-            bool useblizzard = MyWorld.hailStorm && player.ZoneOverworldHeight && !player.ZoneDesert && !ActiveBoss();
+            bool useblizzard = MyWorld.hailStormTime > 0 && player.ZoneOverworldHeight && !player.ZoneDesert && !ActiveBoss() && !ModContent.GetInstance<Config>().lowDust;
             player.ManageSpecialBiomeVisuals("Blizzard", useblizzard, default(Vector2));
 
             // thanks misaro
-            bool useInfWrath = NPC.downedBoss3 && !MyWorld.downedInfernace && !ActiveBoss();
-            if (useInfWrath)
-            {
-                SkyManager.Instance.Activate("ElementsAwoken:InfernacesWrath", player.Center);
-            }
-            else
-            {
-                SkyManager.Instance.Deactivate("ElementsAwoken:InfernacesWrath");
-            }
+            bool useInfWrath = MyWorld.firePrompt > 108000 && !ActiveBoss();
+            if (useInfWrath)SkyManager.Instance.Activate("ElementsAwoken:InfernacesWrath", player.Center);
+            else SkyManager.Instance.Deactivate("ElementsAwoken:InfernacesWrath");
 
             NPC aqueous = null;
             for (int i = 0; i < Main.npc.Length; ++i)
@@ -2133,6 +2373,10 @@ namespace ElementsAwoken
                 {
                     SkyManager.Instance.Deactivate("ElementsAwoken:AqueousSky");
                 }
+            }
+            else
+            {
+                SkyManager.Instance.Deactivate("ElementsAwoken:AqueousSky");
             }
 
             /*bool useCelestial = NPC.AnyNPCs(mod.NPCType("TheCelestial"));
@@ -2462,14 +2706,8 @@ namespace ElementsAwoken
                 return false;
             }
 
-            if (spikeBoots)
-            {
-                if (damageSource.SourceOtherIndex == 3)
-                {
-                    return false;
-                }
-            }
-
+            if (spikeBoots && damageSource.SourceOtherIndex == 3 && damage <= 46) return false;
+            if (templeSpikeBoots && damageSource.SourceOtherIndex == 3) return false;
             if (aegisDashTimer > 0)
             {
                 damage = (int)(damage * 0.1f);

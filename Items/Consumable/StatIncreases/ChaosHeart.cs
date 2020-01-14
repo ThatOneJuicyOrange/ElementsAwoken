@@ -60,7 +60,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             recipe.AddIngredient(null, "VoidEssence", 15);
             recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);
-            recipe.AddRecipe();
+            if (ModLoader.GetMod("CalamityMod") == null) recipe.AddRecipe();
         }
     }
 }

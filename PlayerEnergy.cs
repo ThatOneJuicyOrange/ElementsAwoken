@@ -63,6 +63,8 @@ namespace ElementsAwoken
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
             ModPacket packet = mod.GetPacket();
+            packet.Write((byte)ElementsAwokenMessageType.EnergySync);
+            packet.Write((byte)player.whoAmI);
             packet.Write(energy);
             packet.Send(toWho, fromWho);
         }

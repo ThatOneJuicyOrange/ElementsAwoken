@@ -50,6 +50,8 @@ namespace ElementsAwoken
             potionsConsumedLastMin = 0;
             bossesKilledLastMin = 0;
             bossesKilledLastFiveMin = 0;
+            salesLastMin = 0;
+            buysLastMin = 0;
         }
         public override void PreUpdate()
         {
@@ -103,9 +105,15 @@ namespace ElementsAwoken
                     }
                 }
             }
-
             #endregion
 
+            if (placingAutoDriller > 0)
+            {
+                placingAutoDriller--;
+            }
+        }
+        public override void PostUpdateMiscEffects()
+        {
             for (int i = 0; i < potionConsumedCD.Length; i++)
             {
                 if (potionConsumedCD[i] > 0)
@@ -141,12 +149,6 @@ namespace ElementsAwoken
                     bossesKilledLastFiveMin++;
                     bossKilledCD[i]--;
                 }
-            }
-            //ElementsAwoken.DebugModeText(potionsConsumedLastMin); 
-
-            if (placingAutoDriller > 0)
-            {
-                placingAutoDriller--;
             }
         }
         private void QuickBuff()

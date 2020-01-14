@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         }
         public override bool UseItem(Player player)
         {
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Main.dayTime = !Main.dayTime;
                 Main.time = 0; //16220 for midnight 9000 for 10pm

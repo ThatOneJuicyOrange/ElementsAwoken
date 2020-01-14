@@ -66,7 +66,7 @@ namespace ElementsAwoken.Projectiles.Whips
             projectile.ai[0] += 1f;
             if (projectile.ai[0] < timeAlive)
             {
-                float distance = 25f;
+                float distance = 27f;
                 projectile.velocity += distance * vector17; // determines how far it goes
             }
             else

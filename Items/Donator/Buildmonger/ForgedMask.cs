@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Donator.Buildmonger
         }
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Double tap down to shackle yourself to the ground\nTap down again to fling yourself back to the center";
+            player.setBonus = "Double tap down to shackle yourself in place\nTap down again to fling yourself back to the center";
             player.GetModPlayer<MyPlayer>().forgedArmor = true;
         }
 

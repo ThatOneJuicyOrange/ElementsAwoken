@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Tech.Materials
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("CopperBar", 1);
+            recipe.AddRecipeGroup("ElementsAwoken:CopperBar", 1);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this, 5);
             recipe.AddRecipe();

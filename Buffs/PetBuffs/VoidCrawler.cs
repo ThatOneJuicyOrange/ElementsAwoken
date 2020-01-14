@@ -9,7 +9,7 @@ namespace ElementsAwoken.Buffs.PetBuffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Void Crawler");
-            Description.SetDefault("Dont get cut by the blades when it nuzzles you");
+            Description.SetDefault("Don't get cut by the blades when it nuzzles you");
             Main.buffNoTimeDisplay[Type] = true;
             Main.vanityPet[Type] = true;
         }

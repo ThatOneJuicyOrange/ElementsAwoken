@@ -15,9 +15,8 @@ namespace ElementsAwoken.Items.Donator.Lantard
             item.width = 24;
             item.height = 28;
 
-            item.rare = 11;
-            item.GetGlobalItem<EARarity>().rare = 13;
-            item.value = Item.sellPrice(0, 45, 0, 0);
+            item.rare = 2;
+            item.value = Item.sellPrice(0, 0, 20, 0);
 
             item.accessory = true;
 

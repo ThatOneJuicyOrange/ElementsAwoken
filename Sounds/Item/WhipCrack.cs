@@ -10,6 +10,8 @@ namespace ElementsAwoken.Sounds.Item
         {
             // By creating a new instance, this ModSound allows for overlapping sounds. Non-ModSound behavior is to restart the sound, only permitting 1 instance.
             soundInstance = sound.CreateInstance();
+            soundInstance.Volume = volume * 1f;
+            soundInstance.Pan = pan;
             return soundInstance;
         }
     }

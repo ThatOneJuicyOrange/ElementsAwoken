@@ -13,19 +13,24 @@ namespace ElementsAwoken.Items.Elements.Fire
 
         public override void SetDefaults()
         {
-            item.damage = 15;
-            item.ranged = true;
             item.width = 58;
             item.height = 22;
-            item.useTime = 17;
-            item.useAnimation = 17;
-            item.useStyle = 5;
-            item.noMelee = true; //so the item's animation doesn't do damage
+            
+            item.damage = 25;
             item.knockBack = 2.25f;
+
+            item.useTime = 13;
+            item.useAnimation = 13;
+            item.useStyle = 5;
+            item.UseSound = SoundID.Item5;
+
+            item.noMelee = true;
+            item.ranged = true;
+            item.autoReuse = true;
+
             item.value = Item.buyPrice(0, 7, 0, 0);
             item.rare = 4;
-            item.UseSound = SoundID.Item5;
-            item.autoReuse = true;
+
             item.shoot = 10;
             item.shootSpeed = 12f;
             item.useAmmo = 40;
@@ -37,7 +42,8 @@ namespace ElementsAwoken.Items.Elements.Fire
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ProjectileID.FireArrow, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
+            if (type == ProjectileID.WoodenArrowFriendly) type = ProjectileID.FireArrow;
+            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
             return false;
         }
         public override void AddRecipes()

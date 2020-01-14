@@ -27,6 +27,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             npc.width = 44;
             npc.height = 102;
 
+            npc.aiStyle = -1;
+
             npc.lifeMax = 10;
             npc.damage = 0;
             npc.defense = 0;
@@ -48,7 +50,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             npc.npcSlots = 1f;
 
             music = MusicID.LunarBoss;
-            //music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/InfernaceTheme");
+
+            bossBag = mod.ItemType("AncientsBag");
         }
         public override void SetStaticDefaults()
         {

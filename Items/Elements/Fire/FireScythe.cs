@@ -10,23 +10,39 @@ namespace ElementsAwoken.Items.Elements.Fire
     {
         public override void SetDefaults()
         {
-            item.CloneDefaults(ItemID.DeathSickle);
-            item.shootSpeed *= 1.1f;
+            item.width = 24;
+            item.height = 28;
+
+            item.damage = 28;
+            item.knockBack = 7f;
+
+            item.useStyle = 1;
+            item.useAnimation = 25;
+            item.useTime = 50;
+            item.UseSound = SoundID.Item1;
+
+            item.melee = true;
+            item.autoReuse = true;
+
+            item.shootSpeed = 8f;
             item.shoot = mod.ProjectileType("FireScytheProj");
-            item.damage = 34;
+
             item.value = Item.buyPrice(0, 7, 0, 0);
             item.rare = 4;
-            item.scale *= 0.9f;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Scythe of Eternal Flame");
         }
-
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 71);
+            return true;
+        }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
-                int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Fire);
+            int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Fire);
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
         {

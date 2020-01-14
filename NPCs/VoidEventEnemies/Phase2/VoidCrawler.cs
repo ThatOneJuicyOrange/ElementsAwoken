@@ -34,8 +34,8 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase2
             npc.HitSound = SoundID.NPCHit29;
 			npc.DeathSound = SoundID.NPCDeath31;
 
-            //banner = npc.type;
-            //bannerItem = mod.ItemType("PetalClasperBanner");
+            banner = npc.type;
+            bannerItem = mod.ItemType("VoidCrawlerBanner");
         }
         public override void SetStaticDefaults()
         {

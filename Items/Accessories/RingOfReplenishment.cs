@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.Accessories
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.LifeCrystal, 3);
-            recipe.AddRecipeGroup("GoldBar", 6);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 6);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

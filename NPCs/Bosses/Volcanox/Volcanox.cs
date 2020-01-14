@@ -126,11 +126,12 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Hearth"));
                 }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Pyroplasm"), Main.rand.Next(10, 60));
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VolcanicStone"), Main.rand.Next(10, 25));
             }
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Pyroplasm"), Main.rand.Next(10, 60));
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VolcanicStone"), Main.rand.Next(10, 25));
+
             // box
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int centerX = (int)npc.Center.X / 16;
                 int centerY = (int)npc.Center.Y / 16;
@@ -221,7 +222,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
             }
             Lighting.AddLight(npc.Center, 2f, 2f, 2f);
             npc.TargetClosest(true);
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int num728 = 6000;
                 if (Math.Abs(npc.Center.X - Main.player[npc.target].Center.X) + Math.Abs(npc.Center.Y - Main.player[npc.target].Center.Y) > (float)num728)
@@ -237,7 +238,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
             // Set the correct rotation for this NPC.
             npc.rotation = (float)Math.Atan2(npc.velocity.Y, npc.velocity.X) + 1.57f;
 
-            if (npc.localAI[0] == 0f && Main.netMode != 1)
+            if (npc.localAI[0] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.localAI[0] = 1f;
                 int hook = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("VolcanoxHook"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
@@ -405,7 +406,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 {
                     shootTimer += 1f;
                 }
-                if (Main.netMode != 1 && shootTimer > 80f) // firing
+                if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer > 80f) // firing
                 {
                     if (Collision.CanHit(npc.position, npc.width, npc.height, Main.player[npc.target].position, Main.player[npc.target].width, Main.player[npc.target].height))
                     {
@@ -431,7 +432,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 {
                     shootCooldown = 80f;
                 }
-                if (Main.netMode != 1 && burstTimer <= 0f && shootCooldown <= 30)
+                if (Main.netMode != NetmodeID.MultiplayerClient && burstTimer <= 0f && shootCooldown <= 30)
                 {
                     float projSpeed = 10f;
                     int damage = projectileBaseDamage - 20;
@@ -452,7 +453,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
 
                     burstTimer = 6f;
                 }
-                if (Main.netMode != 1 && npc.ai[2] >= 750 && npc.ai[2] <= 1000)
+                if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[2] >= 750 && npc.ai[2] <= 1000)
                 {
                     ringAttack--;
                     if (ringAttack <= 0)
@@ -494,7 +495,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 }
                 int tentacleType = mod.NPCType("VolcanoxTentacle");
                 int numTentacles = 10;
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (npc.localAI[0] == 1f)
                     {

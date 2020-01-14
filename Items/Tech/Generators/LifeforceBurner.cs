@@ -144,7 +144,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.LifeCrystal, 4);
             recipe.AddIngredient(ItemID.HellstoneBar, 10);
-            recipe.AddRecipeGroup("GoldBar", 6);
+            recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 6);
             recipe.AddIngredient(null, "GoldWire", 6);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

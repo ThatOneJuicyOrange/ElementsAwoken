@@ -64,8 +64,6 @@ namespace ElementsAwoken
             sanityRegens = new List<int>();
             sanityRegensName = new List<string>();
         }
-
-
         public override void PostUpdateMiscEffects()
         {
             nurseCooldown--;
@@ -74,6 +72,7 @@ namespace ElementsAwoken
                 sanity = sanityMax;
             }
             PlayerUtils playerUtils = player.GetModPlayer<PlayerUtils>();
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
 
             sanityMax = sanityIncreaser;
             craftWeaponCooldown--;
@@ -273,7 +272,7 @@ namespace ElementsAwoken
                 }
                 if (sanity < sanityMax * 0.1f)
                 {
-                    ElementsAwoken.screenshakeAmount = 2f;
+                    modPlayer.screenshakeAmount = 2f;
                     if (sanity != 0)
                     {
                         player.magicDamage *= 0.75f;
@@ -410,12 +409,12 @@ namespace ElementsAwoken
                 {
                     if (target.damage == 0 && NPCID.Sets.TownCritter[target.type])
                     {
-                        Main.NewText("reduced sanity");
+                        ElementsAwoken.DebugModeText("reduced sanity by 3");
                         sanity -= 3;
                     }
                     if (target.townNPC)
                     {
-                        Main.NewText("reduced sanity");
+                        ElementsAwoken.DebugModeText("reduced sanity by 15");
                         sanity -= 15;
                     }
                 }
@@ -429,12 +428,12 @@ namespace ElementsAwoken
                 {
                     if (target.damage == 0 && NPCID.Sets.TownCritter[target.type])
                     {
-                        Main.NewText("reduced sanity");
+                        ElementsAwoken.DebugModeText("reduced sanity by 3");
                         sanity -= 3;
                     }
                     if (target.townNPC)
                     {
-                        Main.NewText("reduced sanity");
+                        ElementsAwoken.DebugModeText("reduced sanity by 15");
                         sanity -= 15;
                     }
                 }
@@ -574,6 +573,8 @@ namespace ElementsAwoken
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
             ModPacket packet = mod.GetPacket();
+            packet.Write((byte)ElementsAwokenMessageType.AwakenedSync);
+            packet.Write((byte)player.whoAmI);
             packet.Write(sanity);
             packet.Send(toWho, fromWho);
         }
@@ -656,7 +657,7 @@ namespace ElementsAwoken
             {
                 // lavawet isnt set yet so check it manually
                 reduceSanityCD--; // takes 3 frames for vanilla to destroy the voodoo doll (idk why) so add a cooldown so it doesnt reduce it too much
-                if (item.type == ItemID.GuideVoodooDoll && Collision.LavaCollision(item.position, item.width, item.height) && Main.netMode != 1 && NPC.AnyNPCs(NPCID.Guide) && reduceSanityCD <= 0)
+                if (item.type == ItemID.GuideVoodooDoll && Collision.LavaCollision(item.position, item.width, item.height) && Main.netMode != NetmodeID.MultiplayerClient && NPC.AnyNPCs(NPCID.Guide) && reduceSanityCD <= 0)
                 {
                     reduceSanityCD = 5;
                     modPlayer.sanity -= 20;

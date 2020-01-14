@@ -33,6 +33,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             npc.width = 88;
             npc.height = 88;
 
+            npc.aiStyle = -1;
+
             npc.lifeMax = 250000;
             npc.damage = 150;
             npc.defense = 80;
@@ -147,6 +149,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
         public override void AI()
         {
+            npc.TargetClosest(true);
             Player P = Main.player[npc.target];
             Lighting.AddLight(npc.Center, 1.5f, 0f, 0.5f);
 
@@ -500,57 +503,56 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 }
             }
         }
-        private void MoveDirect(Player P, float moveSpeed)
+        private void Move(Player P, float speed, Vector2 target)
         {
-            Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget.Normalize();
-            npc.velocity = toTarget * moveSpeed;
-        }
+            Vector2 desiredVelocity = target - npc.Center;
+            if (Main.expertMode) speed *= 1.1f;
+            if (MyWorld.awakenedMode) speed *= 1.1f;
+            if (Vector2.Distance(P.Center, npc.Center) >= 2500) speed = 2;
 
-        private void Move(Player P, float speed, float playerX, float playerY)
-        {
-            int maxDist = 1500;
-            if (Vector2.Distance(P.Center, npc.Center) >= maxDist)
+            if (npc.velocity.X < desiredVelocity.X)
             {
-                float moveSpeed = 14f;
-                Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget.Normalize();
-                npc.velocity = toTarget * moveSpeed;
+                npc.velocity.X = npc.velocity.X + speed;
+                if (npc.velocity.X < 0f && desiredVelocity.X > 0f)
+                {
+                    npc.velocity.X = npc.velocity.X + speed;
+                }
             }
-            else
+            else if (npc.velocity.X > desiredVelocity.X)
             {
-                if (Main.expertMode)
+                npc.velocity.X = npc.velocity.X - speed;
+                if (npc.velocity.X > 0f && desiredVelocity.X < 0f)
                 {
-                    speed += 0.1f;
+                    npc.velocity.X = npc.velocity.X - speed;
                 }
-                if (npc.velocity.X < playerX)
-                {
-                    npc.velocity.X = npc.velocity.X + speed * 2;
-                }
-                else if (npc.velocity.X > playerX)
-                {
-                    npc.velocity.X = npc.velocity.X - speed * 2;
-                }
-                if (npc.velocity.Y < playerY)
+            }
+            if (npc.velocity.Y < desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y + speed;
+                if (npc.velocity.Y < 0f && desiredVelocity.Y > 0f)
                 {
                     npc.velocity.Y = npc.velocity.Y + speed;
-                    if (npc.velocity.Y < 0f && playerY > 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y + speed;
-                        return;
-                    }
+                    return;
                 }
-                else if (npc.velocity.Y > playerY)
+            }
+            else if (npc.velocity.Y > desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y - speed;
+                if (npc.velocity.Y > 0f && desiredVelocity.Y < 0f)
                 {
                     npc.velocity.Y = npc.velocity.Y - speed;
-                    if (npc.velocity.Y > 0f && playerY < 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y - speed;
-                        return;
-                    }
+                    return;
                 }
+            }
+            float slowSpeed = Main.expertMode ? 0.93f : 0.95f;
+            if (MyWorld.awakenedMode) slowSpeed = 0.92f;
+            int xSign = Math.Sign(desiredVelocity.X);
+            if ((npc.velocity.X < xSign && xSign == 1) || (npc.velocity.X > xSign && xSign == -1)) npc.velocity.X *= slowSpeed;
+
+            int ySign = Math.Sign(desiredVelocity.Y);
+            if (MathHelper.Distance(target.Y, npc.Center.Y) > 1000)
+            {
+                if ((npc.velocity.X < ySign && ySign == 1) || (npc.velocity.X > ySign && ySign == -1)) npc.velocity.Y *= slowSpeed;
             }
         }
     }

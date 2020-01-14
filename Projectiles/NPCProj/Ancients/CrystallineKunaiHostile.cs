@@ -52,10 +52,13 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients
             }
             projectile.velocity.Y += 0.09f;
 
-            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, GetDustID());
-            Main.dust[dust].noGravity = true;
-            Main.dust[dust].scale = 1f;
-            Main.dust[dust].velocity *= 0.1f;
+            if (!ModContent.GetInstance<Config>().lowDust && Main.rand.Next(3) == 0)
+            {
+                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, GetDustID());
+                Main.dust[dust].noGravity = true;
+                Main.dust[dust].scale = 1f;
+                Main.dust[dust].velocity *= 0.1f;
+            }
         }
         private int GetDustID()
         {

@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("CopperBar", 8);
+            recipe.AddRecipeGroup("ElementsAwoken:CopperBar", 8);
             recipe.AddRecipeGroup("IronBar", 5);
             recipe.AddIngredient(null, "CopperWire", 10);
             recipe.AddTile(TileID.Anvils);

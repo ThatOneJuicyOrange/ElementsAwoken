@@ -54,5 +54,9 @@ namespace ElementsAwoken.Projectiles
                 dust.noGravity = true;
             }
         }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.immune[projectile.owner] = 5;
+        }
     }
 }

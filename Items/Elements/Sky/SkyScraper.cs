@@ -10,27 +10,36 @@ namespace ElementsAwoken.Items.Elements.Sky
     public class SkyScraper : ModItem
     {
         public override void SetDefaults()
-        {       
-            item.damage = 32;
+        {
+            item.height = 60;
+            item.width = 60;
+            
+            item.damage = 38;
+            item.knockBack = 4.75f;
+            item.crit = 12;
+
             item.melee = true;
             item.noMelee = true;
             item.useTurn = true;
             item.noUseGraphic = true;
+            item.autoReuse = true;
+
             item.useAnimation = 12;
             item.useTime = 12;
             item.useStyle = 5;
-            item.knockBack = 4.75f;
             item.UseSound = SoundID.Item1;
-            item.autoReuse = false;
-            item.height = 60;
-            item.width = 60;
-            item.maxStack = 1;
+
             item.value = Item.buyPrice(0, 25, 0, 0);
             item.rare = 6;
+
             item.shoot = mod.ProjectileType("SkyScraperP");
             item.shootSpeed = 12f;
         }
-
+        public override bool CanUseItem(Player player)
+        {
+            // Ensures no more than one spear can be thrown out, use this when using autoReuse
+            return player.ownedProjectileCounts[item.shoot] < 1;
+        }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sky Scraper");

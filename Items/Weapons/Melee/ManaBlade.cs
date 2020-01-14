@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.ManaCrystal, 5);
-            recipe.AddRecipeGroup("SilverSword");
+            recipe.AddRecipeGroup("ElementsAwoken:SilverSword");
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

@@ -36,10 +36,10 @@ namespace ElementsAwoken.Projectiles.Arrows
         }
         public override void Kill(int timeLeft)
         {
-            int numberProjectiles = 2;
+            int numberProjectiles = Main.rand.Next(0,3);
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.NextFloat(-1.2f, 1.2f), Main.rand.NextFloat(-1.2f, 1.2f), mod.ProjectileType("ThickSmoke"), (int)(projectile.damage * 0.75f), 2f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.NextFloat(-1.2f, 1.2f), Main.rand.NextFloat(-1.2f, 1.2f), mod.ProjectileType("ThickSmoke"), (int)(projectile.damage * 0.5f), 2f, projectile.owner, 0f, 0f);
             }
         }
     }

@@ -35,22 +35,34 @@ namespace ElementsAwoken.Items.BossDrops.TheCelestial
         public override void OpenBossBag(Player player)
         {
             player.TryGettingDevArmor();
-            int choice = Main.rand.Next(3);
+            int choice = Main.rand.Next(4);
             if (choice == 0)
             {
                 player.QuickSpawnItem(mod.ItemType("CelestialInferno"));      
             }
             if (choice == 1)
             {
-                player.QuickSpawnItem(mod.ItemType("EyeOfTheCelestial"));
+                player.QuickSpawnItem(mod.ItemType("Celestia"));
             }
             if (choice == 2)
             {
                 player.QuickSpawnItem(mod.ItemType("EyeballStaff"));
             }
+            if (choice == 3)
+            {
+                player.QuickSpawnItem(mod.ItemType("Solus"));
+            }
             if (Main.rand.Next(10) == 0)
             {
                 player.QuickSpawnItem(mod.ItemType("TheCelestialTrophy"));
+            }
+            if (Main.rand.Next(10) == 0)
+            {
+                player.QuickSpawnItem(mod.ItemType("CelestialsMask"));
+            }
+            if (Main.rand.Next(10) == 0)
+            {
+                player.QuickSpawnItem(mod.ItemType("CelestialCrown"));
             }
             player.QuickSpawnItem(mod.ItemType("CelestialFlame"));
         }

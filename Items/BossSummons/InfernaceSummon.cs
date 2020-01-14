@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("InfernaceSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -39,7 +38,13 @@ namespace ElementsAwoken.Items.BossSummons
             player.ZoneUnderworldHeight && 
             !NPC.AnyNPCs(mod.NPCType("Infernace"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            Main.NewText("You dare challenge me?!", Color.Orange.R, Color.Orange.G, Color.Orange.B);
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Infernace"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

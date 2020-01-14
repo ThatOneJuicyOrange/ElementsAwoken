@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Chlorobyte");
-            Tooltip.SetDefault("Dont let it escape...");
+            Tooltip.SetDefault("Don't let it escape...");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(10, 13));
         }
         public override void UpdateInventory(Player player)

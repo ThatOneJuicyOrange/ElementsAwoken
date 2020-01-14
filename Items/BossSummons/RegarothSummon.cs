@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.BossSummons
             item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
-            item.shoot = mod.ProjectileType("RegarothSpawn");
         }
 
         public override void SetStaticDefaults()
@@ -38,7 +37,12 @@ namespace ElementsAwoken.Items.BossSummons
             player.ZoneSkyHeight &&
             !NPC.AnyNPCs(mod.NPCType("RegarothHead"));
         }
-
+        public override bool UseItem(Player player)
+        {
+            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("RegarothHead"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

@@ -11,6 +11,8 @@ namespace ElementsAwoken.Projectiles
 {
     public class ViridiumLightningPassive : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LightningSprite"; } }
+
         float timeTillStop = 200;
         public override void SetDefaults()
         {

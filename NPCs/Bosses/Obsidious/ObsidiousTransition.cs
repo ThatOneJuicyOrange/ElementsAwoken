@@ -19,6 +19,8 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
             npc.width = 48;
             npc.height = 48;
 
+            npc.aiStyle = -1;
+
             npc.lifeMax = 20;
             npc.knockBackResist = 0f;
 

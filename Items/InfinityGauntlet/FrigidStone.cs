@@ -21,7 +21,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frigid Stone");
-            Tooltip.SetDefault("While in your inventory:\nNearby enemies are frostburned\n5 increased critical stike chance\nYou cannot hold more than one infinity stone");
+            Tooltip.SetDefault("While in your inventory:\nNearby enemies are frostburned\n5 increased critical strike chance\nYou cannot hold more than one infinity stone");
         }
         public override void UpdateInventory(Player player)
         {

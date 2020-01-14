@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dubstep Beam");
+            DisplayName.SetDefault("Strange Ukulele");
         }
         public override bool? CanHitNPC(NPC target)
         {

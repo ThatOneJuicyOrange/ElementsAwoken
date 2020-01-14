@@ -69,7 +69,7 @@ namespace ElementsAwoken.NPCs.VoidEventEnemies.Phase1
             {
                 casting = false;
             }
-            if (Main.netMode != 1 && shootTimer == 0f)
+            if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer == 0f)
             {
                 float Speed = 8f;
                 Vector2 vector8 = new Vector2(npc.position.X + (npc.width / 2), npc.position.Y + (npc.height / 2));

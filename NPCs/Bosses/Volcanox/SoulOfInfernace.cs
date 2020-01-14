@@ -185,7 +185,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
             MoveDirect(P, 3f);
             if (npc.ai[1] < 700f)
             {
-                if (Main.netMode != 1 && shootTimer1 == 0f)
+                if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer1 == 0f)
                 {
                     Spike(P, 12f, projectileBaseDamage);
                     shootTimer1 = 100f;
@@ -267,7 +267,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                     Teleport(Main.player[npc.target].position.X, Main.player[npc.target].position.Y - 250);
                 }
                 // waves
-                if (Main.netMode != 1)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     npc.velocity *= 0;
                     if (shootTimer2 == 0f)

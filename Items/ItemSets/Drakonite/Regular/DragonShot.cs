@@ -16,7 +16,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
             item.width = 30;
             item.height = 44;
 
-            item.damage = 13;
+            item.damage = 11;
             item.knockBack = 2f;
 
             item.useTime = 20;
@@ -26,13 +26,13 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
 
             item.ranged = true;
             item.noMelee = true;
-            item.autoReuse = true;
+            item.autoReuse = false;
 
             item.value = Item.sellPrice(0, 0, 20, 0);
             item.rare = 1;
 
             item.shoot = 10;
-            item.shootSpeed = 8f;
+            item.shootSpeed = 9f;
             item.useAmmo = 40;
         }
 
@@ -54,10 +54,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            if (type == ProjectileID.WoodenArrowFriendly)
-            {
-                type = mod.ProjectileType("DrakoniteArrow");
-            }
+            if (type == ProjectileID.WoodenArrowFriendly)type = mod.ProjectileType("DrakoniteArrow");
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
             return false;
         }

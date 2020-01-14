@@ -80,19 +80,21 @@ namespace ElementsAwoken.Projectiles
                 {
                     Vector2 speed = vector16.RotatedByRandom(MathHelper.ToRadians(20));
                     Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DubstepWave"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);                  
-                    shootTimer1 = 10;
+                    shootTimer1 = 6;
                 }
                 if (shootTimer2 <= 0)
                 {
                     Vector2 speed = vector16.RotatedByRandom(MathHelper.ToRadians(50));
-                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DubstepBeam"), projectile.damage / 2, projectile.knockBack, projectile.owner, 0f, 0f);
-                    shootTimer2 = 25;
+                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DubstepBeam"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
+                    shootTimer2 = 14;
+                    PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
+                    modPlayer.energy -= 3;
                 }
                 if (shootTimer3 <= 0)
                 {
                     Vector2 speed = vector16;
-                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DubstepPulse"), (int)(projectile.damage * 0.75), 20f, projectile.owner, 0f, 0f);
-                    shootTimer3 = 90;
+                    Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DubstepPulse"), (int)(projectile.damage * 1.75), 20f, projectile.owner, 0f, 0f);
+                    shootTimer3 = 60;
                 }
                 if (!player.channel)
                 {

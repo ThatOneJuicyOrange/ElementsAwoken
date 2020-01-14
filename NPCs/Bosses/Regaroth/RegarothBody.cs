@@ -43,6 +43,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
             npc.buffImmune[BuffID.Frozen] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
 
         }
         public override void SetStaticDefaults()
@@ -80,7 +81,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                 npc.TargetClosest(true);
             if (Main.player[npc.target].dead)
                 npc.timeLeft = 50;
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (!Main.npc[(int)npc.ai[1]].active)
                 {
@@ -101,7 +102,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
             {
                 npc.ai[2] = 0f;
             }
-            if (Main.netMode != 1)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 float rotation = (float)Math.Atan2(npc.Center.Y - (P.position.Y + (P.height * 0.5f)), npc.Center.X - (P.position.X + (P.width * 0.5f)));
                 if (npc.ai[2] >= 750)

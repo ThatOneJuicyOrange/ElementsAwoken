@@ -58,7 +58,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             recipe.AddIngredient(null, "VoidEssence", 2);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
-            recipe.AddRecipe();
+            if (ModLoader.GetMod("CalamityMod") == null) recipe.AddRecipe();
         }
     }
 }

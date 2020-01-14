@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Weapons.Summon
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Lens, 6);
             recipe.AddRecipeGroup("IronBar", 8);
-            recipe.AddRecipeGroup("SilverSword");
+            recipe.AddRecipeGroup("ElementsAwoken:SilverSword");
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

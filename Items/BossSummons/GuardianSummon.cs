@@ -31,7 +31,13 @@ namespace ElementsAwoken.Items.BossSummons
             Tooltip.SetDefault("It is covered in dust\nNot consumable\nUse at night\nSummons The Guardian on use");
         }
 
-
+        public override bool UseItem(Player player)
+        {
+            Vector2 spawnAt = player.Center + new Vector2(0f + 200, (float)player.height / 2f);
+            NPC.NewNPC((int)spawnAt.X, (int)spawnAt.Y, mod.NPCType("TheGuardian"));
+            Main.PlaySound(SoundID.Roar, player.position, 0);
+            return true;
+        }
         public override bool CanUseItem(Player player)
         {
             return
