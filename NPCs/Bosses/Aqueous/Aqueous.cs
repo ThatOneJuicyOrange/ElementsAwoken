@@ -141,6 +141,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("WaterEssence"), Main.rand.Next(5, 25));
             Main.windSpeed = 0.5f; // reset wind
             MyWorld.downedAqueous = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -493,7 +494,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
         {
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
             float rotation = (float)Math.Atan2(staffCenter.Y - P.Center.Y, staffCenter.X - P.Center.X);
-            Projectile.NewProjectile(staffCenter.X, staffCenter.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("AquaticBolt"), damage, 0f, 0);
+            Projectile.NewProjectile(staffCenter.X, staffCenter.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("AquaticBolt"), damage, 0f, Main.myPlayer);
         }
 
         private void WaterKnives(Player P, float speed, int damage, int numberProjectiles)
@@ -533,7 +534,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
             {
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                 float rotation = (float)Math.Atan2(npc.Center.Y - shootTarget.Y, npc.Center.X - shootTarget.X);
-                int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, 0);
+                int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, Main.myPlayer);
                 spinAI[1] = enraged ? 2 : 4;
             }
         }

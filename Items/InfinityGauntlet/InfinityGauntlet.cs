@@ -283,7 +283,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            string baseTooltip = "The forces of the elements combined...\nHas the effects of all the infinity stones\nRight click to switch modes\n";
+            string baseTooltip = "The forces of the elements combined...\nHas the effects of all the infinity stones\nRight Click to switch modes\n";
 
             string text = "";
             switch (gauntletMode)

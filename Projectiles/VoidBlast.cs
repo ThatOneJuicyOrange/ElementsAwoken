@@ -9,7 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class VoidBlast : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 10;

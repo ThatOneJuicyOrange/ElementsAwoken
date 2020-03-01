@@ -19,7 +19,7 @@ namespace ElementsAwoken.Items.Elements.Void
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Helmet");
+            DisplayName.SetDefault("Gloomhandler Helmet");
             Tooltip.SetDefault("Immune to cursed inferno, fire, chilled and cursed debuffs\n+2 max minions\n5% reduced damage");
         }
 

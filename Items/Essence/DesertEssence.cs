@@ -13,7 +13,7 @@ namespace ElementsAwoken.Items.Essence
             item.width = 20;
             item.height = 20;
             item.maxStack = 999;
-            item.value = 50;
+            item.value = Item.sellPrice(0, 0, 0, 50);
             item.rare = 3;
             ItemID.Sets.ItemNoGravity[item.type] = true;
         }

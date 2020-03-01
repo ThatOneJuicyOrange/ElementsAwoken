@@ -37,5 +37,13 @@ namespace ElementsAwoken.Items.VoidEventItems
         {
             DisplayName.SetDefault("Crimson Shade");
         }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "ShadeScale", 12);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
     }
 }

@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Elements.Elemental
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dusksong");
-            Tooltip.SetDefault("Turns normal arrows into 3 elemental arrows");
+            Tooltip.SetDefault("Turns normal arrows into 2 elemental arrows accompanied by two elemental bolts");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

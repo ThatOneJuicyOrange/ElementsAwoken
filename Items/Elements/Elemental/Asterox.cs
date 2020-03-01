@@ -36,10 +36,13 @@ namespace ElementsAwoken.Items.Elements.Elemental
             player.armorPenetration += 5;
             player.lifeRegen += 3;
             player.moveSpeed *= 1.2f;
-            player.panic = true;
-            if(player.ownedProjectileCounts[mod.ProjectileType("AsteroxShieldBase")] < 1)
+            player.panic = true; 
+            if (player.whoAmI == Main.myPlayer)
             {
-                Projectile.NewProjectile(player.position.X, player.position.Y, 0f, 0f, mod.ProjectileType("AsteroxShieldBase"), 50, 10f, player.whoAmI, 0.0f, 0.0f);
+                if (player.ownedProjectileCounts[mod.ProjectileType("AsteroxShieldBase")] < 1)
+                {
+                    Projectile.NewProjectile(player.position.X, player.position.Y, 0f, 0f, mod.ProjectileType("AsteroxShieldBase"), 50, 10f, player.whoAmI, 0.0f, 0.0f);
+                }
             }
         }
         public override void AddRecipes()

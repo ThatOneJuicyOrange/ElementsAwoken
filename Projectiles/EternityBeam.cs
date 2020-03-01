@@ -9,7 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class EternityBeam : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 4;
@@ -37,20 +37,18 @@ namespace ElementsAwoken.Projectiles
                 projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
-                for (int num447 = 0; num447 < 4; num447++)
-                {
-                    if (Main.rand.Next(2) == 0)
-                    {
-                        Vector2 vector33 = projectile.position;
-                        vector33 -= projectile.velocity * ((float)num447 * 0.25f);
-                        projectile.alpha = 255;
-                        int num448 = Dust.NewDust(vector33, 1, 1, 58, 0f, 0f, 0, default(Color), 0.75f);
-                        Main.dust[num448].position = vector33;
-                        Main.dust[num448].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-                        Main.dust[num448].velocity *= 0.05f;
-                    }
-                }
-                return;
+            for (int num447 = 0; num447 < 4; num447++)
+            {
+
+                Vector2 vector33 = projectile.position;
+                vector33 -= projectile.velocity * ((float)num447 * 0.25f);
+                projectile.alpha = 255;
+                int num448 = Dust.NewDust(vector33, 1, 1, 58, 0f, 0f, 0, default(Color), 0.75f);
+                Main.dust[num448].position = vector33;
+                Main.dust[num448].scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                Main.dust[num448].velocity *= 0.05f;
+            }
+            return;
         }
     }
 }

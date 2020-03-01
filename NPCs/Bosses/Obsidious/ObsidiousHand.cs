@@ -127,7 +127,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
             if (npc.localAI[0] == 0)
             {
                 // bad way to do this probably :lul:
-                Projectile.NewProjectile(npc.position.X, npc.position.Y, 0, 0, mod.ProjectileType("ObsidiousHandOverlay"), 0, 0, 0, 0, npc.whoAmI);
+                Projectile.NewProjectile(npc.position.X, npc.position.Y, 0, 0, mod.ProjectileType("ObsidiousHandOverlay"), 0, 0, Main.myPlayer, 0, npc.whoAmI);
                 npc.alpha = 255; // so u cant see the weird ass offset :shruggy:
                 npc.localAI[0]++;
                 npc.netUpdate = true;
@@ -143,7 +143,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                 for (int l = 0; l < orbitalCount; l++)
                 {
                     int distance = 360 / orbitalCount;
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousRockOrbital"), npc.damage, 0f, 0, l * distance, npc.whoAmI);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousRockOrbital"), npc.damage, 0f, Main.myPlayer, l * distance, npc.whoAmI);
                 }
                 npc.localAI[1]++;
                 npc.netUpdate = true;

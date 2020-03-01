@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ninja Katana");
-            Tooltip.SetDefault("Right click to dash");
+            Tooltip.SetDefault("Right Click to dash");
         }
 
         public override bool AltFunctionUse(Player player)

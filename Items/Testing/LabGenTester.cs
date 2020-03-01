@@ -51,10 +51,25 @@ namespace ElementsAwoken.Items.Testing
 
             if (TileCheckSafe(structX, structY))
             {
-                bool mirrored = false;
+                /*bool mirrored = false;
                 if (Main.rand.Next(2) == 0)
                     mirrored = true;
-                AncientsLab.Generate(structX, structY, mirrored);
+                AncientsLab.Generate(structX, structY, mirrored);*/
+
+                Dictionary<Color, int> colorToTile = new Dictionary<Color, int>();
+                colorToTile[new Color(151, 171, 198)] = TileID.PlatinumBrick;
+                colorToTile[new Color(255, 128, 0)] = TileID.MarbleBlock;
+                colorToTile[new Color(150, 150, 150)] = -2; // air
+                colorToTile[Color.Black] = -1;
+
+                Dictionary<Color, int> colorToWall = new Dictionary<Color, int>();
+                colorToWall[new Color(48, 116, 193)] = WallID.MartianConduit;
+                colorToWall[new Color(116, 178, 26)] = WallID.LunarBrickWall;
+                colorToWall[new Color(190, 232, 229)] = WallID.PlatinumBrick;
+                colorToWall[Color.Black] = -1;
+
+                TexGen gen = TexToGen.GetTexGenerator(mod.GetTexture("Structures/AzanaLab"), colorToTile, mod.GetTexture("Structures/AzanaLabWalls"), colorToWall);
+                gen.Generate(structX, structY, true, true);
             }
         }
         private static bool TileCheckSafe(int i, int j)

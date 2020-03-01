@@ -8,10 +8,27 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
 {
     public class GuardianProbe : ModNPC
     {
-        public float vectorX = 0f;
-        public float vectorY = 0f;
-        public int changeLocationTimer = 0;
-        float speed = 0.1f;
+        public float speed = 0.1f;
+        private float changeLocTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float vectorX
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float vectorY
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float shootTimer
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
         public override void SetDefaults()
         {
             npc.width = 46;
@@ -77,8 +94,8 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 npc.spriteDirection = 1;
                 npc.rotation = direction.ToRotation() - 3.14f;
             }
-            npc.ai[1]--;
-            if (npc.ai[1] == 0)
+            changeLocTimer--;
+            if (changeLocTimer == 0)
             {
                 int minDist = 150;
                 vectorX = Main.rand.Next(-500, 500);
@@ -99,8 +116,28 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 {
                     vectorY = -minDist;
                 }
-                npc.ai[1] = 200;
+                changeLocTimer = 200;
                 speed = Main.rand.NextFloat(0.05f, 0.1f);
+            }
+            if (shootTimer <= 0)
+            {
+                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
+
+                float Speed = 12f;
+                float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), 60, 0f, Main.myPlayer);
+                shootTimer = Main.rand.Next(150, 300);
+                npc.netUpdate = true;
+            }
+            if (!NPC.AnyNPCs(mod.NPCType("TheGuardianFly"))) npc.active = false;
+
+            int dustLength = ModContent.GetInstance<Config>().lowDust ? 1 : 3;
+            for (int i = 0; i < dustLength; i++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(npc.Center - Vector2.One * 2, 4, 4, 6)];
+                dust.velocity = Vector2.Zero;
+                dust.position -= npc.velocity / dustLength * (float)i;
+                dust.noGravity = true;
             }
             // movement
             npc.TargetClosest(true);
@@ -133,26 +170,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                     npc.velocity.Y = npc.velocity.Y - speed;
                     return;
                 }
-            }
-            if (Main.rand.Next(200) == 0)
-            {
-                float Speed = 12f;
-                int damage = 60;
-                float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), damage, 0f, 0, npc.ai[2]);
-            }
-            if (Main.player[npc.target].dead || !NPC.AnyNPCs(mod.NPCType("TheGuardianFly")))
-            {
-                npc.active = false;
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                Dust dust = Main.dust[Dust.NewDust(npc.Center, 4, 4, 6)];
-                dust.velocity = Vector2.Zero;
-                dust.position -= npc.velocity / 6f * (float)i;
-                dust.noGravity = true;
             }
         }      
     }

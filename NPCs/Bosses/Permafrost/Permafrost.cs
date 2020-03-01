@@ -147,12 +147,12 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostEssence"), Main.rand.Next(5, 25));
             if (!MyWorld.downedPermafrost)
             {
-                MyWorld.encounter2 = true;
-                MyWorld.encounterTimer = 3600;
+                ElementsAwoken.encounter = 2;
+                ElementsAwoken.encounterTimer = 3600;
                 ElementsAwoken.DebugModeText("encounter 2 start");
             }
             MyWorld.downedPermafrost = true;
-
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -228,8 +228,8 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
             if (portalTimer <= 0)
             {
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 33);
-                Projectile.NewProjectile(npc.Center.X + 200, npc.Center.Y, 8, 0, mod.ProjectileType("PermafrostPortal"), 0, 0f, 0);
-                Projectile.NewProjectile(npc.Center.X - 200, npc.Center.Y, -8, 0, mod.ProjectileType("PermafrostPortal"), 0, 0f, 0);
+                Projectile.NewProjectile(npc.Center.X + 200, npc.Center.Y, 8, 0, mod.ProjectileType("PermafrostPortal"), 0, 0f, Main.myPlayer);
+                Projectile.NewProjectile(npc.Center.X - 200, npc.Center.Y, -8, 0, mod.ProjectileType("PermafrostPortal"), 0, 0f, Main.myPlayer);
 
                 portalTimer = enraged ? 200 : 600;
             }
@@ -364,7 +364,7 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
                         float projOffset = 360 / numProj;
                         Vector2 shootTarget = npc.Center + offset.RotatedBy(spinAI + (projOffset * i) * (Math.PI * 2 / 8));
                         float rotation = (float)Math.Atan2(npc.Center.Y - shootTarget.Y, npc.Center.X - shootTarget.X);
-                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("PermafrostLaser"), damage, 0f, 0);
+                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("PermafrostLaser"), damage, 0f, Main.myPlayer);
                         Main.projectile[proj].timeLeft = (int)(npc.ai[1] - 1350);
                     }
                     shootTimer = enraged ? 1 : 3;
@@ -440,7 +440,7 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
             for (int i = 0; i < numberProj; i++)
             {
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(angle));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("PermafrostBolt"), damage, 0f, 0);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("PermafrostBolt"), damage, 0f, Main.myPlayer);
             }
         }
         public override bool CheckActive()

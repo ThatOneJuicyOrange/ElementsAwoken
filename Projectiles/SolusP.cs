@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class SolusP : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public float aiTimer = 0f;
         public Vector2 initialMouse = new Vector2(0,0);
         public int initialDir = 1;

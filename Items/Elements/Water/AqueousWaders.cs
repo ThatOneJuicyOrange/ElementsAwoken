@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Elements.Water
         {
             item.width = 36;
             item.height = 32;
-            item.value = Item.buyPrice(0, 75, 0, 0);
+            item.value = Item.sellPrice(0, 20, 0, 0);
             item.rare = 8;
             item.accessory = true;
         }

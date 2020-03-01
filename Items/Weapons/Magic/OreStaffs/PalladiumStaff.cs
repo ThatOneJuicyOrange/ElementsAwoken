@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.OreStaffs
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Palladium Sparkler");
-            Tooltip.SetDefault("Fires out sparks");
+            Tooltip.SetDefault("Shoots burning sparks");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

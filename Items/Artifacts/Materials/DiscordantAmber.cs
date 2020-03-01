@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.Artifacts.Materials
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Amber");
+            DisplayName.SetDefault("Unstable Amber");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
         }
     }

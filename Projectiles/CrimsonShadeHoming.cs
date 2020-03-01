@@ -10,6 +10,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class CrimsonShadeHoming : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 4;
@@ -31,7 +32,45 @@ namespace ElementsAwoken.Projectiles
             Main.dust[dust].velocity *= 0.5f;
             Main.dust[dust].velocity += projectile.velocity * 0.1f;
 
-            ProjectileGlobal.Home(projectile, 7f);
+            // to minimise the loops required and cause lag
+            if (projectile.ai[0] == 0)
+            {
+                float num = 400f;
+                for (int i = 0; i < 200; i++)
+                {
+                    if (Main.npc[i].CanBeChasedBy(projectile, false) && Collision.CanHit(projectile.Center, 1, 1, Main.npc[i].Center, 1, 1))
+                    {
+                        float num1 = Main.npc[i].position.X + (float)(Main.npc[i].width / 2);
+                        float num2 = Main.npc[i].position.Y + (float)(Main.npc[i].height / 2);
+                        float num3 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num1) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num2);
+                        if (num3 < num)
+                        {
+                            num = num3;
+                            projectile.ai[0] = Main.npc[i].whoAmI;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                NPC target = Main.npc[(int)projectile.ai[0]];
+                if (target.active)
+                {
+                    float speed = 7f;
+                    float num4 = target.Center.X - projectile.Center.X;
+                    float num5 = target.Center.Y - projectile.Center.Y;
+                    float num6 = (float)Math.Sqrt((double)(num4 * num4 + num5 * num5));
+                    num6 = speed / num6;
+                    num4 *= num6;
+                    num5 *= num6;
+                    projectile.velocity.X = (projectile.velocity.X * 20f + num4) / 21f;
+                    projectile.velocity.Y = (projectile.velocity.Y * 20f + num5) / 21f;
+                }
+                else
+                {
+                    projectile.ai[0] = 0;
+                }
+            }
         }
     }
 }

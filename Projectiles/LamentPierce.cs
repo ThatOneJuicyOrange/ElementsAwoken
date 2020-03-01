@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class LamentPierce : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 14;

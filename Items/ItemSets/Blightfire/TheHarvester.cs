@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Harvester");
-            Tooltip.SetDefault("Throws a life stealing scythe");
+            Tooltip.SetDefault("Throws a life-stealing scythe");
         }
 
         public override void MeleeEffects(Player player, Rectangle hitbox)

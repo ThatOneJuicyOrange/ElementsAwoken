@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.CosmicObserver
 
             projectile.timeLeft = 600;
 
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
@@ -33,12 +33,15 @@ namespace ElementsAwoken.Projectiles.NPCProj.CosmicObserver
         public override void AI()
         {
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            for (int i = 0; i < 2; i++)
+            int dustLength = ModContent.GetInstance<Config>().lowDust ? 1 : 2;
+            int dustWidth = 4;
+            for (int i = 0; i < dustLength; i++)
             {
-                Dust dust = Main.dust[Dust.NewDust(projectile.Center, 4, 4, 220)];
+                Dust dust = Main.dust[Dust.NewDust(projectile.Center - Vector2.One * (dustWidth/2), 4, 4, 220)];
                 dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f * (float)i;
+                dust.position -= projectile.velocity / dustLength * (float)i;
                 dust.noGravity = true;
+                if (ModContent.GetInstance<Config>().lowDust) dust.scale = 0.5f;
             }
         }
 

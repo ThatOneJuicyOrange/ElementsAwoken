@@ -15,7 +15,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
 
 			npc.damage = 50;
 			npc.defense = 30;
-			npc.lifeMax = 500;
+			npc.lifeMax = 900;
             npc.knockBackResist = 0.50f;
             npc.aiStyle = 3;
 
@@ -38,21 +38,18 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
             Main.npcFrameCount[npc.type] = Main.npcFrameCount[NPCID.PossessedArmor];
         }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
-		{
-            int x = spawnInfo.spawnTileX;
-            int y = spawnInfo.spawnTileY;
-            int tile = (int)Main.tile[x, y].type;
-            bool oUnderworld = (y <= (Main.maxTilesY * 0.6f));
-            bool oRockLayer = (y >= (Main.maxTilesY * 0.4f));
-            return oUnderworld && oRockLayer && Main.evilTiles < 80 && Main.sandTiles < 80 && Main.dungeonTiles < 80 && Main.hardMode && NPC.downedPlantBoss ? 0.06f : 0f;
+        {
+            bool underworld = (spawnInfo.spawnTileY >= (Main.maxTilesY - 200));
+            bool rockLayer = (spawnInfo.spawnTileY >= (Main.maxTilesY * 0.4f));
+            return !underworld && rockLayer && !spawnInfo.player.ZoneCrimson && !spawnInfo.player.ZoneCorrupt && !spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneDungeon && NPC.downedPlantBoss ? 0.06f : 0f;
         }
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
             player.AddBuff(mod.BuffType("Dragonfire"), 100, true);
         }
         public override void NPCLoot()
-		{
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RefinedDrakonite"), Main.rand.Next(3, 6)); //Item spawn
-        }		 
+        {
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("RefinedDrakonite"), Main.rand.Next(1, 2));
+        }
 	}
 }

@@ -32,24 +32,36 @@ namespace ElementsAwoken.Projectiles.Arrows
         public override void AI()
         {
             Lighting.AddLight(projectile.Center, 0.6f, 0.1f, 0.3f);
-            float max = 400f;
-            if (Main.rand.Next(30) == 0)
+
+            int numChaosArrows = 0;
+            for (int i = 0; i < Main.projectile.Length; i++)
             {
-                for (int i = 0; i < Main.npc.Length; i++)
+                if (Main.projectile[i].active && Main.projectile[i].type == mod.ProjectileType("DiscordantArrowChaos")) numChaosArrows++;
+            }
+            Main.NewText(numChaosArrows);
+            if (numChaosArrows < 100)
+            {
+                if (Main.rand.Next(30) == 0)
                 {
-                    NPC nPC = Main.npc[i];
-                    if (nPC.active && !nPC.dontTakeDamage && Vector2.Distance(projectile.Center, nPC.Center) <= max)
+                    float max = 400f;
+                    NPC npc = null;
+                    for (int i = 0; i < Main.npc.Length; i++)
+                    {
+                        NPC test = Main.npc[i];
+                        if (test.active && !test.dontTakeDamage && Vector2.Distance(projectile.Center, test.Center) <= max)
+                        {
+                            npc = test;
+                        }
+                    }
+                    if (npc != null)
                     {
                         float Speed = 9f;
-                        float rotation = (float)Math.Atan2(projectile.Center.Y - nPC.Center.Y, projectile.Center.X - nPC.Center.X);
+                        float rotation = (float)Math.Atan2(projectile.Center.Y - npc.Center.Y, projectile.Center.X - npc.Center.X);
 
                         Vector2 speed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
                         Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, mod.ProjectileType("DiscordantArrowChaos"), projectile.damage, projectile.knockBack, projectile.owner);
                     }
-                    else
-                    {
-                        Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X * 0.9f, projectile.velocity.Y * 0.9f, mod.ProjectileType("DiscordantArrowChaos"), (int)(projectile.damage * 1.5f), projectile.knockBack, projectile.owner);
-                    }
+                    else Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, projectile.velocity.X * 0.9f, projectile.velocity.Y * 0.9f, mod.ProjectileType("DiscordantArrowChaos"), (int)(projectile.damage * 1.5f), projectile.knockBack, projectile.owner);
                 }
             }
         }

@@ -8,7 +8,8 @@ using Terraria.ModLoader;
 namespace ElementsAwoken.Projectiles
 {
 	public class StrangePlantBall4 : ModProjectile
-	{
+    {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         int spawnProj = 10;
 		public override void SetDefaults()
 		{

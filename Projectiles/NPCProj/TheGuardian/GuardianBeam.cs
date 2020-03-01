@@ -35,10 +35,11 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheGuardian
                 projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
-            for (int i = 0; i < 2; i++)
+            int numDust = 2;
+            for (int i = 0; i < numDust; i++)
             {
                 Vector2 vector33 = projectile.position;
-                vector33 -= projectile.velocity * ((float)i * 0.25f);
+                vector33 -= projectile.velocity * ((float)i / numDust);
                 projectile.alpha = 255;
                 int dust = Dust.NewDust(vector33, 1, 1, 6, 0f, 0f, 0, default(Color), 0.75f);
                 Main.dust[dust].position = vector33;

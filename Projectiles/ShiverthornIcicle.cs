@@ -11,14 +11,11 @@ namespace ElementsAwoken.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 34;
-            projectile.friendly = true;
+            projectile.width = 14;
+            projectile.height = 14;
             projectile.penetrate = 2;
-            projectile.hostile = false;
-            projectile.melee = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            projectile.magic = true;
+            projectile.friendly = true;
         }
         public override void SetStaticDefaults()
         {
@@ -26,12 +23,13 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            //this is projectile dust
+            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+
             int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 135);
             Main.dust[dust].noGravity = true;
             Main.dust[dust].scale = 0.8f;
             Main.dust[dust].velocity *= 0.1f;
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+
             projectile.localAI[0] += 1f;
             projectile.alpha = (int)projectile.localAI[0] * 2;
 

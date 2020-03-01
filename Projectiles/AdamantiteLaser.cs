@@ -9,14 +9,16 @@ namespace ElementsAwoken.Projectiles
 {
     public class AdamantiteLaser : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
 
         public override void SetDefaults()
         {
             projectile.width = 4;
             projectile.height = 4;
-            //projectile.aiStyle = 48;
+
             projectile.friendly = true;
             projectile.magic = true;
+
             projectile.penetrate = 1;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 100;
@@ -38,21 +40,19 @@ namespace ElementsAwoken.Projectiles
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
             projectile.localAI[0] += 1f;
-            if (projectile.localAI[0] > 9f)
+            if (projectile.localAI[0] > 5f)
             {
-                for (int num447 = 0; num447 < 4; num447++)
+                int numDust = 3;
+                for (int i = 0; i < numDust; i++)
                 {
-                    if (Main.rand.Next(2) == 0)
-                    {
-                        Vector2 vector33 = projectile.position;
-                        vector33 -= projectile.velocity * ((float)num447 * 0.25f);
-                        projectile.alpha = 255;
-                        int dust = Dust.NewDust(vector33, 1, 1, 60, 0f, 0f, 0, default(Color), 1f);
-                        Main.dust[dust].position = vector33;
-                        Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.01f;
-                        Main.dust[dust].velocity *= 0.05f;
-                        Main.dust[dust].noGravity = true;
-                    }
+                    Vector2 vector33 = projectile.position;
+                    vector33 -= projectile.velocity * ((float)i / numDust);
+                    projectile.alpha = 255;
+                    int dust = Dust.NewDust(vector33, 1, 1, 60, 0f, 0f, 0, default(Color), 1f);
+                    Main.dust[dust].position = vector33;
+                    Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.01f;
+                    Main.dust[dust].velocity *= 0.05f;
+                    Main.dust[dust].noGravity = true;
                 }
                 return;
             }

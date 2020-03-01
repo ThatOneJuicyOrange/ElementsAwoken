@@ -20,6 +20,7 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.friendly = true;
             projectile.minion = true;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
             projectile.tileCollide = false;
 
             projectile.minionSlots = 1f;

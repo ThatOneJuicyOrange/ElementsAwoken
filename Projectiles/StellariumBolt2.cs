@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class StellariumBolt2 : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 8;

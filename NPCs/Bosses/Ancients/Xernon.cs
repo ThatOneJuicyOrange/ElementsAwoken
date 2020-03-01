@@ -171,6 +171,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 {
                     originX = P.Center.X;
                     originY = P.Center.Y;
+                    npc.Center = P.Center;
+                    npc.netUpdate = true;
                 }
                 if (npc.ai[0] < 60)
                 {
@@ -206,17 +208,17 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
                         if (npc.life > npc.lifeMax * 0.6f)
                         {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBolt"), projectileBaseDamage, 5f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBolt"), projectileBaseDamage, 5f, Main.myPlayer);
                             npc.ai[2] = 120;
                         }
                         else if (npc.life > npc.lifeMax * 0.3f)
                         {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBoltExplosive"), projectileBaseDamage, 5f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBoltExplosive"), projectileBaseDamage, 5f, Main.myPlayer);
                             npc.ai[2] = 140;
                         }
                         else
                         {
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBoltSuper"), projectileBaseDamage, 5f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("XernonBoltSuper"), projectileBaseDamage, 5f, Main.myPlayer);
                             npc.ai[2] = 150;
                         }
                     }
@@ -250,7 +252,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                             {
                                 for (int i = 0; i < 2; i++)
                                 {
-                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, i == 1 ? -8f : 8f, 2f, mod.ProjectileType("XernonBoltHoming"), projectileBaseDamage, 5f, 0);
+                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, i == 1 ? -8f : 8f, 2f, mod.ProjectileType("XernonBoltHoming"), projectileBaseDamage, 5f, Main.myPlayer);
                                 }
                             }
                             npc.ai[3]++;
@@ -292,7 +294,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                             if (attack2ShootTimer <= 0)
                             {
                                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 43);
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 6f, mod.ProjectileType("XernonCrystal"), projectileBaseDamage, 5f, 0);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 6f, mod.ProjectileType("XernonCrystal"), projectileBaseDamage, 5f, Main.myPlayer);
                                 attack2ShootTimer = 10;
                             }
                         }
@@ -326,7 +328,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                             if (attack2ShootTimer <= 0)
                             {
                                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 43);
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, -6f, mod.ProjectileType("XernonCrystal"), projectileBaseDamage, 5f, 0);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, -6f, mod.ProjectileType("XernonCrystal"), projectileBaseDamage, 5f, Main.myPlayer);
                                 attack2ShootTimer = 10;
                             }
                         }
@@ -353,7 +355,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("XernonShard"), 0, 0f, 0, i);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("XernonShard"), 0, 0f, Main.myPlayer, i);
                 }
                 for (int k = 0; k < 80; k++)
                 {

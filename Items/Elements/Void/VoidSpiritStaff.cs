@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.Elements.Void
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Abyss Cultist Staff");
-            Tooltip.SetDefault("Summons a Abyss Cultist to protect you\nCultists take 5 minion slots");
+            Tooltip.SetDefault("Summons an Abyss Cultist to protect you\nCultists take 5 minion slots");
         }
         public override void AddRecipes()
         {

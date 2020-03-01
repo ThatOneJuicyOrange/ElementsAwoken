@@ -20,7 +20,7 @@ namespace ElementsAwoken.Items.Accessories.Teeth
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Digger Tooth");
-            Tooltip.SetDefault("Mining speed increased by 15%");
+            Tooltip.SetDefault("15% increased mining speed");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

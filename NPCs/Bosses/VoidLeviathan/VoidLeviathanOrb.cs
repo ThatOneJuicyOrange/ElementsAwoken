@@ -62,7 +62,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
         }
         public override void HitEffect(int hitDirection, double damage)
         {
-if (npc.life <= 0) Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("VoidOrbDestroyed"), 0, 0f, 0);
+if (npc.life <= 0) Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("VoidOrbDestroyed"), 0, 0f, Main.myPlayer);
         }
         public override bool PreNPCLoot()
         {
@@ -81,7 +81,7 @@ if (npc.life <= 0) Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mo
                 int projDamage = Main.expertMode ? (int)(projectileBaseDamage * 1.5f) : projectileBaseDamage;
                 if (MyWorld.awakenedMode) projDamage = (int)(projectileBaseDamage * 1.8f);
 
-                Projectile strike = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), mod.ProjectileType("VoidOrbProj"), projDamage, 0f, 0)];
+                Projectile strike = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), mod.ProjectileType("VoidOrbProj"), projDamage, 0f, Main.myPlayer)];
                 strike.GetGlobalProjectile<ProjectileGlobal>().dontScaleDamage = true;
                 shootTimer = 60;
             }

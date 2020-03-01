@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         {
             item.width = 36;
             item.height = 32;
-            item.value = Item.buyPrice(0, 25, 0, 0);
+            item.value = Item.sellPrice(0, 12, 0, 0);
             item.rare = 6;
             item.accessory = true;
         }

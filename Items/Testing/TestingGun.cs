@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Testing
 
             item.UseSound = SoundID.Item12;
             item.shootSpeed = 15f;
-            item.shoot = mod.ProjectileType("ShockwaveCreator");
+            item.shoot = mod.ProjectileType("SuperGrenade");
         }
 
         public override void SetStaticDefaults()

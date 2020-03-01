@@ -30,8 +30,9 @@ namespace ElementsAwoken.Projectiles.Thrown
         {
         	if (Main.rand.Next(2) == 0)
         	{
-        		Item.NewItem((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, mod.ItemType("Dictionary"));
-        	}
+                int item = Item.NewItem((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, mod.ItemType("Dictionary"));
+                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, item, 1f);
+            }
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)

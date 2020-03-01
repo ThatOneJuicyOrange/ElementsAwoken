@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.Artifacts
             item.width = 26;
             item.height = 22;
             item.rare = 4;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.accessory = true;
 
             item.GetGlobalItem<EATooltip>().artifact = true;
@@ -32,12 +32,13 @@ namespace ElementsAwoken.Items.Artifacts
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             player.jumpSpeedBoost += 2.0f;
             player.meleeCrit += 5;
             player.magicCrit += 5;
             player.rangedCrit += 5;
             player.thrownCrit += 5;
-            player.magmaStone = true;
+            modPlayer.eaMagmaStone = true;
             player.fireWalk = true;
         }
         public override bool CanEquipAccessory(Player player, int slot)

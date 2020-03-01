@@ -9,7 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class LamentExplosion : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 100;

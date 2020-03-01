@@ -12,7 +12,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
             item.width = 50;
             item.height = 50;
             
-            item.damage = 12;
+            item.damage = 16;
             item.mana = 5;
             item.knockBack = 2;
 
@@ -22,8 +22,8 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
             item.autoReuse = false;
 
             item.UseSound = SoundID.Item20;
-            item.useTime = 30;
-            item.useAnimation = 30;
+            item.useTime = 40;
+            item.useAnimation = 40;
             item.useStyle = 5;
 
             item.value = Item.sellPrice(0, 0, 20, 0);

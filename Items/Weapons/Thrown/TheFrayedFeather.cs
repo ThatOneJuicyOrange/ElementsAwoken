@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Weapons.Thrown
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Frayed Feather");
-            Tooltip.SetDefault("Throw a wave of feathers");
+            Tooltip.SetDefault("Throws a burst of three feathers");
         }
 
 

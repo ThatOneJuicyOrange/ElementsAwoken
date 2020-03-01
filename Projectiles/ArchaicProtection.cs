@@ -88,7 +88,7 @@ namespace ElementsAwoken.Projectiles
                         proj.velocity -= toTarget * 10;
                     }
                 }
-                for (int i = 0; i < Main.item.Length; i++)
+                for (int i = 0; i < Main.maxItems; i++)
                 {
                     Item item = Main.item[i];
                     if (item.active && Vector2.Distance(item.Center, player.Center) < maxDist)

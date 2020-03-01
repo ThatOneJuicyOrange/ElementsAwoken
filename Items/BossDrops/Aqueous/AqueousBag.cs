@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.BossDrops.Aqueous
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
 
         public override bool CanRightClick()
@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Aqueous
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
 
             int choice = Main.rand.Next(6);
             if (choice == 0)

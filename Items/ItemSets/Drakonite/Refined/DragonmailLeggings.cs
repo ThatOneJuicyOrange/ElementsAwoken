@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
 
             item.defense = 16;
 
-            item.value = Item.buyPrice(0, 7, 50, 0);
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = 7;
         }
 

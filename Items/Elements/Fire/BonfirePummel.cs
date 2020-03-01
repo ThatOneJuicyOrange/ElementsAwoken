@@ -12,12 +12,12 @@ namespace ElementsAwoken.Items.Elements.Fire
             item.width = 50;
             item.height = 50;
             
-            item.damage = 24;
+            item.damage = 22;
             item.knockBack = 2;
             item.mana = 16;
 
-            item.useTime = 30;
-            item.useAnimation = 30;
+            item.useTime = 40;
+            item.useAnimation = 40;
             item.useStyle = 5;
             item.UseSound = SoundID.Item42;
 
@@ -30,18 +30,18 @@ namespace ElementsAwoken.Items.Elements.Fire
             item.rare = 4;
 
             item.shoot = mod.ProjectileType("FireBall");
-            item.shootSpeed = 13f;
+            item.shootSpeed = 11f;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Bonfire Pummel");
-            Tooltip.SetDefault("Fires an exploding fireball");
+            Tooltip.SetDefault("Fires fireball that explodes into sparks on impact");
         }
 
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
-            int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, DustID.Fire);
+            Dust.NewDust(hitbox.TopLeft(), hitbox.Width, hitbox.Height, DustID.Fire);
         }
 
         public override void AddRecipes()

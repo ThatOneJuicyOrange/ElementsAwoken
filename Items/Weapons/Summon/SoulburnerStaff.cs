@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Weapons.Summon
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Soulburner Staff");
-            Tooltip.SetDefault("Summons a corrupt skull to breathe soul flames");
+            Tooltip.SetDefault("Summons a soul skull to burn your enemies");
         }
 
         public override void AddRecipes()

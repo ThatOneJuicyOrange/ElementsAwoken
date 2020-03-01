@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Elements.Fire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Fire Knives");
-            Tooltip.SetDefault("Rapidly throw exploding fire daggers");
+            Tooltip.SetDefault("Throws three exploding fire daggers");
         }
 
 

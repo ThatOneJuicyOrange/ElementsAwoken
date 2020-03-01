@@ -10,6 +10,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class NyanBootsTrail : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 2;
@@ -27,6 +28,14 @@ namespace ElementsAwoken.Projectiles
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("");
+        }
+        public override bool? CanCutTiles()
+        {
+            return false;
+        }
+        public override bool CanDamage()
+        {
+            return false;
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

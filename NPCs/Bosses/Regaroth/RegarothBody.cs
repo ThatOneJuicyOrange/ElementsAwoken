@@ -111,7 +111,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     {
                         float Speed = 10f;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
-                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBolt"), projectileBaseDamage, 0f, 0);
+                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBolt"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                 }
                 if (npc.ai[2] <= 750)
@@ -120,14 +120,14 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                     {
                         float Speed = 4f;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
-                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothPortal"), projectileBaseDamage, 0f, 0);
+                        int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothPortal"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                 }
                 if (Main.rand.Next(1500) == 0)
                 {
                     float Speed = 4f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 8);
-                    int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBomb"), projectileBaseDamage + 20, 0f, 0);
+                    int num54 = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("RegarothBomb"), projectileBaseDamage + 20, 0f, Main.myPlayer);
                 }
                 if (npc.ai[0] <= 0)
                 {

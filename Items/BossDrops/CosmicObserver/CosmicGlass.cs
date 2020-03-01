@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.BossDrops.CosmicObserver
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cosmic Glass");
-            Tooltip.SetDefault("Increases all critical strike chances by 15%\nOn crit, a cosmic beam is shot at the enemy");
+            Tooltip.SetDefault("15% increases critical strike chance\nCritical strikes fire a cosmic beam at the enemy");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

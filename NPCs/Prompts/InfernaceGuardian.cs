@@ -9,9 +9,31 @@ namespace ElementsAwoken.NPCs.Prompts
 {
     public class InfernaceGuardian : ModNPC
     {
+        private float aiTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float tpLocX
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float tpLocY
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float visualsAI
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
         public override void SetDefaults()
         {
             npc.damage = 10;
+
+            npc.aiStyle = -1;
 
             npc.width = 26;
             npc.height = 50;
@@ -46,8 +68,8 @@ namespace ElementsAwoken.NPCs.Prompts
             Vector2 eyesAddition = npc.direction != 1 ? new Vector2(6, 16) : new Vector2(12, 16);
             Vector2 castPos = npc.position - Main.screenPosition + castOrigin + new Vector2(0f, npc.gfxOffY) + castAddition;
             Vector2 eyesPos = npc.position - Main.screenPosition + eyesOrigin + new Vector2(0f, npc.gfxOffY) + eyesAddition;
-            if (npc.ai[1] < 150 && npc.ai[1] > 90) spriteBatch.Draw(eyes, eyesPos, null, Color.White * (1 - ((npc.ai[1] - 90) / 60)), npc.rotation, eyesOrigin, npc.scale, spriteEffects, 0f);
-            if (npc.ai[1] < 120 && npc.ai[1] > 60) spriteBatch.Draw(cast, castPos, null, Color.White * (1 - ((npc.ai[1]-60) / 60)), npc.ai[1] / 15f, castOrigin, npc.scale, spriteEffects, 0f);
+            if (visualsAI < 150 && visualsAI > 90) spriteBatch.Draw(eyes, eyesPos, null, Color.White * (1 - ((visualsAI - 90) / 60)), npc.rotation, eyesOrigin, npc.scale, spriteEffects, 0f);
+            if (visualsAI < 120 && aiTimer > 60) spriteBatch.Draw(cast, castPos, null, Color.White * (1 - ((visualsAI - 60) / 60)), visualsAI / 15f, castOrigin, npc.scale, spriteEffects, 0f);
         }
         public override void HitEffect(int hitDirection, double damage)
         {
@@ -80,8 +102,19 @@ namespace ElementsAwoken.NPCs.Prompts
                 }
             }
         }
+        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        {
+            if (aiTimer < 120) aiTimer = 120;
+        }
+        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        {
+            if (aiTimer < 120) aiTimer = 120;
+        }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
+            int maxNPCs = Main.expertMode ? 6 : 3;
+            if (MyWorld.awakenedMode) maxNPCs = 9;
+
             float spawnChance = MathHelper.Lerp(0f, 0.15f, ((float)spawnInfo.player.Center.Y - ((float)Main.maxTilesY * 16) * 0.2f) / ((float)Main.maxTilesY * 16));
             return spawnInfo.spawnTileY > Main.maxTilesY * 0.8f &&
             !spawnInfo.player.ZoneTowerStardust &&
@@ -89,25 +122,32 @@ namespace ElementsAwoken.NPCs.Prompts
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
-            MyWorld.firePrompt > 108000 && !Main.snowMoon && !Main.pumpkinMoon ? spawnChance : 0f;
+            MyWorld.firePrompt > ElementsAwoken.bossPromptDelay && NPC.CountNPCS(npc.type) < maxNPCs && !Main.snowMoon && !Main.pumpkinMoon ? spawnChance : 0f;
         }
         public override void AI()
         {
-            npc.velocity.X = 0f;
+            npc.TargetClosest(true);
             Player P = Main.player[npc.target];
-            npc.ai[1]--;
-            if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[1] == 60f)
+            if (P.position.Y < Main.maxTilesY * 16 * 0.25f) npc.active = false;
+
+            Vector2 direction = P.Center - npc.Center;
+            npc.spriteDirection = Math.Sign(direction.X);
+            npc.velocity.X = 0f;
+
+            aiTimer--;
+            visualsAI--;
+            if (Main.netMode != NetmodeID.MultiplayerClient && aiTimer == 60f)
             {
                 float Speed = 2f;
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                 float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("InfernaceGuardianProj"), 12, 0f, 0);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("InfernaceGuardianProj"), 12, 0f, Main.myPlayer);
             }
-            if (npc.ai[1] <= 0f)
+            if (aiTimer <= 0f)
             {
-                npc.ai[0] = 1f;
+                aiTimer = 240f;
+                visualsAI = 240f;
                 Teleport(P, 0);
-                npc.ai[1] = 240f;
             }
         }
         private void Teleport(Player P, int attemptNum)
@@ -131,9 +171,8 @@ namespace ElementsAwoken.NPCs.Prompts
 
                     if (flag2 && Main.tileSolid[(int)Main.tile[targetX, targetY].type] && !Collision.SolidTiles(targetX - 1, targetX + 1, targetY - 4, targetY - 1))
                     {
-                        npc.ai[1] = 20f;
-                        npc.ai[2] = (float)targetX;
-                        npc.ai[3] = (float)targetY;
+                        tpLocX = (float)targetX;
+                        tpLocY = (float)targetY;
                         foundNewLoc = true;
                         break;
                     }
@@ -150,10 +189,11 @@ namespace ElementsAwoken.NPCs.Prompts
                 }
             }
             Main.PlaySound(SoundID.Item8, npc.position);
-            if (npc.ai[2] != 0 && npc.ai[3] != 0 && foundNewLoc)
+            if (tpLocX != 0 && tpLocY != 0 && foundNewLoc)
             {
-                npc.position.X = (float)((double)npc.ai[2] * 16.0 - (double)(npc.width / 2) + 8.0);
-                npc.position.Y = npc.ai[3] * 16f - (float)npc.height;
+                npc.position.X = (float)((double)tpLocX * 16.0 - (double)(npc.width / 2) + 8.0);
+                npc.position.Y = tpLocY * 16f - (float)npc.height;
+                npc.netUpdate = true;
 
                 for (int i = 0; i < 20; i++)
                 {

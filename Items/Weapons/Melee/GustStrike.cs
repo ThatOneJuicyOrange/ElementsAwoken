@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Gust Strike");
-            Tooltip.SetDefault("Harness the wind\nShoots out a blast of cloud and occasionally electrocutes enemies\nThe player moves faster when striking the enemy with the blade");
+            Tooltip.SetDefault("Fires a blast of cloud and occasionally electrocutes enemies\nThe player moves faster after striking the enemy with the blade\n'Harness the wind'");
         }
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)

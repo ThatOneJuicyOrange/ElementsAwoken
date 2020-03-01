@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class DubstepBeam : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public int dustType = 60;
         public override void SetDefaults()
         {

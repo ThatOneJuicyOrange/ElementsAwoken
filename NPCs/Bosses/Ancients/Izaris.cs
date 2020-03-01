@@ -176,6 +176,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 {
                     originX = P.Center.X;
                     originY = P.Center.Y;
+                    npc.Center = P.Center;
+                    npc.netUpdate = true;
                 }
                 if (npc.ai[0] < 60)
                 {
@@ -272,7 +274,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("IzarisShard"), 0, 0f, 0, i);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("IzarisShard"), 0, 0f, Main.myPlayer, i);
                 }
                 for (int k = 0; k < 80; k++)
                 {

@@ -18,17 +18,16 @@ namespace ElementsAwoken.Items.Artifacts
             item.width = 26;
             item.height = 22;
             item.rare = 4;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.accessory = true;
 
             item.GetGlobalItem<EATooltip>().artifact = true;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Skull");
-            Tooltip.SetDefault("30% increased pick speed\n4% increased damage\nReduces damage taken by 5%");
+            DisplayName.SetDefault("Skull of the Old One");
+            Tooltip.SetDefault("30% increased mining speed\n4% increased damage\nReduces damage taken by 5%\nGrants immunity to knockback");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
-
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -54,6 +53,7 @@ namespace ElementsAwoken.Items.Artifacts
             player.magicDamage *= 1.04f;
             player.minionDamage *= 1.04f;
             player.endurance += 0.05f;
+            player.noKnockback = true;
         }
         public override void AddRecipes()
         {

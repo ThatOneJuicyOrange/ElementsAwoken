@@ -24,6 +24,7 @@ namespace ElementsAwoken.Projectiles.Minions
 
             projectile.timeLeft = 18000;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
             projectile.penetrate = -1;
             projectile.minion = true;
             //aiType = 317;

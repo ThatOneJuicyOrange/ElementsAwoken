@@ -58,7 +58,6 @@ namespace ElementsAwoken.Items.Elements.Frost
             recipe.AddIngredient(null, "FrostEssence", 7);
             recipe.AddRecipeGroup("ElementsAwoken:IceGroup", 5);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 5);
-            recipe.AddIngredient(ItemID.Flamethrower);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();

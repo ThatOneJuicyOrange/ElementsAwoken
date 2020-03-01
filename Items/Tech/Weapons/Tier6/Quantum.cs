@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.Tech.Materials;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Tech.Weapons.Tier6
 {
@@ -26,7 +28,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
             item.autoReuse = true;
 
             item.value = Item.sellPrice(0, 5, 0, 0);
-            item.rare = 4;
+            item.rare = 8;
 
             item.UseSound = SoundID.Item15;
             item.shoot = mod.ProjectileType("MatrixLaser");
@@ -64,9 +66,9 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.SoulofLight, 8);
-            recipe.AddIngredient(null, "GoldWire", 10);
-            recipe.AddIngredient(null, "SiliconBoard", 1);
-            recipe.AddIngredient(null, "Microcontroller", 1);
+            recipe.AddIngredient(ItemType<GoldWire>(), 10);
+            recipe.AddIngredient(ItemType<SiliconBoard>(), 1);
+            recipe.AddIngredient(ItemType<Microcontroller>(), 1);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

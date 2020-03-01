@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chaotic Gaze");
+            DisplayName.SetDefault("Outbreak");
             Tooltip.SetDefault("Occasionally fires a chaos eye\n50% chance to not consume ammo");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

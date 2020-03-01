@@ -41,6 +41,10 @@ namespace ElementsAwoken
         public bool pressingQuickBuff = false;
         public int pressingQuickBuffCD = 0;
 
+        public int enemiesKilledLastMin = 0;
+        public int enemiesKilledLast10Secs = 0;
+        public int[] enemiesKilledCD = new int[999];
+
         public int placingAutoDriller = 0;
         public override void ResetEffects()
         {
@@ -52,6 +56,8 @@ namespace ElementsAwoken
             bossesKilledLastFiveMin = 0;
             salesLastMin = 0;
             buysLastMin = 0;
+            enemiesKilledLast10Secs = 0;
+            enemiesKilledLastMin = 0;
         }
         public override void PreUpdate()
         {
@@ -148,6 +154,18 @@ namespace ElementsAwoken
                 {
                     bossesKilledLastFiveMin++;
                     bossKilledCD[i]--;
+                }
+            }
+            for (int i = 0; i < enemiesKilledCD.Length; i++)
+            {
+                if (enemiesKilledCD[i] > 3600 - 600)
+                {
+                    enemiesKilledLast10Secs++;
+                }
+                if (enemiesKilledCD[i] > 0)
+                {
+                    enemiesKilledLastMin++;
+                    enemiesKilledCD[i]--;
                 }
             }
         }
@@ -275,6 +293,17 @@ namespace ElementsAwoken
                 ElementsAwoken.DebugModeText("boss killed");
                 ElementsAwoken.DebugModeText("bosses killed last min: " + (modPlayer.bossesKilledLastMin + 1)); // plus 1 because it hasnt updated yet
                 ElementsAwoken.DebugModeText("bosses killed last five min: " + (modPlayer.bossesKilledLastFiveMin + 1));
+            }
+            else if (!npc.friendly && !npc.SpawnedFromStatue)
+            {
+                for (int i = 0; i < modPlayer.enemiesKilledCD.Length; i++)
+                {
+                    if (modPlayer.enemiesKilledCD[i] <= 0)
+                    {
+                        modPlayer.enemiesKilledCD[i] = 3600;
+                        break;
+                    }
+                }
             }
         }
     }

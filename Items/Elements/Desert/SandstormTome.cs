@@ -12,34 +12,37 @@ namespace ElementsAwoken.Items.Elements.Desert
     {
         public override void SetDefaults()
         {
-
+            item.width = 32;
+            item.height = 32; 
+            
             item.damage = 18;
-            item.magic = true;
             item.mana = 13;
-            item.width = 48;
-            item.height = 48;
-            item.useTime = 9;
-            item.useAnimation = 18;
+            item.knockBack = 2.25f;
+
+            item.useTime = 14;
+            item.useAnimation = 14;
             item.useStyle = 5;
 
-            item.noMelee = true; //so the item's animation doesn't do damage
-            item.knockBack = 2.25f;
+            item.magic = true;
+            item.noMelee = true;
+            item.autoReuse = true;
+
             item.value = Item.buyPrice(0, 5, 0, 0);
             item.rare = 3;
+
             item.UseSound = SoundID.Item66;
-            item.autoReuse = true;
             item.shoot = mod.ProjectileType("Skysand");
             item.shootSpeed = 8f;
         }
 
-    public override void SetStaticDefaults()
-    {
-      DisplayName.SetDefault("Sandstorm Tome");
-      Tooltip.SetDefault("Summons sand to rain down from the sky");
-    }
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Sandstorm Tome");
+            Tooltip.SetDefault("Summons sand to rain down from the sky");
+        }
 
 
-        public override void AddRecipes()  //How to craft this gun
+        public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
@@ -53,7 +56,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            int numberProjectiles = 6 + Main.rand.Next(2);  //This defines how many projectiles to shot
+            int numberProjectiles = Main.rand.Next(2,6);  //This defines how many projectiles to shot
             for (int index = 0; index < numberProjectiles; ++index)
             {
                 Vector2 vector2_1 = new Vector2((float)((double)player.position.X + (double)player.width * 0.5 + (double)(Main.rand.Next(201) * -player.direction) + ((double)Main.mouseX + (double)Main.screenPosition.X - (double)player.position.X)), (float)((double)player.position.Y + (double)player.height * 0.5 - 600.0));   //this defines the projectile width, direction and position

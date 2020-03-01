@@ -9,20 +9,25 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
     {
         public override void SetDefaults()
         {
-            item.damage = 42;
-            item.ranged = true;
             item.width = 66;
             item.height = 34;
+            
+            item.damage = 42;
+            item.knockBack = 3.75f;
+
             item.useTime = 4;
             item.reuseDelay = 10;
             item.useAnimation = 9;
             item.useStyle = 5;
+
             item.noMelee = true;
-            item.knockBack = 3.75f;
+            item.ranged = true;
+            item.autoReuse = true;
+
             item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = 5;
-            item.UseSound = SoundID.Item12;
-            item.autoReuse = true;
+
+            item.UseSound = SoundID.Item11;
             item.shoot = 10;
             item.shootSpeed = 12f;
             item.useAmmo = 97;
@@ -39,6 +44,9 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(2));
+            speedX = perturbedSpeed.X;
+            speedY = perturbedSpeed.Y;
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("ManaRound"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
             return false;
         }

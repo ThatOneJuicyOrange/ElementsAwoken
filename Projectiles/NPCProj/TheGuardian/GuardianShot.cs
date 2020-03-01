@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheGuardian
 
             projectile.timeLeft = 600;
 
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 6;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
@@ -32,12 +32,15 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheGuardian
         }
         public override void AI()
         {
+            Lighting.AddLight(projectile.Center, 0.9f, 0.2f, 0.4f);
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            for (int i = 0; i < 5; i++)
+
+            int dustLength = ModContent.GetInstance<Config>().lowDust ? 1 : 3;
+            for (int i = 0; i < dustLength; i++)
             {
-                Dust dust = Main.dust[Dust.NewDust(projectile.Center, 4, 4, 6)];
+                Dust dust = Main.dust[Dust.NewDust(projectile.Center - Vector2.One * 2, 4, 4, 6)];
                 dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f * (float)i;
+                dust.position -= projectile.velocity / dustLength * (float)i;
                 dust.noGravity = true;
             }
         }

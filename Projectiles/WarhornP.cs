@@ -8,6 +8,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class WarhornP : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 200;

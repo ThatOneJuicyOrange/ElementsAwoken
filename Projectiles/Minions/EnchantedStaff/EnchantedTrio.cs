@@ -24,6 +24,7 @@ namespace ElementsAwoken.Projectiles.Minions.EnchantedStaff
             projectile.light = 0.5f;
             projectile.timeLeft = 18000;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
             projectile.penetrate = -1;
             projectile.timeLeft *= 5;
             projectile.minion = true;

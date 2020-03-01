@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Elements.Void
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Calamity");
-            Tooltip.SetDefault("Throws 2 bouncing, exploding chakrams");
+            Tooltip.SetDefault("Throws 2 bouncing chakrams that explode on impact");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -112,7 +113,7 @@ namespace ElementsAwoken.NPCs.Town
         }
         public override void AI()
         {
-            if (MyWorld.downedAzana)
+            if (MyWorld.downedAzana || MyWorld.sparedAzana)
             {
                 if (shadowDirection == 0)
                 {
@@ -209,7 +210,7 @@ namespace ElementsAwoken.NPCs.Town
         {
             if (buttonMode == 0)
             {
-                if (!MyWorld.downedAzana)
+                if (!MyWorld.downedAzana && !MyWorld.sparedAzana)
                 {
                     buttonText = "Story";
                 }
@@ -237,7 +238,7 @@ namespace ElementsAwoken.NPCs.Town
             {
                 if (buttonMode == 0)
                 {
-                    if (!MyWorld.downedAzana)
+                    if (!MyWorld.downedAzana && !MyWorld.sparedAzana)
                     {
                         #region story
                         bool toySlime = MyWorld.downedToySlime;
@@ -412,14 +413,20 @@ namespace ElementsAwoken.NPCs.Town
                     }
                     else
                     {
-                        Main.npcChatText = "You question my origin? I am a celestial being, born within the core of Terraria. For so long, you mindlessly did what I said, without questioning. You did your job well. Now, it's time for you to perish. I do not need you any longer.";
+                        Main.npcChatText = "You question my origin? I am a crystalline being, born within the depths of " + Main.worldName+". For so long, you mindlessly did what I said, without questioning. You did your job well. Now, it's time for you to perish. I do not need you any longer.";
                         buttonMode = 1;
                     }
                 }
                 if (buttonPressed == 1) // if we go straight to checking buttonMode then it does this when Question is pressed
                 {
-                    npc.active = false;
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("AncientSpawn"), 0, 0f, Main.myPlayer, 0f, 0f);
+                    if (Main.netMode == NetmodeID.SinglePlayer) SpawnAncients(player);
+                    else
+                    {
+                        ModPacket netMessage = GetPacket();
+                        netMessage.Write(true);
+                        netMessage.Send();
+                    }
+
                 }
             }
             if (!firstButton)
@@ -584,7 +591,45 @@ namespace ElementsAwoken.NPCs.Town
             }
             #endregion
         }
+        private ModPacket GetPacket()
+        {
+            ModPacket packet = mod.GetPacket();
+            packet.Write((byte)ElementsAwokenMessageType.Storyteller);
+            packet.Write(npc.whoAmI);
+            return packet;
+        }
 
+        public void HandlePacket(BinaryReader reader)
+        {
+            Player player = Main.LocalPlayer;
+            SpawnAncients(player);
+        }
+        private void SpawnAncients(Player player)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient) return;
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                npc.active = false;
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Izaris"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Kirvein"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Krecheus"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Xernon"));
+                NPC.NewNPC((int)player.Center.X, (int)player.Center.Y - 300, mod.NPCType("ShardBase"), 0, 0, 0, 0, 0, player.whoAmI);
+            }
+            else
+            {
+                Console.WriteLine("Spawning Ancients");
+                npc.StrikeNPCNoInteraction(9999, 0f, 0, false, false, false);
+
+                NPC npc1 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Izaris"), 0, 0, 0, 0, 0, player.whoAmI)];
+                NPC npc2 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Kirvein"), 0, 0, 0, 0, 0, player.whoAmI)];
+                NPC npc3 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Krecheus"), 0, 0, 0, 0, 0, player.whoAmI)];
+                NPC npc4 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Xernon"), 0, 0, 0, 0, 0, player.whoAmI)];
+                NPC npc5 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("ShardBase"), 0, 0, 0, 0, 0, player.whoAmI)];
+                npc.netUpdate = true;
+                //Projectile.NewProjectile(player.Center.X, player.Center.Y - 300, 0f, 0f, mod.ProjectileType("ShardBase"), 0, 0f, Main.myPlayer, Main.myPlayer);
+            }
+        }
         public override string GetChat()
         {
             // on open reset button mode

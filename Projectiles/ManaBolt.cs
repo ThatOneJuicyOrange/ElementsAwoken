@@ -9,11 +9,11 @@ namespace ElementsAwoken.Projectiles
 {
     public class ManaBolt : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
+            projectile.width = 8;
+            projectile.height = 8;
             projectile.friendly = true;
             projectile.ranged = true;
             projectile.penetrate = 1;
@@ -26,16 +26,18 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            for (int num134 = 0; num134 < 6; num134++)
+            projectile.localAI[0]++;
+            if (projectile.localAI[0] > 3)
             {
-                float x = projectile.position.X - projectile.velocity.X / 10f * (float)num134;
-                float y = projectile.position.Y - projectile.velocity.Y / 10f * (float)num134;
-                int num135 = Dust.NewDust(new Vector2(x, y), 1, 1, 234, 0f, 0f, 0, default(Color), 1.25f);
-                Main.dust[num135].alpha = projectile.alpha;
-                Main.dust[num135].position.X = x;
-                Main.dust[num135].position.Y = y;
-                Main.dust[num135].velocity *= 0f;
-                Main.dust[num135].noGravity = true;
+                float numDust = 4;
+                for (int l = 0; l < numDust; l++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 234)];
+                    dust.velocity = Vector2.Zero;
+                    dust.position -= projectile.velocity / numDust * (float)l;
+                    dust.noGravity = true;
+                    dust.scale = 1f;
+                }
             }
         }
 

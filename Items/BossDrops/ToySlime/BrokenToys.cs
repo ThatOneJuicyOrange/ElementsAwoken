@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.BossDrops.ToySlime
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Broken Toys");
-            Tooltip.SetDefault("Don't step on them");
+            Tooltip.SetDefault("Most effective on the feet");
         }
 
     }

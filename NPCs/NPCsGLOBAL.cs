@@ -29,8 +29,7 @@ namespace ElementsAwoken.NPCs
 
         public bool impishCurse = false;
 
-        public bool lifeDrain = false;
-        public int lifeDrainAmount = 1;
+        public int lifeDrainAmount = 0;
 
         public bool hasHands = false;
 
@@ -58,8 +57,6 @@ namespace ElementsAwoken.NPCs
             corroding = false;
 
             impishCurse = false;
-
-            lifeDrain = false;
         }
 
         public override bool InstancePerEntity
@@ -163,23 +160,65 @@ namespace ElementsAwoken.NPCs
                 }
             }
         }
-
+        public static bool AnyBoss()
+        {
+            for (int i = 0; i < Main.npc.Length; ++i)
+            {
+                NPC boss = Main.npc[i];
+                if (boss.boss && boss.active)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static void GoThroughPlatforms(NPC npc)
+        {
+            Vector2 platform = npc.Bottom / 16;
+            if (TileID.Sets.Platforms[Framing.GetTileSafely((int)platform.X, (int)platform.Y).type]) npc.noTileCollide = true;
+            else npc.noTileCollide = false;
+            /*if (ModContent.GetInstance<Config>().debugMode)
+            {
+                Dust dust = Main.dust[Dust.NewDust(platform * 16, 16, 16, 135)];
+                dust.noGravity = true;
+            }*/
+        }
+        public static int ReducePierceDamage(int damage, Projectile projectile)
+        {
+            if (projectile.type == ProjectileID.LastPrismLaser && ModContent.GetInstance<Config>().vItemChangesDisabled) return (int)(damage * 0.1f);
+            else if (projectile.type == ProjectileID.LastPrismLaser && !ModContent.GetInstance<Config>().vItemChangesDisabled) return (int)(damage * 0.85f);
+            else if (projectile.maxPenetrate == -1 && ProjectileID.Sets.YoyosMaximumRange[projectile.type] == 0) return (int)(damage * 0.5f);
+            else if (projectile.maxPenetrate > 10) return (int)(damage * 0.5f);
+            else if (projectile.maxPenetrate > 6) return (int)(damage * 0.75f);
+            else if (projectile.maxPenetrate > 3) return (int)(damage * 0.9f);
+            else return damage;
+        }
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
             if (player.FindBuffIndex(mod.BuffType("CalamityPotionBuff")) != -1)
             {
-                spawnRate = (int)(spawnRate / 30f);
-                maxSpawns = (int)(maxSpawns * 30f);
+                spawnRate = (int)(spawnRate / 12.5f);
+                maxSpawns = (int)(maxSpawns * 12.5f);
             }
-            if (player.FindBuffIndex(mod.BuffType("ChaosPotionBuff")) != -1)
+            else if (player.FindBuffIndex(mod.BuffType("ChaosPotionBuff")) != -1 || player.FindBuffIndex(mod.BuffType("CalamityBannerBuff")) != -1)
             {
-                spawnRate = (int)(spawnRate / 20f);
-                maxSpawns = (int)(maxSpawns * 20f);
+                spawnRate = (int)(spawnRate / 7.5f);
+                maxSpawns = (int)(maxSpawns * 7.5f);
             }
-            if (player.FindBuffIndex(mod.BuffType("HavocPotionBuff")) != -1)
+            else if (player.FindBuffIndex(mod.BuffType("ChaosBannerBuff")) != -1)
             {
-                spawnRate = (int)(spawnRate / 15f);
-                maxSpawns = (int)(maxSpawns * 15f);
+                spawnRate = (int)(spawnRate / 5f);
+                maxSpawns = (int)(maxSpawns * 5f);
+            }
+            else if(player.FindBuffIndex(mod.BuffType("HavocPotionBuff")) != -1)
+            {
+                spawnRate = (int)(spawnRate / 4f);
+                maxSpawns = (int)(maxSpawns * 4f);
+            }
+            else if (player.FindBuffIndex(mod.BuffType("HavocBannerBuff")) != -1)
+            {
+                spawnRate = (int)(spawnRate / 2f);
+                maxSpawns = (int)(maxSpawns * 2f);
             }
             if (MyWorld.aggressiveEnemies)
             {
@@ -194,35 +233,8 @@ namespace ElementsAwoken.NPCs
 
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            NPC bossCheck = Main.npc[0];
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].boss && Main.npc[i].active)
-                {
-                    bossCheck = Main.npc[i];
-                    break;
-                }
-            }
-            if (bossCheck.boss && bossCheck.active)
-            {
-                pool.Clear();
-            }
+            if (AnyBoss()) pool.Clear();
         }
-
-        private bool AnyBoss()
-        {
-            bool anyboss = false;
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].boss && Main.npc[i].active)
-                {
-                    anyboss = true;
-                    break;
-                }
-            }
-            return anyboss;
-        }
-
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
             // poisoned: -4
@@ -325,7 +337,7 @@ namespace ElementsAwoken.NPCs
                     damage = 26;
                 }
             }
-            if (lifeDrain && !npc.SpawnedFromStatue)
+            if (lifeDrainAmount > 0 && !npc.SpawnedFromStatue)
             {
                 npc.lifeRegen -= lifeDrainAmount;
                 if (damage < lifeDrainAmount / 2)
@@ -410,7 +422,13 @@ namespace ElementsAwoken.NPCs
                     CombatText.NewText(npc.getRect(), Color.Red, s, false, false);
                 }
             }
-            
+
+            if (impishCurse)
+            {
+                if (!npc.ichor) drawColor = new Color(255, 80, 80);
+                else drawColor = new Color(255, 180, 40);
+                Lighting.AddLight(npc.Center, 0.6f, 0.2f, 0.3f);
+            }
             // seeing the npc id
             //Main.spriteBatch.DrawString(Main.fontMouseText, "whoAmI: " + npc.whoAmI, new Vector2(npc.Center.X - 30 - Main.screenPosition.X, npc.Top.Y - 20 - Main.screenPosition.Y), Color.White);
         }
@@ -507,129 +525,7 @@ namespace ElementsAwoken.NPCs
             if (npc.SpawnedFromStatue)
             {
                 npc.buffImmune[mod.BuffType("LifeDrain")] = true;
-            }
-            /*// infinity gauntlet deletion blacklist
-            if (npc.type == NPCID.EyeofCthulhu ||
-                npc.type == NPCID.EaterofWorldsHead ||
-                npc.type == NPCID.EaterofWorldsBody ||
-                npc.type == NPCID.EaterofWorldsTail ||
-                npc.type == NPCID.BrainofCthulhu ||
-                npc.type == NPCID.Creeper ||
-                npc.type == NPCID.SkeletronHead ||
-                npc.type == NPCID.SkeletronHand ||
-                npc.type == NPCID.QueenBee ||
-                npc.type == NPCID.KingSlime ||
-                npc.type == NPCID.WallofFlesh ||
-                npc.type == NPCID.WallofFleshEye ||
-                npc.type == NPCID.TheDestroyer ||
-                npc.type == NPCID.TheDestroyerBody ||
-                npc.type == NPCID.TheDestroyerTail ||
-                npc.type == NPCID.Retinazer ||
-                npc.type == NPCID.Spazmatism ||
-                npc.type == NPCID.SkeletronPrime ||
-                npc.type == NPCID.PrimeCannon ||
-                npc.type == NPCID.PrimeSaw ||
-                npc.type == NPCID.PrimeVice ||
-                npc.type == NPCID.PrimeLaser ||
-                npc.type == NPCID.Plantera ||
-                npc.type == NPCID.PlanterasTentacle ||
-                npc.type == NPCID.Golem ||
-                npc.type == NPCID.GolemHead ||
-                npc.type == NPCID.GolemFistLeft ||
-                npc.type == NPCID.GolemFistRight ||
-                npc.type == NPCID.GolemHeadFree ||
-                npc.type == NPCID.DukeFishron ||
-                npc.type == NPCID.CultistBoss ||
-                npc.type == NPCID.MoonLordHead ||
-                npc.type == NPCID.MoonLordHand ||
-                npc.type == NPCID.MoonLordCore ||
-                npc.type == NPCID.MoonLordFreeEye ||
-                npc.type == NPCID.DungeonGuardian ||
-                npc.type == NPCID.IceGolem ||
-                npc.type == NPCID.WyvernHead ||
-                npc.type == NPCID.WyvernLegs ||
-                npc.type == NPCID.WyvernTail ||
-                npc.type == NPCID.WyvernBody ||
-                npc.type == NPCID.WyvernBody2 ||
-                npc.type == NPCID.WyvernBody3 ||
-                npc.type == NPCID.Mothron ||
-                npc.type == NPCID.PlanterasHook ||
-                npc.type == NPCID.PlanterasTentacle ||
-                npc.type == NPCID.Paladin ||
-                npc.type == NPCID.HeadlessHorseman ||
-                npc.type == NPCID.MourningWood ||
-                npc.type == NPCID.Pumpking ||
-                npc.type == NPCID.PumpkingBlade ||
-                npc.type == NPCID.Yeti ||
-                npc.type == NPCID.Everscream ||
-                npc.type == NPCID.IceQueen ||
-                npc.type == NPCID.Krampus ||
-                npc.type == NPCID.MartianSaucer ||
-                npc.type == NPCID.MartianSaucerCannon ||
-                npc.type == NPCID.MartianSaucerCore ||
-                npc.type == NPCID.MartianSaucerTurret ||
-                npc.type == NPCID.MoonLordCore ||
-                npc.type == NPCID.LunarTowerVortex ||
-                npc.type == NPCID.LunarTowerStardust ||
-                npc.type == NPCID.LunarTowerSolar ||
-                npc.type == NPCID.LunarTowerNebula ||
-                npc.type == NPCID.CultistArcherBlue ||
-                npc.type == NPCID.CultistArcherWhite ||
-                npc.type == NPCID.CultistDevote ||
-                npc.type == NPCID.CultistDragonBody1 ||
-                npc.type == NPCID.CultistDragonBody2 ||
-                npc.type == NPCID.CultistDragonBody3 ||
-                npc.type == NPCID.CultistDragonBody4 ||
-                npc.type == NPCID.CultistDragonHead ||
-                npc.type == NPCID.CultistDragonTail ||
-                npc.type == NPCID.CultistTablet ||
-                npc.type == NPCID.GoblinSummoner ||
-                npc.type == NPCID.BigMimicJungle ||
-                npc.type == NPCID.BigMimicCorruption ||
-                npc.type == NPCID.BigMimicHallow ||
-                npc.type == NPCID.BigMimicCrimson ||
-                npc.type == NPCID.PirateShip ||
-                npc.type == NPCID.PirateShipCannon ||
-                npc.type == NPCID.SandElemental ||
-                npc.type == NPCID.DD2Betsy ||
-                npc.type == NPCID.DD2DarkMageT1 ||
-                npc.type == NPCID.DD2DarkMageT3 ||
-                npc.type == NPCID.SolarCrawltipedeBody ||
-                npc.type == NPCID.SolarCrawltipedeHead ||
-                npc.type == NPCID.DD2OgreT2 ||
-                npc.type == NPCID.DD2OgreT3 ||
-                npc.type == NPCID.RainbowSlime ||
-                npc.type == NPCID.PirateCaptain ||
-                npc.type == mod.NPCType("CosmicObserver") ||
-                npc.type == mod.NPCType("ToySlime") ||
-                npc.type == mod.NPCType("AncientWyrmArms") ||
-                npc.type == mod.NPCType("AncientWyrmBody") ||
-                npc.type == mod.NPCType("AncientWyrmHead") ||
-                npc.type == mod.NPCType("AncientWyrmTail") ||
-                npc.type == mod.NPCType("AndromedaHead") ||
-                npc.type == mod.NPCType("AndromedaBody") ||
-                npc.type == mod.NPCType("AndromedaTail") ||
-                npc.type == mod.NPCType("BarrenSoul") ||
-                npc.type == mod.NPCType("Furosia") ||
-                npc.type == mod.NPCType("ObsidiousHand") ||
-                npc.type == mod.NPCType("RegarothHead") ||
-                npc.type == mod.NPCType("RegarothBody") ||
-                npc.type == mod.NPCType("RegarothTail") ||
-                npc.type == mod.NPCType("ShadeWyrmHead") ||
-                npc.type == mod.NPCType("ShadeWyrmBody") ||
-                npc.type == mod.NPCType("ShadeWyrmTail") ||
-                npc.type == mod.NPCType("SolarFragment") ||
-                npc.type == mod.NPCType("SoulOfInfernace") ||
-                npc.type == mod.NPCType("VoidLeviathanHead") ||
-                npc.type == mod.NPCType("VoidLeviathanBody") ||
-                npc.type == mod.NPCType("VoidLeviathanBodyWeak") ||
-                npc.type == mod.NPCType("VoidLeviathanTail") ||
-                npc.type == mod.NPCType("VolcanoxHook") ||
-                npc.type == mod.NPCType("VolcanoxTentacle")
-                )
-            {
-                npc.buffImmune[mod.BuffType("DeletionMark")] = true;
-            }*/
+            }         
         }
 
         public override void SetupShop(int type, Chest shop, ref int nextSlot)
@@ -640,9 +536,9 @@ namespace ElementsAwoken.NPCs
                 shop.item[nextSlot].shopCustomPrice = 80;
                 nextSlot++;
             }
-            if (type == NPCID.Dryad)
+            if (type == NPCID.Dryad && Main.bloodMoon)
             {
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("AlchemistsTimer"));
+                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("DryadsRadar"));
                 nextSlot++;
             }
             if (type == NPCID.Wizard)
@@ -697,10 +593,10 @@ namespace ElementsAwoken.NPCs
                     chat = "Dont trust " + Main.npc[storyteller].GivenName + ", he isn't as helpful as you may think.";
                 }
             }
-            if (npc.type == NPCID.Guide && Main.rand.Next(10) == 0 && MyWorld.downedAncients)
+            /*if (npc.type == NPCID.Guide && Main.rand.Next(10) == 0 && MyWorld.downedAncients)
             {
-                //Main.npcChatText = "At last, the storyteller is gone!"; // crap text 
-            }
+                Main.npcChatText = "At last, the storyteller is gone!"; // crap text 
+            }*/
             if (npc.type == NPCID.Nurse && storyteller >= 0)
             {
                 if (Main.rand.Next(10) == 0)
@@ -713,6 +609,18 @@ namespace ElementsAwoken.NPCs
                 if (Main.rand.Next(10) == 0)
                 {
                     chat = "How old is " + Main.npc[storyteller].GivenName + "? I seem to have memories of him from when I was a kid...";
+                }
+                if (NPC.downedBoss1 && !MyWorld.downedWasteland)
+                {
+                    if (Main.rand.Next(5) == 0)
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0: chat = "That scorpion, 'Wasteland' as you call it, why do we fear it?"; break;
+                            case 1: chat = "I feel her speaking to me... she’s afraid... "; break;
+                            case 2: chat = "All creatures deserve a chance to live. Live and be free..."; break;
+                        }
+                    }
                 }
             }
             if (npc.type == NPCID.ArmsDealer && storyteller >= 0)

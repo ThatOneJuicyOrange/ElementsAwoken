@@ -9,14 +9,14 @@ namespace ElementsAwoken.NPCs
     {
         public override void NPCLoot(NPC npc)
         {
-            Player player = Main.player[Main.myPlayer];
-
+            Player player = Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)];
             #region Essence Drops
             if (NPC.downedBoss1) //EoC
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDesert && !npc.SpawnedFromStatue)
+                if (player.ZoneDesert && !player.ZoneBeach && !npc.SpawnedFromStatue)
                 {
-                    if (Main.rand.Next(11) == 0)
+                    int chance = Main.expertMode ? MyWorld.awakenedMode ? 9 : 11 : 12;
+                    if (Main.rand.Next(chance) == 0)
                     {
                         Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DesertEssence"), 1);
                     }
@@ -24,9 +24,10 @@ namespace ElementsAwoken.NPCs
             }
             if (NPC.downedBoss3) //Skeletron
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneUnderworldHeight && !npc.SpawnedFromStatue)
+                if (player.ZoneUnderworldHeight && !npc.SpawnedFromStatue)
                 {
-                    if (Main.rand.Next(12) == 0)
+                    int chance = Main.expertMode ? MyWorld.awakenedMode ? 10 : 12 : 13;
+                    if (Main.rand.Next(chance) == 0)
                     {
                         Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FireEssence"), 1);
                     }
@@ -34,9 +35,10 @@ namespace ElementsAwoken.NPCs
             }
             if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneSkyHeight && !npc.SpawnedFromStatue)
+                if (player.ZoneSkyHeight && !npc.SpawnedFromStatue)
                 {
-                    if (Main.rand.Next(8) == 0)
+                    int chance = Main.expertMode ? MyWorld.awakenedMode ? 6 : 8 : 10;
+                    if (Main.rand.Next(chance) == 0)
                     {
                         Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SkyEssence"), 1);
                     }
@@ -44,9 +46,10 @@ namespace ElementsAwoken.NPCs
             }
             if (NPC.downedPlantBoss)
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneSnow && !npc.SpawnedFromStatue)
+                if (player.ZoneSnow && !npc.SpawnedFromStatue)
                 {
-                    if (Main.rand.Next(14) == 0)
+                    int chance = Main.expertMode ? MyWorld.awakenedMode ? 10 : 14 : 16;
+                    if (Main.rand.Next(chance) == 0)
                     {
                         Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FrostEssence"), 1);
                     }
@@ -54,54 +57,15 @@ namespace ElementsAwoken.NPCs
             }
             if (NPC.downedFishron)
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneBeach && !npc.SpawnedFromStatue)
+                if (player.ZoneBeach && !npc.SpawnedFromStatue)
                 {
-                    if (Main.rand.Next(15) == 0)
+                    int chance = Main.expertMode ? MyWorld.awakenedMode ? 12 : 15 : 16;
+                    if (Main.rand.Next(chance) == 0)
                     {
                         Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("WaterEssence"), 1);
                     }
                 }
             }
-            /*if (NPC.downedMoonlord)
-            {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerNebula && !npc.SpawnedFromStatue)
-                {
-                    if (Main.rand.Next(54) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VoidEssence"), 1);
-                    }
-                }
-            }
-            if (NPC.downedMoonlord)
-            {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerSolar && !npc.SpawnedFromStatue)
-                {
-                    if (Main.rand.Next(54) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VoidEssence"), 1);
-                    }
-                }
-            }
-            if (NPC.downedMoonlord)
-            {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerStardust && !npc.SpawnedFromStatue)
-                {
-                    if (Main.rand.Next(54) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VoidEssence"), 1);
-                    }
-                }
-            }
-            if (NPC.downedMoonlord)
-            {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerVortex && !npc.SpawnedFromStatue)
-                {
-                    if (Main.rand.Next(54) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VoidEssence"), 1);
-                    }
-                }
-            }*/
             #endregion
 
             #region Boss Drops
@@ -233,7 +197,7 @@ namespace ElementsAwoken.NPCs
             #region Other
             if (npc.boss)
             {
-                int dropChance = Main.expertMode ? 200 : 250;
+                int dropChance = Main.expertMode ? MyWorld.awakenedMode ?  150 : 200 : 250;
                 if (Main.rand.Next(dropChance) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Awakener"));
@@ -254,21 +218,21 @@ namespace ElementsAwoken.NPCs
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Warhorn"));
                 }
             }
-            if (npc.type == NPCID.Shark)
+            if (npc.type == NPCID.Shark && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(15) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BabyShark"));
                 }
             }
-            if (npc.type >= NPCID.Salamander && npc.type <= NPCID.Salamander9)
+            if (npc.type >= NPCID.Salamander && npc.type <= NPCID.Salamander9 && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(15) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AxolotlMask"));
                 }
             }
-            if (npc.type == NPCID.Penguin || npc.type == NPCID.CrimsonPenguin || npc.type == NPCID.CorruptPenguin || npc.type == NPCID.PenguinBlack)
+            if ((npc.type == NPCID.Penguin || npc.type == NPCID.CrimsonPenguin || npc.type == NPCID.CorruptPenguin || npc.type == NPCID.PenguinBlack) && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(3) == 0)
                 {
@@ -296,6 +260,10 @@ namespace ElementsAwoken.NPCs
             if (npc.type == NPCID.WallofFlesh)
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DemonicFleshClump"), Main.rand.Next(10, 30));
+                if (Main.rand.Next(7) == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ThrowerEmblem"), 1);
+                }
             }
             if (npc.type == NPCID.GiantWormHead)
             {
@@ -315,132 +283,78 @@ namespace ElementsAwoken.NPCs
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MysticLeaf"), Main.rand.Next(1, 2));
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MagicalHerbs"), Main.rand.Next(3, 8));
-                if (Main.rand.Next(8) == 0)
+                if (Main.rand.Next(8) == 0 && !Main.expertMode)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrematedChaos"));
                 }
             }
-            if (npc.type == NPCID.WallofFlesh)
+            if (npc.type == NPCID.Tim && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(7) == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ThrowerEmblem"), 1);
-                }
-            }
-            if (npc.type == NPCID.Tim)
-            {
-                if (Main.rand.Next(2) == 0)
+                int dropChance = Main.expertMode ? MyWorld.awakenedMode ? 1 : 2 : 3;
+                if (Main.rand.Next(dropChance) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("IllusiveCharm"), 1);
                 }
             }
-            if (npc.type == NPCID.FireImp)
+            if (npc.type == NPCID.FireImp && !npc.SpawnedFromStatue)
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ImpEar"), Main.rand.Next(1, 2));
             }
-            if (npc.type == NPCID.LavaSlime)
+            if (npc.type == NPCID.LavaSlime && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(5) == 0)
+                int chance = Main.expertMode ? 4 : 5;
+                if (MyWorld.awakenedMode) chance = 3;
+                if (Main.rand.Next(chance) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("MagmaCrystal"), Main.rand.Next(1, 2));
                 }
             }
-            if (npc.type == NPCID.Hellbat)
+            if (npc.type == NPCID.Hellbat && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(49) == 0)
+                if (Main.rand.Next(79) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("HellbatWing"), 1);
                 }
             }
-            if (npc.type == NPCID.Lavabat)
+            if (npc.type == NPCID.Lavabat && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(39) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("HellbatWing"), 1);
                 }
             }
-            if (npc.type == NPCID.Harpy)
+            if (npc.type == NPCID.Harpy && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(50) == 0)
+                if (Main.rand.Next(99) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LightningCloud"), 1);
                 }
             }
-            if (Main.hardMode)
+            if (Main.hardMode && Main.rand.Next(1499) == 0 && !npc.SpawnedFromStatue)
             {
-                {
-                    if (Main.rand.Next(1499) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfinityCrys"), 1);
-                    }
-                }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfinityCrys"), 1);
             }
-            if (Main.bloodMoon)
+            if (Main.bloodMoon && Main.rand.Next(19) == 0 && !npc.SpawnedFromStatue)
             {
-                {
-                    if (Main.rand.Next(19) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FleshClump"), Main.rand.Next(1, 2));
-                    }
-                }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FleshClump"), Main.rand.Next(1, 2));
             }
-            if (NPC.downedBoss3)
-            {
-                if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
-                {
-                    if (Main.rand.Next(999) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Lament"), 1);
-                    }
-                }
-            }
-            if (NPC.downedBoss3)
-            {
-                if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
-                {
-                    if (Main.rand.Next(999) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Fireweaver"), 1);
-                    }
-                }
-            }
-            if (NPC.downedBoss3)
-            {
-                if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
-                {
-                    if (Main.rand.Next(999) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ChargedBlasterRepeater"), 1);
-                    }
-                }
-            }
-            if (NPC.downedBoss3)
-            {
-                if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneJungle) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
-                {
-                    if (Main.rand.Next(999) == 0)
-                    {
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LightningRod"), 1);
-                    }
-                }
-            }
-            if ((Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight) && (!Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon))
+            if (player.ZoneRockLayerHeight && !player.ZoneDungeon && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(400) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AssassinsKnife"), 1);
                 }
             }
-            if (npc.type == NPCID.Zombie && (!Main.hardMode))
+            if (npc.type == NPCID.Zombie && !Main.hardMode && !npc.SpawnedFromStatue)
             {
                 if (Main.rand.Next(12) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SteakShield"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneRockLayerHeight)
+            if (player.ZoneRockLayerHeight && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(1999) == 0)
+                if (Main.rand.Next(3999) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Tomato"), 1);
                 }
@@ -448,75 +362,54 @@ namespace ElementsAwoken.NPCs
             #endregion
 
             #region Artifact Drops
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDesert && !npc.SpawnedFromStatue)
+            if (player.ZoneDesert && !player.ZoneBeach && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(800) == 0)
+                if (Main.rand.Next(1000) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DiscordantAmber"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneUnderworldHeight && !npc.SpawnedFromStatue)
+            if (player.ZoneUnderworldHeight && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(800) == 0)
+                if (Main.rand.Next(1000) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FieryJar"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneSkyHeight && !npc.SpawnedFromStatue)
+            if (player.ZoneSkyHeight && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(600) == 0)
+                if (Main.rand.Next(800) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("StrangeTotem"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneSnow && !npc.SpawnedFromStatue)
+            if (player.ZoneSnow && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(800) == 0)
+                if (Main.rand.Next(1000) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("GlowingSlush"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneBeach && !npc.SpawnedFromStatue)
+            if (player.ZoneBeach && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(800) == 0)
+                if (Main.rand.Next(1000) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("OddWater"), 1);
                 }
             }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerNebula && !npc.SpawnedFromStatue)
+            if (MyWorld.voidInvasionUp && !npc.SpawnedFromStatue)
             {
-                if (Main.rand.Next(1200) == 0)
+                if (Main.rand.Next(1000) == 0)
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SoulOfPlight"), 1);
                 }
-            }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerSolar && !npc.SpawnedFromStatue)
-            {
-                if (Main.rand.Next(1200) == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SoulOfPlight"), 1);
-                }
-            }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerStardust && !npc.SpawnedFromStatue)
-            {
-                if (Main.rand.Next(1200) == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SoulOfPlight"), 1);
-                }
-            }
-            if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneTowerVortex && !npc.SpawnedFromStatue)
-            {
-                if (Main.rand.Next(1200) == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SoulOfPlight"), 1);
-                }
-            }
+            }          
             #endregion
 
             #region Enemy Spawns
             if (NPC.downedMoonlord) //EoC
             {
-                if (Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].ZoneDungeon && !npc.SpawnedFromStatue)
+                if (player.ZoneDungeon && !npc.SpawnedFromStatue)
                 {
                     if (Main.rand.Next(9) == 0)
                     {
@@ -570,21 +463,15 @@ namespace ElementsAwoken.NPCs
                 }
                 if (Main.slimeRainKillCount == killsRequired)
                 {
-                    NPC.NewNPC((int)player.Center.X - 3000, (int)player.Center.Y - 1500, mod.NPCType("ToySlime"));
+                    NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ToySlime"));
                 }
             }
             if (npc.type == NPCID.MoonLordCore && !ElementsAwoken.ancientsAwakenedEnabled && MyWorld.moonlordKills < 5)
             {
                 MyWorld.moonlordKills++;
-                Main.NewText("The world has been blessed with Luminite!", Color.GreenYellow);
-                for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 5E-05); k++) // xE-05 x is how many veins will spawn
-                {
-                    int x = WorldGen.genRand.Next(0, Main.maxTilesX);
-                    int y = WorldGen.genRand.Next((int)(Main.maxTilesY * .6f), Main.maxTilesY - 200); // WorldGen.worldSurfaceLow is actually the highest surface tile. In practice you might want to use WorldGen.rockLayer or other WorldGen values.
-
-                    WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), TileID.LunarOre);
-                }
+                MyWorld.genLuminite = true;
+                if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
             }
-        }
+        }       
     }
 }

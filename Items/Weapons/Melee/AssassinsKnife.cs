@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Assassin's Knife");
-            Tooltip.SetDefault("While holding the item, damage taken is increased by 2x");
+            Tooltip.SetDefault("While holding the item, damage taken is doubled");
         }
 
         public override void HoldItem(Player player)

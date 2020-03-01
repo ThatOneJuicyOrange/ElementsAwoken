@@ -10,7 +10,7 @@ namespace ElementsAwoken.Projectiles
     public class VoidPortalSinewave : ModProjectile
     {
         public bool invert = false;
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 8;

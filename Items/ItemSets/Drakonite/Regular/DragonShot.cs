@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Regular
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dragon Shot");
-            Tooltip.SetDefault("Turns normal arrows into Drakonite arrows");
+            Tooltip.SetDefault("Turns normal arrows into drakonite arrows");
         }
 
 

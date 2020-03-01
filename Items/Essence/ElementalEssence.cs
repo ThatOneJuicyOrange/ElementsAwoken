@@ -14,7 +14,8 @@ namespace ElementsAwoken.Items.Essence
             item.height = 20;
             item.maxStack = 999;
             item.value = Item.sellPrice(0, 1, 0, 0);
-            item.rare = 3;
+            item.rare = 11;
+            item.GetGlobalItem<EARarity>().rare = 12;
             ItemID.Sets.ItemNoGravity[item.type] = true;
         }
 

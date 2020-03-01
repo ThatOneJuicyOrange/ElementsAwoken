@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Storyteller
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Forever");
-            Tooltip.SetDefault("Shoots life stealing bolts");
+            Tooltip.SetDefault("Rapidly shoots life stealing bolts");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

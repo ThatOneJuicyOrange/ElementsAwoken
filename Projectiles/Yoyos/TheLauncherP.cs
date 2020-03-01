@@ -34,13 +34,13 @@ namespace ElementsAwoken.Projectiles.Yoyos
         {
             if (Main.rand.Next(7) == 0)
             {
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.Next(-50, 50) * .25f, Main.rand.Next(-50, 50) * .25f, mod.ProjectileType("TheLauncherBolt"), projectile.damage, 0, projectile.owner);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y - 16f, Main.rand.NextFloat(-12.5f, 12.5f), Main.rand.NextFloat(-12.5f, 12.5f), mod.ProjectileType("TheLauncherBolt"), projectile.damage, 0, projectile.owner);
             }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.velocity.Y -= Main.rand.Next(1, 20);
-            target.velocity.X -= Main.rand.Next(-20, 20);
+            target.velocity.Y -= Main.rand.Next(1, 20) * target.knockBackResist;
+            target.velocity.X += Main.rand.Next(-20, 20) * target.knockBackResist;
         }
     }
 }

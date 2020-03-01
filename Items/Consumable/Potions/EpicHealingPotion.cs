@@ -14,22 +14,27 @@ namespace ElementsAwoken.Items.Consumable.Potions
         {
             item.width = 28;
             item.height = 18;
-            item.useTurn = true;
+
             item.maxStack = 30;
-            item.healLife = 300;
-            item.rare = 10;
+
             item.useAnimation = 17;
             item.useTime = 17;
             item.useStyle = 2;
             item.UseSound = SoundID.Item3;
+
             item.consumable = true;
             item.potion = true;
+            item.useTurn = true;
+
+            item.healLife = 250;
+
             item.value = 10000;
+            item.rare = 10;
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Epic Healing Potion");
+            DisplayName.SetDefault("Grand Healing Potion");
         }
 
 

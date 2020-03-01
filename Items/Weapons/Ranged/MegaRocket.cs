@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Mega Rocket");
-            Tooltip.SetDefault("Fires a rocket\nHas a chance to shoot a Mega Rocket");
+            Tooltip.SetDefault("Has a chance to fire a Mega Rocket");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

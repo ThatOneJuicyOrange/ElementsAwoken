@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Burner Generator");
-            Tooltip.SetDefault("Consumes raw wood in the inventory to produce 1 energy per second\n1 wood burns for 15 seconds\nRight click to turn on");
+            Tooltip.SetDefault("Consumes raw wood in the inventory to produce 1 energy per second\n1 wood burns for 15 seconds\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -89,7 +89,7 @@ namespace ElementsAwoken.Items.Tech.Generators
                 producePowerCooldown--;
                 if (fuel > 0 && producePowerCooldown <= 0)
                 {
-                    producePowerCooldown = 60;
+                    producePowerCooldown = 90;
                     modPlayer.energy += 1;
                 }
             }

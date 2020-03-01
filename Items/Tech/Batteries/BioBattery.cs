@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
             recipe.AddIngredient(null, "HellstoneCapacitor", 2);
             recipe.AddIngredient(null, "MysticLeaf", 1);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 8);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

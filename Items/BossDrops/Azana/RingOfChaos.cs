@@ -24,8 +24,8 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ring of Chaos");
-            Tooltip.SetDefault("Pressing the ability key will create a shield around the player that absorbs damage, buffing the player with the more damage they take\n10% increased crit chance\n5% increased damage");
+            DisplayName.SetDefault("Mark of the Infection");
+            Tooltip.SetDefault("Pressing the ability key will create a shield around the player that absorbs damage, buffing the player as they absorb damage\n10% increased critical strike chance\n5% increased damage");
         }
 
 

@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lightning Cloud");
-            Tooltip.SetDefault("A storm brews above you, charging you with electricity\nOn hit, you release the electricity");
+            Tooltip.SetDefault("A storm brews above you, charging you with electricity\nWhen hit, you release the electricity");
         }
 
 

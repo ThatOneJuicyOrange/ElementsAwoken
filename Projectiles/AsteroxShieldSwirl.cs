@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class AsteroxShieldSwirl : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public float shrink = 100;
         public float dustAI = 20;
 

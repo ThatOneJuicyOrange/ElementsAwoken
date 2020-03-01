@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Leashed Hungry");
-            Tooltip.SetDefault("Heals the player on enemy hit");
+            Tooltip.SetDefault("Heals the player on enemy hits");
         }
         public override void AddRecipes()
         {

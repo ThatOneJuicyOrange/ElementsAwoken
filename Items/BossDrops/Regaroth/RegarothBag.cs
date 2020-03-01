@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
 
         public override bool CanRightClick()
@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {
@@ -63,10 +63,16 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
             {
                 player.QuickSpawnItem(mod.ItemType("RegarothTrophy"));
             }
-            if (Main.rand.Next(5) == 0)
+            if (Main.rand.Next(2) == 0)
             {
                 player.QuickSpawnItem(mod.ItemType("EnergyWeaversHelm"));
+            }
+            if (Main.rand.Next(2) == 0)
+            {
                 player.QuickSpawnItem(mod.ItemType("EnergyWeaversBreastplate"));
+            }
+            if (Main.rand.Next(2) == 0)
+            {
                 player.QuickSpawnItem(mod.ItemType("EnergyWeaversLeggings"));
             }
         }

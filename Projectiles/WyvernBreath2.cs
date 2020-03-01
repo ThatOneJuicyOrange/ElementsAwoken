@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class WyvernBreath2 : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public int damage = 0;
         public override void SetDefaults()
         {

@@ -27,8 +27,6 @@ namespace ElementsAwoken.NPCs.Critters
 
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
-
-            npc.friendly = true;
         }
 
         public override void SetStaticDefaults()
@@ -44,6 +42,7 @@ namespace ElementsAwoken.NPCs.Critters
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
+            spawnInfo.spawnTileY < Main.rockLayer &&
             !Main.snowMoon && 
             !Main.pumpkinMoon && 
             Main.dayTime 

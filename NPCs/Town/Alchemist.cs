@@ -47,7 +47,7 @@ namespace ElementsAwoken.NPCs.Town
         }
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
-            if (NPC.downedBoss3 && !ModContent.GetInstance<Config>().alchemistDisabled)
+            if (NPC.downedBoss2)
             {
                 return true;
             }
@@ -59,19 +59,19 @@ namespace ElementsAwoken.NPCs.Town
         }
 
         public override string TownNPCName()
-        {                                       //NPC names
+        {
             switch (WorldGen.genRand.Next(4))
             {
                 case 0:
-                    return "Laden True";
+                    return "Saul";
                 case 1:
-                    return "Drearier Lemurs";
+                    return "Darius";
                 case 2:
-                    return "Rearm Dire Lures";
+                    return "Eliseo";
                 case 3:
-                    return "Serial";
+                    return "Cadmus";
                 default:
-                    return "default";
+                    return "Saul";
             }
         }
 
@@ -99,7 +99,7 @@ namespace ElementsAwoken.NPCs.Town
             randomOffset = 2f;
         }
 
-        const int NumberShops = 3;
+        const int NumberShops = 4;
         static int shopNumber = 0;
         public string text = "";
         public string shopText = "";
@@ -108,49 +108,19 @@ namespace ElementsAwoken.NPCs.Town
         {
             switch (Main.rand.Next(6))
             {
-                case 0: text = "No matter how large the wound, my healing potions shall fix it"; break;
-                case 1: text = "Mana potions aren't much of a use to me, but I still sell them"; break;
-                case 2: text = "I travel the world searching for ingredients for my potions, its not an easy task"; break;
+                case 0: text = "No matter how large the wound, healing potions shall fix it."; break;
+                case 1: text = "All your potion needs, taken care of right here."; break;
+                case 2: text = "I travel the world searching for ingredients for my potions, its not an easy task."; break;
                 case 3: text = "I come from a dark world..."; break;
-                case 4: text = "Be careful out there, I hate fighting. I'd much rather talk my way out of it"; break;
-                case 5: text = "Going truffle worm hunting? I suggest an invisibility potion"; break;
+                case 4: text = "Be careful out there, I hate fighting. I'd much rather talk my way out of it."; break;
+                case 5: text = "Going truffle worm hunting? I suggest an invisibility potion."; break;
                 default:
                     return "default";
             }
-            if (shopNumber == 0)
-            {
-                shopText = "Health and Mana";
-            }
-            if (shopNumber == 1)
-            {
-                shopText = "Combat";
-            }
-            if (shopNumber == 2)
-            {
-                shopText = "Other";
-            }
-            return text + "\n\nShop: " + shopText;
-        }
-        // Multiple Shops code. multishop
-        public override void SetChatButtons(ref string button, ref string button2)
-        {
-            button = Language.GetTextValue("LegacyInterface.28");
-            button2 = "Next Shop";
-        }
+            string addText = "";
 
-        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
-        {
-            if (firstButton)
+            if (ModContent.GetInstance<Config>().alchemistPotions)
             {
-                shop = true;
-            }
-            else
-            {
-                shopNumber = shopNumber + 1 % NumberShops;
-                if (shopNumber > 2)
-                {
-                    shopNumber = 0;
-                }
                 if (shopNumber == 0)
                 {
                     shopText = "Health and Mana";
@@ -163,273 +133,412 @@ namespace ElementsAwoken.NPCs.Town
                 {
                     shopText = "Other";
                 }
-                Main.npcChatText = text + "\n\nShop: " + shopText;
+                if (shopNumber == 3)
+                {
+                    shopText = "Transmutation";
+                }
+                addText = "\n\nShop: " + shopText;
+            }
+            return text + addText;
+        }
+        // Multiple Shops code. multishop
+        public override void SetChatButtons(ref string button, ref string button2)
+        {
+            button = Language.GetTextValue("LegacyInterface.28");
+            if (shopNumber == 3) button = "Convert";
+            if (ModContent.GetInstance<Config>().alchemistPotions) button2 = "Next Shop";
+            else button2 = "Transmutation";
+        }
+
+        public override void OnChatButtonClicked(bool firstButton, ref bool shop)
+        {
+            if (firstButton)
+            {
+                if (ModContent.GetInstance<Config>().alchemistPotions)
+                {
+                    if (shopNumber < 3) shop = true;
+                    else
+                    {
+                        Main.playerInventory = true;
+                        Main.npcChatText = "";
+                        ModContent.GetInstance<ElementsAwoken>().AlchemistUserInterface.SetState(new UI.AlchemistUI());
+                    }
+                }
+                else
+                {
+                    shop = true;
+                }
+            }
+            else
+            {
+                if (ModContent.GetInstance<Config>().alchemistPotions)
+                {
+                    shopNumber = shopNumber + 1 % NumberShops;
+                    if (shopNumber > 3)
+                    {
+                        shopNumber = 0;
+                    }
+                    if (shopNumber == 0)
+                    {
+                        shopText = "Health and Mana";
+                    }
+                    if (shopNumber == 1)
+                    {
+                        shopText = "Combat";
+                    }
+                    if (shopNumber == 2)
+                    {
+                        shopText = "Other";
+                    }
+                    if (shopNumber == 3)
+                    {
+                        shopText = "Transmutation";
+                    }
+                    Main.npcChatText = text + "\n\nShop: " + shopText;
+                }
+                else
+                {
+                    Main.playerInventory = true;
+                    Main.npcChatText = "";
+                    ModContent.GetInstance<ElementsAwoken>().AlchemistUserInterface.SetState(new UI.AlchemistUI());
+                }
             }
         }
 
         public override void SetupShop(Chest shop, ref int nextSlot)
         {
-            if (shopNumber == 0) // healing and mana
+            if (ModContent.GetInstance<Config>().alchemistPotions)
             {
-                #region Healing Potions
-                shop.item[nextSlot].SetDefaults(ItemID.LesserHealingPotion);
-                shop.item[nextSlot].shopCustomPrice = 7500;
-                nextSlot++;
-                if (NPC.downedBoss2) // && !Main.hardMode
+                if (shopNumber == 0) // healing and mana
                 {
-                    shop.item[nextSlot].SetDefaults(ItemID.HealingPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    #region Healing Potions
+                    shop.item[nextSlot].SetDefaults(ItemID.LesserHealingPotion);
+                    shop.item[nextSlot].shopCustomPrice = 7500;
                     nextSlot++;
-                }
-                if (Main.hardMode)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.GreaterHealingPotion);
-                    shop.item[nextSlot].shopCustomPrice = 75000;
-                    nextSlot++;
-                }
-                if (NPC.downedAncientCultist)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.SuperHealingPotion);
-                    shop.item[nextSlot].shopCustomPrice = 100000;
-                    nextSlot++;
-                }
-                if (NPC.downedMoonlord)
-                {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("EpicHealingPotion"));
-                    shop.item[nextSlot].shopCustomPrice = 200000;
-                    nextSlot++;
-                }
-                #endregion
-                #region Mana Potions
+                    if (NPC.downedBoss2) // && !Main.hardMode
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.HealingPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (Main.hardMode)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.GreaterHealingPotion);
+                        shop.item[nextSlot].shopCustomPrice = 75000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedAncientCultist)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.SuperHealingPotion);
+                        shop.item[nextSlot].shopCustomPrice = 100000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMoonlord)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("EpicHealingPotion"));
+                        shop.item[nextSlot].shopCustomPrice = 200000;
+                        nextSlot++;
+                    }
+                    #endregion
+                    #region Mana Potions
                     shop.item[nextSlot].SetDefaults(ItemID.LesserManaPotion);
                     shop.item[nextSlot].shopCustomPrice = 7500;
                     nextSlot++;
-                if (NPC.downedBoss2)
+                    if (NPC.downedBoss2)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.ManaPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (Main.hardMode)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.GreaterManaPotion);
+                        shop.item[nextSlot].shopCustomPrice = 75000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMechBossAny)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.SuperManaPotion);
+                        shop.item[nextSlot].shopCustomPrice = 100000;
+                        nextSlot++;
+                    }
+                    #endregion
+                    #region other
+                    if (NPC.downedBoss1)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.LesserRestorationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.RestorationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 20000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.RegenerationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.ManaRegenerationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    #endregion
+                }
+                else if (shopNumber == 1) // combat
                 {
-                    shop.item[nextSlot].SetDefaults(ItemID.ManaPotion);
+                    #region Defense
+                    if (NPC.downedBoss1)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.IronskinPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedBoss2)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("DemonPhilter"));
+                        shop.item[nextSlot].shopCustomPrice = 30000;
+                        nextSlot++;
+                    }
+                    if (Main.hardMode)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("HellFury"));
+                        shop.item[nextSlot].shopCustomPrice = 40000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMoonlord)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CelestialEmpowerment"));
+                        shop.item[nextSlot].shopCustomPrice = 100000;
+                        nextSlot++;
+                    }
+                    #endregion
+                    #region Other
+                    shop.item[nextSlot].SetDefaults(ItemID.ArcheryPotion);
                     shop.item[nextSlot].shopCustomPrice = 10000;
                     nextSlot++;
-                }
-                if (Main.hardMode)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.GreaterManaPotion);
-                    shop.item[nextSlot].shopCustomPrice = 75000;
+                    shop.item[nextSlot].SetDefaults(ItemID.EndurancePotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
                     nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.ThornsPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.TitanPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.SwiftnessPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    if (NPC.downedBoss2)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.AmmoReservationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedBoss3)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.SummoningPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.GravitationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.HeartreachPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.MagicPowerPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.WrathPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (Main.hardMode)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.InfernoPotion);
+                        shop.item[nextSlot].shopCustomPrice = 30000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.RagePotion);
+                        shop.item[nextSlot].shopCustomPrice = 30000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.LifeforcePotion);
+                        shop.item[nextSlot].shopCustomPrice = 30000;
+                        nextSlot++;
+                    }
+                    #endregion
                 }
-                if (NPC.downedMechBossAny)
+                else if (shopNumber == 2) // other
                 {
-                    shop.item[nextSlot].SetDefaults(ItemID.SuperManaPotion);
+                    #region Other
+                    shop.item[nextSlot].SetDefaults(ItemID.RecallPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.WormholePotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.InvisibilityPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.BuilderPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.FeatherfallPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.HunterPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.TrapsightPotion); // dangersense
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.MiningPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.NightOwlPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.ShinePotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.ThornsPotion);
+                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    nextSlot++;
+                    if (NPC.savedAngler)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.CratePotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.FishingPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.FlipperPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.SonarPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.GillsPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedBoss3)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.BattlePotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.CalmingPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.GravitationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.HeartreachPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.ObsidianSkinPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.WarmthPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                        shop.item[nextSlot].SetDefaults(ItemID.SpelunkerPotion);
+                        shop.item[nextSlot].shopCustomPrice = 10000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMechBossAny)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.TeleportationPotion);
+                        shop.item[nextSlot].shopCustomPrice = 50000;
+                        nextSlot++;
+                    }
+                    shop.item[nextSlot].SetDefaults(ItemID.GenderChangePotion);
                     shop.item[nextSlot].shopCustomPrice = 100000;
                     nextSlot++;
+                    if (NPC.downedBoss3)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Chaospotion"));
+                        shop.item[nextSlot].shopCustomPrice = 50000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMechBossAny)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("HavocPotion"));
+                        shop.item[nextSlot].shopCustomPrice = 100000;
+                        nextSlot++;
+                    }
+                    if (NPC.downedMoonlord)
+                    {
+                        shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CalamityPotion"));
+                        shop.item[nextSlot].shopCustomPrice = 250000;
+                        nextSlot++;
+                    }
+                    #endregion
                 }
-                #endregion
-                #region other
+            }
+            else
+            {
+                shop.item[nextSlot].SetDefaults(ItemID.DaybloomSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.MoonglowSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.BlinkrootSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.DeathweedSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.WaterleafSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.ShiverthornSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                shop.item[nextSlot].SetDefaults(ItemID.FireblossomSeeds);
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 0, 5, 0);
+                nextSlot++;
+                nextSlot++;
+                nextSlot++;
+                nextSlot++;
+
+                if (NPC.downedSlimeKing)
+                {
+                    shop.item[nextSlot].SetDefaults(ItemID.DayBloomPlanterBox);
+                    nextSlot++;
+                }
+                if (NPC.downedQueenBee)
+                {
+                    shop.item[nextSlot].SetDefaults(ItemID.MoonglowPlanterBox);
+                    nextSlot++;
+                }
                 if (NPC.downedBoss1)
                 {
-                    shop.item[nextSlot].SetDefaults(ItemID.LesserRestorationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.RestorationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 20000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.RegenerationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.ManaRegenerationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                }
-                #endregion
-            }
-            else if (shopNumber == 1) // combat
-            {
-                #region Defense
-                if (NPC.downedBoss1)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.IronskinPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
+                    shop.item[nextSlot].SetDefaults(ItemID.BlinkrootPlanterBox);
                     nextSlot++;
                 }
                 if (NPC.downedBoss2)
                 {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("DemonPhilter"));
-                    shop.item[nextSlot].shopCustomPrice = 30000;
+                    if (WorldGen.crimson)
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.CrimsonPlanterBox);
+                    }
+                    else
+                    {
+                        shop.item[nextSlot].SetDefaults(ItemID.CorruptPlanterBox);
+                    }
+                    nextSlot++;
+                }
+                if (NPC.downedBoss3)
+                {
+                    shop.item[nextSlot].SetDefaults(ItemID.WaterleafPlanterBox);
+                    nextSlot++;
+                    shop.item[nextSlot].SetDefaults(ItemID.ShiverthornPlanterBox);
                     nextSlot++;
                 }
                 if (Main.hardMode)
                 {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("HellFury"));
-                    shop.item[nextSlot].shopCustomPrice = 40000;
+                    shop.item[nextSlot].SetDefaults(ItemID.FireBlossomPlanterBox);
                     nextSlot++;
                 }
-                if (NPC.downedMoonlord)
-                {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CelestialEmpowerment"));
-                    shop.item[nextSlot].shopCustomPrice = 100000;
-                    nextSlot++;
-                }
-                #endregion
-                #region Other
-                shop.item[nextSlot].SetDefaults(ItemID.ArcheryPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.EndurancePotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.ThornsPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.TitanPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.SwiftnessPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                if (NPC.downedBoss2)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.AmmoReservationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                }
-                if (NPC.downedBoss3)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.SummoningPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.GravitationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.HeartreachPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.MagicPowerPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.WrathPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                }
-                if (Main.hardMode)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.InfernoPotion);
-                    shop.item[nextSlot].shopCustomPrice = 30000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.RagePotion);
-                    shop.item[nextSlot].shopCustomPrice = 30000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.LifeforcePotion);
-                    shop.item[nextSlot].shopCustomPrice = 30000;
-                    nextSlot++;
-                }
-                #endregion
+                if (Main.moonPhase == 1) shop.item[20].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("AlchemistsTimer"));
             }
-            else if (shopNumber == 2) // other
-            {
-                #region Other
-                shop.item[nextSlot].SetDefaults(ItemID.RecallPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.WormholePotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.InvisibilityPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.BuilderPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.FeatherfallPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.HunterPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.TrapsightPotion); // dangersense
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.MiningPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.NightOwlPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.ShinePotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                shop.item[nextSlot].SetDefaults(ItemID.ThornsPotion);
-                shop.item[nextSlot].shopCustomPrice = 10000;
-                nextSlot++;
-                if (NPC.savedAngler)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.CratePotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.FishingPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.FlipperPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.SonarPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.GillsPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                }
-                if (NPC.downedBoss3)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.BattlePotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.CalmingPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.GravitationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.HeartreachPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.ObsidianSkinPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.WarmthPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                    shop.item[nextSlot].SetDefaults(ItemID.SpelunkerPotion);
-                    shop.item[nextSlot].shopCustomPrice = 10000;
-                    nextSlot++;
-                }
-                if (NPC.downedMechBossAny)
-                {
-                    shop.item[nextSlot].SetDefaults(ItemID.TeleportationPotion);
-                    shop.item[nextSlot].shopCustomPrice = 50000;
-                    nextSlot++;
-                }
-                shop.item[nextSlot].SetDefaults(ItemID.GenderChangePotion);
-                shop.item[nextSlot].shopCustomPrice = 100000;
-                nextSlot++;
-                if (NPC.downedBoss3)
-                {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Chaospotion"));
-                    shop.item[nextSlot].shopCustomPrice = 50000;
-                    nextSlot++;
-                }
-                if (NPC.downedMechBossAny)
-                {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("HavocPotion"));
-                    shop.item[nextSlot].shopCustomPrice = 100000;
-                    nextSlot++;
-                }
-                if (NPC.downedMoonlord)
-                {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CalamityPotion"));
-                    shop.item[nextSlot].shopCustomPrice = 250000;
-                    nextSlot++;
-                }
-                #endregion
-            }
-        } 
+        }
     }
 }

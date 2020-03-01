@@ -176,6 +176,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 {
                     originX = P.Center.X;
                     originY = P.Center.Y;
+                    npc.Center = P.Center;
+                    npc.netUpdate = true;
                 }
                 if (npc.ai[0] < 60)
                 {
@@ -206,7 +208,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     for (int l = 0; l < orbitalCount; l++)
                     {
                         int distance = 360 / orbitalCount;
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusBlade"), npc.damage / 2, 0f, 0, l * distance, npc.whoAmI);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusBlade"), npc.damage / 2, 0f, Main.myPlayer, l * distance, npc.whoAmI);
                     }
                     npc.localAI[2]++;
                 }
@@ -293,7 +295,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                                     speed = -8f;
                                 }
                                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed, 0f, mod.ProjectileType("KrecheusBolt"), projectileBaseDamage, 0f, 0);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, speed, 0f, mod.ProjectileType("KrecheusBolt"), projectileBaseDamage, 0f, Main.myPlayer);
                                 shootTimer = 5;
                             }
                             if (npc.ai[3] >= 60)
@@ -344,7 +346,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                             npc.position.X = spinX;
                             npc.position.Y = spinY;
 
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusCircle"), projectileBaseDamage, 0f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusCircle"), projectileBaseDamage, 0f, Main.myPlayer);
                             spinDetectDelay--;
                             if (spinDetectDelay <= 0)
                             {
@@ -493,7 +495,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusShard"), 0, 0f, 0, i);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KrecheusShard"), 0, 0f, Main.myPlayer, i);
                 }
                 for (int k = 0; k < 80; k++)
                 {

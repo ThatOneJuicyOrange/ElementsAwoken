@@ -17,169 +17,135 @@ Donations are on the forum allowing you to get your own custom weapon, accessory
 Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
-1.3.9 (fixing the damn versioning)
+1.3.12
 -Additions
-   - The Boots of the Void and Nyan now both have their own special dashes
-   - Gravity Core- consumes energy to set the players gravity
+  - Wasteland lore quotes from the Dryad
+  - Firebrick
+  - Mayhemm's developer item :)
+  - Aegida's donator items
+  - kREEpDABoom donator item
+  - Lantards donator armour
+  - InstaFiz's donator item
+  - sans harp sans harp sans harp sans harp (Harp of Judgement)
+  - Fizzler
+  - Napalm Cannon
+  - Awakened Mode items for:
+    - Toy Slime
+    - Void Leviathan
+    - Permafrost
+    - King Slime
+    - Eye of Cthulhu
+    - Queen Bee
+    - Skeletron
+    - Wall of Flesh
+  - More
 -Changes
-   - Void Leviathan Rework!
-   - Void Leviathan's Aegis now says the hotkey in the tooltip
-   - Ancient Ice Crystal is now Enchanted Ice Crystal
-   - Furosia Rework
-   - Infernace AI improved
+  - Coilgun now says it uses bullets
+  - The Chaos Tomato now has some fun effects
+  - Cooldown Buffs now have a different colour to regular buffs and it is consistant
+  - Matter manipulator now can cut trees
+  - Azana drop name changes
+  - Elemental Capsule & Voidblood Heart can be crafted at the demon altar
+  - Flare's ability cooldown only ticks down when its equipped
+  - Removed flamethrower from Snower's recipe
+  - Void orbs now spawn around a fixed Y height instead of the players Y height during the Void Leviathan fight
+  - Charge Rifle consumes ammo and if not charged fully, now shoots the ammo used instead of a regular bullet
+  - Removed the Bullseye Potion
+  - Elites look a bit better
+  - Poison elites now have a colour
+  - Electric elites are rarer in pre hardmode and cant spawn until EoC is defeated
 -Bug Fixes
-   - Fixed a few PlayerUtils bugs
-1.3.8.5
--Additions
-   - Boss Highlights Support
--Bug Fixes
-   - Void Leviathan now doesnt despawn in multiplayer
-   - Void Leviathan now has the correct defence
-   - Item Magnet no longer puts Stars and Hearts in chests
--Changes
-   - Boss Prompts now only happen after 30 minutes and have been changed
-   - Infernaces Wrath now spawns Infernace's Guardians instead of setting the player on fire
-   - Boss Prompts reworked slightly
-   - Tomb Crawler tooth renamed Dune Splicer Tooth
-   - Reduced the drop rate of the Assassins Knife from 1/100 to 1/400  
-   - Elemental Capsule can now toggle Awakened Mode
-   - Awakened Mode items now say "Awakened" at the end of the tooltip
-   - Reduced the health of Astra's Gazers
-1.3.8.4
-- Fixed a fatal error in the despawning of The Celestials
-1.3.8.3
--Additions
-  - Lihzahrdian Explorer's Boots to allow you to walk on wooden spikes
-  - Sky armour helmets for each class
--Bug Fixes
-  - Fixed multiplayer life breaking MK 2 :(
-  - Fixed multiplayer DOTV?
-  - Fixed Gem Lasers not shooting and made them consume ammo
-  - Ancient items can now be made with platinum
-  - The Ancients now drop their treasure bag correctly
-  - Screenshake now works slightly differently, correcting multiplayer
-  - Manashard whip now works correctly
-  - Chromacast no longer kills town npcs
-  - Fixed The Celestials not dropping the correct items
-  - The Celestials should work a bit better in multiplayer?
-  - Fixed mod sounds not scaling with game volume
-  - Fixed all Demonite using items not being able to be crafted with crimtane
-Changes
-  - Astra & The Celestials items got a resprite
-  - The Celestials have had a slight rework and have some awakened exclusive attacks
-  - Buffed Viridium Greatsword
-  - Buffed Pandemonium
-  - Infernaces monoliths now spawn on platforms too
-  - Nerfed Gust Strike
-  - Reduced amount of Cosmic Shards dropped by the Cosmic Observer
-  - Nerfed Stinger
-  - Reduced Hell Katanas swing speed
-  - Buffed Ataxia IV
-  - Nerfed Sandstorm Staff
-  - Renamed Flare Sword to Blade of Ashes and nerfed it
-  - Buffed Sky Scraper
-  - Nerfed Searing Blaze
-  - Nerfed Void Armours Set Bonus
-  - Increased Lunar Emblem damage reduction
-  - Decreased Flower Power fire rate but increased damage
-  - Boots of Nyan now require Rainbow Dye instead of Intense Rainbow Dye
-  - Stat increases are no longer craftable with Calamity Enabled
-  - Changed the way Awakened Mode scales bosses (now percentage rather than static)
-  - Renamed Aero Armor to Empyrean Armor
-  - Buffed Oceanic Armors defence
-  - Nerfed Drakonite Items 
-  - Buffed Drakonite pickaxe slightly
-  - Nerfed Charged Blaster Repeater
-  - Nerfed Sanguine
-  - Buffed Petal Pike
-  - Buffed Petal Battleaxe
-  - Nerfed Sandballs
-  - Nerfed Dragon's Breath
-  - Nerfed Bonfire Pummel
-  - Nerfed/Reworked Blazing Trisword (and an ID change)
-  - Nerfed/Reworked Scythe of Eternal Flame
-  - Buffed Incinirator
-  - Buffed Blaze Fury
-  - Nerfed Fire Blaster
-1.3.8.2- Happy New Years <3
--Bug Fixes
-  - Energy items should no longer crash
-  - Awakened mode item now spawns in the inventory
-  - In awakened mode, random text no longer appears
-  - Fixed and improved Astra's Flare being only one colour and targetting friendlies
-  - You can no longer get dev armour out of Pre-HM bags
-  - Lightning Rod and Solar Generator I can now be crafted with lead too
-  - The Ancient Amalgamate no longer makes minions hostile
-  - There are now more backup scenes in the credits
-  - Credits now work better in different resolutions
-  - Fixed some worm bosses scaling extra in awakened mode
-  - Wasteland now drops his Awakened item
-Changes
-  - Fixed typos
-  - Volcanox now drops Pyroplasm and Volcanic stone out of its treasure bag in Expert Mode
-  - Nerfed a few Awakened Mode bosses
-  - Nerfed Sky Fury
-  - Nerfed Assasins Knife
-  - Reworked and nerfed Gust Strike
-  - Nerfed Armageddon and made it harder to obtain
-  - Buffed the Dubstep Gun
-  - Buffed Hallowed Radiance
-1.3.8.1
--Bug Fixes
-  - Reworked recipe groups, hopefully fixing a few mod conflicts
-  - Fixed infernace in non-awakened mode
-  - AA now has the correct amount of health
-  - Multiplayer now works again- but chaotic hearts, empty vessels and lunar stars can no longer be used due to some server bugs
--Changes
-  - Boss prompt buffs now say they can be disabled in config
-1.3.8- Ancients Awakened update ;)
--Note: there is a small amount of content that isnt included in the update that will be coming out over the next few weeks hopefully. Merry Christmas from the team <3
--Additions
-  - The Ancients (NEW BOSS)
-  - Player Energy
-    - The player generates energy (like mana) through many different kinds of generators
-    - Energy is used for automation and tech weapons and tools
-  - New tech items
-  - Awakened Mode
-    - Insanity, gets increased and decreased based on circumstances and being low sanity is bad for the player
-    - Elite NPCs- if there are more than 5 enemies of a type, they might be turned into an elite
-  - Some automation!
-    - Auto Driller- digs a 3 block tunnel underneath
-    - Auto Smelter- automatically smelts vanilla ore in your inventory
-    - Auto Digger- digs nearby ores
-  - A lab for The Ancients
-  - Voidite Ore- Spawns post Void Leviathan up to 3 times
-  - Putrid and Blightfire items
-  - Alchemists Timer- Shows the amount of DPS your buffs are doing
-  - Dryads Radar - Detects nearby evils or hallowed
-  - Spike Boots - Allows walking on dungeon spikes
-  - Lantards Donator items- Thank you :)
-  - Credits at the end of the game after beating the Ancients
-  - Crows Dantor items- Thank you :)
-  - Mysterious potions that spawn in golden chests on world generation, you have to drink it to find out what it does
-  - Spawner for the slime rain
-  - Health, mana and accessory slot increases
--Changes
-  - The Ancient items are now themed after the Ancients boss
-  - Supreme Awakener now only requires 1 awakener
-  - Azana now drops Discordant Ore instead of bars
-  - You can now teleport to any discovered location on the map with the Sky function of the Infinity Gauntlet
-  - A better, now ingame config
-  - Regaroth's projectiles are no longer dust projectiles
-  - Drakonite enemy balancing
-  - Reduced the amount of gel needed for the Geltic Armour
-  - Better wings (not so wings) animation for Skyline Whirlwind
-  - Many more
--Bug Fixes
-  - Custom recipes are now in the game properly
-  - Scourge fighter trail now follows the engine properly
-  - Rarities no longer randomly increase and decrease
-  - It no longer rains whenever you open a world
-  - Moreeee. Much more
+  - Strange Ukelele no longer has extra effects. Also got resprited and has a back sprite when equipped
+  - Summons can now use the right click to target feature. Might not work on some summons- please report these
+  - Immortal Resolve now works
+  - Credits now work
+  - You can no longer rip off the Infection Heart
 -Resprites
-  - The Celestials resprite
-  - Volcanox and item resprites!
-  - Scourge Fighter and item resprites!
-  - Desert item & elemental resprites
-  - Infinity Stone resprites
-  - Various resprites
+  - Azana phase 1
+  - Azana phase 2 (only a recolour)
+  - Mega Rocket
+  - Storm Strike
+  - Permafrost Mask
+  - Plasma Rifle
+  - Refined Drakonite 
+  - Elder Shade Wyrm
+  - Mortemite
+  - More
+1.3.11.1
+-Bug Fixes
+   - Blightfire is now able to be made again
+   - Fixed a bug with mods that increase the max buffs
+   - Improved worm pets
+   - Fixed Calamity Banner
+1.3.11
+-Additions
+   - Spawnrate Banners made with the spawnrate potions with a less potent effect
+   - Toy Slime Mask
+-Changes
+   - Removed the max mana cap
+   - Made the balancer statue cut your buffs back in half when it is destroyed
+   - Energy Weaver's Armour now has a 50% chance to drop one piece instead of 20% to drop all
+   - Reworked Azana
+   - Slightly changed Coilgun's Recipe
+   - Ghostbrand is now post Duke Fishron and shoots a projectile
+   - Nerfed Baby Shark
+   - Nerfed Wormer
+   - Lightning Rod is now a proper sentry staff
+   - Reduced the speed of The Celestials
+   - Nerfed Enchanted Staff
+   - Removed Biomatter from the Ulticore recipe
+   - Moved Tactical Strike to post Plantera
+   - Nerfed Stormstrike
+   - Nerfed Mana Blaster
+   - Nerfed Mana Rifle
+   - Increased the price of Lunar Emblems
+   - Reduced Amount of Neutron Fragments in Charred Core
+   - Little Buddy is now an energy weapon and got a slight rework
+   - Floral Enemies dont drop as much gold and spawn after Queen Bee now
+   - Reduced the amount of essence you need to craft the elemental boss summons
+   - Nerfed Energy Weaver's Armour
+   - Gem of the Universe now drops during the Dawn of the Void
+   - Increased the artifact items sell price massively
+   - Increased the price of the elemental boots
+   - Reduced money dropped by vampire bats
+   - Artifact materials now drop less frequently
+   - Hellbat wing drops less frequently
+   - Nerfed Bonfire Pummel
+   - Life stealing diamonds now only steal life if the player is under max health and there is less than 15 healing projectiles on the screen
+   - Changed Ocean's Ray, buffed it and added new effects
+   - Nerfed Burner Generators power output
+   - Dragon Fury reworked
+   - The Alchemist no longer sells potions, instead sells seeds and planter boxes and the Alchemists Timer. The potion shop can be enabled in config
+   - Dragonfire is now extinguished in water
+   - Hypothermia chills the player less
+   - Greater Drakonite enemies balanced better
+   - Renamed Void Armour to Gloomhandler Armour
+   - ThatOneJuicyOrange_ dev set now has a chance to drop from boss bags
+   - Infernace's Wrath ashstorm looks better (thanks yuyutsu)
+   - Made the Impish Warhorn have a visual indicator and be harder to make
+   - Changed the Void Leviathans armour piercing resistance formula
+   - Reduced spread of the Dragonfire
+   - Essences drop more in awakened mode and less in normal
+   - Infernace drops more money
+   - Reduced droprate of the Lightning Cloud
+   - Reduced amount of fragments required for a Neutron Fragment
+-Bug Fixes
+   - Mystic Bunny is now able to be damaged and doesnt spawn underground
+   - Fixed the Ancient Amalgamate from spawning twice
+   - Toy Robot and Scorpion Minions now sit on platforms and dont poop
+   - Regaroth Minions no longer drop coins
+   - Fixed some inefficient code in the custom rarities
+   - Launcher now scales with knockback resistance
+   - Enemies no longer spawn where they shouldnt in multiplayer
+   - Dragonfire bullets can now crit
+   - More
+-Resprites
+   - Coilgun
+   - Ghostbrand
+   - Obsidious Items
+   - Royal Scale
+   - Drakonite Items
+   - Wormer
+   - Spinal Splayer
+   - Sanguine
+   - More I missed

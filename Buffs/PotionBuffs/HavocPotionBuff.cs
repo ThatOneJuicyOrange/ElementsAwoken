@@ -11,7 +11,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
         {
             Main.buffNoTimeDisplay[Type] = false;
             DisplayName.SetDefault("Havoc");
-            Description.SetDefault("Spawnrates increased by 15");
+            Description.SetDefault("Spawnrates increased by 4x");
         }
         public override void Update(Player player, ref int buffIndex)
         {

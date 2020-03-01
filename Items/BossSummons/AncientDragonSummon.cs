@@ -40,8 +40,16 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheEye"));
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("AncientWyrmHead"));
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheEye"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("AncientWyrmHead"));
+            }
+            else
+            {
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("TheEye"), 0f, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("AncientWyrmHead"), 0f, 0f, 0, 0, 0);
+            }
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
@@ -52,7 +60,7 @@ namespace ElementsAwoken.Items.BossSummons
             recipe.AddIngredient(ItemID.FragmentSolar, 1);
             recipe.AddIngredient(ItemID.FragmentStardust, 1);
             recipe.AddIngredient(ItemID.FragmentVortex, 1);
-            recipe.AddIngredient(ItemID.ChlorophyteBar, 4);
+            recipe.AddIngredient(null, "RefinedDrakonite", 8);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

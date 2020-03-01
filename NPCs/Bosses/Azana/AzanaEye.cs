@@ -15,14 +15,43 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
     [AutoloadBossHead]
     public class AzanaEye : ModNPC
     {
-        int text = 0;
-
+        private float dashAI
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float aiState
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float dashTimer
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float attackCool
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+        public override string Texture
+        {
+            get
+            {
+                if (ElementsAwoken.aprilFools) return "ElementsAwoken/NPCs/Bosses/Azana/AzanaFools";
+                return "ElementsAwoken/NPCs/Bosses/Azana/AzanaEye";
+            }
+        }
+        public override string BossHeadTexture  => "ElementsAwoken/NPCs/Bosses/Azana/AzanaEye_Head_Boss";
         public override void SetDefaults()
         {
             npc.lifeMax = 300000;
             npc.damage = 150;
             npc.defense = 60;
             npc.knockBackResist = 0f;
+
+            npc.aiStyle = -1;
 
             npc.width = 126;
             npc.height = 116;
@@ -35,25 +64,22 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
 
             npc.scale = 1f;
             npc.HitSound = SoundID.NPCHit4;
-            npc.DeathSound = SoundID.NPCDeath14;
+            npc.DeathSound = SoundID.NPCDeath1;
             npc.value = Item.buyPrice(0, 0, 0, 0);
             npc.npcSlots = 1f;
 
             music = MusicID.Boss2;
-            //music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/AzanaThemeP1");
 
-            npc.buffImmune[BuffID.Poisoned] = true;
-            npc.buffImmune[BuffID.OnFire] = true;
-            npc.buffImmune[BuffID.Venom] = true;
-            npc.buffImmune[BuffID.ShadowFlame] = true;
-            npc.buffImmune[BuffID.CursedInferno] = true;
-            npc.buffImmune[BuffID.Frostburn] = true;
-            npc.buffImmune[mod.BuffType("IceBound")] = true;
-            npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            NPCsGLOBAL.ImmuneAllEABuffs(npc);
+            for (int k = 0; k < npc.buffImmune.Length; k++)
+            {
+                npc.buffImmune[k] = true;
+            }
+
             bossBag = mod.ItemType("AzanaBag");
 
-            NPCID.Sets.TrailCacheLength[npc.type] = 3;
-            NPCID.Sets.TrailingMode[npc.type] = 0;
+            NPCID.Sets.TrailCacheLength[npc.type] = 8;
+            NPCID.Sets.TrailingMode[npc.type] = 3;
         }
         public override void SetStaticDefaults()
         {
@@ -70,20 +96,23 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 npc.defense = 75;
             }
         }
-        public override bool PreDraw(SpriteBatch spritebatch, Color drawColor)
+        public override bool PreDraw(SpriteBatch spritebatch, Color lightColor)
         {
             Vector2 drawOrigin = new Vector2(Main.npcTexture[npc.type].Width * 0.5f, Main.npcTexture[npc.type].Height * 0.5f);
             SpriteEffects spriteEffects = npc.direction != 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             for (int k = 0; k < npc.oldPos.Length; k++)
             {
-                Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY);
-                Color color = npc.GetAlpha(drawColor) * ((float)(npc.oldPos.Length - k) / (float)npc.oldPos.Length);
-                spritebatch.Draw(Main.npcTexture[npc.type], drawPos, null, color, npc.rotation, drawOrigin, npc.scale, spriteEffects, 0f);
+                Vector2 drawPos = npc.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, npc.gfxOffY); 
+                float alpha = 1 - ((float)k / (float)npc.oldPos.Length);
+                Color color = Color.Lerp(npc.GetAlpha(lightColor), new Color(196, 58, 76), (float)k / (float)npc.oldPos.Length) * alpha;
+                spritebatch.Draw(Main.npcTexture[npc.type], drawPos, null, color, npc.oldRot[k], drawOrigin, npc.scale, spriteEffects, 0f);
             }
+            DateTime now = DateTime.Today;
+            if (ElementsAwoken.aprilFools) return true;
             var texture = Main.npcTexture[npc.type];
             var frame = texture.Frame();
             var origin = frame.Size() * 0.5f;
-            spritebatch.Draw(Main.npcTexture[npc.type], npc.Center - Main.screenPosition, frame, drawColor, npc.rotation, origin, npc.scale, spriteEffects, 0f);
+            spritebatch.Draw(Main.npcTexture[npc.type], npc.Center - Main.screenPosition, frame, lightColor, npc.rotation, origin, npc.scale, spriteEffects, 0f);
             spritebatch.Draw(mod.GetTexture("NPCs/Bosses/Azana/AzanaEye_Glow"), npc.Center - Main.screenPosition, frame, Color.White, npc.rotation, origin, npc.scale, spriteEffects, 0f);
             return false;
         }
@@ -93,6 +122,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ChaoticGaze"));
             }
+            if (ElementsAwoken.aprilFools) Main.NewText("April Fools :)", new Color(235, 70, 106));
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -113,22 +143,23 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
         public override void AI()
         {
             Player P = Main.player[npc.target];
-            bool expertMode = Main.expertMode;
             npc.TargetClosest(true);
 
-            Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
+            
+             if (!ElementsAwoken.aprilFools)   Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
+            else Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.9f) / 255f, ((255 - npc.alpha) * 0.9f) / 255f);
             npc.spriteDirection = npc.direction;
 
 
-            if (npc.life <= npc.lifeMax * 0.5f && text == 0)
+            if (npc.life <= npc.lifeMax * 0.5f && npc.localAI[1] == 0)
             {
-                Main.NewText("You havent seen a thing yet...", new Color(93, 25, 43, 200));
-                text++;
+                Main.NewText("PAKURGH ULURADOK", new Color(235, 70, 106));
+                npc.localAI[1]++;
             }
-            if (npc.life <= npc.lifeMax * 0.25f && text == 1)
+            if (npc.life <= npc.lifeMax * 0.25f && npc.localAI[1] == 1)
             {
-                Main.NewText("Oh you think this is easy? We will see.", new Color(93, 25, 43, 200));
-                text++;
+                Main.NewText("REKAHED PHORLOSPI", new Color(235, 70, 106));
+                npc.localAI[1]++;
             }
             float num1 = npc.position.X + (float)(npc.width / 2) - Main.player[npc.target].position.X - (float)(Main.player[npc.target].width / 2);
             float num2 = npc.position.Y + (float)npc.height - 59f - Main.player[npc.target].position.Y - (float)(Main.player[npc.target].height / 2);
@@ -181,45 +212,33 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 npc.rotation = num3;
             }
 
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-            {
-                npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-                {
-                    npc.localAI[0]++;
-                    npc.velocity.Y = npc.velocity.Y + 0.11f;
-                    if (npc.localAI[0] >= 300)
-                    {
-                        npc.active = false;
-                    }
-                }
-                else
-                    npc.localAI[0] = 0;
-            }
+
             if (Main.dayTime || !P.active || P.dead)
             {
-                npc.velocity.Y = npc.velocity.Y - 0.04f;
-                if (npc.timeLeft > 200)
+                npc.TargetClosest(true);
+                if (Main.dayTime || !P.active || P.dead)
                 {
-                    npc.timeLeft = 200;
-                    return;
+                    npc.velocity.Y = npc.velocity.Y - 0.04f;
+                    npc.timeLeft--;
+                    if (npc.timeLeft <= 0) npc.active = false;
+                    if (npc.timeLeft > 200)
+                    {
+                        npc.timeLeft = 200;
+                        return;
+                    }
                 }
             }
             else
             {
-                if (npc.ai[1] == 0f) // sideways movement
+                if (aiState == 0f) // sideways movement
                 {
                     npc.TargetClosest(true);
                     float num424 = 12f;
-                    float speed = 0.4f;
+                    float speed = 0.1f;
                     int side = 1;
                     if (npc.position.X + (float)(npc.width / 2) < Main.player[npc.target].position.X + (float)Main.player[npc.target].width)
                     {
                         side = -1;
-                    }
-                    if (npc.ai[0] == 0f)
-                    {
-
                     }
                     Vector2 vector44 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
                     float targetX = Main.player[npc.target].position.X + (float)(Main.player[npc.target].width / 2) + (float)(side * 400) - vector44.X;
@@ -261,49 +280,49 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         }
                     }
 
-                    npc.ai[2] += 1f;
-                    if (npc.ai[2] >= 600f) // 10 seconds of shooting
+                    dashTimer += 1f;
+                    if (dashTimer >= 600f) // 10 seconds of shooting
                     {
-                        npc.ai[1] = 1f;
-                        npc.ai[2] = 0f;
-                        npc.ai[3] = 0f;
+                        aiState = 1f;
+                        dashTimer = 0f;
+                        attackCool = 0f;
                         npc.target = 255;
                         npc.netUpdate = true;
                     }
 
-                    npc.ai[3] += 1f;
+                    attackCool += 1f;
                     if (npc.life < npc.lifeMax * 0.8)
                     {
-                        npc.ai[3] += 0.3f;
+                        attackCool += 0.3f;
                     }
                     if (npc.life < npc.lifeMax * 0.6)
                     {
-                        npc.ai[3] += 0.3f;
+                        attackCool += 0.3f;
                     }
                     if (npc.life < npc.lifeMax * 0.4)
                     {
-                        npc.ai[3] += 0.3f;
+                        attackCool += 0.3f;
                     }
                     if (npc.life < npc.lifeMax * 0.2)
                     {
-                        npc.ai[3] += 0.3f;
+                        attackCool += 0.3f;
                     }
                     if (npc.life < npc.lifeMax * 0.1)
                     {
-                        npc.ai[3] += 0.3f;
+                        attackCool += 0.3f;
                     }
                     if (Main.expertMode)
                     {
-                        npc.ai[3] += 0.5f;
+                        attackCool += 0.5f;
                     }
 
-                    if (npc.ai[3] >= 60f && Main.netMode != NetmodeID.MultiplayerClient)
+                    if (attackCool >= 60f && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         int numberProjectiles = 3;
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                         Vector2 vector8 = new Vector2(npc.position.X + (npc.width / 2), npc.position.Y + (npc.height / 2));
                         int type = mod.ProjectileType("AzanaMiniBlast");
-                        int damage = expertMode ? 75 : 100;
+                        int damage = Main.expertMode ? 75 : 100;
                         float Speed = 14f;
                         float rotation = (float)Math.Atan2(vector8.Y - (P.position.Y + (P.height * 0.5f)), vector8.X - (P.position.X + (P.width * 0.5f)));
                         for (int i = 0; i < numberProjectiles; i++)
@@ -311,58 +330,38 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                             Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1)).RotatedByRandom(MathHelper.ToRadians(5));
                             Projectile.NewProjectile(vector8.X, vector8.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, 0f, Main.myPlayer, 0f, 0f);
                         }
-                        npc.ai[3] = 0f;
+                        attackCool = 0f;
                     }
                 }
-                else if (npc.ai[1] == 1f) // dash
+                else if (aiState == 1f) // dash
                 {
-                    if (npc.ai[0] == 0f)
+                    if (dashAI == 0f)
                     {
                         npc.rotation = num3;
-                        float num24 = 21f;
+                        float dashSpeed = 14f;
                         if (Main.expertMode)
                         {
-                            num24 += 4f;
+                            dashSpeed += 4f;
                         }
-                        Vector2 vector4 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
-                        float num25 = Main.player[npc.target].position.X + (float)(Main.player[npc.target].width / 2) - vector4.X;
-                        float num26 = Main.player[npc.target].position.Y + (float)(Main.player[npc.target].height / 2) - vector4.Y;
-                        float num27 = (float)Math.Sqrt((double)(num25 * num25 + num26 * num26));
-                        num27 = num24 / num27;
-                        npc.velocity.X = num25 * num27;
-                        npc.velocity.Y = num26 * num27;
-                        npc.ai[0] = 1f;
+                        float targetX = P.Center.X - npc.Center.X;
+                        float targetY = P.Center.Y - npc.Center.Y;
+                        float num27 = (float)Math.Sqrt((double)(targetX * targetX + targetY * targetY));
+                        num27 = dashSpeed / num27;
+                        npc.velocity.X = targetX * num27;
+                        npc.velocity.Y = targetY * num27;
+                        dashAI = 1f;
                         npc.netUpdate = true;
                     }
-                    else if (npc.ai[0] == 1f)
+                    else if (dashAI == 1f)
                     {
-                        npc.ai[2] += 1f;
-                        if (npc.life < npc.lifeMax * 0.8)
-                        {
-                            npc.ai[2] += 0.5f;
-                        }
-                        if (npc.life < npc.lifeMax * 0.6)
-                        {
-                            npc.ai[2] += 0.5f;
-                        }
-                        if (npc.life < npc.lifeMax * 0.4)
-                        {
-                            npc.ai[2] += 0.5f;
-                        }
-                        if (npc.life < npc.lifeMax * 0.2)
-                        {
-                            npc.ai[2] += 0.5f;
-                        }
-                        if (npc.life < npc.lifeMax * 0.1)
-                        {
-                            npc.ai[2] += 0.5f;
-                        }
-                        if (Main.expertMode)
-                        {
-                            npc.ai[2] += 1f;
-                        }
-                        npc.ai[2] += 1f;
-                        if (npc.ai[2] >= 40f)
+                        dashTimer += 1f;
+                        if (npc.life < npc.lifeMax * 0.8) dashTimer += 0.5f;
+                        if (npc.life < npc.lifeMax * 0.6) dashTimer += 0.5f;
+                        if (npc.life < npc.lifeMax * 0.4) dashTimer += 0.5f;
+                        if (npc.life < npc.lifeMax * 0.2) dashTimer += 0.5f;
+                        if (npc.life < npc.lifeMax * 0.1) dashTimer += 0.5f;
+                        if (Main.expertMode)dashTimer += 1f;
+                        if (dashTimer >= 40f)
                         {
                             npc.velocity *= 0.99f;
                             if (Main.expertMode)
@@ -387,22 +386,22 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         {
                             dashTime = 60;
                         }
-                        if (npc.ai[2] >= (float)dashTime)
+                        if (dashTimer >= (float)dashTime)
                         {
-                            npc.ai[3] += 1f;
-                            npc.ai[2] = 0f;
+                            attackCool += 1f;
+                            dashTimer = 0f;
                             npc.target = 255;
                             npc.rotation = num3;
-                            if (npc.ai[3] >= 10f)
+                            if (attackCool >= 10f)
                             {
-                                npc.ai[0] = 0f;
-                                npc.ai[1] = 0f;
-                                npc.ai[2] = 0f;
-                                npc.ai[3] = 0f;
+                                dashAI = 0f;
+                                aiState = 0f;
+                                dashTimer = 0f;
+                                attackCool = 0f;
                             }
                             else
                             {
-                                npc.ai[0] = 0f;
+                                dashAI = 0f;
                             }
                         }
                     }

@@ -15,43 +15,41 @@ namespace ElementsAwoken.Projectiles.NPCProj
         {
             projectile.width = 10;
             projectile.height = 10;
-            projectile.magic = true;
+
             projectile.penetrate = -1;
+
             projectile.hostile = true;
-            projectile.friendly = false;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.alpha = 0;
+
             projectile.timeLeft = 90;
 
             projectile.scale *= 0.95f;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Bolt");
+            DisplayName.SetDefault("Immolator Blast");
             Main.projFrames[projectile.type] = 4;
         }
         public override void AI()
         {
+            Lighting.AddLight(projectile.Center, 1f, 0.2f, 0.4f);
+
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            int dust = Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 127, projectile.velocity.X * 0.15f, projectile.velocity.Y * 0.15f);
-            Main.dust[dust].noGravity = true;
-            Main.dust[dust].scale *= 1.5f;
-            Lighting.AddLight(projectile.Center, 1f, 1f, 1f);
+            if (Main.rand.NextBool(3))
+            {
+                int dust = Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 127, projectile.velocity.X * 0.15f, projectile.velocity.Y * 0.15f);
+                Main.dust[dust].noGravity = true;
+                Main.dust[dust].scale *= 1.5f;
+            }
         }
         public override void Kill(int timeLeft)
         {
-            // 4 projectiles
-            float spread = 45f * 0.0174f;
-            double startAngle = Math.Atan2(projectile.velocity.X, projectile.velocity.Y) - spread / 2;
-            double deltaAngle = spread / 8f;
-            double offsetAngle;
-            int i;
-            for (i = 0; i < 2; i++)
+            float numberProjectiles = Main.expertMode ? MyWorld.awakenedMode ? 4 : 3 : 2;
+            float rotation = MathHelper.ToRadians(360);
+            float projSpeed = 4f;
+            for (int i = 0; i < numberProjectiles; i++)
             {
-                offsetAngle = (startAngle + deltaAngle * (i + i * i) / 2f) + 64f * i;
-                Projectile.NewProjectile(projectile.position.X, projectile.position.Y, (float)(Math.Sin(offsetAngle) * 5f), (float)(Math.Cos(offsetAngle) * 5f), mod.ProjectileType("ImmolatorBolt"), projectile.damage, projectile.knockBack, projectile.owner);
-                Projectile.NewProjectile(projectile.position.X, projectile.position.Y, (float)(-Math.Sin(offsetAngle) * 5f), (float)(-Math.Cos(offsetAngle) * 5f), mod.ProjectileType("ImmolatorBolt"), projectile.damage, projectile.knockBack, projectile.owner);
+                Vector2 perturbedSpeed = new Vector2(projSpeed, projSpeed).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ImmolatorBolt"), projectile.damage, projectile.knockBack, Main.myPlayer);
             }
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)

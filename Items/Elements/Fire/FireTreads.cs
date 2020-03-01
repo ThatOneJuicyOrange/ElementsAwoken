@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Elements.Fire
         {
             item.width = 36;
             item.height = 32;
-            item.value = Item.buyPrice(0, 7, 0, 0);
+            item.value = Item.sellPrice(0, 10, 0, 0);
             item.rare = 4;
             item.accessory = true;
         }

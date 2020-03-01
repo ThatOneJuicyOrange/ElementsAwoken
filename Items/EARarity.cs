@@ -88,17 +88,12 @@ namespace ElementsAwoken.Items
             {
                 item.expert = false;
             }
+            initialRarity = modItem.rare;
         }
         public override void UpdateInventory(Item item, Player player)
         {
             EARarity modItem = item.GetGlobalItem<EARarity>();
-            Item defaultItem = new Item();
-            defaultItem.SetDefaults(item.type);
-            EARarity defaultModItem = defaultItem.GetGlobalItem<EARarity>();
-            initialRarity = defaultModItem.rare;
 
-           // initialRarity = item.SetDefaults(item.type).rare;
-            //modItem.rare = initialRarity;
             int prefix = item.prefix;
             float damageBoost = 1f;
             float knockbackBoost = 1f;

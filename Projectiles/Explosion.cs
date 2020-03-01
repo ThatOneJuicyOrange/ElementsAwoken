@@ -7,8 +7,9 @@ using Terraria.ModLoader;
 
 namespace ElementsAwoken.Projectiles
 {
-    class Explosion : ModProjectile
+    public class Explosion : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 20;

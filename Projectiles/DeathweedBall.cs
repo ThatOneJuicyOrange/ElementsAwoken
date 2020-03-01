@@ -9,8 +9,8 @@ namespace ElementsAwoken.Projectiles
 {
 	public class DeathweedBall : ModProjectile
 	{
-		
-		public override void SetDefaults()
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+        public override void SetDefaults()
 		{
 			projectile.width = 8;
 			projectile.height = 8;

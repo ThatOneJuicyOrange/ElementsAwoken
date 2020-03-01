@@ -89,7 +89,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
 
-            moveSpeed =  0.06f;
+            moveSpeed =  0.04f;
             npc.defense = baseDefense + 10;
             npc.GivenName = "Ember";
         }
@@ -198,6 +198,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentStardust, Main.rand.Next(5, 10));
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentVortex, Main.rand.Next(5, 10));
                 }
+                if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
             }
             else NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Astra"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
         }
@@ -246,7 +247,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             }
             if (npc.life <= npc.lifeMax * 0.75f && phase == 0)
             {
-                moveSpeed = 0.2f;
+                moveSpeed = 0.15f;
                 npc.defense = baseDefense + 5 * moonlordBonus;
                 npc.GivenName = "Nova";
                 if (Main.netMode != NetmodeID.MultiplayerClient) phase++;
@@ -255,7 +256,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             }
             if (npc.life <= npc.lifeMax * 0.5f && phase == 1)
             {
-                moveSpeed =  0.15f;
+                moveSpeed =  0.1f;
                 npc.defense = baseDefense;
                 npc.GivenName = "Aquila";
 
@@ -265,7 +266,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             }
             if (npc.life <= npc.lifeMax * 0.25f && phase == 2)
             {
-                moveSpeed = 0.15f;
+                moveSpeed = 0.1f;
                 npc.defense = baseDefense - 10 * moonlordBonus;
                 projectileBaseDamage += 20 * moonlordBonus;
                 npc.damage += 20;
@@ -275,7 +276,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 npc.netUpdate = true;
                 createOrbitals = true;
             }
-            if (createOrbitals)
+            if (createOrbitals&&Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int orbitalcount = Main.expertMode ? 9 : 7;
                 for (int l = 0; l < orbitalcount; l++)
@@ -331,7 +332,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                     {
                         int type = mod.ProjectileType("CelestialVortexPortal");
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), type, projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-3, 3), type, projectileBaseDamage, 0f, Main.myPlayer);
                         shootTimer = Main.rand.Next(120, 360);
                         if (MyWorld.awakenedMode) shootTimer = Main.rand.Next(60, 180);
                         //npc.netUpdate = true; // apprently doesnt need to be done, spawning of projectiles & timers related to that dont need to be synced?
@@ -356,13 +357,13 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 {
                     if (phase == 0)
                     {
-                        Projectile proj = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-750,750), P.Center.Y - 1500, Main.rand.NextFloat(-2f,2f), -6f, mod.ProjectileType("SolarFragmentProj"), projectileBaseDamage, 0f, 0)];
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-750,750), P.Center.Y - 1500, Main.rand.NextFloat(-2f,2f), -6f, mod.ProjectileType("SolarFragmentProj"), projectileBaseDamage, 0f, 0,Main.myPlayer)];
                         awakenedAttacks = 120;
                     }
                     // stardust
                     else if (phase == 1)
                     {
-                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X + Main.rand.Next(-1500, 1500), npc.Center.Y + Main.rand.Next(-700, 700), Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f), mod.ProjectileType("CelestialStar"), projectileBaseDamage / 2, 0f, 0)];
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X + Main.rand.Next(-1500, 1500), npc.Center.Y + Main.rand.Next(-700, 700), Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f), mod.ProjectileType("CelestialStar"), projectileBaseDamage / 2, 0f, Main.myPlayer)];
                         awakenedAttacks = 180;
                     }
                     // nebula
@@ -450,7 +451,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             {
                 speed += Main.rand.NextFloat(-2, 2);
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - 2).RotatedByRandom(MathHelper.ToRadians(20));
-                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, 0)];
+                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, Main.myPlayer)];
             }
         }
 
@@ -462,7 +463,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             {
                 speed += Main.rand.NextFloat();
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(10));
-                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, 0)];
+                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, Main.myPlayer)];
             }
         }
 

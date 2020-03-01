@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class FlareShield : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 2;
@@ -36,7 +37,7 @@ namespace ElementsAwoken.Projectiles
             {
                 double angle = Main.rand.NextDouble() * 2d * Math.PI;
                 Vector2 offset = new Vector2((float)Math.Sin(angle) * maxDist, (float)Math.Cos(angle) * maxDist);
-                Dust dust = Main.dust[Dust.NewDust(projectile.Center + offset, 0, 0, 6, 0, 0, 100)];
+                Dust dust = Main.dust[Dust.NewDust(projectile.Center + offset - Vector2.One * 4, 0, 0, 6, 0, 0, 100)];
                 dust.noGravity = true;
             }
             for (int i = 0; i < Main.npc.Length; i++)

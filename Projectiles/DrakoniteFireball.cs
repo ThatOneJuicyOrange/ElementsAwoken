@@ -8,6 +8,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class DrakoniteFireball : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 16;
@@ -38,9 +39,10 @@ namespace ElementsAwoken.Projectiles
         public override void Kill(int timeLeft)
         {
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
-            Projectile proj = Main.projectile[Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.NextFloat(-3f,3f), Main.rand.NextFloat(-3f, 3f), mod.ProjectileType("GreekFire"), (int)(projectile.damage * 0.3f), projectile.knockBack * 0.35f, Main.myPlayer, 0f, 0f)];
-            proj.timeLeft = 180;
-            proj.magic = true;
+            /* Projectile proj = Main.projectile[Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.NextFloat(-3f,3f), Main.rand.NextFloat(-3f, 3f), mod.ProjectileType("GreekFire"), (int)(projectile.damage * 0.5f), projectile.knockBack * 0.35f, Main.myPlayer, 0f, 0f)];
+             proj.timeLeft = 120;
+             proj.magic = true;*/        
+          Projectile.NewProjectile(projectile.position.X, projectile.position.Y, 0, 0, mod.ProjectileType("DrakoniteEruption"), (int)(projectile.damage * 0.5f), 0, Main.myPlayer, 0f, 0f);
         }
     }
 }

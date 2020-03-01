@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Elements.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Blade");
-            Tooltip.SetDefault("Throw two icy blades");
+            Tooltip.SetDefault("Throws two icy blades that return to the player");
         }
 
 

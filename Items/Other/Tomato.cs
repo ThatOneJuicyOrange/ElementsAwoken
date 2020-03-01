@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using ElementsAwoken.NPCs.Bosses.Azana;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,6 +37,15 @@ namespace ElementsAwoken.Items.Other
         {
             DisplayName.SetDefault("Tomato");
             Tooltip.SetDefault("you have a tomato now, what are you going to do with it?\nprobably nothing");
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            if (NPC.AnyNPCs(ModContent.NPCType<Azana>()))
+            {
+                speedX *= 2f;
+                speedY *= 2f;
+            }
+            return true;
         }
     }
 }

@@ -15,10 +15,10 @@ namespace ElementsAwoken.NPCs.Elementals
         {
             npc.width = 26;
             npc.height = 48;
-            npc.damage = 80; //change
-            npc.defense = 40; //change
-            npc.lifeMax = 1100; //change
-            npc.value = Item.buyPrice(0, 2, 0, 0); //change
+            npc.damage = 80;
+            npc.defense = 40;
+            npc.lifeMax = 1100;
+            npc.value = Item.buyPrice(0, 0, 20, 0);
             npc.HitSound = SoundID.NPCHit54;
             npc.DeathSound = SoundID.NPCDeath52;
             npc.knockBackResist = 0.5f;

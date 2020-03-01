@@ -45,17 +45,17 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Aqueous"));
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Aqueous"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Aqueous"), 0f, 0f, 0, 0, 0);
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "WaterEssence", 10);
+            recipe.AddIngredient(null, "WaterEssence", 5);
             recipe.AddIngredient(ItemID.Ectoplasm, 6);
-            recipe.AddIngredient(ItemID.SoulofMight, 7);
-            recipe.AddIngredient(ItemID.SoulofNight, 3);
+            recipe.AddIngredient(ItemID.Seashell, 2);
             recipe.AddIngredient(ItemID.SoulofLight, 3);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);

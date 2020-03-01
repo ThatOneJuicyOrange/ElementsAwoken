@@ -100,7 +100,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
                 float Speed = 4f;
                 float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("TheCelestialLaser"), 60, 0f, 0, type);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("TheCelestialLaser"), 60, 0f, Main.myPlayer, type);
                 shootTimer = Main.rand.Next(60, 450);
                 if (MyWorld.awakenedMode) shootTimer = Main.rand.Next(5, 240);
                 else if (Main.expertMode) shootTimer = Main.rand.Next(20, 360);

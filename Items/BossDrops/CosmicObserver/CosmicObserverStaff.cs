@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.BossDrops.CosmicObserver
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cosmic Observer Staff");
-            Tooltip.SetDefault("Summons a miniature cosmic observer to fight for you");
+            Tooltip.SetDefault("Summons a mini cosmic observer to fight for you");
         }
         public override void AddRecipes()
         {

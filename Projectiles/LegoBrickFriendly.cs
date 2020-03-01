@@ -37,7 +37,7 @@ namespace ElementsAwoken.Projectiles
         {
             if (projectile.localAI[0] == 0)
             {
-                type = Main.rand.Next(0, 3);
+                type = Main.rand.Next(0, 4);
                 projectile.localAI[0] = 1;
             }
             projectile.velocity.Y = projectile.velocity.Y + 0.15f;

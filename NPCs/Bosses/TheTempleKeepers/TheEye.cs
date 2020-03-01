@@ -100,6 +100,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 }
             }
             MyWorld.downedEye = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void FindFrame(int frameHeight)
         {
@@ -190,7 +191,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                     float Speed = 17f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), 60, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), 60, 0f, Main.myPlayer);
                     if (npc.life > npc.lifeMax * 0.75f)
                     {
                         npc.ai[0] = Main.rand.Next(30, 120);

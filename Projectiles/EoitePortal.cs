@@ -10,6 +10,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class EoitePortal : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public int shootTimer = 10;
         public override void SetDefaults()
         {

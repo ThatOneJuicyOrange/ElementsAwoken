@@ -16,7 +16,7 @@ namespace ElementsAwoken.Items.Accessories
         {
             item.width = 36;
             item.height = 32;
-            item.value = Item.buyPrice(1, 20, 0, 0);
+            item.value = Item.sellPrice(0, 30, 0, 0);
             item.rare = 11;
             item.GetGlobalItem<EARarity>().rare = 12;
             item.accessory = true;

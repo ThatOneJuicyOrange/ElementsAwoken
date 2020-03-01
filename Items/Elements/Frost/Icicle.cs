@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Elements.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Icicle");
-            Tooltip.SetDefault("Fires 3 icicles that impale enemies\nRight click to rapidly stab the icicle and fire a volley of icy bolts");
+            Tooltip.SetDefault("Fires three icicles that impale enemies\nRight Click to rapidly stab while firing a volley of icy bolts");
         }
 
         public override void AddRecipes()

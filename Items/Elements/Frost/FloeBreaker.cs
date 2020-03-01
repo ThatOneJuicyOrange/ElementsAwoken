@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Elements.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Floe Breaker");
-            Tooltip.SetDefault("Summons an ice axe");
+            Tooltip.SetDefault("Summons an ice axe to fight for you");
         }
 
         public override void AddRecipes()

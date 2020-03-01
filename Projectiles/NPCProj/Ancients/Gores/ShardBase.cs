@@ -9,6 +9,8 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients.Gores
 {
     public class ShardBase : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+
         public override void SetDefaults()
         {
             projectile.width = 4;
@@ -23,8 +25,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients.Gores
         }
         public override void AI()
         {
-            Player player = Main.LocalPlayer;
-           // Main.NewText(Main.netMode);
+            Player player = Main.player[projectile.owner];
             if (Main.netMode == 0)
             {
                 if (!player.active || player.dead) projectile.Kill();

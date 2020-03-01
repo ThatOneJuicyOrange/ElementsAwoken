@@ -39,8 +39,8 @@ namespace ElementsAwoken.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            target.AddBuff(BuffID.OnFire, 180);
-            target.AddBuff(mod.BuffType("ImpishCurse"), 240);
+            target.AddBuff(BuffID.OnFire, 60);
+            target.AddBuff(mod.BuffType("ImpishCurse"), 300);
             for (int l = 0; l < 5; l++)
             {
                 int dir = l == 1 ? -1 : 1;

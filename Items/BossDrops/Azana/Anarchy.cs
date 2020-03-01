@@ -37,8 +37,8 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Anarchy");
-            Tooltip.SetDefault("Rips your enemies into shreds\nOccasionally shoots out chaos waves");
+            DisplayName.SetDefault("Contamination");
+            Tooltip.SetDefault("Fires chaos bolts everywhere, while occasionally releasing chaos waves");
         }
     }
 }

@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
+using ElementsAwoken.Items.Tech.Weapons.Tier2;
+using ElementsAwoken.Items.Tech.Materials;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Tech.Weapons.Tier6
 {
@@ -43,11 +46,11 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "BassBooster", 1);
-            recipe.AddIngredient(null, "GoldWire", 10);
-            recipe.AddIngredient(null, "CopperWire", 15);
-            recipe.AddIngredient(null, "SiliconBoard", 1);
-            recipe.AddIngredient(null, "Microcontroller", 1);
+            recipe.AddIngredient(ItemType<BassBooster>(), 1);
+            recipe.AddIngredient(ItemType<GoldWire>(), 10);
+            recipe.AddIngredient(ItemType<CopperWire>(), 15);
+            recipe.AddIngredient(ItemType<SiliconBoard>(), 1);
+            recipe.AddIngredient(ItemType<Microcontroller>(), 1);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

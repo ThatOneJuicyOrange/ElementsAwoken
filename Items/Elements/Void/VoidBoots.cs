@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Elements.Void
         {
             item.width = 36;
             item.height = 32;
-            item.value = Item.buyPrice(1, 0, 0, 0);
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.rare = 11;
             item.accessory = true;
         }

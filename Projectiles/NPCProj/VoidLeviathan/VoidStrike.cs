@@ -30,7 +30,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
         }
         public override bool CanHitPlayer(Player target)
         {
-            if (projectile.alpha > 40) return false;
+            if (projectile.alpha > 120) return false;
             return base.CanHitPlayer(target);
         }
         public override void AI()

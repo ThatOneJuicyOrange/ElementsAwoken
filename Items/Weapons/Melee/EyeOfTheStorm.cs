@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eye of the Storm");
-            Tooltip.SetDefault("Shoots a lightning bolt along with lightning balls\nProjectiles rain down from the sky");
+            Tooltip.SetDefault("Shoots a lightning bolt along with energy balls\nProjectiles rain down from the sky");
         }
 
 

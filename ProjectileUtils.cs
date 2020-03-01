@@ -21,6 +21,18 @@ namespace ElementsAwoken
             }
             return num;
         }
+        public static int CountProjectiles(int type,int ownerID)
+        {
+            int num = 0;
+            for (int i = 0; i < Main.projectile.Length; i++)
+            {
+                if (Main.projectile[i].active && Main.projectile[i].type == type && Main.projectile[i].owner == ownerID)
+                {
+                    num++;
+                }
+            }
+            return num;
+        }
         public static bool HasLeastTimeleft(int whoAmI)
         {
             Projectile thisProj = Main.projectile[whoAmI];

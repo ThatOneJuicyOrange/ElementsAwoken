@@ -32,8 +32,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Geltic Burner");
-            Tooltip.SetDefault("Consumes gel in the inventory to produce 2 energy per second\n1 gel burns for 15 seconds\nPink gel burns for 30 seconds\nRight click to turn on");
+            DisplayName.SetDefault("Geltic Burner Generator");
+            Tooltip.SetDefault("Consumes gel in the inventory to produce 2 energy per second\n1 gel burns for 15 seconds\nPink gel burns for 30 seconds\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

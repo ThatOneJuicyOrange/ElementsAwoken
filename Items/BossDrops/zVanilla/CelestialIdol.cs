@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Celestial Idol");
-            Tooltip.SetDefault("10 defense\nAncient stars rain down from the sky on hit\nMagic damage increased by 20%\nInflicts Ancient Decay on hit");
+            Tooltip.SetDefault("10 defense\nAncient stars rain down from the sky on hit\n20% increased magic damage\nInflicts Ancient Decay on hit");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(4, 24));
         }
 

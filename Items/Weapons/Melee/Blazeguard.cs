@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blazeguard");
-            Tooltip.SetDefault("Fires 2 exploding fireballs");
+            Tooltip.SetDefault("Fires two exploding fireballs");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

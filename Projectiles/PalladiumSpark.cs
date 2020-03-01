@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class PalladiumSpark : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public int soundTimer = 0;
         public override void SetDefaults()
         {

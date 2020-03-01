@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.ItemSets.Putrid
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Putrid Ripper Tome");
-            Tooltip.SetDefault("Summons a putrid ripper to protect you\nPutrid ripper's take 1.5 minion slots");
+            Tooltip.SetDefault("Summons a putrid ripper to protect you\nEach putrid ripper's takes up 1.5 minion slots");
         }
         public override void AddRecipes()
         {

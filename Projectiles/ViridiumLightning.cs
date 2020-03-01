@@ -67,24 +67,29 @@ namespace ElementsAwoken.Projectiles
                 }
                 if (Main.rand.Next(projectile.extraUpdates) == 0)
                 {
-                    for (int num856 = 0; num856 < 2; num856 = num3 + 1)
+                    int num = 3;
+                    if (ModContent.GetInstance<Config>().lowDust) num = 10;
+                    if (Main.rand.Next(num) == 0)
                     {
-                        float num857 = projectile.rotation + ((Main.rand.Next(2) == 1) ? -1f : 1f) * 1.57079637f;
-                        float num858 = (float)Main.rand.NextDouble() * 0.8f + 1f;
-                        Vector2 vector96 = new Vector2((float)Math.Cos((double)num857) * num858, (float)Math.Sin((double)num857) * num858);
-                        int num859 = Dust.NewDust(projectile.Center, 0, 0, 133, vector96.X, vector96.Y, 0, default(Color), 1f);
-                        Main.dust[num859].noGravity = true;
-                        Main.dust[num859].scale = 1.2f;
-                        num3 = num856;
-                    }
-                    if (Main.rand.Next(5) == 0)
-                    {
-                        Vector2 value39 = projectile.velocity.RotatedBy(1.5707963705062866, default(Vector2)) * ((float)Main.rand.NextDouble() - 0.5f) * (float)projectile.width;
-                        int num860 = Dust.NewDust(projectile.Center + value39 - Vector2.One * 4f, 8, 8, 31, 0f, 0f, 100, default(Color), 1.5f);
-                        Dust dust = Main.dust[num860];
-                        dust.velocity *= 0.5f;
-                        Main.dust[num860].velocity.Y = -Math.Abs(Main.dust[num860].velocity.Y);
-                        return;
+                        for (int num856 = 0; num856 < 2; num856 = num3 + 1)
+                        {
+                            float num857 = projectile.rotation + ((Main.rand.Next(2) == 1) ? -1f : 1f) * 1.57079637f;
+                            float num858 = (float)Main.rand.NextDouble() * 0.8f + 1f;
+                            Vector2 vector96 = new Vector2((float)Math.Cos((double)num857) * num858, (float)Math.Sin((double)num857) * num858);
+                            int num859 = Dust.NewDust(projectile.Center, 0, 0, 133, vector96.X, vector96.Y, 0, default(Color), 1f);
+                            Main.dust[num859].noGravity = true;
+                            Main.dust[num859].scale = 1.2f;
+                            num3 = num856;
+                        }
+                        if (Main.rand.Next(5) == 0)
+                        {
+                            Vector2 value39 = projectile.velocity.RotatedBy(1.5707963705062866, default(Vector2)) * ((float)Main.rand.NextDouble() - 0.5f) * (float)projectile.width;
+                            int num860 = Dust.NewDust(projectile.Center + value39 - Vector2.One * 4f, 8, 8, 31, 0f, 0f, 100, default(Color), 1.5f);
+                            Dust dust = Main.dust[num860];
+                            dust.velocity *= 0.5f;
+                            Main.dust[num860].velocity.Y = -Math.Abs(Main.dust[num860].velocity.Y);
+                            return;
+                        }
                     }
                 }
             }

@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
 
         public override bool CanRightClick()

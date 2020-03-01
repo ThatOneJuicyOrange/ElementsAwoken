@@ -30,7 +30,6 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth.RegarothMinion
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath14;
             Main.npcFrameCount[npc.type] = 1;
-            npc.value = Item.buyPrice(0, 5, 0, 0);
             npc.npcSlots = 1f;
             npc.netAlways = true;
             npc.buffImmune[BuffID.Poisoned] = true;

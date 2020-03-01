@@ -14,7 +14,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
 {
     public class CosmicObserverHand : ModNPC
     {
-        public int projectileBaseDamage = 20;
+        private int projectileBaseDamage = 20;
 
         public override void SetDefaults()
         {
@@ -78,7 +78,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 npc.localAI[1]++;
                 if (npc.localAI[1] == 120)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("ObserverSpell"), projectileBaseDamage, 0, 0, 0, npc.whoAmI);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("ObserverSpell"), projectileBaseDamage, 0, Main.myPlayer, 0, npc.whoAmI);
                 }
                 if (npc.localAI[1] >= 300)
                 {

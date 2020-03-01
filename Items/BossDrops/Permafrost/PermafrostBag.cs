@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.BossDrops.Permafrost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
 
         public override bool CanRightClick()
@@ -34,32 +34,36 @@ namespace ElementsAwoken.Items.BossDrops.Permafrost
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
             int choice = Main.rand.Next(4);
             if (choice == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("IceReaver"));      
+                player.QuickSpawnItem(ModContent.ItemType<IceReaver>());
             }
             if (choice == 1)
             {
-                player.QuickSpawnItem(mod.ItemType("Snowdrift"));
+                player.QuickSpawnItem(ModContent.ItemType<Snowdrift>());
             }
             if (choice == 2)
             {
-                player.QuickSpawnItem(mod.ItemType("IceWrath"));
+                player.QuickSpawnItem(ModContent.ItemType<IceWrath>());
             }
             if (choice == 3)
             {
-                player.QuickSpawnItem(mod.ItemType("Flurry"));
+                player.QuickSpawnItem(ModContent.ItemType<Flurry>());
             }
-            player.QuickSpawnItem(mod.ItemType("SoulOfTheFrost"));
+            player.QuickSpawnItem(ModContent.ItemType<SoulOfTheFrost>());
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("PermafrostMask"));
+                player.QuickSpawnItem(ModContent.ItemType<PermafrostMask>());
             }
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("PermafrostTrophy"));
+                player.QuickSpawnItem(ModContent.ItemType<PermafrostTrophy>());
+            }
+            if (MyWorld.awakenedMode)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<IcyHeart>());
             }
         }
     }

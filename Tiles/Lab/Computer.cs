@@ -38,7 +38,7 @@ namespace ElementsAwoken.Tiles.Lab
             Item.NewItem(i * 16, j * 16, 16, 32, mod.ItemType("Computer"));
         }
 
-        public override void RightClick(int i, int j)
+        public override bool NewRightClick(int i, int j)
         {
             Main.PlaySound(SoundID.MenuTick);
             Player player = Main.LocalPlayer;
@@ -156,6 +156,8 @@ namespace ElementsAwoken.Tiles.Lab
             modPlayer.inComputer = true;
             modPlayer.computerPos = new Vector2(i, j);
             modPlayer.computerTextNo = entryNo;
+
+            return true;
         }
         public override void MouseOver(int i, int j)
         {

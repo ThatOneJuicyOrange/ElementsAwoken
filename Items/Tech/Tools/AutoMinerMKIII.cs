@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Auto Miner MK III");
-            Tooltip.SetDefault("Automatically mines nearby ores\nConsumes energy to mine\nRight click to turn on");
+            Tooltip.SetDefault("Automatically mines nearby ores\nConsumes energy to mine\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -65,7 +65,7 @@ namespace ElementsAwoken.Items.Tech.Tools
                 digCooldown--;
                 if (digCooldown >= 55)
                 {
-                    for (int k = 0; k < Main.item.Length; k++)
+                    for (int k = 0; k < Main.maxItems; k++)
                     {
                         Item other = Main.item[k];
                         if (other.getRect().Intersects(new Rectangle((int)justDugOre.X, (int)justDugOre.Y, 16, 16)))
@@ -87,7 +87,17 @@ namespace ElementsAwoken.Items.Tech.Tools
                         {
                             Point tilePos = new Point(i, j);
                             Tile t = Framing.GetTileSafely(i, j);
-                            if (TileID.Sets.Ore[t.type] == true && GlobalTiles.GetTileMinPick(t.type) <= item.pick)
+
+                            bool canMineModOre = false;
+                            ModTile modTile = TileLoader.GetTile(t.type);
+                            if (modTile != null)
+                            {
+                                if (modTile.GetType().Name.Contains("Ore"))
+                                {
+                                    canMineModOre = true;
+                                }
+                            }
+                            if ((TileID.Sets.Ore[t.type] == true || canMineModOre) && GlobalTiles.GetTileMinPick(t.type) <= item.pick)
                             {
                                 WorldGen.KillTile(tilePos.X, tilePos.Y);
                                 justDugOre = new Vector2(i * 16, j * 16);

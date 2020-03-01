@@ -14,14 +14,22 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         public int timer = 200;
         public override void SetDefaults()
         {
-            npc.npcSlots = 1f;
             npc.width = 38;
-            npc.height = 42;
+            npc.height = 42; 
+            
+            npc.npcSlots = 1f;
+
+            npc.aiStyle = -1;
+
             npc.defense = 3;
             npc.lifeMax = 25;
+
+            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+
             npc.knockBackResist = 0.1f;
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
 
         public override void SetStaticDefaults()
@@ -29,10 +37,19 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             DisplayName.SetDefault("Egg");
             Main.npcFrameCount[npc.type] = 2;
         }
+        public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
+        {
+            npc.lifeMax = 50;
+            if (MyWorld.awakenedMode)
+            {
+                npc.lifeMax = 150;
+                npc.defense = 6;
+            }
+        }
         public override void AI()
         {
-            timer--;
-            if (timer <= 0)
+            npc.ai[0]--;
+            if (npc.ai[0] <= 0)
             {
                 Vector2 spawnAt = npc.Center + new Vector2(0f, (float)npc.height / 2f);
                 NPC.NewNPC((int)spawnAt.X, (int)spawnAt.Y, mod.NPCType("WastelandMinion"));

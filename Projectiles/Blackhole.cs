@@ -55,7 +55,7 @@ namespace ElementsAwoken.Projectiles
                 }
                 hasOrbital = true;
             }
-            if (ProjectileUtils.CountProjectiles(projectile.type) > 3)
+            if (ProjectileUtils.CountProjectiles(projectile.type, projectile.owner) > 3)
             {
                 if (ProjectileUtils.HasLeastTimeleft(projectile.whoAmI))
                 {
@@ -80,7 +80,7 @@ namespace ElementsAwoken.Projectiles
                         immune = true;
                     }
                 }
-                if (!immune && npc.active && npc.damage > 0 && !npc.boss && npc.lifeMax < 10000 && Vector2.Distance(npc.Center, projectile.Center) < maxDist)
+                if (!immune && !npc.townNPC && npc.active && npc.damage > 0 && !npc.boss && npc.lifeMax < 10000 && Vector2.Distance(npc.Center, projectile.Center) < maxDist)
                 {
                     Vector2 toTarget = new Vector2(projectile.Center.X - npc.Center.X, projectile.Center.Y - npc.Center.Y);
                     toTarget.Normalize();
@@ -88,7 +88,7 @@ namespace ElementsAwoken.Projectiles
                     npc.velocity.Y += toTarget.Y * gravStength * 5;
                 }
             }
-            for (int i = 0; i < Main.item.Length; i++)
+            for (int i = 0; i < Main.maxItems; i++)
             {
                 Item item = Main.item[i];
                 if (item.active && Vector2.Distance(item.Center, projectile.Center) < maxDist)

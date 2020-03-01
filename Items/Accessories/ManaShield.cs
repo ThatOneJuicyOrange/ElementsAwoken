@@ -23,12 +23,11 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shield of Magic");
-            Tooltip.SetDefault("Shield of a true mage\nKnockback immunity\nRestores mana when damaged\nIncreases pickup range for stars\nRestores mana automatically");
+            Tooltip.SetDefault("Shield of a true mage\nRestores mana when damaged\nIncreases pickup range for stars\nAutomatically use mana potions when needed");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.noKnockback = true;
             player.magicCuffs = true;
             player.manaMagnet = true;
             player.manaFlower = true;
@@ -38,7 +37,6 @@ namespace ElementsAwoken.Items.Accessories
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.CobaltShield, 1);
             recipe.AddIngredient(ItemID.CelestialCuffs, 1);
             recipe.AddIngredient(ItemID.ManaFlower, 1);
             recipe.AddTile(TileID.MythrilAnvil);

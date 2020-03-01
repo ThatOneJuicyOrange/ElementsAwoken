@@ -21,6 +21,7 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.friendly = true;
             projectile.ignoreWater = true;
             projectile.sentry = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
             projectile.timeLeft = Projectile.SentryLifeTime;
 

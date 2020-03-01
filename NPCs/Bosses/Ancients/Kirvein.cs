@@ -168,6 +168,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 {
                     originX = P.Center.X;
                     originY = P.Center.Y;
+                    npc.Center = P.Center;
+                    npc.netUpdate = true;
                 }
                 if (npc.ai[0] < 60)
                 {
@@ -208,7 +210,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                         float projSpeed = 12f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinArrow"), projectileBaseDamage, 5f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinArrow"), projectileBaseDamage, 5f, Main.myPlayer);
                         if (npc.life > npc.lifeMax * 0.6f)
                         {
                             npc.ai[2] = 90;
@@ -226,7 +228,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                         float projSpeed = 12f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinArrow"), projectileBaseDamage, 5f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinArrow"), projectileBaseDamage, 5f, Main.myPlayer);
                         npc.ai[2] = 6;
                     }
                 }
@@ -237,11 +239,11 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                         float projSpeed = 16f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinExplosiveArrow"), (int)(projectileBaseDamage * 1.2f), 5f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("KirveinExplosiveArrow"), (int)(projectileBaseDamage * 1.2f), 5f, Main.myPlayer);
                     }
                     else
                     {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, -9f, mod.ProjectileType("KirveinFragCrystal"), projectileBaseDamage, 5f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, -9f, mod.ProjectileType("KirveinFragCrystal"), projectileBaseDamage, 5f, Main.myPlayer);
                     }
                     if (npc.life > npc.lifeMax * 0.6f)
                     {
@@ -277,7 +279,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KirveinShard"), 0, 0f, 0, i);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("KirveinShard"), 0, 0f, Main.myPlayer, i);
                 }
                 for (int k = 0; k < 80; k++)
                 {

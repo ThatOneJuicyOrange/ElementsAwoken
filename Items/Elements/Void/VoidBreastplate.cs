@@ -19,7 +19,7 @@ namespace ElementsAwoken.Items.Elements.Void
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Breastplate");
+            DisplayName.SetDefault("Gloomhandler Breastplate");
             Tooltip.SetDefault("12% increased damage\nIncreased max life and mana by 75");
         }
         public override void UpdateEquip(Player player)

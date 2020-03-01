@@ -30,6 +30,11 @@ namespace ElementsAwoken.Projectiles.Explosions
             damage = (int)(target.statLifeMax2 * 0.2f * Main.rand.NextFloat(0.8f,1.2f)) + target.statDefense;
             damage /= 4; // damage from other players (or urself) is multiplied by 4
         }
+        public override bool? CanHitNPC(NPC target)
+        {
+            if (target.townNPC) return false;
+            return base.CanHitNPC(target);
+        }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.immune[projectile.owner] = 2;

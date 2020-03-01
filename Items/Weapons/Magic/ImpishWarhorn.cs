@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Impish Warhorn");
-            Tooltip.SetDefault("Inflicts 'Impish Curse' which makes you deal more damage to that enemy");
+            Tooltip.SetDefault("Inflicts 'Impish Curse' on enemies, which increases damage taken");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -47,8 +47,10 @@ namespace ElementsAwoken.Items.Weapons.Magic
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.HellstoneBar, 5);
-            recipe.AddIngredient(null, "ImpEar", 3);
+            recipe.AddIngredient(ItemID.HellstoneBar, 16);
+            recipe.AddIngredient(ItemID.Fireblossom, 2);
+            recipe.AddIngredient(null, "ImpEar", 8);
+            recipe.AddIngredient(null, "MagmaCrystal", 8);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

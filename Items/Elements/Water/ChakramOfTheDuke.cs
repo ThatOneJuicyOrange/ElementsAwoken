@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Elements.Water
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Chakram of the Duke");
-            Tooltip.SetDefault("Tear you enemies to pieces");
+            Tooltip.SetDefault("Tear your enemies to pieces");
         }
 
 

@@ -45,7 +45,7 @@ namespace ElementsAwoken.NPCs.MutatedScorpion
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
-            NPC.downedBoss1 &&!Main.snowMoon && !Main.pumpkinMoon ? 0.065f : 0f;
+            NPC.downedBoss1 &&!Main.snowMoon && !Main.pumpkinMoon ? 0.055f : 0f;
         }
     }
 }

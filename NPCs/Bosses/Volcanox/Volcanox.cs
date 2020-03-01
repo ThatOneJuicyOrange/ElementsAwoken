@@ -126,8 +126,8 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Hearth"));
                 }
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Pyroplasm"), Main.rand.Next(10, 60));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VolcanicStone"), Main.rand.Next(10, 25));
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Pyroplasm"), Main.rand.Next(5, 40));
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VolcanicStone"), Main.rand.Next(6, 20));
             }
 
             // box
@@ -161,6 +161,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
 
 
             MyWorld.downedVolcanox = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -385,10 +386,10 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                 int damage = projectileBaseDamage;
                 float posX = P.Center.X + Main.rand.Next(-20, 20);
                 float posY = P.Center.Y + 1000;
-                Projectile.NewProjectile(posX, posY, 0f, -15f, mod.ProjectileType("VolcanicDemon"), damage, 0f);
+                Projectile.NewProjectile(posX, posY, 0f, -15f, mod.ProjectileType("VolcanicDemon"), damage, 0f, Main.myPlayer);
                 float posX2 = P.Center.X + Main.rand.Next(-20, 20);
                 float posY2 = P.Center.Y - 1000;
-                Projectile.NewProjectile(posX2, posY2, 0f, 15f, mod.ProjectileType("VolcanicDemon"), damage, 0f);
+                Projectile.NewProjectile(posX2, posY2, 0f, 15f, mod.ProjectileType("VolcanicDemon"), damage, 0f, Main.myPlayer);
                 strikeTimer = 100;
             }
             if (npc.life > npc.lifeMax / 2)
@@ -419,7 +420,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                         int type = mod.ProjectileType("VolcanoxBolt");
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
+                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer);
                     }
                     shootTimer = 0f;
                 }
@@ -449,7 +450,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                     }
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), type, damage, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), type, damage, 0f, Main.myPlayer);
 
                     burstTimer = 6f;
                 }
@@ -466,7 +467,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                         for (int i = 0; i < numberProjectiles; i++)
                         {
                             Vector2 perturbedSpeed = new Vector2(projSpeed, projSpeed).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, type, projDamage, 2f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, type, projDamage, 2f, Main.myPlayer);
                         }
                         Main.PlaySound(29, (int)npc.position.X, (int)npc.position.Y, 93);
                         /*

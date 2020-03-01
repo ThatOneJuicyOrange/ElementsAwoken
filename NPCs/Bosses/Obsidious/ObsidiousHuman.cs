@@ -251,7 +251,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Move(P, 0.1f);
                     if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousFireCrystal"), projectileBaseDamage, 0f, 0, 0f, npc.whoAmI);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousFireCrystal"), projectileBaseDamage, 0f, Main.myPlayer, 0f, npc.whoAmI);
                         shootTimer = 45;
                     }
                 }
@@ -271,7 +271,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 8);
                         Vector2 tpTarget = P.Center + offset.RotatedBy(spinAI * (Math.PI * 2 / 8));
                         Teleport(tpTarget.X, tpTarget.Y);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousFireCrystalStationary"), projectileBaseDamage - 10, 0f, 0, 0f, npc.whoAmI);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousFireCrystalStationary"), projectileBaseDamage - 10, 0f, Main.myPlayer, 0f, npc.whoAmI);
                         shootTimer = 25;
                     }
                 }
@@ -290,7 +290,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     for (int l = 0; l < orbitalCount; l++)
                     {
                         int distance = 360 / orbitalCount;
-                        int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousHumanRockOrbital"), npc.damage, 0f, 0, l * distance, npc.whoAmI);
+                        int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousHumanRockOrbital"), npc.damage, 0f, Main.myPlayer, l * distance, npc.whoAmI);
                     }
                     npc.localAI[1]++;
                 }
@@ -299,7 +299,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
                     float speed = 8f;
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousRockLarge"), projectileBaseDamage + 20, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousRockLarge"), projectileBaseDamage + 20, 0f, Main.myPlayer);
                     shootTimer = 40;
                 }
             }
@@ -315,7 +315,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                         for (int l = 0; l < orbitalCount; l++)
                         {
                             int distance = 360 / orbitalCount;
-                            int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousIceCrystalSpin"), npc.damage, 0f, 0, l * distance, npc.whoAmI);
+                            int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousIceCrystalSpin"), npc.damage, 0f, Main.myPlayer, l * distance, npc.whoAmI);
                         }
                         shootTimer = 45;
                     }
@@ -331,7 +331,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                         for (int l = 0; l < crystalCount; l++)
                         {
                             int distance = 360 / crystalCount;
-                            int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousIceBeamCrystal"), 0, 0f, 0, l * distance, npc.whoAmI);
+                            int orbital = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousIceBeamCrystal"), 0, 0f, Main.myPlayer, l * distance, npc.whoAmI);
                         }
                     }
                     Vector2 offset = new Vector2(400, 0);
@@ -346,7 +346,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                             float projOffset = 360 / numProj;
                             Vector2 shootTarget1 = npc.Center + offset.RotatedBy(spinAI + (projOffset * i) * (Math.PI * 2 / 8));
                             float rotation = (float)Math.Atan2(npc.Center.Y - shootTarget1.Y, npc.Center.X - shootTarget1.X);
-                            int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 10f) * -1), (float)((Math.Sin(rotation) * 10f) * -1), mod.ProjectileType("ObsidiousIceBeam"), projectileBaseDamage, 0f, 0);
+                            int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 10f) * -1), (float)((Math.Sin(rotation) * 10f) * -1), mod.ProjectileType("ObsidiousIceBeam"), projectileBaseDamage, 0f, Main.myPlayer);
                             Main.projectile[proj].timeLeft = (int)((aiTimer - 600));
                         }
                         shootTimer = 3;
@@ -364,7 +364,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                 npc.velocity.Y = 0f;
                 if (npc.localAI[2] == 0)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousRitual"), npc.damage, 0f, 0, 0f, npc.whoAmI);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("ObsidiousRitual"), npc.damage, 0f, Main.myPlayer, 0f, npc.whoAmI);
                     npc.localAI[2]++;
                 }
                 shootTimer--;
@@ -400,7 +400,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 8);
                     float speed = 8f;
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage - 10, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage - 10, 0f, Main.myPlayer);
                     //npc.netUpdate = true;
                 }
             }

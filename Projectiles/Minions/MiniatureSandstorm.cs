@@ -5,12 +5,21 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 
 namespace ElementsAwoken.Projectiles.Minions
 {
     public class MiniatureSandstorm : ModProjectile
     {
         public int canHit = 0;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(canHit);
+        }
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            canHit = reader.ReadInt32();
+        }
         public override void SetDefaults()
         {
             projectile.width = 30;
@@ -22,8 +31,9 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.minion = true;
             projectile.tileCollide = false;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
-           // projectile.aiStyle = 54;
+            // projectile.aiStyle = 54;
             //aiType = 317;
 
             projectile.minionSlots = 1f;

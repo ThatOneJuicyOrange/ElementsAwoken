@@ -13,21 +13,29 @@ namespace ElementsAwoken.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            item.damage = 18;
-            item.channel = true;
-            item.ranged = true;
             item.width = 38;
-            item.height = 16;
+            item.height = 16; 
+            
+            item.damage = 10;
+            item.knockBack = 1.05f;
+
+
             item.useTime = 20;
             item.useAnimation = 20;
+
             item.useStyle = 5;
+
             item.noMelee = true;
             item.noUseGraphic = true;
-            item.knockBack = 1.05f;
-            item.value = Item.buyPrice(0, 1, 50, 0);
-            item.rare = 1;
-            item.UseSound = SoundID.Item10;
+            item.channel = true;
+            item.ranged = true;
             item.autoReuse = true;
+
+            item.value = Item.sellPrice(0, 0, 10, 0);
+            item.rare = 1;
+
+            item.UseSound = SoundID.Item10;
+
             item.shootSpeed = 15f;
             item.shoot = mod.ProjectileType("BabySharkP");
         }
@@ -37,7 +45,6 @@ namespace ElementsAwoken.Items.Weapons.Ranged
             DisplayName.SetDefault("Baby Shark");
             Tooltip.SetDefault("Animal and child abuse, all in one\nYou monster...");
         }
-
 
         public override Vector2? HoldoutOffset()
         {

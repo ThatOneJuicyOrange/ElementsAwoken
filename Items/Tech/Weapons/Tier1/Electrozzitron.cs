@@ -14,7 +14,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier1
 
             item.damage = 19;
             item.knockBack = 1f;
-            item.GetGlobalItem<ItemEnergy>().energy = 3;
+            item.GetGlobalItem<ItemEnergy>().energy = 2;
 
             item.useAnimation = 45;
             item.useTime = 45;

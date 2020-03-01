@@ -32,8 +32,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Portable Fission Reactor");
-            Tooltip.SetDefault("Consumes 1 chlorophyte ore to generate power\nProduces 10 seconds of power\nCreates deadly chlorobytes which overflow and poison the player\nRight click to turn on");
+            DisplayName.SetDefault("Portable Fission Generator");
+            Tooltip.SetDefault("Consumes 1 chlorophyte ore to generate power\nProduces 10 seconds of power\nCreates deadly chlorobytes which overflow and poison the player\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

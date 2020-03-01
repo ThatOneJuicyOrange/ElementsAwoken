@@ -12,19 +12,24 @@ namespace ElementsAwoken.NPCs.GiantVampireBat
 
         public override void SetDefaults()
         {
+            npc.width = 26;
+            npc.height = 20;
+            
             npc.aiStyle = 14;
+            aiType = NPCID.CaveBat;
+
             npc.damage = 45;
-            npc.width = 26; //324
-            npc.height = 20; //216
             npc.defense = 16;
             npc.lifeMax = 100;
             npc.knockBackResist = 0.25f;
+
             animationType = 93;
-            Main.npcFrameCount[npc.type] = 4;
-            npc.value = Item.buyPrice(0, 0, 20, 0);
+
+            npc.value = Item.buyPrice(0, 0, 7, 50);
+
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath4;
-            npc.buffImmune[24] = true;
+
             banner = npc.type;
             bannerItem = mod.ItemType("GiantVampireBatBanner");
         }
@@ -40,7 +45,7 @@ namespace ElementsAwoken.NPCs.GiantVampireBat
             int tile = (int)Main.tile[x, y].type;
             bool oUnderworld = (y <= (Main.maxTilesY * 0.6f));
             bool oRockLayer = (y >= (Main.maxTilesY * 0.4f));
-            return oUnderworld && oRockLayer && Main.evilTiles < 80 && Main.sandTiles < 80 && Main.dungeonTiles < 80 && Main.hardMode ? 0.05f : 0f;
+            return oUnderworld && oRockLayer && !spawnInfo.player.ZoneCrimson && !spawnInfo.player.ZoneCorrupt && !spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneDungeon && Main.hardMode ? 0.05f : 0f;
         }
 
         public override void NPCLoot()

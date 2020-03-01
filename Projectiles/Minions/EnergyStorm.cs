@@ -21,6 +21,7 @@ namespace ElementsAwoken.Projectiles.Minions
 
             projectile.timeLeft = Projectile.SentryLifeTime + 300; // 7200, 300 so it doesnt vanish and can be faded out
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
             projectile.penetrate = -1;
         }
         public override void SetStaticDefaults()
@@ -50,7 +51,7 @@ namespace ElementsAwoken.Projectiles.Minions
             Main.dust[num1].noGravity = true;
             Main.dust[num1].velocity *= 0.9f;
         
-            if (projectile.timeLeft <= 300f || (ProjectileUtils.CountProjectiles(projectile.type) > 1 && ProjectileUtils.HasLeastTimeleft(projectile.whoAmI)))
+            if (projectile.timeLeft <= 300f || (ProjectileUtils.CountProjectiles(projectile.type,projectile.owner) > 1 && ProjectileUtils.HasLeastTimeleft(projectile.whoAmI)))
             {
                 projectile.alpha += 5;
                 if (projectile.alpha > 255)

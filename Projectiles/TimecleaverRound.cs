@@ -13,17 +13,15 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 2;
             projectile.height = 2;
-            projectile.scale = 1.0f;
-            projectile.magic = true;
+
             projectile.penetrate = 1;
-            projectile.hostile = false;
+
+            projectile.ranged = true;
             projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.alpha = 0;
-            projectile.light = -5f;
-            projectile.timeLeft = 600;
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 3;
+
+            projectile.timeLeft = 300;
+
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 8;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
@@ -32,22 +30,22 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
+            Lighting.AddLight(projectile.Center, 0.2f, 0.4f, 0.9f);
+
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            if (Main.rand.Next(3) == 0)
+        }
+        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        {
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
+            for (int k = 0; k < projectile.oldPos.Length; k++)
             {
-                int dustType = 75;
-                switch (Main.rand.Next(2))
-                {
-                    case 0: dustType = 75; break;
-                    case 1: dustType = 135; break;
-                    default: break;
-                }
-                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType)];
-                dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f;
-                dust.noGravity = true;
-                dust.scale = 1f;
+                Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                Color color = Color.Lerp(Color.White, new Color(119, 255, 0), (float)k / (float)projectile.oldPos.Length) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                sb.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
             }
+            Vector2 drawPos2 = projectile.position - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+            sb.Draw(Main.projectileTexture[projectile.type], drawPos2, null, Color.White, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+            return false;
         }
     }
 }

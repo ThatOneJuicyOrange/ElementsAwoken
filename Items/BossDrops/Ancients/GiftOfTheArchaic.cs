@@ -8,6 +8,8 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using System.Text;
+using System.IO;
+using Terraria.ModLoader.IO;
 
 namespace ElementsAwoken.Items.BossDrops.Ancients
 {
@@ -69,7 +71,28 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
             else if (string.Concat(key) == Main.cMapStyle) return true;
             else return false;
         }
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(boundKey);
+        }
 
+        public override void NetRecieve(BinaryReader reader)
+        {
+            boundKey = reader.ReadInt32();
+        }
+
+        public override TagCompound Save()
+        {
+            return new TagCompound
+            {
+                { "boundKey", boundKey}
+            };
+        }
+
+        public override void Load(TagCompound tag)
+        {
+            boundKey = tag.GetInt("boundKey");
+        }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
@@ -101,7 +124,7 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
                     else if (player.FindBuffIndex(mod.BuffType("ArchaicProtectionCD")) == -1)
                     {
                         modPlayer.archaicProtectionTimer = 1200;
-                        player.AddBuff(mod.BuffType("ArchaicProtectionCD"), 3600); // 3600
+                        player.AddBuff(mod.BuffType("ArchaicProtectionCD"), ModContent.GetInstance<Config>().debugMode ? 60 : 3600); // 3600
                     }
                     reuseKeyTimer = 20;
                 }

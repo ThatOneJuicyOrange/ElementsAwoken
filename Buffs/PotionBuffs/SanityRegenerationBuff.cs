@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
         {
             AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             modPlayer.sanityRegen += 3;
-            modPlayer.AddSanityRegen(3, "SanityPotion");
+            modPlayer.AddSanityRegen(3, "Sanity Potion");
         }
     }
 }   

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,25 +16,56 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
     [AutoloadBossHead]
     public class CosmicObserver : ModNPC
     {
-        public int orbCooldown = 75;
-        public int projectileBaseDamage = 20;
-        public bool reset = false;
-        public int moveAi = 0;
+        private int projectileBaseDamage = 20;
 
-        public float storeRot = 0;
 
-        public bool spawnedHands = false;
+        private const float beamChargeMax = 300f;
 
-        public Vector2 floatCenter = new Vector2();
+        private int targetLaserFrame = 0;
+        private float desiredX = 0;
+        private float desiredY = 0;
+        private int moveAI = 1;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(desiredX);
+            writer.Write(desiredY);
+            writer.Write(targetLaserFrame);
+            writer.Write(moveAI);
+        }
 
-        public float beamCharge = 0f;
-        public const float beamChargeMax = 300f;
-
-        public int targetLaserFrame = 0;
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            desiredX = reader.ReadInt32();
+            desiredY = reader.ReadInt32();
+            targetLaserFrame = reader.ReadInt32();
+            moveAI = reader.ReadInt32();
+        }
+        private float shootTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float aiTimer
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float storeRot
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float beamCharge
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
         public override void SetDefaults()
         {
             npc.width = 104;
             npc.height = 104;
+
+            npc.aiStyle = -1;
 
             npc.lifeMax = 5500;
             npc.damage = 40;
@@ -65,6 +97,8 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             // used for the hands
             NPCID.Sets.TrailCacheLength[npc.type] = 15;
             NPCID.Sets.TrailingMode[npc.type] = 1;
+
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {
@@ -84,23 +118,23 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
         }
         public override void FindFrame(int frameHeight)
         {
-            if (npc.life >= npc.lifeMax * 0.75f)
+            if (npc.life >= npc.lifeMax * 0.8f)
             {
                 npc.frame.Y = 0;
             }
-            else if (npc.life >= npc.lifeMax * 0.6f)
+            else if (npc.life >= npc.lifeMax * 0.65f)
             {
                 npc.frame.Y = 1 * frameHeight;
             }
-            else if (npc.life >= npc.lifeMax * 0.4f)
+            else if (npc.life >= npc.lifeMax * 0.45f)
             {
                 npc.frame.Y = 2 * frameHeight;
             }
-            else if (npc.life >= npc.lifeMax * 0.25f && MyWorld.awakenedMode)
+            else if (npc.life >= npc.lifeMax * 0.3f && MyWorld.awakenedMode)
             {
                 npc.frame.Y = 3 * frameHeight;
             }
-            if (npc.ai[1] % 9 == 0)
+            if (aiTimer % 9 == 0)
             {
                 targetLaserFrame++;
                 if (targetLaserFrame > 3)
@@ -113,22 +147,31 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
         {
             potionType = ItemID.GreaterHealingPotion;
         }
-       
+
         public override void NPCLoot()
         {
-            int numShards = Main.rand.Next(8, 12);
-            if (Main.expertMode) numShards = Main.rand.Next(12, 19);
+            int numShards = 0;
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                if (Main.player[i].active)
+                {
+                    if (MyWorld.awakenedMode) numShards += Main.rand.Next(16, 26);
+                    else if (Main.expertMode) numShards = Main.rand.Next(12, 19); 
+                    else numShards += Main.rand.Next(8, 12);
+                }
+            }
+            
             if (MyWorld.awakenedMode)
             {
-                numShards = Main.rand.Next(16, 26);
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicGlass"), 1);
             }
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CosmicShard"), numShards); //Item spawn
             MyWorld.downedCosmicObserver = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            if (npc.ai[1] >= 1400)
+            if (aiTimer >= 1400)
             {
                 Texture2D texture = ModContent.GetTexture("ElementsAwoken/Projectiles/NPCProj/CosmicObserver/ObserverTarget");
                 Texture2D backTexture = ModContent.GetTexture("ElementsAwoken/Projectiles/NPCProj/CosmicObserver/ObserverTarget1");
@@ -188,33 +231,26 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             }
             #endregion
             Lighting.AddLight(npc.Center, 0.2f, 1.4f, 0.2f);
-            if (!reset)
-            {
-                Main.PlaySound(15, (int)P.position.X, (int)P.position.Y, 0);
-                Main.NewText("A Cosmic Observer roams the skies", 175, 75, 255, false);
-                reset = true;
-            }
-            npc.ai[0]--;
-            npc.ai[1]++;
+            shootTimer--;
+            aiTimer++;
             if (MyWorld.awakenedMode && npc.life < npc.lifeMax * 0.25f)
             {
-                npc.ai[1]++;
+                aiTimer++;
             }
-            npc.ai[2]--; // multiple laser burst
             if (MyWorld.awakenedMode)
             {
-                if (npc.life > npc.lifeMax / 2)
+                if (npc.life > npc.lifeMax * 0.45f)
                 {
-                    if (npc.ai[1] >= 1200)
+                    if (aiTimer >= 1200)
                     {
-                        npc.ai[1] = 0;
+                        aiTimer = 0;
                     }
                 }
-                else if (npc.life > npc.lifeMax * 0.25f)
+                else if (npc.life > npc.lifeMax * 0.3f)
                 {
-                    if (npc.ai[1] >= 1400)
+                    if (aiTimer >= 1400)
                     {
-                        npc.ai[1] = 0;
+                        aiTimer = 0;
                     }
                 }
                 else
@@ -226,54 +262,31 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             {
                 if (npc.life > npc.lifeMax / 2)
                 {
-                    if (npc.ai[1] >= 1200)
+                    if (aiTimer >= 1200)
                     {
-                        npc.ai[1] = 0;
+                        aiTimer = 0;
                     }
                 }
                 else
                 {
-                    if (npc.ai[1] >= 1400)
+                    if (aiTimer >= 1400)
                     {
-                        npc.ai[1] = 0;
+                        aiTimer = 0;
                     }
                 }
             }
             else
             {
-                if (npc.ai[1] >= 1200)
+                if (aiTimer >= 1200)
                 {
-                    npc.ai[1] = 0;
+                    aiTimer = 0;
                 }
             }
 
-            if (npc.ai[2] <= 0)
+            if (aiTimer <= 600)
             {
-                npc.ai[2] = Main.rand.Next(60, 90);
-            }
-            if (npc.ai[1] <= 600)
-            {
-                /*if (npc.life > npc.lifeMax / 2)
-                {
-                    if (npc.ai[0] <= 0)
-                    {
-                        if (npc.life > npc.lifeMax / 2)
-                        {
-                            Laser(P, 4.5f, projectileBaseDamage);
-                            npc.ai[0] = Main.rand.Next(60, 120);
-                        }
-                    }
-                }
-                else
-                {
-                    if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[0] <= 0 && npc.ai[2] <= 18)
-                    {
-                        Laser(P, 4f, projectileBaseDamage);
-                        npc.ai[0] = 6;
-                    }
-                }*/
-                //Move(P, 0.075f, P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                if (Vector2.Distance(P.Center, npc.Center) > 700)
+                Vector2 floatCenter = new Vector2(desiredX, desiredY);
+                 if (Vector2.Distance(P.Center, npc.Center) > 700)
                 {
                     Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
                     toTarget.Normalize();
@@ -281,29 +294,29 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 }
                 else if (Vector2.Distance(P.Center, npc.Center) > 500)
                 {
-                    Move(P, 0.02f, P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
+                    Move(P, 0.02f, P.Center);
                 }
                 else
                 {
-                    float num1060 = 0.2f;
+                    float moveSpeed = 0.2f;
                     Vector2 vector149 = floatCenter - npc.Center;
                     if (vector149.Length() < 60f)
                     {
-                        num1060 = 0.12f;
+                        moveSpeed = 0.12f;
                     }
                     if (vector149.Length() < 40f)
                     {
-                        num1060 = 0.06f;
+                        moveSpeed = 0.06f;
                     }
                     if (vector149.Length() > 20f)
                     {
                         if (Math.Abs(floatCenter.X - npc.Center.X) > 20f)
                         {
-                            npc.velocity.X = npc.velocity.X + num1060 * (float)Math.Sign(floatCenter.X - npc.Center.X);
+                            npc.velocity.X = npc.velocity.X + moveSpeed * (float)Math.Sign(floatCenter.X - npc.Center.X);
                         }
                         if (Math.Abs(floatCenter.Y - npc.Center.Y) > 10f)
                         {
-                            npc.velocity.Y = npc.velocity.Y + num1060 * (float)Math.Sign(floatCenter.Y - npc.Center.Y);
+                            npc.velocity.Y = npc.velocity.Y + moveSpeed * (float)Math.Sign(floatCenter.Y - npc.Center.Y);
                         }
                     }
                     else if (npc.velocity.Length() > 2f)
@@ -314,15 +327,19 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                     {
                         npc.velocity.Y = npc.velocity.Y - 0.1f;
                     }
-                    float num1061 = 15f;
-                    if (npc.velocity.Length() > num1061)
+                    float maxSpeed = 15f;
+                    if (npc.velocity.Length() > maxSpeed)
                     {
-                        npc.velocity = Vector2.Normalize(npc.velocity) * num1061;
+                        npc.velocity = Vector2.Normalize(npc.velocity) * maxSpeed;
                     }
                 }
                 if (Vector2.Distance(P.Center, npc.Center) > 300)
                 {
-                    if (Vector2.Distance(floatCenter, npc.Center) > 150) floatCenter = npc.Center;
+                    if (Vector2.Distance(floatCenter, npc.Center) > 150) 
+                    {
+                        desiredX = npc.Center.X;
+                        desiredY = npc.Center.Y;
+                    }
                 }
 
                 if (ModContent.GetInstance<Config>().debugMode)
@@ -332,49 +349,37 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 }
                 
             }
-            if (npc.ai[1] == 600)
+            if (aiTimer == 600)
             {
-                npc.localAI[1] = 0;
                 npc.localAI[0] = 0;
             }
-            if (npc.ai[1] > 600 && npc.ai[1] <= 1200)
+            if (aiTimer > 600 && aiTimer <= 1200)
             {
-                //movement
-                if (npc.ai[0] > 0)
-                {
-                    float playerX = P.Center.X - npc.Center.X;
-                    float playerY = P.Center.Y - 75 - npc.Center.Y;
-                    if (moveAi == 0)
-                    {
-                        playerX = P.Center.X - 600f - npc.Center.X;
-                        if (Math.Abs(P.Center.X - 600f - npc.Center.X) <= 20)
-                        {
-                            moveAi = 1;
-                        }
-                    }
-                    if (moveAi == 1)
-                    {
-                        playerX = P.Center.X + 600f - npc.Center.X;
-                        if (Math.Abs(P.Center.X + 600f - npc.Center.X) <= 20)
-                        {
-                            moveAi = 0;
-                        }
-                    }
-                    Move(P, 0.1f, playerX, playerY);
-                }
-                int numProj = 8;
 
-                if (npc.ai[0] == 1)
+                int numProj = 8;
+                int shootDelay = 5;
+                if (shootTimer == numProj * shootDelay + 1)
                 {
                     storeRot = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+                }               
+                //movement
+                if (shootTimer > numProj * shootDelay)
+                {
+                    Vector2 target = P.Center + new Vector2(600f * moveAI, -75);
+                    if (moveAI == 0) moveAI = -1;
+                    if (MathHelper.Distance(target.X, npc.Center.X) <= 20)
+                    {
+                        moveAI *= -1;
+                    }
+
+                    Move(P, 0.1f, target);
                 }
-                if (npc.ai[0] <= 0)
+                if (shootTimer <= numProj * shootDelay)
                 {
                     npc.velocity.X *= 0.9f;
                     npc.velocity.Y *= 0.9f;
 
-                    npc.localAI[1]++;
-                    if (npc.localAI[0] < numProj && npc.localAI[1] % 5 == 0)
+                    if (npc.localAI[0] < numProj && shootTimer % shootDelay == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
 
@@ -382,28 +387,27 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                         float rotation = MathHelper.ToRadians(5);
                         float amount = npc.direction == -1 ? npc.localAI[0] - numProj / 2 : -(npc.localAI[0] - numProj / 2); // to make it from down to up
                         Vector2 perturbedSpeed = new Vector2(projSpeed.X, projSpeed.Y).RotatedBy(MathHelper.Lerp(-rotation, rotation, amount));
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ObserverShard"), projectileBaseDamage, 3f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ObserverShard"), projectileBaseDamage, 3f, Main.myPlayer);
                         npc.localAI[0]++;
                     }
                 }
                 if (npc.localAI[0] >= numProj)
                 {
-                    npc.localAI[1] = 0;
                     npc.localAI[0] = 0;
-                    npc.ai[0] = 120f;
+                    shootTimer = 120f + numProj * shootDelay;
                 }
             }
-            if (npc.ai[1] > 1200 && npc.ai[1] < 1400) // spin
+            if (aiTimer > 1200 && aiTimer < 1400) // spin
             {
                 npc.rotation += 0.2f;
 
                 npc.velocity.X = 0f;
                 npc.velocity.Y = 0f;
-                if (npc.ai[0] <= 0)
+                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 perturbedSpeed = new Vector2(7f, 7f).RotatedByRandom(MathHelper.ToRadians(360));
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ObserverShard"), projectileBaseDamage, 0f, 0);
-                    npc.ai[0] = 5;
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ObserverShard"), projectileBaseDamage, 0f, Main.myPlayer);
+                    shootTimer = 5;
                 }
                 if (MyWorld.awakenedMode)
                 {
@@ -427,10 +431,10 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             {
                 npc.rotation = npc.velocity.X * 0.1f;
             }
-            if (npc.ai[1] >= 1400)
+            if (aiTimer >= 1400)
             {
                 beamCharge++;
-                if (beamCharge >= beamChargeMax)
+                if (beamCharge >= beamChargeMax && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 113);
                     float rotation = (float)Math.Atan2(npc.Center.Y - (P.Center.Y + P.velocity.Y * 2), npc.Center.X - (P.Center.X + P.velocity.X * 2));
@@ -438,15 +442,15 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                     {
                         P.immune = false;
                     }
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 4f) * -1), (float)((Math.Sin(rotation) * 4f) * -1), mod.ProjectileType("ObserverBeam"), projectileBaseDamage * 5, 0f, 0, 0, npc.whoAmI);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 4f) * -1), (float)((Math.Sin(rotation) * 4f) * -1), mod.ProjectileType("ObserverBeam"), projectileBaseDamage * 5, 0f, Main.myPlayer, 0, npc.whoAmI);
                     beamCharge = 0;
-                    npc.ai[1] = 0;
+                    aiTimer = 0;
                 }
             }
-            if (!spawnedHands && Main.netMode != NetmodeID.MultiplayerClient)
+            if (npc.localAI[1] == 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.TargetClosest(true);
-                spawnedHands = true;
+                npc.localAI[1] = 1;
                 NPC hand = Main.npc[NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("CosmicObserverHand"), 0, 0f, 0f, 0f, 0f, 255)];
                 hand.ai[0] = -1f;
                 hand.ai[1] = (float)npc.whoAmI;
@@ -460,57 +464,56 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             }
         }
 
-        private void Move(Player P, float speed, float playerX, float playerY)
+        private void Move(Player P, float speed, Vector2 target)
         {
-            int maxDist = 1000;
-            if (Vector2.Distance(P.Center, npc.Center) >= maxDist)
-            {
-                float moveSpeed = 14f;
-                Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget.Normalize();
-                npc.velocity = toTarget * moveSpeed;
-            }
-            else
-            {
-                if (Main.expertMode)
-                {
-                    speed += 0.1f;
-                }
-                if (npc.velocity.X < playerX)
-                {
-                    npc.velocity.X = npc.velocity.X + speed * 2;
-                }
-                else if (npc.velocity.X > playerX)
-                {
-                    npc.velocity.X = npc.velocity.X - speed * 2;
-                }
-                if (npc.velocity.Y < playerY)
-                {
-                    npc.velocity.Y = npc.velocity.Y + speed * 0.8f;
-                    if (npc.velocity.Y < 0f && playerY > 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y + speed * 0.8f;
-                        return;
-                    }
-                }
-                else if (npc.velocity.Y > playerY)
-                {
-                    npc.velocity.Y = npc.velocity.Y - speed * 0.8f;
-                    if (npc.velocity.Y > 0f && playerY < 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y - speed * 0.8f;
-                        return;
-                    }
-                }
-            }
-        }
+            Vector2 desiredVelocity = target - npc.Center;
+            if (Main.expertMode) speed *= 1.05f;
+            if (MyWorld.awakenedMode) speed *= 1.05f;
 
-        private void Laser(Player P, float speed, int damage)
-        {
-            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 33);
-            float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObserverLaser"), damage, 0f, 0);
+            if (npc.velocity.X < desiredVelocity.X)
+            {
+                npc.velocity.X = npc.velocity.X + speed;
+                if (npc.velocity.X < 0f && desiredVelocity.X > 0f)
+                {
+                    npc.velocity.X = npc.velocity.X + speed;
+                }
+            }
+            else if (npc.velocity.X > desiredVelocity.X)
+            {
+                npc.velocity.X = npc.velocity.X - speed;
+                if (npc.velocity.X > 0f && desiredVelocity.X < 0f)
+                {
+                    npc.velocity.X = npc.velocity.X - speed;
+                }
+            }
+            if (npc.velocity.Y < desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y + speed;
+                if (npc.velocity.Y < 0f && desiredVelocity.Y > 0f)
+                {
+                    npc.velocity.Y = npc.velocity.Y + speed;
+                    return;
+                }
+            }
+            else if (npc.velocity.Y > desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y - speed;
+                if (npc.velocity.Y > 0f && desiredVelocity.Y < 0f)
+                {
+                    npc.velocity.Y = npc.velocity.Y - speed;
+                    return;
+                }
+            }
+            float slowSpeed = Main.expertMode ? 0.96f : 0.98f;
+            if (MyWorld.awakenedMode) slowSpeed = 0.94f;
+            int xSign = Math.Sign(desiredVelocity.X);
+            if ((npc.velocity.X < xSign && xSign == 1) || (npc.velocity.X > xSign && xSign == -1)) npc.velocity.X *= slowSpeed;
+
+            int ySign = Math.Sign(desiredVelocity.Y);
+            if (MathHelper.Distance(target.Y, npc.Center.Y) > 1000)
+            {
+                if ((npc.velocity.X < ySign && ySign == 1) || (npc.velocity.X > ySign && ySign == -1)) npc.velocity.Y *= slowSpeed;
+            }
         }
 
         public override bool CheckActive()

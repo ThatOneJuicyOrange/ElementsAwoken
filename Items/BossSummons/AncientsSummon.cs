@@ -45,11 +45,22 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Izaris"));
-            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Kirvein"));
-            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Krecheus"));
-            NPC.NewNPC((int)player.Center.X, (int)player.Center.Y, mod.NPCType("Xernon"));
-
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            { 
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Izaris"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Kirvein"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Krecheus"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Xernon"));
+                NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ShardBase"));
+            }
+            else 
+            {
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Izaris"), 0f, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Kirvein"), 0f, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Krecheus"), 0f, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Xernon"), 0f, 0f, 0, 0, 0);
+                NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("ShardBase"), 0f, 0f, 0, 0, 0);
+            }
             if (!MyWorld.downedAncients)
             {
                 if (MyWorld.ancientSummons == 0)
@@ -100,7 +111,7 @@ namespace ElementsAwoken.Items.BossSummons
                     Main.NewText("You bring me back to this awful land... Why?", new Color(3, 188, 127));
                 }
             }
-            Projectile.NewProjectile(player.Center.X, player.Center.Y - 300, 0f, 0f, mod.ProjectileType("ShardBase"), 0, 0f, player.whoAmI);
+           // Projectile.NewProjectile(player.Center.X, player.Center.Y - 300, 0f, 0f, mod.ProjectileType("ShardBase"), 0, 0f, player.whoAmI);
 
             MyWorld.ancientSummons++;
             

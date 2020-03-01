@@ -43,7 +43,7 @@ namespace ElementsAwoken.NPCs.Elementals
             bool oUnderworld = (y <= (Main.maxTilesY * 0.6f));
             bool oRockLayer = (y >= (Main.maxTilesY * 0.4f));*/
 
-            return (spawnInfo.player.ZoneDesert) &&
+            return (spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneBeach) &&
             !spawnInfo.player.ZoneTowerStardust &&
             !spawnInfo.player.ZoneTowerSolar &&
             !spawnInfo.player.ZoneTowerVortex &&

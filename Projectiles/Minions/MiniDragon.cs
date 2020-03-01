@@ -14,18 +14,21 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             projectile.width = 40;
             projectile.height = 38;
+
             projectile.netImportant = true;
             projectile.friendly = true;
+            projectile.tileCollide = false;
+            projectile.minion = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+
             projectile.minionSlots = 1;
             projectile.timeLeft = 18000;
             Main.projFrames[projectile.type] = 6;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+
             projectile.penetrate = -1;
             projectile.timeLeft *= 5;
-            projectile.minion = true;       
             projectile.aiStyle = 62;
             aiType = 375;
-            projectile.tileCollide = false;
         }
         public override void SetStaticDefaults()
         {
@@ -42,7 +45,6 @@ namespace ElementsAwoken.Projectiles.Minions
         }
         public override void AI()
         {
-            bool flag64 = projectile.type == mod.ProjectileType("MiniDragon");
             Player player = Main.player[projectile.owner];
             MyPlayer modPlayer = (MyPlayer)player.GetModPlayer(mod, "MyPlayer");
             player.AddBuff(mod.BuffType("MiniDragonBuff"), 3600);

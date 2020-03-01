@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shotstorm");
-            Tooltip.SetDefault("Fires 3 supersonic bolts");
+            Tooltip.SetDefault("Fires three supersonic bolts");
         }
 
 

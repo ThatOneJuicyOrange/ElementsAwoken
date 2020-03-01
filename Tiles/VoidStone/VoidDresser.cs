@@ -46,9 +46,9 @@ namespace ElementsAwoken.Tiles.VoidStone
 			return true;
 		}
 
-		public override void RightClick(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
+        public override bool NewRightClick(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
 			if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameY == 0)
 			{
 				Main.CancelClothesWindow(true);
@@ -132,10 +132,12 @@ namespace ElementsAwoken.Tiles.VoidStone
 				Main.dresserX = Player.tileTargetX;
 				Main.dresserY = Player.tileTargetY;
 				Main.OpenClothesWindow();
-			}
-		}
+            }
+            return true;
 
-		public override void MouseOverFar(int i, int j)
+        }
+
+        public override void MouseOverFar(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];

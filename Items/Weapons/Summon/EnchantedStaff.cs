@@ -22,7 +22,7 @@ namespace ElementsAwoken.Items.Weapons.Summon
             item.width = 62;
             item.height = 62;
 
-            item.damage = 46;
+            item.damage = 36;
             item.knockBack = 2f;
             item.mana = 10;
 
@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Weapons.Summon
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Enchanted Staff");
-            Tooltip.SetDefault("Summons a enchanted sword, cursed hammer and crimson axe to fight for you");
+            Tooltip.SetDefault("Summons an enchanted sword, cursed hammer and crimson axe to fight for you");
         }
 
         public override void AddRecipes()

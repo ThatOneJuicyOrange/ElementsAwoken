@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles.GlobalProjectiles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             npc.HitSound = SoundID.NPCHit52;
             npc.DeathSound = SoundID.NPCDeath1;
 
-            npc.value = Item.buyPrice(0, 3, 0, 0);
+            npc.value = Item.buyPrice(0, 7, 50, 0);
             npc.npcSlots = 1f;
 
             music = MusicID.Plantera;
@@ -186,14 +187,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
 
         public override void NPCLoot()
         {
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfernaceTrophy"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfernaceMask"));
-            }
+
             if (Main.expertMode)
             {
                 npc.DropBossBags();
@@ -217,12 +211,20 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                 {
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FireHarpyStaff"));
                 }
+                if (Main.rand.Next(10) == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfernaceTrophy"));
+                }
+                if (Main.rand.Next(10) == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("InfernaceMask"));
+                }
             }
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("FireEssence"), Main.rand.Next(5, 22));
             if (!MyWorld.downedInfernace)
             {
-                MyWorld.encounter1 = true;
-                MyWorld.encounterTimer = 3600;
+                ElementsAwoken.encounter = 1;
+                ElementsAwoken.encounterTimer = 3600;
                 ElementsAwoken.DebugModeText("encounter 1 start");
             }
 
@@ -256,6 +258,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             }
 
             MyWorld.downedInfernace = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -317,8 +320,6 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             }
             #endregion
 
-
-
             if ((npc.life > npc.lifeMax * 0.75f && aiTimer > 1060f) ||
                 (npc.life <= npc.lifeMax * 0.75f && npc.life > npc.lifeMax * 0.45f && aiTimer > 1660f) ||
                 (npc.life <= npc.lifeMax * 0.45f && aiTimer > 1900f)) aiTimer = 0f;
@@ -341,7 +342,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                             break;
                         }
                     }
-                    Projectile.NewProjectile(monolithPos.X, monolithPos.Y, 0f, 0f, mod.ProjectileType("InfernalMonolithSpawn"), projectileBaseDamage + 20, 0f, 0);
+                    Projectile.NewProjectile(monolithPos.X, monolithPos.Y, 0f, 0f, mod.ProjectileType("InfernalMonolithSpawn"), projectileBaseDamage + 20, 0f, Main.myPlayer);
                     monolithTimer = (int)(MathHelper.Lerp(120, 500, (float)npc.life / (float)(npc.lifeMax * 0.25f)));
                 }
             }
@@ -406,100 +407,104 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             if (monsterDropAI <= 0)
             {
                 npc.color = default(Color);
-                //if (npc.life > npc.lifeMax * 0.25f)
+
+                float movementSpeed = Main.expertMode ? 3 : 2.5f;
+                if (MyWorld.awakenedMode) movementSpeed = 3.5f;
+                if (aiTimer < 700f)
                 {
-                    float movementSpeed = Main.expertMode? 3: 2.5f;
-                    if (MyWorld.awakenedMode) movementSpeed = 3.5f;
-                    if (aiTimer < 700f)
-                    {
-                        MoveDirect(P, movementSpeed);
+                    MoveDirect(P, movementSpeed);
 
-                        int tpTimer = (int)(aiTimer - Math.Floor(aiTimer / 300f) * 300) + 1;
-                        if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer <= 0f)
+                    int tpTimer = (int)(aiTimer - Math.Floor(aiTimer / 300f) * 300) + 1;
+                    if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer <= 0f)
+                    {
+                        Spike(P, 10f, projectileBaseDamage);
+                        shootTimer = Main.expertMode ? 90 : 130f;
+                        if (MyWorld.awakenedMode) shootTimer = 70;
+                    }
+                    //tp dust
+                    int maxdusts = 20;
+                    if (tpTimer >= 280f && tpTimer % 5 == 0 && !ModContent.GetInstance<Config>().lowDust)
+                    {
+                        for (int i = 0; i < maxdusts; i++)
                         {
-                            Spike(P, 10f, projectileBaseDamage);
-                            shootTimer = Main.expertMode ? 90 : 130f;
-                            if (MyWorld.awakenedMode) shootTimer = 70;
-                        }
-                        //tp dust
-                        int maxdusts = 20;
-                        if (tpTimer >= 280f && tpTimer % 5 == 0 && !ModContent.GetInstance<Config>().lowDust)
-                        {
-                            for (int i = 0; i < maxdusts; i++)
-                            {
-                                float dustDistance = 100;
-                                float dustSpeed = 10;
-                                Vector2 offset = Vector2.UnitX.RotateRandom(MathHelper.Pi) * dustDistance;
-                                Vector2 velocity = -offset.SafeNormalize(-Vector2.UnitY) * dustSpeed;
-                                Dust vortex = Dust.NewDustPerfect(npc.Center + offset, 6, velocity, 0, default(Color), 1.5f);
-                                vortex.noGravity = true;
-                            }
-                        }
-                        //teleport
-                        if (tpTimer >= 300)
-                        {
-                            int distance = 200 + Main.rand.Next(0, 200);
-                            int choice = Main.rand.Next(4);
-                            if (choice == 0)Teleport(P.position.X + distance, P.position.Y - distance);
-                            else if (choice == 1) Teleport(P.position.X - distance, P.position.Y - distance);
-                            else if(choice == 2) Teleport(P.position.X + distance, P.position.Y + distance);
-                            else if(choice == 3) Teleport(P.position.X - distance, P.position.Y + distance);
+                            float dustDistance = 100;
+                            float dustSpeed = 10;
+                            Vector2 offset = Vector2.UnitX.RotateRandom(MathHelper.Pi) * dustDistance;
+                            Vector2 velocity = -offset.SafeNormalize(-Vector2.UnitY) * dustSpeed;
+                            Dust vortex = Dust.NewDustPerfect(npc.Center + offset, 6, velocity, 0, default(Color), 1.5f);
+                            vortex.noGravity = true;
                         }
                     }
-
-                    // greek fire and fly upwards
-                    if (aiTimer >= 700f && aiTimer <= 1060)
+                    //teleport
+                    if (tpTimer >= 300)
                     {
-                        if (aiTimer == 700) shootTimer = 0;
-
-                        if (aiTimer >= 700 + tpDuration / 2) npc.velocity = new Vector2(0, -6);
-
-                        if (aiTimer == 700) Teleport(P.position.X + 300, P.position.Y + 300);
-                        if (aiTimer == 880) Teleport(P.position.X - 300, P.position.Y + 300);
-                        if (aiTimer == 1060) Teleport(P.position.X, P.position.Y - 300);
-                        float projSpeedX = aiTimer < 880f ? -5f : 5f;
-                        if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, projSpeedX, -1, mod.ProjectileType("InfernaceFire"), projectileBaseDamage, 0f, 0);
-                            shootTimer = Main.rand.Next(15, 35);
-                        }
+                        int distance = 200 + Main.rand.Next(0, 200);
+                        int choice = Main.rand.Next(4);
+                        if (choice == 0) Teleport(P.position.X + distance, P.position.Y - distance);
+                        else if (choice == 1) Teleport(P.position.X - distance, P.position.Y - distance);
+                        else if (choice == 2) Teleport(P.position.X + distance, P.position.Y + distance);
+                        else if (choice == 3) Teleport(P.position.X - distance, P.position.Y + distance);
                     }
-                    if (aiTimer > 1060f && aiTimer <= 1660)
-                    {
-                        if (aiTimer == 1061) shootTimer = 30;
-                        // waves
-                        npc.velocity *= 0;
-                        if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
-                        {
-                            Waves(P, 10f, projectileBaseDamage - 5, 4);
-                            shootTimer = Main.rand.Next(50, 80);
-                        }
-                    }
-                    if (aiTimer > 1660)
-                    {
-                        int tpTimer = (int)(aiTimer - 1660);
-                        float speed = Main.expertMode ? 5f : 4f;
-                        if (MyWorld.awakenedMode) speed = 7f;
+                }
 
-                        if (tpTimer == 1)
-                        {
-                            Teleport(P.position.X + 500, P.position.Y + 500);
-                        }
-                        if (tpTimer >= 1 + tpDuration / 2 && tpTimer < 120)
-                        {
-                            npc.velocity.X = -speed;
-                            npc.velocity.Y = -speed;
-                        }
-                        if (tpTimer == 120)
-                        {
-                            Teleport(P.position.X - 500, P.position.Y + 500);
-                        }
-                        if (tpTimer >= 120 + tpDuration / 2 && tpTimer < 240)
-                        {
-                            npc.velocity.X = speed;
-                            npc.velocity.Y = -speed;
-                        }
+                // greek fire and fly upwards
+                if (aiTimer >= 700f && aiTimer <= 1060)
+                {
+                    if (aiTimer == 700) shootTimer = 0;
+
+                    if (aiTimer >= 700 + tpDuration / 2) npc.velocity = new Vector2(0, -6);
+
+                    if (aiTimer == 700) Teleport(P.position.X + 300, P.position.Y + 300);
+                    if (aiTimer == 880) Teleport(P.position.X - 300, P.position.Y + 300);
+                    if (aiTimer == 1060) Teleport(P.position.X, P.position.Y - 300);
+                    float projSpeedX = aiTimer < 880f ? -5f : 5f;
+                    if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, projSpeedX, -1, mod.ProjectileType("InfernaceFire"), projectileBaseDamage, 0f, Main.myPlayer);
+                        shootTimer = Main.rand.Next(15, 35);
+                    }
+                }
+                if (aiTimer > 1060f && aiTimer <= 1660)
+                {
+                    if (aiTimer == 1061) shootTimer = 30;
+                    // waves
+                    npc.velocity = Vector2.Zero;
+                    if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        int damage = Main.expertMode ? (int)(projectileBaseDamage * 1.3f) : (int)(projectileBaseDamage * 0.8f);
+                        if (MyWorld.awakenedMode) damage = (int)(projectileBaseDamage * 1.6f);
+
+                        float speed = Main.expertMode ? 8f : 6f;
+                        if (MyWorld.awakenedMode) speed = 10f;
+                        Waves(P, speed, damage, 4);
+                        shootTimer = Main.rand.Next(50, 80);
+                        npc.netUpdate = true;
+                    }
+                }
+                if (aiTimer > 1660)
+                {
+                    int tpTimer = (int)(aiTimer - 1660);
+                    float speed = Main.expertMode ? 5f : 4f;
+                    if (MyWorld.awakenedMode) speed = 7f;
+
+                    if (tpTimer == 1)
+                    {
+                        Teleport(P.position.X + 500, P.position.Y + 500);
+                    }
+                    if (tpTimer >= 1 + tpDuration / 2 && tpTimer < 120)
+                    {
+                        npc.velocity.X = -speed;
+                        npc.velocity.Y = -speed;
+                    }
+                    if (tpTimer == 120)
+                    {
+                        Teleport(P.position.X - 500, P.position.Y + 500);
+                    }
+                    if (tpTimer >= 120 + tpDuration / 2 && tpTimer < 240)
+                    {
+                        npc.velocity.X = speed;
+                        npc.velocity.Y = -speed;
                     }
                 }
             }
@@ -591,7 +596,8 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         {
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
             float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("InfernaceSpike"), damage, 0f, 0);
+            Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("InfernaceSpike"), damage, 0f, Main.myPlayer)];
+            proj.GetGlobalProjectile<ProjectileGlobal>().dontScaleDamage = true;
         }
 
         private void Waves(Player P, float speed, int damage, int numberProj)
@@ -600,7 +606,8 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             {
                 Vector2 perturbedSpeed = new Vector2(speed, speed).RotatedByRandom(MathHelper.ToRadians(15));
                 float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-               Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * perturbedSpeed.X) * -1), (float)((Math.Sin(rotation) * perturbedSpeed.Y) * -1), mod.ProjectileType("InfernaceWave"), damage, 0f, Main.myPlayer);
+                Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * perturbedSpeed.X) * -1), (float)((Math.Sin(rotation) * perturbedSpeed.Y) * -1), mod.ProjectileType("InfernaceWave"), damage, 0f, Main.myPlayer)];
+                proj.GetGlobalProjectile<ProjectileGlobal>().dontScaleDamage = true;
             }
         }
 

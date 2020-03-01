@@ -20,12 +20,12 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
             item.rare = 11;
             item.expert = true;
         }
-        public override int BossBagNPC => mod.NPCType("AncientAmalgamDeath");
+        public override int BossBagNPC => mod.NPCType("AncientAmalgam");
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
         public override bool CanRightClick()
         {
@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
             int choice = Main.rand.Next(3);
             if (choice == 0)
             {
@@ -61,8 +61,8 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
             {
                 //player.QuickSpawnItem(mod.ItemType("AncientsTrophy"));
             }
-            player.QuickSpawnItem(mod.ItemType("DiscordantOre"), Main.rand.Next(45, 90));
-
+            player.QuickSpawnItem(mod.ItemType("CrystalAmalgamate"), 2);
+            player.QuickSpawnItem(mod.ItemType("AncientShard"), Main.rand.Next(7, 12));
         }
     }
 }

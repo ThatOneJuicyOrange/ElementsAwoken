@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace ElementsAwoken.NPCs
@@ -13,101 +14,97 @@ namespace ElementsAwoken.NPCs
             {
                 if (!NPC.downedBoss1)
                 {
-                    Main.NewText("You have activated a boss prompt! These can be disabled in the EA Config.", Color.IndianRed.R, Color.IndianRed.G, Color.IndianRed.B);
+                    string text = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes. These can be disabled in the EA Config.";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.IndianRed);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.IndianRed);
+
                 }
             }
-            return true;
-        }
-        public override void NPCLoot(NPC npc)
-        {
             if (npc.type == NPCID.EyeofCthulhu)
             {
-                if (!MyWorld.desertText)
+                if (!NPC.downedBoss1)
                 {
-                    Main.NewText("The desert sands shift...", Color.Yellow.R, Color.Yellow.G, Color.Yellow.B);
-                    MyWorld.desertText = true;
+                    string text = "The desert sands shift...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Yellow);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Yellow);
                 }
             }
 
             if (npc.type == NPCID.SkeletronHead)
             {
-                if (!MyWorld.fireText)
+                if (!NPC.downedBoss3)
                 {
-                    Main.NewText("Roars echo from the underworld...", Color.Orange.R, Color.Orange.G, Color.Orange.B);
-                    MyWorld.fireText = true;
+                    string text = "Roars echo from the underworld...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Orange);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Orange);
                 }
             }
             if (npc.type == NPCID.SkeletronPrime)
             {
-                if (NPC.downedMechBoss1 && NPC.downedMechBoss2)
+                if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && !NPC.downedMechBoss3)
                 {
-                    if (!MyWorld.skyText)
-                    {
-                        Main.NewText("The sky wind howls...", Color.Cyan.R, Color.Cyan.G, Color.Cyan.B);
-                        MyWorld.skyText = true;
-                    }
+                    string text = "The sky wind howls...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Cyan);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Cyan);
                 }
             }
             if (npc.type == NPCID.TheDestroyer)
             {
-                if (NPC.downedMechBoss1 && NPC.downedMechBoss3)
+                if (NPC.downedMechBoss1 && NPC.downedMechBoss3 && !NPC.downedMechBoss2)
                 {
-                    if (!MyWorld.skyText)
-                    {
-                        Main.NewText("The sky wind howls...", Color.Cyan.R, Color.Cyan.G, Color.Cyan.B);
-                        MyWorld.skyText = true;
-                    }
+                    string text = "The sky wind howls...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Cyan);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Cyan);
                 }
             }
             if (npc.type == NPCID.Spazmatism && NPC.AnyNPCs(NPCID.Retinazer))
             {
-                if (NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                if (NPC.downedMechBoss2 && NPC.downedMechBoss3 && !NPC.downedMechBoss1)
                 {
-                    if (!MyWorld.skyText)
-                    {
-                        Main.NewText("The sky wind howls...", Color.Cyan.R, Color.Cyan.G, Color.Cyan.B);
-                        MyWorld.skyText = true;
-                    }
+                    string text = "The sky wind howls...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Cyan);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Cyan);
                 }
             }
             if (npc.type == NPCID.Retinazer && NPC.AnyNPCs(NPCID.Spazmatism))
             {
                 if (NPC.downedMechBoss2 && NPC.downedMechBoss3)
                 {
-                    if (!MyWorld.skyText)
-                    {
-                        Main.NewText("The sky wind howls...", Color.Cyan.R, Color.Cyan.G, Color.Cyan.B);
-                        MyWorld.skyText = true;
-                    }
+                    string text = "The sky wind howls...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Cyan);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Cyan);
                 }
             }
             if (npc.type == NPCID.Plantera)
             {
-                if (!MyWorld.frostText)
+                if (!NPC.downedPlantBoss)
                 {
-                    Main.NewText("You hear cracking coming from the ice...", Color.LightBlue.R, Color.LightBlue.G, Color.LightBlue.B);
-                    MyWorld.frostText = true;
+                    string text = "You hear cracking coming from the ice...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.LightBlue);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.LightBlue);
                 }
             }
 
             if (npc.type == NPCID.DukeFishron)
             {
-                if (!MyWorld.waterText)
+                if (!NPC.downedFishron)
                 {
-                    //Main.NewText("The ocean bubbles...", Color.MediumBlue.R, Color.MediumBlue.G, Color.MediumBlue.B);
-                    Main.NewText("The wrath of Aqueous stirs the ocean", Color.MediumBlue.R, Color.MediumBlue.G, Color.MediumBlue.B);
-                    MyWorld.waterText = true;
+                    string text = "The wrath of Aqueous stirs the ocean";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.MediumBlue);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.MediumBlue);
                 }
             }
 
             if (npc.type == NPCID.MoonLordCore)
             {
-                if (!MyWorld.voidText)
-                { 
-                    Main.NewText("The depths of Terraria rumble...", Color.Red.R, Color.Red.G, Color.Red.B);
-                    MyWorld.voidText = true;
+                if (!NPC.downedMoonlord)
+                {
+                    string text = "The depths of Terraria rumble...";
+                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Red);
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Red);
                 }
             }
+            return base.PreNPCLoot(npc);
         }
     }
 }

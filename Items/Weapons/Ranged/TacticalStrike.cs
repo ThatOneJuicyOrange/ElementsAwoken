@@ -16,7 +16,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
             item.width = 30;
             item.height = 44;
 
-            item.damage = 34;
+            item.damage = 38;
             item.knockBack = 2f;
 
             item.ranged = true;
@@ -31,7 +31,8 @@ namespace ElementsAwoken.Items.Weapons.Ranged
             item.rare = 3;
 
             item.shoot = 10;
-            item.shootSpeed = 16f;
+            item.shootSpeed = 20f;
+            item.useAmmo = AmmoID.Rocket;
         }
 
         public override void SetStaticDefaults()
@@ -42,7 +43,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            int numberProjectiles = 6;
+            int numberProjectiles = Main.rand.Next(4,6);
             for (int index = 0; index < numberProjectiles; ++index)
             {
                 Vector2 vector2_1 = new Vector2((float)((double)player.position.X + (double)player.width * 0.5 + (double)(Main.rand.Next(201) * -player.direction) + ((double)Main.mouseX + (double)Main.screenPosition.X - (double)player.position.X)), (float)((double)player.position.Y + (double)player.height * 0.5 - 600.0));   //this defines the projectile width, direction and position
@@ -70,6 +71,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
             recipe.AddIngredient(ItemID.SoulofLight, 8);
             recipe.AddIngredient(ItemID.PixieDust, 16);
             recipe.AddIngredient(ItemID.UnicornHorn, 1);
+            recipe.AddIngredient(null, "MysticLeaf", 1);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

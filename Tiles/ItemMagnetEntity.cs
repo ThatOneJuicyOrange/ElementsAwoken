@@ -16,7 +16,7 @@ namespace ElementsAwoken.Tiles
         public override void Update()
         {
             Vector2 tileCenter = new Vector2(Position.X * 16, Position.Y * 16);
-            for (int k = 0; k < Main.item.Length; k++)
+            for (int k = 0; k < Main.maxItems; k++)
             {
                 Item sucked = Main.item[k];
                 if (Vector2.Distance(sucked.Center, tileCenter) < 800)
@@ -24,6 +24,7 @@ namespace ElementsAwoken.Tiles
                     Vector2 toTarget = new Vector2(tileCenter.X - sucked.Center.X, tileCenter.Y - sucked.Center.Y);
                     toTarget.Normalize();
                     sucked.velocity += toTarget *= 0.3f;
+                    NetMessage.SendData(MessageID.SyncItem, -1, -1, null, sucked.whoAmI, 1f);
 
                     if (Vector2.Distance(sucked.Center, tileCenter) < 30)
                     {
@@ -42,10 +43,13 @@ namespace ElementsAwoken.Tiles
                                         int amount = Math.Min(available, sucked.stack);
                                         chestItem.stack += amount;
                                         sucked.stack -= amount;
+                                        NetMessage.SendData(MessageID.SyncChestItem, -1, -1, null, chest, (float)chestItem.whoAmI, 0f, 0f, 0, 0, 0);
+
                                         if (sucked.stack <= 0)
                                         {
                                             //sucked.SetDefaults(0, false);
                                             VanishItem(sucked);
+                                            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, sucked.whoAmI, 1f);
                                             break;
                                         }
                                     }
@@ -58,6 +62,8 @@ namespace ElementsAwoken.Tiles
                                         chestItem.SetDefaults(sucked.type);
                                         chestItem.stack = sucked.stack;
                                         VanishItem(sucked);
+                                        NetMessage.SendData(MessageID.SyncChestItem, -1, -1, null, chest, (float)chestItem.whoAmI, 0f, 0f, 0, 0, 0);
+                                        NetMessage.SendData(MessageID.SyncItem, -1, -1, null, sucked.whoAmI, 1f);
                                         break;
                                     }
                                 }

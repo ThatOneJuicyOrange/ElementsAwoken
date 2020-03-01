@@ -27,8 +27,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hand Crank");
-            Tooltip.SetDefault("Right click in inventory to generate 3 energy");
+            DisplayName.SetDefault("Starlight Crank Generator");
+            Tooltip.SetDefault("Right Click in inventory to generate 3 energy");
         }
         public override void UpdateInventory(Player player)
         {

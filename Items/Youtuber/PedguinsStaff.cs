@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Youtuber
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Pedguin's Staff");
-            Tooltip.SetDefault("Summons a corrupt penguin\nPedguin's magic allows it to fly!\nPedguins's Youtuber item");
+            Tooltip.SetDefault("Summons a corrupt penguin\nPedguin's magic allows it to fly!\nPedguin's Youtuber item");
         }
         public override void AddRecipes()
         {

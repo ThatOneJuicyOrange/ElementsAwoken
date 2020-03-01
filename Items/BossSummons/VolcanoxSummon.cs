@@ -30,8 +30,6 @@ namespace ElementsAwoken.Items.BossSummons
             DisplayName.SetDefault("Charred Core");
             Tooltip.SetDefault("It's eternal blaze burns your eyes\nSummons Volcanox on use");
         }
-
-
         public override bool CanUseItem(Player player)
         {
             return 
@@ -40,14 +38,15 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Volcanox"));
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Volcanox"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Volcanox"), 0f, 0f, 0, 0, 0); 
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "NeutronFragment", 10);
+            recipe.AddIngredient(null, "NeutronFragment", 3);
             recipe.AddIngredient(null, "Pyroplasm", 30);
             recipe.AddIngredient(ItemID.LunarBar, 12);
             recipe.AddTile(TileID.MythrilAnvil);

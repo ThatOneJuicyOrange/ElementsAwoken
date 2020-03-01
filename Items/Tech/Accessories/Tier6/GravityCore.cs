@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Tech.Accessories.Tier6
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Gravity Core");
-            Tooltip.SetDefault("Allows the player to control the gravity\nUse the arrow keys while hovering over the item to change strength\nPress G on the item to reset gravity to normal\nRight click to turn on");
+            Tooltip.SetDefault("Allows the player to control the gravity\nUse the arrow keys while hovering over the item to change strength\nPress G on the item to reset gravity to normal\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

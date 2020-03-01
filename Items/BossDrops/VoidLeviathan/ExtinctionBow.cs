@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Extinction Bow");
-            Tooltip.SetDefault("Turns normal arrows into extinction arrows\nRight click to create a void portal that follows the cursor\nPortals can only be created every 30 seconds");
+            Tooltip.SetDefault("Turns normal arrows into extinction arrows\nRight Click to create a void portal that follows the cursor\nPortals can only be created every 30 seconds");
         }
         public override bool AltFunctionUse(Player player)
         {

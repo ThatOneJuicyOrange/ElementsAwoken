@@ -17,8 +17,8 @@ namespace ElementsAwoken.Items.Artifacts
         {
             item.width = 26;
             item.height = 22;
-            item.rare = 9;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.rare = 11;
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.accessory = true;
 
             item.GetGlobalItem<EATooltip>().artifact = true;
@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Artifacts
                 "Critical strike chance increased by 10%\n" +
                 "Maximum mana increased by 150\n" +
                 "Life regen increased\n" +
-                "30% increased pick speed\n" +
+                "30% increased mining speed\n" +
                 "Reduces damage taken by 5%\n" +
                 "Has all the effects from the Elemental Artifacts");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(7, 4));
@@ -87,7 +87,7 @@ namespace ElementsAwoken.Items.Artifacts
             player.magicCrit += 5;
             player.rangedCrit += 5;
             player.thrownCrit += 5;*/
-            player.magmaStone = true;
+            modPlayer.eaMagmaStone = true;
             player.fireWalk = true;
             //Great Thunder Totem
             modPlayer.lightningCloud = true;

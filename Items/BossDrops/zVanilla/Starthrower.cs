@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Starthrower");
-            Tooltip.SetDefault("Fires 3 homing stars");
+            Tooltip.SetDefault("Fires three homing stars");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

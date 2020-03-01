@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class OrionsBeltGalaxy : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 4;

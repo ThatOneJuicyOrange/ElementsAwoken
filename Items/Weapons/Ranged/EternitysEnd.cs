@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eternity's End");
-            Tooltip.SetDefault("Turns normal arrows into Eternity arrows that inflict a variety of debuffs\nHas a chance of firing a laser\n60% chance not to consume ammo");
+            Tooltip.SetDefault("Turns normal arrows into eternity arrows\nHas a chance to fire a laser\n60% chance not to consume ammo");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
@@ -53,9 +53,9 @@ namespace ElementsAwoken.Items.Weapons.Ranged
                 type = mod.ProjectileType("EternityArrow");
             }
             Projectile.NewProjectile(position.X + addPosition, position.Y + addPosition, speedX, speedY, type, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
-            if (Main.rand.Next(3) == 0)
+            if (Main.rand.Next(10) == 0)
             {
-                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("EternityArrow"), 70, knockBack, player.whoAmI, 0.0f, 0.0f);
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("EternityBeam"), (int)(damage * 1.5f), knockBack, player.whoAmI, 0.0f, 0.0f);
             }
             return false;
         }

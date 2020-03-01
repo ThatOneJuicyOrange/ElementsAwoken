@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles.GlobalProjectiles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -62,9 +63,9 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
 
             npc.aiStyle = -1;
 
-            npc.lifeMax = 5000;
+            npc.lifeMax = 2000;
             npc.damage = 15;
-            npc.defense = 10;
+            npc.defense = 6;
             npc.knockBackResist = 0f;
 
             npc.lavaImmune = true;
@@ -93,12 +94,12 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.damage = 30;
-            npc.lifeMax = 7500;
+            npc.lifeMax = 3000;
             if (MyWorld.awakenedMode)
             {
-                npc.lifeMax = 10000;
+                npc.lifeMax = 5000;
                 npc.damage = 45;
-                npc.defense = 15;
+                npc.defense = 10;
             }
         }
         public override void FindFrame(int frameHeight)
@@ -188,7 +189,12 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     float projSpeed = Main.expertMode ? 14 : 10;
                     if (MyWorld.awakenedMode) projSpeed = 18;
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -tpDir * projSpeed, 0, mod.ProjectileType("FurosiaSpike"), projectileBaseDamage, 0f, 0);
+
+                    int damage = Main.expertMode ? (int)(projectileBaseDamage * 1.5f) : (int)(projectileBaseDamage);
+                    if (MyWorld.awakenedMode) damage = (int)(projectileBaseDamage * 2f);
+
+                    Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, -tpDir * projSpeed, 0, mod.ProjectileType("FurosiaSpike"), damage, 0f, Main.myPlayer)];
+                    proj.GetGlobalProjectile<ProjectileGlobal>().dontScaleDamage = true;
                 }
                 if (aiTimer == 420)
                 {

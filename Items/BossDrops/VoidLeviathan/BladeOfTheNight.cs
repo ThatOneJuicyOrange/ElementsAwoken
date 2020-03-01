@@ -100,6 +100,8 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
                 Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(8));
                 Projectile proj = Main.projectile[Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("VoidSinewave"), damage, knockBack, player.whoAmI)];
                 proj.localAI[0] = Main.rand.NextFloat();
+                proj.melee = true;
+                proj.ranged = false;
             }
             if (swingNum % 2 == 0)
             {

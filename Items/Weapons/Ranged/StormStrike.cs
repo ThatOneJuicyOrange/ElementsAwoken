@@ -16,11 +16,11 @@ namespace ElementsAwoken.Items.Weapons.Ranged
             item.width = 60;
             item.height = 26;
 
-            item.damage = 250;
+            item.damage = 190;
             item.knockBack = 3.5f;
 
-            item.useAnimation = 30;
-            item.useTime = 30;
+            item.useAnimation = 40;
+            item.useTime = 40;
             item.useStyle = 5;
             item.UseSound = SoundID.Item61;
 
@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Storm Strike");
-            Tooltip.SetDefault("Fires a storm of homing rockets\nHas a chance to shoot a Mega Rocket\n70% chance to not consume ammo");
+            Tooltip.SetDefault("Fires a storm of homing rockets\nHas a chance to fire a Mega Rocket\n70% chance to not consume ammo");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

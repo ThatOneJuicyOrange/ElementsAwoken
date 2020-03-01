@@ -14,7 +14,7 @@ using Terraria.ModLoader.IO;
 using ReLogic.Graphics;
 using Terraria.Graphics.Effects;
 using ElementsAwoken.NPCs;
-using ElementsAwoken.ScreenEffects;
+using ElementsAwoken.Effects;
 
 namespace ElementsAwoken
 {
@@ -121,7 +121,7 @@ namespace ElementsAwoken
                         sanityRegen -= 2;
                         AddSanityDrain(2, "In Hell");
                     }
-                    if (player.ZoneSkyHeight)
+                    if (player.ZoneSkyHeight && !modPlayer.cosmicalusArmor)
                     {
                         sanityRegen -= 1;
                         AddSanityDrain(1, "In Space");
@@ -264,22 +264,18 @@ namespace ElementsAwoken
 
                 if (sanity < sanityMax * 0.25f && sanity > sanityMax * 0.1f)
                 {
-                    player.magicDamage *= 0.9f;
-                    player.meleeDamage *= 0.9f;
-                    player.minionDamage *= 0.9f;
-                    player.rangedDamage *= 0.9f;
-                    player.thrownDamage *= 0.9f;
+                    player.allDamage *= 0.9f;
                 }
                 if (sanity < sanityMax * 0.1f)
                 {
                     modPlayer.screenshakeAmount = 2f;
                     if (sanity != 0)
                     {
-                        player.magicDamage *= 0.75f;
-                        player.meleeDamage *= 0.75f;
-                        player.minionDamage *= 0.75f;
-                        player.rangedDamage *= 0.75f;
-                        player.thrownDamage *= 0.75f;
+                        player.allDamage *= 0.75f;
+                    }
+                    else
+                    {
+                        player.allDamage *= 0.5f;
                     }
                     if (Main.rand.Next(1200) == 0)
                     {
@@ -294,14 +290,7 @@ namespace ElementsAwoken
                         }
                     }
                 }
-                if (sanity == 0)
-                {
-                    player.magicDamage *= 0.5f;
-                    player.meleeDamage *= 0.5f;
-                    player.minionDamage *= 0.5f;
-                    player.rangedDamage *= 0.5f;
-                    player.thrownDamage *= 0.5f;
-                }
+
                 // sanity regen logic
                 if (!MyWorld.credits)
                 {
@@ -527,7 +516,7 @@ namespace ElementsAwoken
             if (MyWorld.downedGuardian) scale += 3f;
             if (MyWorld.downedVolcanox) scale += 3f;
             if (MyWorld.downedVoidLeviathan) scale += 3f;
-            if (MyWorld.downedAzana) scale += 3f;
+            if (MyWorld.downedAzana || MyWorld.sparedAzana) scale += 3f;
             if (MyWorld.downedAncients) scale += 3f;
             return scale;
         }

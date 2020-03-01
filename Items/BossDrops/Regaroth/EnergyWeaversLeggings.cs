@@ -25,17 +25,22 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energy Weaver's Leggings");
-            Tooltip.SetDefault("5% increased damage speed\n20% increased movement speed\nYou leave a trail of energy particles");
+            Tooltip.SetDefault("Damage increased the closer it is to midday to a maximum of 5%\n20% increased movement speed\nYou leave a trail of energy particles");
         }
         public override void UpdateEquip(Player player)
         {
             player.moveSpeed *= 1.2f;
 
-            player.meleeDamage *= 1.05f;
-            player.magicDamage *= 1.05f;
-            player.rangedDamage *= 1.05f;
-            player.minionDamage *= 1.05f;
-            player.thrownDamage *= 1.05f;
+            float damageBonus = 1f;
+            if (Main.dayTime)
+            {
+                damageBonus = MathHelper.Lerp(1.05f, 1f, MathHelper.Distance((float)Main.time, 27000) / 27000);
+            }
+            player.meleeDamage *= damageBonus;
+            player.magicDamage *= damageBonus;
+            player.rangedDamage *= damageBonus;
+            player.minionDamage *= damageBonus;
+            player.thrownDamage *= damageBonus;
         }
         public override void UpdateVanity(Player player, EquipType type)
         {

@@ -42,12 +42,12 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
         {
             bool underworld = (spawnInfo.spawnTileY >= (Main.maxTilesY - 200));
             bool rockLayer = (spawnInfo.spawnTileY >= (Main.maxTilesY * 0.4f));
-            return !underworld && rockLayer && Main.evilTiles < 80 && Main.sandTiles < 80 && Main.dungeonTiles < 80 && !Main.hardMode ? 0.06f : 0f;
+            return !underworld && rockLayer && !spawnInfo.player.ZoneCrimson && !spawnInfo.player.ZoneCorrupt && !spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneDungeon && !Main.hardMode ? 0.06f : 0f;
         }
 
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
-            if (Main.expertMode) player.AddBuff(BuffID.OnFire, MyWorld.awakenedMode ? 300 : 120, false);
+            if (Main.expertMode) player.AddBuff(BuffID.OnFire, MyWorld.awakenedMode ? 150 : 90, false);
         }
 
         public override void NPCLoot()
@@ -76,7 +76,8 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                     }
                     if (Main.netMode != NetmodeID.MultiplayerClient && npc.localAI[1] == 0f)
                     {
-                        for (int n = 0; n < 5; n++)
+                        int num = MyWorld.awakenedMode ? 5 : 3;
+                        for (int n = 0; n < num; n++)
                         {
                             Vector2 vector4 = new Vector2((float)(n - 2), -4f);
                             vector4.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;

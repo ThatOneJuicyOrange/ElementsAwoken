@@ -72,6 +72,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             npc.noTileCollide = true;
             npc.behindTiles = true;
 
+            NPCID.Sets.NeedsExpertScaling[npc.type] = true;
+
             music = MusicID.Boss1;
             bossBag = mod.ItemType("WastelandBag");
 
@@ -133,8 +135,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                     snapPos.X = npc.Center.X + 52;
                     snapPos2.X = npc.Center.X + 14;
                 }
-                Projectile.NewProjectile(snapPos.X, snapPos.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, 0, npc.whoAmI);
-                Projectile.NewProjectile(snapPos2.X, snapPos2.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, 0, npc.whoAmI);
+                Projectile.NewProjectile(snapPos.X, snapPos.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, Main.myPlayer, npc.whoAmI);
+                Projectile.NewProjectile(snapPos2.X, snapPos2.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, Main.myPlayer, npc.whoAmI);
 
                 npc.frame.Y = 0;
                 return;
@@ -219,6 +221,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             Sandstorm.Happening = false;
             Sandstorm.TimeLeft = 0;
             Sandstorm.IntendedSeverity = 0;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -338,13 +341,13 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             if (spoutSpawnTimer <= 0)
             {
                 int numFakes = 2;
-                if (Main.expertMode) numFakes = Main.rand.Next(2, 4);
-                if (MyWorld.awakenedMode) numFakes = Main.rand.Next(3, 5);
+                if (Main.expertMode) numFakes = Main.rand.Next(2, 5);
+                if (MyWorld.awakenedMode) numFakes = Main.rand.Next(3, 6);
                 for (int k = 0; k < numFakes; k++)
                 {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-12, -2), mod.ProjectileType("WastelandDiggingProj"), 0, 0);
+                    Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), mod.ProjectileType("WastelandDiggingProj"), 0, 0, Main.myPlayer);
                 }
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-12, -2), mod.ProjectileType("WastelandDiggingProjReal"), 0, 0, 0, npc.whoAmI);
+                Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), mod.ProjectileType("WastelandDiggingProjReal"), 0, 0, Main.myPlayer, npc.whoAmI);
                 spoutSpawnTimer = 10000; // temporary so it doesnt constantly shoot- proper time set after the projectile is killed below
 
                 diggingType = 1; // 1 is down
@@ -399,7 +402,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                         int add = npc.direction == 1 ? -40 : 40;
                         Vector2 vector8 = new Vector2(npc.Center.X + add, npc.Center.Y - 30);
                         float rotation = (float)Math.Atan2(vector8.Y - P.Center.Y, vector8.X - P.Center.X);
-                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("WastelandStinger"), projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("WastelandStinger"), projectileBaseDamage, 0f, Main.myPlayer);
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 17);
                         burstTimer = 6f;
                     }
@@ -412,7 +415,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                         {
                             for (int k = 0; k < 3; k++)
                             {
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-12, -2), mod.ProjectileType("WastelandStormBolt"), 6, 0f, 0);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-12, -2), mod.ProjectileType("WastelandStormBolt"), 6, 0f, Main.myPlayer);
                             }
                             stormTimer = Main.rand.Next(1200, 2000);
                             if (enraged) stormTimer = Main.rand.Next(200, 600);
@@ -429,7 +432,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
 
                             float speed = 10f;
                             float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - acidBallShooting[1] * 2, mod.ProjectileType("AcidBall"), projectileBaseDamage, 0f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - acidBallShooting[1] * 2, mod.ProjectileType("AcidBall"), projectileBaseDamage, 0f, Main.myPlayer);
                             acidBallShooting[0] = 5f;
                             acidBallShooting[1]++;
                         }
@@ -514,7 +517,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                             for (int i = 0; i < numberProjectiles; i++)
                             {
                                 Vector2 perturbedSpeed = new Vector2(projSpeed, projSpeed).RotatedByRandom(MathHelper.ToRadians(360));
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("WastelandStinger"), projectileBaseDamage - 5, 2f, 0);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("WastelandStinger"), projectileBaseDamage - 5, 2f, Main.myPlayer);
                             }
                             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 17);
                         }
@@ -555,8 +558,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                                     }
                                 }
                             }
-                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, 0, 24f, 1f);
-                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, 0, 24f, -1f);
+                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, Main.myPlayer, 24f, 1f);
+                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, Main.myPlayer, 24f, -1f);
                             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
 
                             aiTimer = 0;

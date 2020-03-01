@@ -40,18 +40,23 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier2
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Coilgun");
-            Tooltip.SetDefault("Fires a fast high damaging bullet");
+            Tooltip.SetDefault("Fires a fast high damaging bullet\nAlso consumes bullets as well as energy");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("CoilRound"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
             return false;
         }
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-7, 0);
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 8);
-            recipe.AddIngredient(null, "GoldWire", 10);
+            recipe.AddIngredient(null, "GoldWire", 2);
+            recipe.AddIngredient(null, "CopperWire", 10);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

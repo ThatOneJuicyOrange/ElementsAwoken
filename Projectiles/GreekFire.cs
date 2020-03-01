@@ -7,6 +7,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class GreekFire : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.CloneDefaults(ProjectileID.GreekFire1);

@@ -194,6 +194,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
             }
             Main.NewText("Ah, my crystal... crumbling... You still arent... strong enough for him", new Color(188, 58, 49));
             MyWorld.downedObsidious = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -335,7 +336,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     {
                         if (shootTimer == 150 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
-                            Projectile.NewProjectile(P.Center.X, P.Center.Y, 0, 0, mod.ProjectileType("ObsidiousTargetCrystalCenter"), 0, 0, 0, 0f, P.whoAmI); // lonng name
+                            Projectile.NewProjectile(P.Center.X, P.Center.Y, 0, 0, mod.ProjectileType("ObsidiousTargetCrystalCenter"), 0, 0, Main.myPlayer, 0f, P.whoAmI); // lonng name
                         }
                         if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
@@ -377,7 +378,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
                     float speed = 8f;
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousRockLarge"), projectileBaseDamage + 20, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousRockLarge"), projectileBaseDamage + 20, 0f, Main.myPlayer);
                     shootTimer = Main.rand.Next(20, 60);
                 }
                 int rand = npc.life <= npc.lifeMax * 0.5f ? 12 : 14;
@@ -386,7 +387,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     int damage = 30;
                     float posX = npc.Center.X + Main.rand.Next(5000) - 3000;
                     float posY = npc.Center.Y + 1000;
-                    Projectile.NewProjectile(posX, posY, 0f, -10f, mod.ProjectileType("ObsidiousRockNoCollide"), damage, 0f);
+                    Projectile.NewProjectile(posX, posY, 0f, -10f, mod.ProjectileType("ObsidiousRockNoCollide"), damage, 0f, Main.myPlayer);
                 }
                 if (aiTimer >= 900)
                 {
@@ -405,10 +406,10 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 33);
 
                     float rotation = (float)Math.Atan2(npc.Center.Y - 92 - P.Center.Y, npc.Center.X - 12 - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X - 12, npc.Center.Y - 92, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, projectileBaseDamage, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X - 12, npc.Center.Y - 92, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, projectileBaseDamage, 0f, Main.myPlayer);
 
                     float rotation2 = (float)Math.Atan2(npc.Center.Y - 92 - P.Center.Y, npc.Center.X + 12 - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X + 12, npc.Center.Y - 92, (float)((Math.Cos(rotation2) * speed) * -1), (float)((Math.Sin(rotation2) * speed) * -1), type, projectileBaseDamage, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X + 12, npc.Center.Y - 92, (float)((Math.Cos(rotation2) * speed) * -1), (float)((Math.Sin(rotation2) * speed) * -1), type, projectileBaseDamage, 0f, Main.myPlayer);
                     shootTimer = 6;
                 }
                 if (aiTimer >= 900)
@@ -426,7 +427,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 103);
                     float speed = 5f;
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 80, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage + 20, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 80, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage + 20, 0f, Main.myPlayer);
                     shootTimer = Main.rand.Next(8, 40);
                     npc.netUpdate = true;
                 }
@@ -457,7 +458,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                             float projOffset = 360 / numProj;
                             Vector2 shootTarget1 = npc.Center + offset.RotatedBy(spinAI + (projOffset * i) * (Math.PI * 2 / 8));
                             float rotation = (float)Math.Atan2(npc.Center.Y - shootTarget1.Y, npc.Center.X - shootTarget1.X);
-                            int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 10f) * -1), (float)((Math.Sin(rotation) * 10f) * -1), mod.ProjectileType("ObsidiousBeam"), damage, 0f, 0, 0, i);
+                            int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 10f) * -1), (float)((Math.Sin(rotation) * 10f) * -1), mod.ProjectileType("ObsidiousBeam"), damage, 0f, Main.myPlayer, 0, i);
                             Main.projectile[proj].timeLeft = (int)aiTimer;
                         }
                         shootTimer = 4;

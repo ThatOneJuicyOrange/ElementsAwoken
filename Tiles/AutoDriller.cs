@@ -44,13 +44,16 @@ namespace ElementsAwoken.Tiles
         {
             if (myEntity == null)
             {
-                foreach (TileEntity current in TileEntity.ByID.Values)
+                if (!Main.gameMenu)
                 {
-                    if (current.type == TileEntityType<AutoDrillerEntity>())
+                    foreach (TileEntity current in TileEntity.ByID.Values)
                     {
-                        if (current.Position == tilePoint)
+                        if (current.type == TileEntityType<AutoDrillerEntity>())
                         {
-                            myEntity = (AutoDrillerEntity)current;
+                            if (current.Position == tilePoint)
+                            {
+                                myEntity = (AutoDrillerEntity)current;
+                            }
                         }
                     }
                 }

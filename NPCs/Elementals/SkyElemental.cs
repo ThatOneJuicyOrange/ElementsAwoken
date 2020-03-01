@@ -49,7 +49,7 @@ namespace ElementsAwoken.NPCs.Elementals
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
-            !Main.snowMoon && !Main.pumpkinMoon && NPC.downedMechBossAny && !Main.dayTime ? 0.09f : 0f;
+            !Main.snowMoon && !Main.pumpkinMoon && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && !Main.dayTime ? 0.09f : 0f;
         }
         public override void AI()
         {

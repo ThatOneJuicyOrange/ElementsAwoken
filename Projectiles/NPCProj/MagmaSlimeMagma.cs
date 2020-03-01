@@ -21,15 +21,16 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Dragon Slime Spike");
+            DisplayName.SetDefault("Magma");
         }
         public override void AI()
         {
-            for (int l = 0; l < 5; l++)
+            float numDusts = 2;
+            for (int l = 0; l < numDusts; l++)
             {
                 Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 6)];
                 dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f * (float)l;
+                dust.position -= projectile.velocity / numDusts * (float)l;
                 dust.noGravity = true;
                 dust.scale = 1f;
             }

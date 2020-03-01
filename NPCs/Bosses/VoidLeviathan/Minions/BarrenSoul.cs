@@ -80,5 +80,9 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan.Minions
             }
             npc.rotation *= 0f;
         }
+        public override bool CheckActive()
+        {
+            return false;
+        }
     }
 }

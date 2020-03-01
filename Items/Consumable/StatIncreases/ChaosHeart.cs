@@ -18,6 +18,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             item.maxStack = 10;
 
             item.consumable = true;
+            item.noUseGraphic = true;
 
             item.useStyle = 4;
             item.useTime = 30;
@@ -32,7 +33,6 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         {
             DisplayName.SetDefault("Chaos Heart");
             Tooltip.SetDefault("Fighters of The Calamity need not apply\nPermanently increases maximum life by 10");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(5, 5));
         }
 
         public override bool CanUseItem(Player player)
@@ -55,8 +55,8 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DiscordantBar", 25);
-            recipe.AddIngredient(null, "VoidAshes", 12);
+            recipe.AddIngredient(null, "DiscordantBar", 5);
+            recipe.AddIngredient(null, "VoidAshes", 8);
             recipe.AddIngredient(null, "VoidEssence", 15);
             recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);

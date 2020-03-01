@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Ancient.Izaris
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Disarray IV");
-            Tooltip.SetDefault("Summons a familliar crystalline entity to protect you");
+            Tooltip.SetDefault("Summons a familliar crystalline entity to protect you\nEach crystalline entity takes up 2 minion slots");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

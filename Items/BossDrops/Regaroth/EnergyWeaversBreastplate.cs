@@ -17,21 +17,15 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
             item.value = Item.sellPrice(0, 7, 50, 0);
             item.rare = 6;
 
-            item.defense = 17;
+            item.defense = 15;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energy Weaver's Breastplate");
-            Tooltip.SetDefault("10% increased damage\nWing mobility is greatly increased\n20% decreased mana usage");
+            Tooltip.SetDefault("Wing mobility is greatly increased\n20% decreased mana usage");
         }
         public override void UpdateEquip(Player player)
         {
-            player.meleeDamage *= 1.1f;
-            player.magicDamage *= 1.1f;
-            player.rangedDamage *= 1.1f;
-            player.minionDamage *= 1.1f;
-            player.thrownDamage *= 1.1f;
-
             player.manaCost *= 0.8f;
 
             player.wingTimeMax = (int)(player.wingTimeMax * 1.1f);

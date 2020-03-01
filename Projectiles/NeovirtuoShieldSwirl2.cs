@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class NeovirtuoShieldSwirl2 : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public float spinAi = 0f;
         public bool reset = true;
         public override void SetDefaults()

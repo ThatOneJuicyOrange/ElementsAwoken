@@ -11,6 +11,7 @@ using Terraria.IO;
 using Terraria.ObjectData;
 using Terraria.Utilities;
 using Terraria.ModLoader;
+using ElementsAwoken.Projectiles.Minions;
 
 namespace ElementsAwoken.Items.BossDrops.Azana
 {
@@ -38,21 +39,14 @@ namespace ElementsAwoken.Items.BossDrops.Azana
             item.value = Item.sellPrice(0, 35, 0, 0);
 
             item.UseSound = SoundID.Item44;
-            item.shoot = mod.ProjectileType("AzanaMinion");
+            item.shoot = ModContent.ProjectileType<InfectionMouthMinion>();
             item.shootSpeed = 10f;
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Vow of Chaos");
-            Tooltip.SetDefault("Summons Azana herself to fight alongside you\nTakes 5 minion slots");
-        }
-
-        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("AzanaEyeMinion"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
-            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("AzanaMinion"), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
-            return false;
+            DisplayName.SetDefault("Vow of Malaise");
+            Tooltip.SetDefault("Summons an infection mouth to fight with you");
         }
     }
 }

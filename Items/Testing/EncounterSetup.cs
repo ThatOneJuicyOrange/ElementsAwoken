@@ -39,26 +39,11 @@ namespace ElementsAwoken.Items.Testing
             if (player.altFunctionUse == 2)
             {
                 mode++;
-                if (mode > 2)
+                if (mode > 3)
                 {
                     mode = 0;
                 }
-                string text = "";
-                switch (mode)
-                {
-                    case 0:
-                        text = "1";
-                        break;
-                    case 1:
-                        text = "2";
-                        break;
-                    case 2:
-                        text = "3";
-                        break;
-                    default:
-                        return base.CanUseItem(player);
-                }
-                Main.NewText(text, Color.White.R, Color.White.G, Color.White.B);
+                Main.NewText(mode, Color.White);
             }
             else
             {
@@ -70,26 +55,13 @@ namespace ElementsAwoken.Items.Testing
         {
             if (player.altFunctionUse != 2)
             {
-                if (mode == 0)
+                ElementsAwoken.encounter = mode;
+                ElementsAwoken.encounterTimer = 3600;
+                ElementsAwoken.encounterSetup = false;
+               /* if (Main.netMode == NetmodeID.Server)
                 {
-                    MyWorld.encounter1 = true;
-                    MyWorld.encounter2 = false;
-                    MyWorld.encounter3 = false;
-                }
-                else if (mode == 1)
-                {
-                    MyWorld.encounter1 = false;
-                    MyWorld.encounter2 = true;
-                    MyWorld.encounter3 = false;
-                }
-                else
-                {
-                    MyWorld.encounter1 = false;
-                    MyWorld.encounter2 = false;
-                    MyWorld.encounter3 = true;
-                }
-                MyWorld.encounterTimer = 3600;
-                MyWorld.encounterSetup = false;
+                        NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
+                }*/
             }
             return true;
         }

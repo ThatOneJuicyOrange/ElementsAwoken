@@ -73,6 +73,18 @@ namespace ElementsAwoken.Items
                     tooltips.Add(tip);
                 }
             }
+            if (ModContent.GetInstance<Config>().debugMode)
+            {
+                string tipString = "";
+                if (item.useTime > 0) tipString += "Use Time: " + item.useTime + "\n";
+                if (item.useAnimation > 0) tipString += "Use Animation: " + item.useAnimation + "\n";
+                if (item.useStyle > 0) tipString += "Use Style: " + item.useStyle + "\n";
+                if (item.damage > 0) tipString += "Base Damage: " + item.damage + "\n";
+                if (item.knockBack > 0) tipString += "Base Knockback: " + item.knockBack + "\n";
+                TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", tipString);
+                tip.overrideColor = Color.AliceBlue;
+                tooltips.Add(tip);
+            }   
         }   
     }
 }

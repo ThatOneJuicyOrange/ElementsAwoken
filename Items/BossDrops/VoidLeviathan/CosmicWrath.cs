@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cosmic Wrath");
-            Tooltip.SetDefault("Right click to cause all spears to explode\nCritical strikes do 3x damage");
+            Tooltip.SetDefault("Right Click to cause all spears to explode\nCritical strikes do 3x damage");
         }
         public override bool AltFunctionUse(Player player)
         {

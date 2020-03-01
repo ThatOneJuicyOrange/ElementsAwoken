@@ -8,6 +8,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class DragonFangShadow : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.CloneDefaults(ProjectileID.TerraBeam);

@@ -9,7 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class NeptuneRay : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 4;
@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Neptunes Ray");
+            DisplayName.SetDefault("Ocean's Ray");
         }
         public override void AI()
         {
@@ -37,27 +37,37 @@ namespace ElementsAwoken.Projectiles
                 projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
-                for (int i = 0; i < 4; i++)
+            projectile.localAI[0]++;
+            if (projectile.localAI[0] > 4)
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    if (Main.rand.Next(2) == 0)
-                    {
-                        Vector2 vector33 = projectile.position;
-                        vector33 -= projectile.velocity * ((float)i * 0.25f);
-                        projectile.alpha = 255;
-                        int dust = Dust.NewDust(vector33, 1, 1, 56, 0f, 0f, 0, default(Color), 0.75f);
-                        Main.dust[dust].position = vector33;
-                        Main.dust[dust].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-                        Main.dust[dust].velocity *= 0.05f;
-                    }
+                    Vector2 vector33 = projectile.position;
+                    vector33 -= projectile.velocity * ((float)i * 0.33f);
+                    projectile.alpha = 255;
+                    Dust dust = Main.dust[Dust.NewDust(vector33, 1, 1, 221, 0f, 0f, 0, default(Color), 0.75f)];
+                    dust.position = vector33;
+                    dust.scale = (float)Main.rand.Next(70, 110) * 0.013f;
+                    dust.velocity *= 0.05f;
+                    dust.noGravity = true;
                 }
-                return;
+            }
+            return;
         }
-
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            int numProj = Main.rand.Next(1, 3);
+            for (int k = 0; k < numProj; k++)
+            {
+                Projectile.NewProjectile(target.Center.X + Main.rand.Next(-6,6), target.Top.Y - Main.rand.Next(60,75), 0f, 2, mod.ProjectileType("OceansSeashell"), (int)(projectile.damage * 0.75f), projectile.knockBack, projectile.owner, 0f, 0f);
+            }
+        }
         public override void Kill(int timeLeft)
         {
             for (int k = 0; k < 5; k++)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 56, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 221, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f)];
+                dust.noGravity = true;
             }
         }
     }

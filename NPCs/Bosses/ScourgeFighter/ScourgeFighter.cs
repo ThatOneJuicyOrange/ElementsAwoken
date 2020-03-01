@@ -148,6 +148,7 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
             }
             MyWorld.downedScourgeFighter = true;
             Main.NewText("Main.NewText(FATAL ERROR DETECTED. SYSTEM WILL NOW SHUT DOWN IMMEDIATELY.);", Color.Red.R, Color.Red.G, Color.Red.B);
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
 
         public override void BossLoot(ref string name, ref int potionType)
@@ -267,7 +268,7 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
                 if (napalmTimer <= 0f)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("Napalm"), projectileBaseDamage, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("Napalm"), projectileBaseDamage, 0f, Main.myPlayer);
                     napalmTimer = 15f;
                 }
             }
@@ -285,7 +286,7 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
                     float Speed = 6f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 72);
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("ScourgeHomingRocket"), projectileBaseDamage - 20, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("ScourgeHomingRocket"), projectileBaseDamage - 20, 0f, Main.myPlayer);
                     homingMissileTimer = 50f;
                 }
                 npc.ai[1]++;
@@ -381,10 +382,10 @@ namespace ElementsAwoken.NPCs.Bosses.ScourgeFighter
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 11);
 
             float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X + 35 - P.Center.X);
-            Projectile.NewProjectile(npc.Center.X + 35, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ScourgeBullet"), damage, 0f, 0);
+            Projectile.NewProjectile(npc.Center.X + 35, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ScourgeBullet"), damage, 0f, Main.myPlayer);
 
             float rotation2 = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - 35 - P.Center.X);
-            Projectile.NewProjectile(npc.Center.X - 35, npc.Center.Y, (float)((Math.Cos(rotation2) * speed) * -1), (float)((Math.Sin(rotation2) * speed) * -1), mod.ProjectileType("ScourgeBullet"), damage, 0f, 0);
+            Projectile.NewProjectile(npc.Center.X - 35, npc.Center.Y, (float)((Math.Cos(rotation2) * speed) * -1), (float)((Math.Sin(rotation2) * speed) * -1), mod.ProjectileType("ScourgeBullet"), damage, 0f, Main.myPlayer);
         }
 
         public override bool CheckActive()

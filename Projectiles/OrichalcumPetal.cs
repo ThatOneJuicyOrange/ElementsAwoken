@@ -11,23 +11,28 @@ namespace ElementsAwoken.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 12;
-            projectile.height = 12;
-            projectile.friendly = true;
+            projectile.width = 20;
+            projectile.height = 20;
+
             projectile.penetrate = 1;
-            Main.projFrames[projectile.type] = 3;
-            projectile.hostile = false;
-            projectile.melee = true;
+
+            projectile.magic = true;
             projectile.tileCollide = true;
+            projectile.friendly = true;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Orichalcum Petal");
+            Main.projFrames[projectile.type] = 3;
+        }
+        public override void AI()
+        {
+            projectile.rotation += 0.2f;
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {
             projectile.frameCounter++;
-            if (projectile.frameCounter >= 2)
+            if (projectile.frameCounter >= 9)
             {
                 projectile.frame++;
                 projectile.frameCounter = 0;

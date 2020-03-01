@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Auto Smelter MKII");
-            Tooltip.SetDefault("Automatically turns ores into bars\nConsumes energy to smelt bars\nRight click to turn on");
+            Tooltip.SetDefault("Automatically turns ores into bars\nConsumes energy to smelt bars\nRight Click to turn on");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 4));
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
@@ -290,6 +290,15 @@ namespace ElementsAwoken.Items.Tech.Tools
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "AutoSmelter", 1);
             recipe.AddIngredient(ItemID.AdamantiteForge, 1);
+            recipe.AddIngredient(null, "SiliconBoard", 2);
+            recipe.AddIngredient(null, "GoldWire", 6);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+
+            recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "AutoSmelter", 1);
+            recipe.AddIngredient(ItemID.TitaniumForge, 1);
             recipe.AddIngredient(null, "SiliconBoard", 2);
             recipe.AddIngredient(null, "GoldWire", 6);
             recipe.AddTile(TileID.MythrilAnvil);

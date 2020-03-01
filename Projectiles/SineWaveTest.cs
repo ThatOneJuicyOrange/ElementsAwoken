@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class SineWaveTest : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public bool hasGivenShield = false;
         public override void SetDefaults()
         {

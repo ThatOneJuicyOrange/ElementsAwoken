@@ -35,7 +35,7 @@ namespace ElementsAwoken.Tiles
         /*public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Vector2 tileCenter = new Vector2(i * 16, j * 16);
-            for (int k = 0; k < Main.item.Length; k++)
+            for (int k = 0; k < Main.maxItems; k++)
             {
                 Item sucked = Main.item[k];
                 if (Vector2.Distance(sucked.Center, tileCenter) < 800)

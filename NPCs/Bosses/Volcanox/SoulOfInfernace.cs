@@ -255,7 +255,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
                     {
                         int type = mod.ProjectileType("InfernaceFire");
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
-                        Projectile.NewProjectile(infernaceCenter.X, infernaceCenter.Y, projSpeedX, -1, type, projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(infernaceCenter.X, infernaceCenter.Y, projSpeedX, -1, type, projectileBaseDamage, 0f, Main.myPlayer);
                         fireTimer = 10f + Main.rand.Next(0, 15);
                     }
                 }
@@ -374,7 +374,7 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
             int type = mod.ProjectileType("InfernaceSpike");
             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
             float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, 0);
+            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, damage, 0f, Main.myPlayer);
         }
 
         private void Waves(Player P, float speed, int damage, int numberProj)

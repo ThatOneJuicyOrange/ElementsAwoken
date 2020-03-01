@@ -11,14 +11,14 @@ namespace ElementsAwoken.Projectiles
     {
         public override void SetDefaults()
         {
-            projectile.width = 18;
-            projectile.height = 34;
-            projectile.friendly = true;
+            projectile.width = 14;
+            projectile.height = 14;
+
             projectile.penetrate = 1;
-            projectile.hostile = false;
+
             projectile.magic = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            projectile.friendly = true;
+
             projectile.timeLeft = 120;
         }
         public override void SetStaticDefaults()
@@ -27,37 +27,37 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            projectile.velocity.Y += 0.9f;
+            projectile.rotation += projectile.velocity.X * 0.2f;
+            projectile.velocity.Y += 0.2f;
 
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            projectile.ai[0] += 0.1f;
-            if (projectile.velocity.X != oldVelocity.X)
+            projectile.ai[0]++;
+            if (projectile.ai[0] > 5)
             {
-                projectile.velocity.X = -oldVelocity.X / 2;
+                projectile.Kill();
             }
-            if (projectile.velocity.Y != oldVelocity.Y)
+            else
             {
-                projectile.velocity.Y = -oldVelocity.Y / 2;
+                if (projectile.velocity.X != oldVelocity.X)
+                {
+                    projectile.velocity.X = -oldVelocity.X;
+                }
+                if (projectile.velocity.Y != oldVelocity.Y)
+                {
+                    projectile.velocity.Y = -oldVelocity.Y;
+                }
+                projectile.velocity *= 0.5f;
             }
             return false;
         }
         public override void Kill(int timeLeft)
         {
-            int numberProjectiles = 5;
-            for (int num252 = 0; num252 < numberProjectiles; num252++)
+            int numProj = 5;
+            for (int i = 0; i < numProj; i++)
             {
-                Vector2 value15 = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
-                while (value15.X == 0f && value15.Y == 0f)
-                {
-                    value15 = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
-                }
-                value15.Normalize();
-                value15 *= (float)Main.rand.Next(70, 101) * 0.1f;
-                int num1 = projectile.damage / 2;
-                Projectile.NewProjectile(projectile.oldPosition.X + (float)(projectile.width / 2), projectile.oldPosition.Y + (float)(projectile.height / 2), value15.X, value15.Y, mod.ProjectileType("MythrilSpike"), num1, 0f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.NextFloat(-5,5), Main.rand.NextFloat(-5, 5), mod.ProjectileType("MythrilSpike"), (int)(projectile.damage * 0.5f), 0f, projectile.owner, 0f, 0f);
             }
         }
     }

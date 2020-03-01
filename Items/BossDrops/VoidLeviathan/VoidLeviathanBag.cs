@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
 
         public override bool CanRightClick()
@@ -34,50 +34,61 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
-            int choice = Main.rand.Next(8);
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
+            int choice = Main.rand.Next(10);
             if (choice == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("BladeOfTheNight"));      
+                player.QuickSpawnItem(ModContent.ItemType<BladeOfTheNight>());
             }
             if (choice == 1)
             {
-                player.QuickSpawnItem(mod.ItemType("CosmicWrath"));
+                player.QuickSpawnItem(ModContent.ItemType<CosmicWrath>());
             }
             if (choice == 2)
             {
-                player.QuickSpawnItem(mod.ItemType("EndlessAbyssBlaster"));
+                player.QuickSpawnItem(ModContent.ItemType<EndlessAbyssBlaster>());
             }
-			if (choice == 3)
+            if (choice == 3)
             {
-                player.QuickSpawnItem(mod.ItemType("ExtinctionBow"));
+                player.QuickSpawnItem(ModContent.ItemType<ExtinctionBow>());
             }
             if (choice == 4)
             {
-                player.QuickSpawnItem(mod.ItemType("PikeOfEternalDespair"));
+                player.QuickSpawnItem(ModContent.ItemType<PikeOfEternalDespair>());
             }
             if (choice == 5)
             {
-                player.QuickSpawnItem(mod.ItemType("Reaperstorm"));
+                player.QuickSpawnItem(ModContent.ItemType<Reaperstorm>());
             }
             if (choice == 6)
             {
-                player.QuickSpawnItem(mod.ItemType("VoidInferno"));
+                player.QuickSpawnItem(ModContent.ItemType<VoidInferno>());
             }
             if (choice == 7)
             {
-                player.QuickSpawnItem(mod.ItemType("VoidLeviathanAegis"));
+                player.QuickSpawnItem(ModContent.ItemType<VoidLeviathansAegis>());
             }
-
-            player.QuickSpawnItem(mod.ItemType("VoidLeviathanHeart"), 2);
-            player.QuickSpawnItem(mod.ItemType("AmuletOfDestruction"));
+            if (choice == 8)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<BreathOfDarkness>());
+            }
+            if (choice == 9)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<LightsAffliction>());
+            }
+            player.QuickSpawnItem(ModContent.ItemType<VoidLeviathanHeart>(),2);
+            player.QuickSpawnItem(ModContent.ItemType<AmuletOfDestruction>());
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("VoidLeviathanMask"));
+                player.QuickSpawnItem(ModContent.ItemType<VoidLeviathanMask>());
             }
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("VoidLeviathanTrophy"));
+                player.QuickSpawnItem(ModContent.ItemType<VoidLeviathanTrophy>());
+            }
+            if (MyWorld.awakenedMode)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<AbyssalMatter>());
             }
         }
     }

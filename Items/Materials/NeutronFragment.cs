@@ -24,10 +24,10 @@ namespace ElementsAwoken.Items.Materials
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.FragmentNebula, 2);
-            recipe.AddIngredient(ItemID.FragmentSolar, 2);
-            recipe.AddIngredient(ItemID.FragmentStardust, 2);
-            recipe.AddIngredient(ItemID.FragmentVortex, 2);
+            recipe.AddIngredient(ItemID.FragmentNebula, 1);
+            recipe.AddIngredient(ItemID.FragmentSolar, 1);
+            recipe.AddIngredient(ItemID.FragmentStardust, 1);
+            recipe.AddIngredient(ItemID.FragmentVortex, 1);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

@@ -56,7 +56,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
             npc.scale *= 1.3f;
             npc.alpha = 255; // starts transparent
-            npc.value = Item.buyPrice(0, 3, 0, 0);
+            npc.value = Item.buyPrice(1, 0, 0, 0);
             npc.npcSlots = 1f;
 
             music = MusicID.LunarBoss;
@@ -76,6 +76,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             {
                 npc.buffImmune[num2] = true;
             }
+            bossBag = mod.ItemType("AncientsBag");
         }
         public override void SetStaticDefaults()
         {
@@ -129,11 +130,46 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             }
             return true;
         }
-        public override bool PreNPCLoot()
+        public override void NPCLoot()
         {
-            return false;
-        }
+            if (Main.rand.Next(10) == 0)
+            {
+                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsTrophy"));
+            }
+            if (Main.rand.Next(10) == 0)
+            {
+                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsMask"));
+            }
 
+            if (Main.expertMode)
+            {
+                npc.DropBossBags();
+
+            }
+            else
+            {
+                int choice = Main.rand.Next(3);
+                if (choice == 0)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Chromacast"));
+                }
+                if (choice == 1)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Shimmerspark"));
+                }
+                if (choice == 2)
+                {
+                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TheFundamentals"));
+                }
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystalAmalgamate"), 1);
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientShard"), Main.rand.Next(5, 8));
+            }
+
+        }
+        public override void BossLoot(ref string name, ref int potionType)
+        {
+            potionType = mod.ItemType("EpicHealingPotion");
+        }
         public override bool CheckActive()
         {
             return false;
@@ -314,7 +350,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         for (int i = 0; i < numRadialProj; i++)
                         {
                             Vector2 perturbedSpeed = new Vector2(2, 2).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numRadialProj - 1))) * 2.5f;
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CrystallineKunaiHostileNG"), projDamage, 2f, 0);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CrystallineKunaiHostileNG"), projDamage, 2f, Main.myPlayer);
                         }
                         shootTimer[0] = 14;
                     }
@@ -404,11 +440,11 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     if (Main.rand.Next(5) == 0)
                     {
                         int distance = 500;
-                        Projectile.NewProjectile(P.Center.X + Main.rand.NextFloat(-distance, distance), P.Center.Y + Main.rand.NextFloat(-distance, distance), 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(P.Center.X + Main.rand.NextFloat(-distance, distance), P.Center.Y + Main.rand.NextFloat(-distance, distance), 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                     if (Main.rand.Next(30) == 0)
                     {
-                        Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                     if (npc.ai[1] > 450)
                     {
@@ -639,7 +675,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         float projSpeed = 12f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileNG"), projectileBaseDamage, 5f, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileNG"), projectileBaseDamage, 5f, Main.myPlayer);
                     }
                     if (npc.ai[1] > 600)
                     {
@@ -656,7 +692,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         if (Main.rand.Next(50) == 0)
                         {
-                            Projectile kunai = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-1000, 1000), P.Center.Y - 1500, Main.rand.NextFloat(-2, 2), 9f, mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, 0)];
+                            Projectile kunai = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-1000, 1000), P.Center.Y - 1500, Main.rand.NextFloat(-2, 2), 9f, mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, Main.myPlayer)];
                             kunai.timeLeft = 180;
                         }
                     }
@@ -664,7 +700,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         float projSpeed = 12f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile kunai = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, 0)];
+                        Projectile kunai = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, Main.myPlayer)];
                         kunai.timeLeft = 60;
                         shootTimer[0] = 60;
                     }
@@ -694,7 +730,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
                     if (Main.rand.Next(75) == 0)
                     {
-                        Projectile kunai = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-1000, 1000), P.Center.Y - 1500, Main.rand.NextFloat(-2, 2), 9f, mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, 0)];
+                        Projectile kunai = Main.projectile[Projectile.NewProjectile(P.Center.X + Main.rand.Next(-1000, 1000), P.Center.Y - 1500, Main.rand.NextFloat(-2, 2), 9f, mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, Main.myPlayer)];
                         kunai.timeLeft = 180;
                     }
 
@@ -702,7 +738,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         float projSpeed = 12f;
                         float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                        Projectile kunai = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, 0)];
+                        Projectile kunai = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * projSpeed) * -1), (float)((Math.Sin(rotation) * projSpeed) * -1), mod.ProjectileType("CrystallineKunaiHostileExplosive"), projectileBaseDamage, 5f, Main.myPlayer)];
                         kunai.timeLeft = 75;
                         shootTimer[0] = 60;
                     }
@@ -710,11 +746,11 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     if (Main.rand.Next(10) == 0)
                     {
                         int distance = 500;
-                        Projectile.NewProjectile(P.Center.X + Main.rand.NextFloat(-distance, distance), P.Center.Y + Main.rand.NextFloat(-distance, distance), 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(P.Center.X + Main.rand.NextFloat(-distance, distance), P.Center.Y + Main.rand.NextFloat(-distance, distance), 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                     if (Main.rand.Next(32) == 0)
                     {
-                        Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, 0);
+                        Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("CrystalCluster"), projectileBaseDamage, 0f, Main.myPlayer);
                     }
                     if (npc.ai[1] > 450)
                     {
@@ -821,7 +857,6 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
                 NPC deathAni = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("AncientAmalgamDeath"))];
                 deathAni.Center = npc.Center;
-                deathAni.ai[1] = npc.whoAmI;
                 /*for (int i = 0; i < Main.npc.Length; i++)
                 {
                     NPC fist = Main.npc[i];

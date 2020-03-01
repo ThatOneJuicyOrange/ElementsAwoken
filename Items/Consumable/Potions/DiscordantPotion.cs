@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             DisplayName.SetDefault("Discordant Potion");
             Tooltip.SetDefault("Decreases the duration of 'Chaos State' by 25%");
         }
-        public override void AddRecipes()
+        /*public override void AddRecipes() // disabled until i can figure out how to do it properly
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.BottledWater, 1);
@@ -49,6 +49,6 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

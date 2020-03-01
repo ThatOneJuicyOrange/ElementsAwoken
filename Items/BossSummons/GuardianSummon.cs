@@ -33,8 +33,8 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override bool UseItem(Player player)
         {
-            Vector2 spawnAt = player.Center + new Vector2(0f + 200, (float)player.height / 2f);
-            NPC.NewNPC((int)spawnAt.X, (int)spawnAt.Y, mod.NPCType("TheGuardian"));
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheGuardian"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("TheGuardian"), 0f, 0f, 0, 0, 0);
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
@@ -51,7 +51,7 @@ namespace ElementsAwoken.Items.BossSummons
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "TempleFragment", 1);
             recipe.AddIngredient(null, "WyrmHeart", 1);
-            recipe.AddIngredient(ItemID.ChlorophyteBar, 8);
+            recipe.AddIngredient(null, "RefinedDrakonite", 18);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

@@ -20,7 +20,6 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
             item.useAnimation = 12;
             item.reuseDelay = 24;
             item.useStyle = 5;
-            item.UseSound = SoundID.Item8;
 
             Item.staff[item.type] = true;
             item.magic = true;
@@ -37,6 +36,11 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Stinger");
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Main.PlaySound(SoundID.Item17, (int)player.position.X, (int)player.position.Y);
+            return true;
         }
     }
 }

@@ -68,7 +68,7 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
                 int type = mod.ProjectileType("Waterball");  //put your projectile
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
                 float rotation = (float)Math.Atan2(vector8.Y - (P.position.Y + (P.height * 0.5f)), vector8.X - (P.position.X + (P.width * 0.5f)));
-                int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0);
+                int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer);
                 shootTimer = 150f + Main.rand.Next(-30, 50);
             }
             if (!NPC.AnyNPCs(mod.NPCType("Aqueous")))

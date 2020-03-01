@@ -11,7 +11,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
         {
             Main.buffNoTimeDisplay[Type] = false;
             DisplayName.SetDefault("Calamity");
-            Description.SetDefault("Spawnrates increased by 30");
+            Description.SetDefault("Spawnrates increased by 12.5x");
         }
         public override void Update(Player player, ref int buffIndex)
         {

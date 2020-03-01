@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Developer
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Purple Tearstone Ring");
-            Tooltip.SetDefault("When under 15% life\nDamage is increased by 20%\nDefence is increased by 50%\nAmadisLFE's developer accessory");
+            Tooltip.SetDefault("When under 15% life:\nDamage is increased by 20%\nDefence is increased by 50%\nAmadisLFE's developer accessory");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

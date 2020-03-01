@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Deteriorator");
-            Tooltip.SetDefault("Rapidly throw corrosive daggers");
+            Tooltip.SetDefault("Rapidly throws three waves of corrosive daggers");
         }
 
 

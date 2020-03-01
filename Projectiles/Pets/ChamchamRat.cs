@@ -20,7 +20,6 @@ namespace ElementsAwoken.Projectiles.Pets
             Main.projPet[projectile.type] = true;
             projectile.tileCollide = false;
 
-            projectile.minionSlots = 1f;
             projectile.timeLeft = 18000;
             projectile.penetrate = -1;
             projectile.timeLeft *= 5;

@@ -66,7 +66,7 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Desolation IV");
-            Tooltip.SetDefault("Turns normal arrows into shattering crystalline arrows\nRight to change modes");
+            Tooltip.SetDefault("Turns normal arrows into shattering crystalline arrows\n70% chance not to consume ammo\nRight Click to change modes");
         }
         public override bool AltFunctionUse(Player player)
         {
@@ -75,6 +75,10 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
         public override void UpdateInventory(Player player)
         {
             discCooldown--;
+        }
+        public override bool ConsumeAmmo(Player player)
+        {
+            return Main.rand.NextFloat() > .30f;
         }
         public override bool CanUseItem(Player player)
         {

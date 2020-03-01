@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,15 +11,16 @@ namespace ElementsAwoken.Projectiles
 {
     public class DeathwarpLaser : ModProjectile
     {
-    	
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LaserTex"; } }
         public override void SetDefaults()
         {
-            projectile.width = 2;
-            projectile.height = 2;
+            projectile.width = 5;
+            projectile.height = 5;
             projectile.friendly = true;
+            projectile.alpha = 255;
             projectile.penetrate = 1;
-            projectile.tileCollide = true;
-            projectile.timeLeft = 220;
+            projectile.extraUpdates = 2;
+            projectile.timeLeft = 600;
             projectile.melee = true;
         }
         public override void SetStaticDefaults()
@@ -26,58 +29,67 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            for (int num121 = 0; num121 < 5; num121++)
-            {
-                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 173)];
-                dust.velocity = Vector2.Zero;
-                dust.position -= projectile.velocity / 6f * (float)num121;
-                dust.noGravity = true;
-                dust.scale = 1f;
+            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
+            Lighting.AddLight((int)projectile.Center.X, (int)projectile.Center.Y, 0f, 0.1f, 0.5f);
+            float trailLength = 75f;
+            if (projectile.ai[1] == 0f)
+            {
+                projectile.localAI[0] += 3f;
+                if (projectile.localAI[0] > trailLength)
+                {
+                    projectile.localAI[0] = trailLength;
+                }
             }
+            else
+            {
+                projectile.localAI[0] -= 3f;
+                if (projectile.localAI[0] <= 0f)
+                {
+                    projectile.Kill();
+                    return;
+                }
+            }
+        }
+        public override Color? GetAlpha(Color lightColor)
+        {
+            return new Color(209, 145, 255, 0);
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Color color25 = Lighting.GetColor((int)((double)projectile.position.X + (double)projectile.width * 0.5) / 16, (int)(((double)projectile.position.Y + (double)projectile.height * 0.5) / 16.0));
+
+            Rectangle value7 = new Rectangle((int)Main.screenPosition.X - 500, (int)Main.screenPosition.Y - 500, Main.screenWidth + 1000, Main.screenHeight + 1000);
+            float num148 = (float)(Main.projectileTexture[projectile.type].Width - projectile.width) * 0.5f + (float)projectile.width * 0.5f;
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (projectile.spriteDirection == -1)
+            {
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            if (projectile.getRect().Intersects(value7))
+            {
+                Vector2 value8 = new Vector2(projectile.position.X - Main.screenPosition.X + num148, projectile.position.Y - Main.screenPosition.Y + (float)(projectile.height / 2) + projectile.gfxOffY);
+                float num173 = 100f;
+                float scaleFactor = 3f;
+                if (projectile.ai[1] == 1f)
+                {
+                    num173 = (float)((int)projectile.localAI[0]);
+                }
+                for (int num174 = 1; num174 <= (int)projectile.localAI[0]; num174++)
+                {
+                    Vector2 value9 = Vector2.Normalize(projectile.velocity) * (float)num174 * scaleFactor;
+                    Color color32 = projectile.GetAlpha(color25);
+                    color32 *= (num173 - (float)num174) / num173;
+                    color32.A = 0;
+                    spriteBatch.Draw(Main.projectileTexture[projectile.type], value8 - value9, null, color32, projectile.rotation, new Vector2(num148, (float)(projectile.height / 2)), projectile.scale, spriteEffects, 0f);
+                }
+            }
+            return false;
         }
 
         public override void Kill(int timeLeft)
         {
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("Explosion"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
-            for (int num369 = 0; num369 < 20; num369++)
-            {
-                int num370 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 173, 0f, 0f, 100, default(Color), 1.5f);
-                Main.dust[num370].velocity *= 1.4f;
-            }
-            for (int num371 = 0; num371 < 10; num371++)
-            {
-                int num372 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 173, 0f, 0f, 100, default(Color), 2.5f);
-                Main.dust[num372].noGravity = true;
-                Main.dust[num372].velocity *= 5f;
-                num372 = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 173, 0f, 0f, 100, default(Color), 1.5f);
-                Main.dust[num372].velocity *= 3f;
-            }
-            int num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.4f;
-            Gore gore85 = Main.gore[num373];
-            gore85.velocity.X = gore85.velocity.X + 1f;
-            Gore gore86 = Main.gore[num373];
-            gore86.velocity.Y = gore86.velocity.Y + 1f;
-            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.4f;
-            Gore gore87 = Main.gore[num373];
-            gore87.velocity.X = gore87.velocity.X - 1f;
-            Gore gore88 = Main.gore[num373];
-            gore88.velocity.Y = gore88.velocity.Y + 1f;
-            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.4f;
-            Gore gore89 = Main.gore[num373];
-            gore89.velocity.X = gore89.velocity.X + 1f;
-            Gore gore90 = Main.gore[num373];
-            gore90.velocity.Y = gore90.velocity.Y - 1f;
-            num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.4f;
-            Gore gore91 = Main.gore[num373];
-            gore91.velocity.X = gore91.velocity.X - 1f;
-            Gore gore92 = Main.gore[num373];
-            gore92.velocity.Y = gore92.velocity.Y - 1f;
+            ProjectileGlobal.Explosion(projectile, new int[] { 173 }, projectile.damage, "melee");
         }
     }
 }

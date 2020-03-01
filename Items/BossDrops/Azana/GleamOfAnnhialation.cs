@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Gleam of Annhialation");
+            DisplayName.SetDefault("Virulent Gleam");
         }
     }
 }

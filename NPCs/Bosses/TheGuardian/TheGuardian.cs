@@ -15,13 +15,34 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
     [AutoloadBossHead]
     public class TheGuardian : ModNPC
     {
-        public bool isTransforming = false;
-        public bool startDrop = true;
-        public int projectileBaseDamage = 60; 
+        private int projectileBaseDamage = 60;
+        private float shootTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float aiTimer
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float dropAI
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float isTransforming
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+
         public override void SetDefaults()
         {
             npc.width = 92;
-            npc.height = 110;
+            npc.height = 152;
+
+            npc.aiStyle = -1;
 
             npc.lifeMax = 40000;
             npc.damage = 120;
@@ -37,7 +58,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             npc.scale = 1.2f;
             npc.alpha = 255;
             npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath1;
 
 
             npc.value = Item.buyPrice(0, 0, 0, 0);
@@ -71,7 +91,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter += 1;
-            if (!isTransforming)
+            if (isTransforming == 0)
             {
                 if (npc.frameCounter > 5)
                 {
@@ -83,7 +103,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                     npc.frame.Y = 0;
                 }
             }
-            if (isTransforming)
+            else
             {
                 if (npc.frameCounter > 7)
                 {
@@ -98,165 +118,177 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
 
             }
         }
-        
+
         public override void AI()
         {
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
             Player P = Main.player[npc.target];
             MyPlayer modPlayer = P.GetModPlayer<MyPlayer>();
+
             #region despawning
-            if (Main.dayTime)
-            {
-                npc.localAI[0]++;
-            }
-            else if (!P.active || P.dead)
+            if (Main.dayTime) npc.localAI[0]++;
+            else if (!P.active || P.dead || Vector2.Distance(P.Center, npc.Center) > 5000)
             {
                 npc.TargetClosest(true);
-                if (!P.active || P.dead)
+                if (!P.active || P.dead || Vector2.Distance(P.Center, npc.Center) > 5000)
                 {
                     npc.localAI[0]++;
                 }
             }
-            else if (Vector2.Distance(P.Center, npc.Center) > 5000)
-            {
-                npc.localAI[0]++;
-            }
-            if (npc.localAI[0] >= 300)
-            {
-                npc.active = false;
-            }
-            if (npc.life < 1000)
-            {
-                isTransforming = true;
-                npc.immortal = true;
-            }
+            if (npc.localAI[0] >= 300) npc.active = false;
             #endregion
-            if (startDrop)
+
+            if (npc.life <= 1000)
             {
-                npc.localAI[1]++;
-                if (npc.localAI[1] == 5)
-                {
-                    npc.Center = P.Center - new Vector2(0, 400);
-                }
-                if (npc.localAI[1] >= 5)
-                {
-                    npc.alpha -= 5;
-                }
+                isTransforming = 1;
+                npc.immortal = true;
+                npc.dontTakeDamage = true;
+                npc.life = 1000;
+            }
+            if (dropAI == 0)
+            {
+                npc.Center = P.Center - new Vector2(0, 400);
+                dropAI = 1;
+            }
+            if (dropAI == 1)
+            {
+                npc.alpha -= 5;
                 if (npc.alpha > 0)
                 {
                     npc.velocity.X = 0;
                     npc.velocity.Y = 0;
                 }
-                if (npc.localAI[2] == 0)
+                if (npc.alpha <= 0)
                 {
-                    if (npc.alpha <= 0)
-                    {
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                        npc.localAI[2] = 1;
-                        npc.velocity.Y = 5f;
-                        npc.ai[0] = 120; // so it doesnt start shooting right away
-                    }
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+                    dropAI = 2;
+                    npc.velocity.Y = 5f;
+                    shootTimer = 120; // so it doesnt start shooting right away
                 }
-                else
+            }
+            else if (dropAI == 2)
+            {
+                if (npc.velocity.Y == 0f)
                 {
-                    if (npc.velocity.Y == 0f)
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+
+                    if (Main.netMode == 0) modPlayer.screenshakeAmount = 8;
+                    else ElementsAwoken.NPCApplyScreenShakeToAll(npc.whoAmI, 8, 2000);
+
+                    for (int k = 0; k < 200; k++)
                     {
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-
-                        if (Main.netMode == 0) modPlayer.screenshakeAmount = 8;                       
-                        else ElementsAwoken.NPCApplyScreenShakeToAll(npc.whoAmI, 8, 2000);
-
-                        for (int k = 0; k < 200; k++)
-                        {
-                            int dust = Dust.NewDust(new Vector2(npc.position.X, npc.Center.Y + 45), npc.width, 8, 0, 0f, 0f, 100, default(Color), 2f);
-                            Main.dust[dust].noGravity = true;
-                            Main.dust[dust].velocity *= 1.5f;
-                        }
-                        startDrop = false;
+                        int dust = Dust.NewDust(new Vector2(npc.position.X, npc.Center.Y + 45), npc.width, 8, 0, 0f, 0f, 100, default(Color), 2f);
+                        Main.dust[dust].noGravity = true;
+                        Main.dust[dust].velocity *= 1.5f;
                     }
+                    dropAI = -1;
                 }
-            }            
+            }
             else
             {
-                #region circle shield and player movement
-                int maxDist = 1000;
-                for (int i = 0; i < 80; i++)
+                if (isTransforming == 0)
                 {
-                    double angle = Main.rand.NextDouble() * 2d * Math.PI;
-                    Vector2 offset = new Vector2((float)Math.Sin(angle) * maxDist, (float)Math.Cos(angle) * maxDist);// unit circle yay
-                    Dust dust = Main.dust[Dust.NewDust(npc.Center + offset, 0, 0, 6, 0, 0, 100)];
-                    dust.noGravity = true;
-                }
-                for (int i = 0; i < Main.player.Length; i++)
-                {
-                    Player player = Main.player[i];
-                    if (player.active && !P.dead && Vector2.Distance(player.Center, npc.Center) > maxDist)
+                    #region circle shield and player movement
+                    int maxDist = 1000;
+                    for (int i = 0; i < 80; i++)
                     {
-                        Vector2 toTarget = new Vector2(npc.Center.X - player.Center.X, npc.Center.Y - player.Center.Y);
-                        toTarget.Normalize();
-                        float speed = Vector2.Distance(player.Center, npc.Center) > maxDist + 500 ? 1f : 0.5f;
-                        player.velocity += toTarget * 0.5f;
-
-                        player.dashDelay = 2; // to stop dashing away
-                        player.grappling[0] = -1;
-                        // to stop grappling
-                        player.grapCount = 0;
-                        for (int p = 0; p < Main.projectile.Length; p++)
+                        double angle = Main.rand.NextDouble() * 2d * Math.PI;
+                        Vector2 offset = new Vector2((float)Math.Sin(angle) * maxDist, (float)Math.Cos(angle) * maxDist);
+                        Dust dust = Main.dust[Dust.NewDust(npc.Center + offset, 0, 0, 6, 0, 0, 100)];
+                        dust.noGravity = true;
+                    }
+                    for (int i = 0; i < Main.player.Length; i++)
+                    {
+                        Player player = Main.player[i];
+                        if (player.active && !P.dead && Vector2.Distance(player.Center, npc.Center) > maxDist)
                         {
-                            if (Main.projectile[p].active && Main.projectile[p].owner == player.whoAmI && Main.projectile[p].aiStyle == 7)
+                            Vector2 toTarget = new Vector2(npc.Center.X - player.Center.X, npc.Center.Y - player.Center.Y);
+                            toTarget.Normalize();
+                            float speed = MathHelper.Lerp(0.5f, 2.5f, (Vector2.Distance(P.Center, npc.Center) - maxDist) / 400);
+                            player.velocity += toTarget * speed;
+
+                            player.dashDelay = 2; // to stop dashing away
+                            player.grappling[0] = -1; // to stop grappling
+                            player.grapCount = 0;
+                            for (int p = 0; p < Main.projectile.Length; p++)
                             {
-                                Main.projectile[p].Kill();
+                                if (Main.projectile[p].active && Main.projectile[p].owner == player.whoAmI && Main.projectile[p].aiStyle == 7)
+                                {
+                                    Main.projectile[p].Kill();
+                                }
                             }
                         }
                     }
-                }
-                #endregion
-                // ai
-                npc.ai[1]++;
-                if (npc.ai[1] > 1000f)
-                {
-                    npc.ai[1] = 0f;
-                }
-                npc.ai[0]--;
-                // shoot 
-                if (npc.ai[0] <= 0 && npc.ai[1] <= 500)
-                {
-                    float Speed = 17f;
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-                    float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), projectileBaseDamage, 0f, 0);
-                    npc.ai[0] = 50;
-                }
-                // targeting and beam
-                if (npc.ai[1] >= 500)
-                {
-                    if (npc.ai[0] == 80)
+                    #endregion
+                    aiTimer++;
+                    if (aiTimer > 1000f) aiTimer = 0f;
+                    shootTimer--;
+                    if (shootTimer <= 0 && aiTimer <= 500)
                     {
-                        Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("GuardianTargeter"), 0, 0f, 0, 0, P.whoAmI);
+                        float Speed = 17f;
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
+                        float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianShot"), projectileBaseDamage, 0f, Main.myPlayer);
+                        shootTimer = 50;
                     }
-                    if (npc.ai[0] <= 0)
+                    // targeting and beam
+                    if (aiTimer >= 500)
                     {
-                        for (int k = 0; k < Main.maxProjectiles; k++)
+                        if (shootTimer == 80)
                         {
-                            Projectile other = Main.projectile[k];
-                            if (other.type == mod.ProjectileType("GuardianTargeter") && other.active)
+                            Projectile.NewProjectile(P.Center.X, P.Center.Y, 0f, 0f, mod.ProjectileType("GuardianTargeter"), 0, 0f, Main.myPlayer, 0, P.whoAmI);
+                        }
+                        if (shootTimer <= 0)
+                        {
+                            int target = FindTargeter();
+                            if (target != -1)
                             {
-                                float Speed = 15f;
+                                Projectile targetNPC = Main.projectile[target];
                                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-                                float rotation = (float)Math.Atan2(npc.Center.Y - other.Center.Y, npc.Center.X - other.Center.X);
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianBeam"), projectileBaseDamage + 40, 0f, 0);
 
-                                other.Kill();
+                                float Speed = 15f;
+                                float rotation = (float)Math.Atan2(npc.Center.Y - targetNPC.Center.Y, npc.Center.X - targetNPC.Center.X);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianBeam"), projectileBaseDamage + 40, 0f, Main.myPlayer);
+                                targetNPC.Kill();
                             }
+                            shootTimer = 100;
                         }
-                        npc.ai[0] = 100;
+                    }
+                    else
+                    {
+                        int target = FindTargeter();
+                        if (target != -1)
+                        {
+                            Projectile targetNPC = Main.projectile[target];
+                            targetNPC.Kill();
+                        }
                     }
                 }
             }
         }
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            Texture2D texture = mod.GetTexture("NPCs/Bosses/TheGuardian/" + GetType().Name + "_Glow");
+            Rectangle frame = new Rectangle(0, npc.frame.Y, texture.Width, texture.Height / Main.npcFrameCount[npc.type]);
+            Vector2 origin = new Vector2(texture.Width * 0.5f, (texture.Height / Main.npcFrameCount[npc.type]) * 0.5f);
+            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition + new Vector2(0, npc.gfxOffY) + new Vector2(0,4), frame, new Color(255, 255, 255, 0), npc.rotation, origin, npc.scale, effects, 0.0f);
+        }
         public override bool PreNPCLoot()
         {
             return false;
+        }
+        private int FindTargeter()
+        {
+            for (int k = 0; k < Main.maxProjectiles; k++)
+            {
+                Projectile other = Main.projectile[k];
+                if (other.type == mod.ProjectileType("GuardianTargeter") && other.active)
+                {
+                    return other.whoAmI;
+                }
+            }
+            return -1;
         }
         public override void HitEffect(int hitDirection, double damage)
         {

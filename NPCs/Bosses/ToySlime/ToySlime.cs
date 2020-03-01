@@ -7,17 +7,26 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Localization;
+using ElementsAwoken.Items.BossDrops.ToySlime;
 
 namespace ElementsAwoken.NPCs.Bosses.ToySlime
 {
     [AutoloadBossHead]
     public class ToySlime : ModNPC
     {
-        bool reset = false;
-        int projectileBaseDamage = 15;
-        int brickTimer = 0;
+        // all the npc.ais are used in slime ai
+        public bool announceBoss = true;
+        private int projectileBaseDamage = 15;
+        private int brickTimer = 0;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(brickTimer);
+        }
 
-        float despawnTimer = 0;
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            brickTimer = reader.ReadInt32();
+        }
         public override void SetDefaults()
         {
             npc.width = 32;
@@ -66,13 +75,13 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
             float spawnchance = Main.expertMode ? 0.006f : 0.005f;  
             MyPlayer modPlayer = spawnInfo.player.GetModPlayer<MyPlayer>();
             bool enoughStats = true;
-            if (modPlayer.increasedToySlimeChance && !NPC.AnyNPCs(mod.NPCType("ToySlime")))
+            if (modPlayer.toySlimeChanceTimer > 0 && !NPC.AnyNPCs(mod.NPCType("ToySlime")))
             {
                 return 0.3f;
             }
             else
             {
-                if (MyWorld.downedToySlime)
+                if (MyWorld.downedToySlime || Main.slimeRain)
                 {
                     return 0.0f;
                 }
@@ -106,10 +115,29 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
 
         public override void NPCLoot()
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("BrokenToys"), Main.rand.Next(20, 35));
+            int numToys = 0;
+            for (int i = 0; i < Main.player.Length; i++)
+            {
+                if (Main.player[i].active)
+                {
+                    if (MyWorld.awakenedMode) numToys += Main.rand.Next(10, 35);
+                    else if (Main.expertMode) numToys = Main.rand.Next(10, 25);
+                    else numToys += Main.rand.Next(10, 12);
+                }
+            }
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<BrokenToys>(), numToys);
+            if (Main.rand.Next(10) == 0)
+            {
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<ToySlimeMask>());
+            }
+            if (MyWorld.awakenedMode)
+            {
+                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ModContent.ItemType<ToySlimeClaw>());
+            }
             int item = Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Gel, Main.rand.Next(10, 35));
             Main.item[item].color = new Color(0, 220, 40, 100);
             MyWorld.downedToySlime = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
 
         public override void AI()
@@ -125,14 +153,8 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                     npc.localAI[0]++;
                 }
             }
-            if (P.active && !P.dead)
-            {
-                npc.localAI[0] = 0;
-            }
-            if (npc.localAI[0] >= 300)
-            {
-                npc.active = false;
-            }
+            if (P.active && !P.dead) npc.localAI[0] = 0;
+            if (npc.localAI[0] >= 300) npc.active = false;
             #endregion
 
             float num234 = 1f;
@@ -149,11 +171,11 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                 npc.TargetClosest(true);
                 npc.netUpdate = true;
             }
-            if (!reset)
+            if (announceBoss && !Main.slimeRain)
             {
                 Main.PlaySound(15, (int)P.position.X, (int)P.position.Y, 0);
                 Main.NewText(Language.GetTextValue("Announcement.HasAwoken", "A Toy Slime"), 175, 75, 255, false);
-                reset = true;
+                announceBoss = false;
             }
             // despawning
             if (Main.player[npc.target].dead)
@@ -471,7 +493,7 @@ namespace ElementsAwoken.NPCs.Bosses.ToySlime
                 {
                     for (int k = 0; k < 3; k++)
                     {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 10, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, -2), mod.ProjectileType("LegoBrick"), projectileBaseDamage, 0f, 0, 0, 0);
+                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 10, Main.rand.NextFloat(-3, 3), Main.rand.NextFloat(-6, -2), mod.ProjectileType("LegoBrick"), projectileBaseDamage, 0f, Main.myPlayer, 0, 0);
                     }
                     brickTimer = Main.rand.Next(200, 350);
                     if (MyWorld.awakenedMode)

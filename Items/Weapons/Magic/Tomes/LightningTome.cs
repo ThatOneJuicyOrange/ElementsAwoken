@@ -9,20 +9,25 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
     {
         public override void SetDefaults()
         {
+            item.width = 32;
+            item.height = 32; 
+
             item.damage = 22;
-            item.magic = true;
-            item.width = 50;
-            item.height = 50;
+            item.knockBack = 2;
+            item.mana = 12;
+
             item.useTime = 32;
             item.useAnimation = 32;
             item.useStyle = 5;
+
             item.noMelee = true;
-            item.knockBack = 2;
-            item.value = Item.buyPrice(0, 3, 0, 0);
-            item.rare = 2;
-            item.mana = 12;
-            item.UseSound = SoundID.Item8;
+            item.magic = true;
             item.autoReuse = false;
+
+            item.value = Item.sellPrice(0, 0, 5, 0);
+            item.rare = 2;
+
+            item.UseSound = SoundID.Item8;
             item.shoot = mod.ProjectileType("Lightning");
             item.shootSpeed = 14f;
         }
@@ -30,6 +35,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Lightning Tome");
+            Tooltip.SetDefault("Shoots a bolt of lightning that has a chance to chain to a nearby enemy");
         }
         public override void AddRecipes()
         {

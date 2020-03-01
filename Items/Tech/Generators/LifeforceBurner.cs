@@ -39,8 +39,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lifeforce Burner");
-            Tooltip.SetDefault("Turns life into energy\nUse the arrow keys while hovering over the item to change amount\nRight click to turn on");
+            DisplayName.SetDefault("Lifeforce Burner Generator");
+            Tooltip.SetDefault("Turns life into energy\nUse the arrow keys while hovering over the item to change amount\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

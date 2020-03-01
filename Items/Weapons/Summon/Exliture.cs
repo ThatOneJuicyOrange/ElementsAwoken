@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -10,27 +11,32 @@ namespace ElementsAwoken.Items.Weapons.Summon
     {
         public override void SetDefaults()
         {
-            item.damage = 12;
-            item.summon = true;
             item.width = 40;
-            item.height = 40;
+            item.height = 40; 
+            
+            item.damage = 12;
+            item.knockBack = 5;
+
+            item.UseSound = SoundID.Item1;
             item.useTime = 28;
-            item.useTurn = true;
             item.useAnimation = 28;
             item.useStyle = 1;
-            item.knockBack = 5;
-            item.value = Item.buyPrice(0, 2, 0, 0);
-            item.rare = 1;
-            item.UseSound = SoundID.Item1;
+
+            item.useTurn = true;
+            item.summon = true;
             item.autoReuse = true;
-            item.shoot = mod.ProjectileType("ExlitureEye");
+
+            item.value = Item.sellPrice(0, 0, 20, 0);
+            item.rare = 1;
+
+            item.shoot = ModContent.ProjectileType<ExlitureEye>();
             item.shootSpeed = 4f;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Exliture");
-            Tooltip.SetDefault("Shoots little eyes. Also serves as a sword");
+            Tooltip.SetDefault("Shoots eyes that attack enemies\nAlso serves as a sword");
         }
 
         public override void AddRecipes()

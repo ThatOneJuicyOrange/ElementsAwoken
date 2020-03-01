@@ -14,17 +14,23 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             projectile.CloneDefaults(ProjectileID.OneEyedPirate);
             aiType = ProjectileID.OneEyedPirate;
+
             projectile.width = 26;
             projectile.height = 26;
+
             projectile.netImportant = true;
             projectile.friendly = true;
+            projectile.minion = true;
+            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+
             projectile.minionSlots = 1;
             projectile.timeLeft = 18000;
             Main.projFrames[projectile.type] = 15;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
             projectile.penetrate = -1;
             projectile.timeLeft *= 5;
-            projectile.minion = true;
+
+            projectile.scale *= 0.8f;
             //aiType = 393;
             //projectile.tileCollide = true;
         }
@@ -56,6 +62,11 @@ namespace ElementsAwoken.Projectiles.Minions
                 projectile.timeLeft = 2;
             }
 
+            projectile.localAI[0] = 0; // responsible for pooping
+            // platform collision
+            Vector2 platform = projectile.Bottom / 16;
+            Tile platformTile = Framing.GetTileSafely((int)platform.X, (int)platform.Y);
+            if (TileID.Sets.Platforms[platformTile.type] && player.Center.Y < projectile.Center.Y && platformTile.active() && projectile.ai[0] != 1) projectile.velocity.Y = 0;
         }
     }
 }

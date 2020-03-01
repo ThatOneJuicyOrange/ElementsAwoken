@@ -26,6 +26,7 @@ namespace ElementsAwoken.Items.Tools
             item.autoReuse = true;
 
             item.pick = 300;
+            item.axe = 65;
             item.tileBoost += 30;
 
             item.value = Item.sellPrice(0, 20, 0, 0);

@@ -126,6 +126,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentStardust, Main.rand.Next(5, 20));
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.FragmentVortex, Main.rand.Next(5, 20));
             }
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
@@ -176,13 +177,16 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                         }
                     }
                 }
-                int orbitalcount = MyWorld.awakenedMode ? 9 : 7;
-                for (int l = 0; l < orbitalcount; l++)
+                if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    //cos = y, sin = x
-                    int distance = 360 / orbitalcount;
-                    NPC orbital = Main.npc[NPC.NewNPC((int)(npc.Center.X + (Math.Sin(l * distance) * 150)), (int)(npc.Center.Y + (Math.Cos(l * distance) * 150)), mod.NPCType("AstraMinion"), npc.whoAmI, 0, Main.rand.Next(0, 300))];
-                    orbital.netUpdate = true;
+                    int orbitalcount = MyWorld.awakenedMode ? 9 : 7;
+                    for (int l = 0; l < orbitalcount; l++)
+                    {
+                        //cos = y, sin = x
+                        int distance = 360 / orbitalcount;
+                        NPC orbital = Main.npc[NPC.NewNPC((int)(npc.Center.X + (Math.Sin(l * distance) * 150)), (int)(npc.Center.Y + (Math.Cos(l * distance) * 150)), mod.NPCType("AstraMinion"), npc.whoAmI, 0, Main.rand.Next(0, 300))];
+                        orbital.netUpdate = true;
+                    }
                 }
                 npc.localAI[1]++;
                 npc.netUpdate = true;
@@ -204,7 +208,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 {
                     AstraShots(P, 12f, projectileBaseDamage + 35, Main.rand.Next(3, 5));
                     shootTimer = Main.rand.Next(60, 180);
-                    //npc.netUpdate = true;
+                    npc.netUpdate = true;
                 }
                 npc.immortal = true;
                 npc.dontTakeDamage = true;
@@ -215,7 +219,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 {
                     AstraShots(P, 12f, projectileBaseDamage, Main.rand.Next(3, 5));
                     shootTimer = Main.rand.Next(20, 140);
-                    //npc.netUpdate = true;
+                    npc.netUpdate = true;
                 }
                 npc.immortal = false;
                 npc.dontTakeDamage = false;
@@ -252,7 +256,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
                 {
                     int type = mod.ProjectileType("CelestialVortexPortal");
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 21);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f), type, projectileBaseDamage, 0f, 0);
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f), type, projectileBaseDamage, 0f, Main.myPlayer);
                 }
                 attackCool = 240;
                 npc.netUpdate = true;
@@ -349,7 +353,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             {
                 speed += Main.rand.NextFloat(-2, 2);
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - 2).RotatedByRandom(MathHelper.ToRadians(20));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, 0);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("SolarFragmentProj"), damage, 0f, Main.myPlayer);
             }
         }
 
@@ -361,7 +365,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheCelestial
             {
                 speed += Main.rand.NextFloat();
                 Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(10));
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, 0);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("CelestialStarShot"), damage, 0f, Main.myPlayer);
             }
         }
 

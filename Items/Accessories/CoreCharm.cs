@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Core Charm");
-            Tooltip.SetDefault("Fires 2 homing fire skulls at nearby enemies");
+            Tooltip.SetDefault("Occasionally fires 2 homing fire skulls at nearby enemies");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(7, 4));
         }
 

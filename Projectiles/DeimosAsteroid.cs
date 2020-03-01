@@ -13,9 +13,9 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 24;
             projectile.height = 24;
-            projectile.magic = true;
             projectile.penetrate = 1;
             projectile.friendly = true;
+            projectile.magic = true;
             projectile.extraUpdates = 1;
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 4;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;

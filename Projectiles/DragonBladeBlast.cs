@@ -43,7 +43,7 @@ namespace ElementsAwoken.Projectiles
                 for (int i = 0; i < Main.npc.Length; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active && npc.damage > 0 && !npc.boss && Vector2.Distance(npc.Center, projectile.Center) < max + 20)
+                    if (!npc.townNPC && npc.active && npc.damage > 0 && !npc.boss && Vector2.Distance(npc.Center, projectile.Center) < max + 20)
                     {
                         npc.AddBuff(BuffID.OnFire, 120);
                         Vector2 toTarget = new Vector2(projectile.Center.X - npc.Center.X, projectile.Center.Y - npc.Center.Y);

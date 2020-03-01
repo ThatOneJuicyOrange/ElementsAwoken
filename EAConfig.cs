@@ -61,9 +61,13 @@ namespace ElementsAwoken
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        [Label("Disable Alchemist")]
-        [Tooltip("Prevents the Alchemist from spawning in your world")]
-        public bool alchemistDisabled { get; set; }
+        [Label("Enable Alchemist Potion Shop")]
+        [Tooltip("Enables the Alchemists potion shop, replacing the potion material shop")]
+        public bool alchemistPotions { get; set; }
+
+        [Label("Resource Bars")]
+        [Tooltip("Turns the energy and insanity UI into bars")]
+        public bool resourceBars { get; set; }
 
         [Label("Disable Labs")]
         [Tooltip("Stops Labs from generating on world gen")]
@@ -71,8 +75,12 @@ namespace ElementsAwoken
         public bool labsDisabled { get; set; }
 
         [Label("Disable Boss Prompts")]
-        [Tooltip("Disables the effects that happen in the world after beating a boss")]
+        [Tooltip("Disables the effects that happen in the world 30 minutes after beating a boss")]
         public bool promptsDisabled { get; set; }
+
+        [Label("Disable Vanilla Item Changes")]
+        [Tooltip("Disabled all changes to vanilla items")]
+        public bool vItemChangesDisabled { get; set; }
 
         [Label("Disable Screenshake")]
         public bool screenshakeDisabled { get; set; }

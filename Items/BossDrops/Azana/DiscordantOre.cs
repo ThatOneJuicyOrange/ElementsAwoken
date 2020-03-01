@@ -23,6 +23,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Discordant Ore");
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(12, 4));
         }
     }
 }

@@ -96,7 +96,7 @@ namespace ElementsAwoken.Items.Tech.Tools
                     }
                 }
             }
-            for (int i = 0; i < Main.item.Length; i++)
+            for (int i = 0; i < Main.maxItems; i++)
             {
                 Item otherItem = Main.item[i];
 

@@ -25,8 +25,8 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
-            ProjectileID.Sets.Homing[projectile.type] = true;
-            ProjectileID.Sets.LightPet[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
+
             Main.projPet[projectile.type] = true;
 
             projectile.minionSlots = 0.75f;

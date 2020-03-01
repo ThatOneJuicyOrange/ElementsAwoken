@@ -17,12 +17,12 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
             item.value = Item.sellPrice(0, 7, 50, 0);
             item.rare = 6;
 
-            item.defense = 27;
+            item.defense = 21;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energy Weaver's Helm");
-            Tooltip.SetDefault("Damage increased the closer it is to midday\nCritical strike chance increased by 7");
+            Tooltip.SetDefault("Damage increased the closer it is to midday to a maximum of 30%\nCritical strike chance increased by 7");
         }
 
         public override void UpdateEquip(Player player)
@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
             float damageBonus = 1f;
             if (Main.dayTime)
             {
-                damageBonus = MathHelper.Lerp(1.2f, 1f, MathHelper.Distance((float)Main.time, 27000) / 27000);
+                damageBonus = MathHelper.Lerp(1.3f, 1f, MathHelper.Distance((float)Main.time, 27000) / 27000);
             }
 
             player.meleeDamage *= damageBonus;

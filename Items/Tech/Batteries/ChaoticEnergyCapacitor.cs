@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
             recipe.AddIngredient(null, "LunarEnergyHarnesser", 2);
             recipe.AddIngredient(null, "DiscordantBar", 8);
             recipe.AddIngredient(null, "ChaoticFlare", 4);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(null, "ChaoticCrucible");
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

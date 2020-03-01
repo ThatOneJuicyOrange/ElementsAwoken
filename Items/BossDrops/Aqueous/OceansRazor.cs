@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.BossDrops.Aqueous
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ocean's Razor");
-            Tooltip.SetDefault("Fire 3 water shots");
+            Tooltip.SetDefault("Fires three explosive water shots");
         }
 
 

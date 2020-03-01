@@ -18,6 +18,7 @@ namespace ElementsAwoken.Projectiles
             projectile.friendly = true;
             projectile.ignoreWater = true;
             projectile.tileCollide = false;
+            projectile.sentry = true;
 
             projectile.penetrate = -1;
             projectile.timeLeft = 10000;

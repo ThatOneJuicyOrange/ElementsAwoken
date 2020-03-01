@@ -11,19 +11,16 @@ namespace ElementsAwoken.Projectiles.Pets.BabyShadeWyrm
     {
         public override void SetDefaults()
         {
-            projectile.width = 28;
-            projectile.height = 28;
+            projectile.width = 24;
+            projectile.height = 24;
 
             projectile.friendly = true;
             projectile.ignoreWater = true;
-            projectile.netImportant = true;
             projectile.tileCollide = false;
-            projectile.minion = true;
-            //Main.projPet[projectile.type] = true;
+            Main.projPet[projectile.type] = true;
 
             projectile.penetrate = -1;
             projectile.timeLeft = 18000;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
             projectile.timeLeft *= 5;
         }
 

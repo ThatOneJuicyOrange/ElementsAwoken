@@ -12,18 +12,21 @@ namespace ElementsAwoken.Tiles.Crafting
         public override void SetDefaults()
         {
 			Main.tileLighted[Type] = true;
-            Main.tileSolidTop[Type] = false;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
-            Main.tileTable[Type] = true;
             Main.tileLavaDeath[Type] = false;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+
             ModTranslation name = CreateMapEntryName();
             name.SetDefault("Elemental Forge");
             AddMapEntry(new Color(133, 133, 133), name);
+
             disableSmartCursor = true;
+
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
             TileObjectData.addTile(Type);
+
 			adjTiles = new int[] { TileID.Furnaces };
 			animationFrameHeight = 38;
 			dustType = 6;
@@ -54,9 +57,9 @@ namespace ElementsAwoken.Tiles.Crafting
 		}
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)   //light colors
         {
-            r = Main.DiscoR / 255f;
-            g = Main.DiscoG / 255f;
-            b = Main.DiscoB / 255f; 
+            r = (Main.DiscoR / 255f) / 3;
+            g = (Main.DiscoG / 255f) / 3;
+            b = (Main.DiscoB / 255f) / 3; 
         }
     }
 }

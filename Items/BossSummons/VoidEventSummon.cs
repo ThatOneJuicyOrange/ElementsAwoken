@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using ElementsAwoken.Events.VoidEvent;
 
 namespace ElementsAwoken.Items.BossSummons
 {
@@ -37,26 +38,34 @@ namespace ElementsAwoken.Items.BossSummons
                 Main.NewText("It is too late to call upon the void...", 182, 15, 15, false);
                 return false;
             }
+            else if (MyWorld.voidInvasionUp)
+            {
+                Main.NewText("You cannot intensify the void...", 182, 15, 15, false);
+                return false;
+            }
+            else if (MyWorld.voidInvasionWillStart)
+            {
+                Main.NewText("Your head is already filled with screams...", 182, 15, 15, false);
+                return false;
+            }
             return true;
         }
         public override bool UseItem(Player player)
         {
-            if (!MyWorld.voidInvasionUp && !Main.dayTime)
+            if (!Main.dayTime && !MyWorld.voidInvasionUp)
             {
                 Main.NewText("You feel a wave of cold rush over you...", 182, 15, 15, false);
                 VoidEvent.StartInvasion();
                 return true;
             }
-            if (Main.dayTime)
+            else if (!MyWorld.voidInvasionWillStart)
             {
                 Main.NewText("Your head throbs", 182, 15, 15, false);
-                MyWorld.willStartVoidInvasion = true;
+                MyWorld.voidInvasionWillStart = true;
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
+            return false;
         }
         public override void AddRecipes()
         {

@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class BlackholeOrbit : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public bool reset = false;
         public int distance = 75;
         public float speed = 5f;

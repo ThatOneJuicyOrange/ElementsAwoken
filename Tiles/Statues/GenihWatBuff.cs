@@ -55,7 +55,7 @@ namespace ElementsAwoken.Tiles.Statues
                 MyWorld.swearingEnemies = false;
             }
         }
-        public override void RightClick(int i, int j)
+        public override bool NewRightClick(int i, int j)
         {
             Main.PlaySound(SoundID.MenuTick);
             if (swearing)
@@ -67,6 +67,8 @@ namespace ElementsAwoken.Tiles.Statues
                 swearing = true;
                 Swear(i, j);
             }
+            return true;
+
         }
         private void Swear(int posX, int posY)
         {

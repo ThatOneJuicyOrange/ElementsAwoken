@@ -39,9 +39,9 @@ namespace ElementsAwoken.Tiles.VoidStone
 			Item.NewItem(i * 16, j * 16, 64, 32, mod.ItemType("VoidBed"));
 		}
 
-		public override void RightClick(int i, int j)
-		{
-			Player player = Main.LocalPlayer;
+        public override bool NewRightClick(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
 			Tile tile = Main.tile[i, j];
 			int spawnX = i - tile.frameX / 18;
 			int spawnY = j + 2;
@@ -60,10 +60,12 @@ namespace ElementsAwoken.Tiles.VoidStone
 			{
 				player.ChangeSpawn(spawnX, spawnY);
 				Main.NewText("Spawn point set!", 255, 240, 20, false);
-			}
-		}
+            }
+            return true;
 
-		public override void MouseOver(int i, int j)
+        }
+
+        public override void MouseOver(int i, int j)
 		{
 			Player player = Main.LocalPlayer;
 			player.noThrow = 2;

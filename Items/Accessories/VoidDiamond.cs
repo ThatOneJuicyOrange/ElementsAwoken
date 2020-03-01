@@ -30,34 +30,58 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Diamond");
-            Tooltip.SetDefault("Sucks life of enemies around you that have under 10000 life");
+            Tooltip.SetDefault("Sucks the life of enemies around you that have under 10000 life");
         }
 
-
+        public override bool CanEquipAccessory(Player player, int slot)
+        {
+            if (slot < 10)
+            {
+                int maxAccessoryIndex = 5 + player.extraAccessorySlots;
+                for (int i = 3; i < 3 + maxAccessoryIndex; i++)
+                {
+                    if (slot != i && player.armor[i].type == mod.ItemType("LifeDiamond") && player.armor[i].type == mod.ItemType("BloodDiamond"))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            drainLifeTimer--;
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             float maxDistance = 750f;
-            if (player.whoAmI == Main.myPlayer)
+            float targetDist = maxDistance;
+            NPC drainTarget = null;
+            if (player.statLife < player.statLifeMax2 && player.ownedProjectileCounts[mod.ProjectileType("HealProjVoid")] < 15)
             {
-                for (int l = 0; l < 200; l++)
+                for (int l = 0; l < Main.npc.Length; l++)
                 {
                     NPC nPC = Main.npc[l];
-                    if (nPC.active && !nPC.friendly && nPC.damage > 0 && !nPC.dontTakeDamage && Vector2.Distance(player.Center, nPC.Center) <= maxDistance && nPC.life <= 10000 && nPC.life > 30 && !nPC.SpawnedFromStatue)
+                    float distance = Vector2.Distance(nPC.Center, player.Center);
+                    if (distance < targetDist && nPC.CanBeChasedBy(this) && nPC.life <= 10000 && !nPC.SpawnedFromStatue)
                     {
-                        nPC.AddBuff(mod.BuffType("LifeDrain"), 5);
-                        nPC.GetGlobalNPC<NPCsGLOBAL>().lifeDrainAmount = 100;
-                        if (drainLifeTimer <= 0)
+                        targetDist = distance;
+                        drainTarget = nPC;
+                    }
+                }
+                if (drainTarget != null)
+                {
+                    drainLifeTimer--;
+                    if (drainLifeTimer <= 0)
+                    {
+                        drainTarget.GetGlobalNPC<NPCsGLOBAL>().lifeDrainAmount = 100;
+                        if (Main.myPlayer == player.whoAmI)
                         {
-                            float healAmount = Main.rand.Next(4, 6);
-                            Projectile.NewProjectile(nPC.Center.X, nPC.Center.Y, 0f, 0f, mod.ProjectileType("HealProjVoid"), 0, 0f, Main.myPlayer, Main.myPlayer, healAmount); // ai 1 is how much it heals
+                            float healAmount = Main.rand.Next(4, 7);
+                            Projectile.NewProjectile(drainTarget.Center.X, drainTarget.Center.Y, 0f, 0f, mod.ProjectileType("HealProjVoid"), 0, 0f, Main.myPlayer, Main.myPlayer, healAmount); // ai 1 is how much it heals
                             drainLifeTimer = 17;
                         }
                     }
                 }
             }
         }
+
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

@@ -11,7 +11,7 @@ namespace ElementsAwoken.Items.ItemSets.Puff
         public override void SetDefaults()
         {
             item.damage = 10;
-            item.magic = true;
+            item.melee = true;
             item.width = 58;
             item.height = 58;
             item.useTime = 20;

@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 namespace ElementsAwoken.Items.Donator.Lantard
 {
+    [AutoloadEquip(EquipType.Back)]
     public class StrangeUkulele : ModItem
     {
         public override void SetDefaults()
@@ -19,8 +20,6 @@ namespace ElementsAwoken.Items.Donator.Lantard
             item.value = Item.sellPrice(0, 0, 20, 0);
 
             item.accessory = true;
-
-            item.defense = 2;
 
             item.GetGlobalItem<EATooltip>().donator = true;
         }
@@ -35,10 +34,6 @@ namespace ElementsAwoken.Items.Donator.Lantard
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.strangeUkulele = true;
-
-            player.buffImmune[mod.BuffType("ChaosBurn")] = true;
-
-            player.armorPenetration += 10;
         }
         public override void AddRecipes()
         {

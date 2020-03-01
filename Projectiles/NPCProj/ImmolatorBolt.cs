@@ -13,23 +13,17 @@ namespace ElementsAwoken.Projectiles.NPCProj
 
         public override void SetDefaults()
         {
-            projectile.scale = 1.0f;
             projectile.width = 2;
             projectile.height = 2;
-            projectile.magic = true;
             projectile.penetrate = 1;
             projectile.hostile = true;
-            projectile.friendly = false;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
-            projectile.alpha = 0;
             projectile.timeLeft = 120;
             ProjectileID.Sets.TrailCacheLength[projectile.type] = 16;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Bolt");
+            DisplayName.SetDefault("Immolator Particle");
         }
         public override void AI()
         {
@@ -50,42 +44,6 @@ namespace ElementsAwoken.Projectiles.NPCProj
                 float speed = 4.5f;
                 double angle = Math.Atan2(Main.player[Main.myPlayer].position.Y - projectile.position.Y, Main.player[Main.myPlayer].position.X - projectile.position.X);
                 projectile.velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * speed;
-
-                // how to lag the shit out of terraria: use lots of homing projectiles with this code
-                /*float centerY = projectile.Center.X;
-                float centerX = projectile.Center.Y;
-                float num = 400f;
-                bool home = false;
-                for (int i = 0; i < 200; i++)
-                {
-                    if (Collision.CanHit(projectile.Center, 1, 1, Main.player[i].Center, 1, 1))
-                    {
-                        float num1 = Main.player[i].position.X + (float)(Main.player[i].width / 2);
-                        float num2 = Main.player[i].position.Y + (float)(Main.player[i].height / 2);
-                        float num3 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num1) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num2);
-                        if (num3 < num)
-                        {
-                            num = num3;
-                            centerY = num1;
-                            centerX = num2;
-                            home = true;
-                        }
-                    }
-                }
-                if (home)
-                {
-                    float speed = 6f;
-                    Vector2 vector35 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
-                    float num4 = centerY - vector35.X;
-                    float num5 = centerX - vector35.Y;
-                    float num6 = (float)Math.Sqrt((double)(num4 * num4 + num5 * num5));
-                    num6 = speed / num6;
-                    num4 *= num6;
-                    num5 *= num6;
-                    projectile.velocity.X = (projectile.velocity.X * 20f + num4) / 21f;
-                    projectile.velocity.Y = (projectile.velocity.Y * 20f + num5) / 21f;
-                    return;
-                }*/
             }
         }
 

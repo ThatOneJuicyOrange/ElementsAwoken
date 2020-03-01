@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Corroder Staff");
-            Tooltip.SetDefault("Summons a corroder to protect you\nCorroders only take 0.75 minion slots");
+            Tooltip.SetDefault("Summons a corroder to protect you\nEach corroders only takes 0.75 minion slots");
         }
         public override void AddRecipes()
         {

@@ -13,6 +13,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheGuardian
             aiType = ProjectileID.GreekFire1;
             projectile.scale = 1f;
             projectile.hostile = true;
+            projectile.timeLeft = 240;
         }
         public override void SetStaticDefaults()
         {

@@ -46,12 +46,11 @@ namespace ElementsAwoken.Tiles
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
-
-            player.showItemIconText = "Melee boosts: Damage: +" + (int)((player.meleeDamage * 100) - 100) + "%" + " Crit chance: +" + (player.meleeCrit - 4) + "%" +
-                 "\nMagic boosts: Damage: +" + (int)((player.magicDamage * 100) - 100) + "%" + " Crit chance: +" + (player.magicCrit - 4) + "%" +
-                 "\nRanged boosts: Damage: +" + (int)((player.rangedDamage * 100) - 100) + "%" + " Crit chance: +" + (player.rangedCrit - 4) + "%" +
-                 "\nThrown boosts: Damage: +" + (int)((player.thrownDamage * 100) - 100) + "%" + " Crit chance: +" + (player.thrownCrit - 4) + "%" +
-                 "\nSummoner boosts: Damage: +" + (int)((player.minionDamage * 100) - 100) + "%" +
+            player.showItemIconText = "Melee boosts: Damage: +" + (int)((player.meleeDamage * 100 * player.allDamage) - 100) + "%" + " Crit chance: +" + (player.meleeCrit - 4) + "%" +
+                 "\nMagic boosts: Damage: +" + (int)((player.magicDamage * 100 * player.allDamage) - 100) + "%" + " Crit chance: +" + (player.magicCrit - 4) + "%" +
+                 "\nRanged boosts: Damage: +" + (int)((player.rangedDamage * 100 * player.allDamage) - 100) + "%" + " Crit chance: +" + (player.rangedCrit - 4) + "%" +
+                 "\nThrown boosts: Damage: +" + (int)((player.thrownDamage * 100 * player.allDamage) - 100) + "%" + " Crit chance: +" + (player.thrownCrit - 4) + "%" +
+                 "\nSummoner boosts: Damage: +" + (int)((player.minionDamage * 100 * player.allDamage) - 100) + "%" +
                  "\nMax amount of: Minions: +" + (player.maxMinions - 1) + " Sentries: +" + (player.maxTurrets - 1) +
                  "\nSwing speed: +" + (int)(100 - (player.meleeSpeed * 100)) + "%" + 
                  "\nMovement speed: +" + (int)((player.moveSpeed * 100) - 100) + "%" +

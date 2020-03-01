@@ -23,7 +23,7 @@ namespace ElementsAwoken.Items.Ancient
             DisplayName.SetDefault("Mystic Gemstone");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(7, 53));
         }
-       /* public override void AddRecipes()
+        public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "LamentI", 1);
@@ -92,6 +92,6 @@ namespace ElementsAwoken.Items.Ancient
             recipe.AddIngredient(null, "DisarrayIV", 1);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }*/
+        }
     }
 }

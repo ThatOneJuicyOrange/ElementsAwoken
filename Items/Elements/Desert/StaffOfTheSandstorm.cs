@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Staff of the Sandstorm");
-            Tooltip.SetDefault("Summons a miniature sand storm to fight for you");
+            Tooltip.SetDefault("Summons a mini sandstorm to fight for you");
         }
 
         public override void AddRecipes()

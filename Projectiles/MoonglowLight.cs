@@ -9,8 +9,8 @@ namespace ElementsAwoken.Projectiles
 {
 	public class MoonglowLight : ModProjectile
 	{
-		
-		public override void SetDefaults()
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+        public override void SetDefaults()
 		{
 			projectile.width = 30;
 			projectile.height = 30;

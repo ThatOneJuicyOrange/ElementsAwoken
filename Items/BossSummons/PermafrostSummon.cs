@@ -39,14 +39,15 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Permafrost"));
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Permafrost"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Permafrost"), 0f, 0f, 0, 0, 0);
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FrostEssence", 10);
+            recipe.AddIngredient(null, "FrostEssence", 5);
             recipe.AddIngredient(ItemID.IceBlock, 5);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 5);
             recipe.AddTile(TileID.MythrilAnvil);

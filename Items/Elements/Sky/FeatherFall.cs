@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Feather Fall");
-            Tooltip.SetDefault("Turns normal arrows into a feather that causes more feathers to rain from above");
+            Tooltip.SetDefault("Turns normal arrows into feathers that rain down more feathers on enemy hits");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

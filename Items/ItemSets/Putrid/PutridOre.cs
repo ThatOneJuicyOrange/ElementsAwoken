@@ -29,12 +29,12 @@ namespace ElementsAwoken.Items.ItemSets.Putrid
             if (item.lavaWet)
             {
                 Item conPyroplasm = null;
-                for (int k = 0; k < Main.item.Length; k++)
+                for (int k = 0; k < Main.maxItems; k++)
                 {
                     Item other = Main.item[k];
                     if (Vector2.Distance(item.Center, other.Center) <= 50 && other.active)
                     {
-                        if (other.type == mod.ItemType("ConcerntratedPyroplasm"))
+                        if (other.type == mod.ItemType("ConcentratedPyroplasm"))
                         {
                             conPyroplasm = other;
                         }

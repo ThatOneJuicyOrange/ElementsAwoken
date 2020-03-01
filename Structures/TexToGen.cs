@@ -14,6 +14,7 @@ namespace ElementsAwoken.Structures
         //load the texture then the list of colours to tiles
         public static TexGen GetTexGenerator(Texture2D tileTex, Dictionary<Color, int> colorToTile, Texture2D wallTex = null, Dictionary<Color, int> colorToWall = null, Texture2D liquidTex = null)
         {
+
             if (colorToLiquid == null)
             {
                 colorToLiquid = new Dictionary<Color, int>();
@@ -68,6 +69,7 @@ namespace ElementsAwoken.Structures
         //where x, y is the top-left hand corner of the gen
         public void Generate(int x, int y, bool silent, bool sync)
         {
+
             for (int x1 = 0; x1 < width; x1++)
             {
                 for (int y1 = 0; y1 < height; y1++)
@@ -85,7 +87,7 @@ namespace ElementsAwoken.Structures
         {
             WorldGen.KillTile(x, y);
             Main.tile[x, y].liquid = 0;
-            WorldGen.PlaceTile(x, y, tileType, true, true, -1, style);
+            WorldGen.PlaceTile(x, y, tileType, true, true);
         }
         private void ReplaceWall(int x, int y, int wallType)
         {

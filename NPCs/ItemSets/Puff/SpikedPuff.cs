@@ -16,15 +16,20 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
         {
             npc.width = 30;
             npc.height = 50;
+
             npc.damage = 24;
             npc.defense = 6;
             npc.lifeMax = 32;
+            npc.knockBackResist = 0.5f;
+
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
+
             npc.value = Item.buyPrice(0, 0, 1, 0);
-            npc.knockBackResist = 0.5f;
+
             npc.aiStyle = 1;
             aiType = 1;
+
             animationType = NPCID.BlueSlime;
             banner = npc.type;
             bannerItem = mod.ItemType("SpikedPuffBanner");
@@ -54,11 +59,12 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
-            !Main.snowMoon && !Main.pumpkinMoon && NPC.downedBoss1 && Main.dayTime && !Main.hardMode ? 0.04f : 0f;
+            !spawnInfo.invasion &&
+            !Main.snowMoon && Main.expertMode &&!Main.pumpkinMoon && NPC.downedBoss1 && Main.dayTime && !Main.hardMode ? 0.04f : 0f;
         }
-        public override void NPCLoot()  //Npc drop
+        public override void NPCLoot()
         {
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Puffball"), Main.rand.Next(2, 4)); //Item spawn
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Puffball"), Main.rand.Next(2, 4));
         }
 
         public override void AI()
@@ -79,7 +85,8 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                     }
                     if (Main.netMode != NetmodeID.MultiplayerClient && spikeTimer <= 0f)
                     {
-                        for (int i = 0; i < 5; i++)
+                        int num = MyWorld.awakenedMode ? 5 : 3;
+                        for (int i = 0; i < num; i++)
                         {
                             Vector2 vector2 = new Vector2((float)(i - 2), -4f);
                             vector2.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
@@ -88,7 +95,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                             vector2 *= 4f + (float)Main.rand.Next(-50, 51) * 0.01f;
                             int damage = 7;
                             Projectile.NewProjectile(vector.X, vector.Y, vector2.X, vector2.Y, mod.ProjectileType("PuffSpike"), damage, 0f, Main.myPlayer, 0f, 0f);
-                            spikeTimer = 30f;
+                            spikeTimer = 70f;
                         }
                     }
                 }
@@ -106,7 +113,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                         num10 = 4.5f / num10;
                         num8 *= num10;
                         num9 *= num10;
-                        spikeTimer = 50f;
+                        spikeTimer = 90f;
                         int damage = 5;
                         Projectile.NewProjectile(vector.X, vector.Y, num8, num9, mod.ProjectileType("PuffSpike"), damage, 0f, Main.myPlayer, 0f, 0f);
                     }

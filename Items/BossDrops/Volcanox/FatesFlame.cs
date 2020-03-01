@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.BossDrops.Volcanox
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fates Flame");
+            DisplayName.SetDefault("Fate's Flame");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

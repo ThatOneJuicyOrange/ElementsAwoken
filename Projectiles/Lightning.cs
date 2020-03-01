@@ -9,21 +9,35 @@ namespace ElementsAwoken.Projectiles
 {
     public class Lightning : ModProjectile
     {
-
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+        public Vector2 velocity = new Vector2();
         public override void SetDefaults()
         {
             projectile.width = 4;
             projectile.height = 4;
-            //projectile.aiStyle = 48;
+
             projectile.friendly = true;
-            projectile.magic = true;
-            projectile.penetrate = 1;
+            projectile.tileCollide = true;
+
+            projectile.penetrate = 2;
             projectile.extraUpdates = 100;
-            projectile.timeLeft = 320;
+            projectile.timeLeft = 200;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Lightning");
+            DisplayName.SetDefault("Lightning Tome");
+        }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            if (Main.rand.Next(2) == 0)
+            {
+                projectile.ai[0]++;
+                projectile.ai[1] = target.whoAmI;
+            }
+            else
+            {
+                projectile.Kill();
+            }
         }
         public override void AI()
         {
@@ -37,20 +51,45 @@ namespace ElementsAwoken.Projectiles
                 projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
                 projectile.velocity.Y = -projectile.velocity.Y;
             }
-                for (int num447 = 0; num447 < 4; num447++)
+
+            int dustLength = ModContent.GetInstance<Config>().lowDust ? 1 : 3;
+            for (int i = 0; i < dustLength; i++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 226)];
+                dust.velocity = Vector2.Zero;
+                dust.position -= projectile.velocity / dustLength * (float)i;
+                dust.noGravity = true;
+                dust.color = new Color(154, 255, 145);
+            }
+            if (velocity == Vector2.Zero) velocity = projectile.velocity;
+            projectile.velocity = velocity.RotatedByRandom(.75);
+
+            if (projectile.ai[0] != 0)
+            {
+                float closestEntity = 200f;
+                NPC target = null;
+                for (int i = 0; i < 200; i++)
                 {
-                    if (Main.rand.Next(2) == 0)
+                    NPC nPC = Main.npc[i];
+                    if (nPC.CanBeChasedBy(projectile, false) && Collision.CanHit(projectile.Center, 1, 1, nPC.Center, 1, 1))
                     {
-                        Vector2 vector33 = projectile.position;
-                        vector33 -= projectile.velocity * ((float)num447 * 0.25f);
-                        projectile.alpha = 255;
-                        int num448 = Dust.NewDust(vector33, 1, 1, 61, 0f, 0f, 0, default(Color), 0.75f);
-                        Main.dust[num448].position = vector33;
-                        Main.dust[num448].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-                        Main.dust[num448].velocity *= 0.05f;
+                        float dist = Math.Abs(projectile.Center.X - nPC.Center.X) + Math.Abs(projectile.Center.Y - nPC.Center.Y);
+                        if (dist < closestEntity && nPC.whoAmI != projectile.ai[1])
+                        {
+                            closestEntity = dist;
+                            target = nPC;
+                        }
                     }
                 }
-                return;
+                if (target != null)
+                {
+                    Vector2 toTarget = target.Center - projectile.Center;
+                    toTarget.Normalize();
+                    toTarget *= 5;
+                    velocity = toTarget;
+                }
+            }
+
         }
     }
 }

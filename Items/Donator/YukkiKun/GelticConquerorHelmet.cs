@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
         }
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Increases jump height\nYou bounce when you land\nNegates 75% of fall damage";
+            player.setBonus = "Increases jump height\nNegates 75% of fall damage\nYou bounce when you land\nPress down to stop bouncing- this will also not negate fall damage";
             Point playerTopLeft = (player.TopLeft / 16).ToPoint();
             Point playerBottomRight = (player.BottomRight / 16).ToPoint();
             bool touchingCobweb = false;
@@ -53,7 +53,7 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
                     }
                 }
             }
-            if (!touchingCobweb)
+            if (!touchingCobweb && !player.controlDown && !player.mount.Active)
             {
                 if (player.velocity.Y <= player.gravity && player.oldVelocity.Y != 0 && player.oldVelocity.Y > 5) // > 5 so he doesnt bounce when jumping, only when falling
                 {

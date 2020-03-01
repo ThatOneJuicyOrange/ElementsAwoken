@@ -30,9 +30,9 @@ namespace ElementsAwoken.Tiles.VoidStone
 			adjTiles = new int[] { TileID.GrandfatherClocks };
 		}
 
-		public override void RightClick(int x, int y)
-		{
-			{
+        public override bool NewRightClick(int i, int j)
+        {
+            {
 				string text = "AM";
 				//Get current weird time
 				double time = Main.time;
@@ -79,10 +79,12 @@ namespace ElementsAwoken.Tiles.VoidStone
 				//Whack it all together to get a HH:MM format
 				var newText = string.Concat("Time: ", intTime, ":", text2, " ", text);
 				Main.NewText(newText, 255, 240, 20);
-			}
-		}
+            }
+            return true;
 
-		public override void NearbyEffects(int i, int j, bool closer)
+        }
+
+        public override void NearbyEffects(int i, int j, bool closer)
 		{
 			if (closer)
 			{

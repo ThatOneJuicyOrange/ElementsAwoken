@@ -12,23 +12,28 @@ namespace ElementsAwoken.Items.Weapons.Magic
     {
         public override void SetDefaults()
         {
-            item.damage = 140;
-            item.magic = true;
-            item.mana = 10;
             item.width = 54;
             item.height = 54;
-            item.useTime = 6;
-            item.useAnimation = 6;
+
+            item.damage = 125;
+            item.mana = 10;
+            item.knockBack = 4;
+
+            item.useTime = 9;
+            item.useAnimation = 9;
             item.useStyle = 5;
+
             Item.staff[item.type] = true;
             item.noMelee = true;
-            item.knockBack = 4;
-            item.value = Item.buyPrice(0, 25, 0, 0);
-            item.UseSound = SoundID.Item88;
             item.autoReuse = true;
+            item.magic = true;
+
+            item.value = Item.sellPrice(0, 7, 50, 0);
+            item.rare = 11;
+
+            item.UseSound = SoundID.Item88;
             item.shoot = mod.ProjectileType("DeimosAsteroid");
             item.shootSpeed = 18f;
-            item.rare = 10;
         }
 
         public override void SetStaticDefaults()

@@ -1,4 +1,8 @@
-﻿using Terraria;
+﻿using ElementsAwoken.Buffs.PetBuffs;
+using ElementsAwoken.Projectiles;
+using ElementsAwoken.Projectiles.Pets.Wyvern;
+using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -21,8 +25,8 @@ namespace ElementsAwoken.Items.Donator.Chamcham
 
             item.noMelee = true;
 
-            item.shoot = mod.ProjectileType("WyvernHead");
-            item.buffType = mod.BuffType("WyvernPetBuff");
+            item.shoot = ModContent.ProjectileType<AnarchyWave>(); // shoot isnt run if its a pet projectile
+            item.buffType = ModContent.BuffType<WyvernPetBuff>();
 
             item.GetGlobalItem<EATooltip>().donator = true;
         }
@@ -39,6 +43,25 @@ namespace ElementsAwoken.Items.Donator.Chamcham
             {
                 player.AddBuff(item.buffType, 3600, true);
             }
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<WyvernHead>()] <= 0)
+            {
+                int current = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<WyvernHead>(), 0, 0f, Main.myPlayer);
+
+                int previous = current;
+                for (int k = 0; k < 5; k++)
+                {
+                    previous = current;
+                    current = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<WyvernBody>(), 0, 0f, Main.myPlayer, previous);
+                }
+                previous = current;
+                current = Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ModContent.ProjectileType<WyvernTail>(), 0, 0f, Main.myPlayer, previous);
+                Main.projectile[previous].localAI[1] = (float)current;
+                Main.projectile[previous].netUpdate = true;
+            }
+            return false;
         }
         public override void AddRecipes()
         {

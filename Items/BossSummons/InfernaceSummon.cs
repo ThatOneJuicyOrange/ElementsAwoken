@@ -40,15 +40,16 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            Main.NewText("You dare challenge me?!", Color.Orange.R, Color.Orange.G, Color.Orange.B);
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Infernace"));
+            Main.NewText("You arrive, at last.", Color.Orange.R, Color.Orange.G, Color.Orange.B);
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Infernace"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Infernace"), 0f, 0f, 0, 0, 0); 
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FireEssence", 10);
+            recipe.AddIngredient(null, "FireEssence", 5);
             recipe.AddIngredient(ItemID.HellstoneBar, 5);
             recipe.AddIngredient(ItemID.Obsidian, 8);
             recipe.AddTile(TileID.Anvils);

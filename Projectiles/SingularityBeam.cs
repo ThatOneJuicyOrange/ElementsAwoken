@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class SingularityBeam : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public float shrink = 150;
         public override void SetDefaults()
         {

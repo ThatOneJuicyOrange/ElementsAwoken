@@ -50,7 +50,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier5
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Size Manipulator");
-            Tooltip.SetDefault("Left click to grow enemies\nRight click to shrink enemies\nOnly works on minor enemies");
+            Tooltip.SetDefault("Left click to grow enemies\nRight Click to shrink enemies\nOnly works on minor enemies");
         }
         public override void AddRecipes()
         {

@@ -8,8 +8,8 @@ namespace ElementsAwoken.Buffs.MinionBuffs
     {
         public override void SetDefaults()
         {
-            DisplayName.SetDefault("Fire Elemental");
-            Description.SetDefault("It serves you willingly");
+            DisplayName.SetDefault("Fire Spirit");
+            Description.SetDefault("It will keep you warm on the cold nights");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
 

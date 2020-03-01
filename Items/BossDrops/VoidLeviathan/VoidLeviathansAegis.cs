@@ -29,7 +29,12 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            string baseTooltip = "Life increased by 50\nWhen under half health defense is increased by 5%\nAllows the player to perform a secondary dash using the " + ElementsAwoken.dash2.GetAssignedKeys()[0] + " key\nFor 15 seconds after taking 500 total damage:\nMovement speed increased by 40%\nDamage increased by 20%";
+            string hotkey;
+            var list = ElementsAwoken.dash2.GetAssignedKeys();
+            if (list.Count > 0) hotkey = list[0];
+            else hotkey = "<Dash Unbound>";
+
+            string baseTooltip = "Life increased by 50\nWhen under half health, defense is increased by 5%\nAllows the player to perform a secondary dash using the " + hotkey + " key\nFor 15 seconds after taking 500 total damage:\n40% increased movement speed\n20% increased damage";
             foreach (TooltipLine line2 in tooltips)
             {
                 if (line2.mod == "Terraria" && line2.Name.StartsWith("Tooltip"))
@@ -38,6 +43,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
                 }
             }
         }
+    
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();

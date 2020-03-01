@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossDrops.Regaroth
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Stone of Hope");
-            Tooltip.SetDefault("The relic of Regaroth\nThe lower your health the higher defense and damage");
+            Tooltip.SetDefault("The relic of Regaroth\nThe lower your health the higher your defense and damage");
         }
 
 

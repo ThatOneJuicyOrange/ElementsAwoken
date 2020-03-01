@@ -46,12 +46,10 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             npc.DeathSound = SoundID.NPCDeath6;
 
             npc.scale *= 1.3f;
-            npc.value = Item.buyPrice(1, 0, 0, 0);
             npc.npcSlots = 1f;
 
             music = MusicID.LunarBoss;
 
-            bossBag = mod.ItemType("AncientsBag");
         }
         public override void SetStaticDefaults()
         {
@@ -75,7 +73,6 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                 npc.frame.Y = 0;
             }
         }
-
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
             return false;
@@ -88,47 +85,9 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
         {
             return false;
         }
-        public override void NPCLoot()
+        public override bool PreNPCLoot()
         {
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("DeathShockwave"), 0, 0f);
-            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("CreditsStarter"), 0, 0f);
-            MyWorld.downedAncients = true;
-            if (Main.rand.Next(10) == 0)
-            {
-                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsTrophy"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsMask"));
-            }
-
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            else
-            {
-                int choice = Main.rand.Next(3);
-                if (choice == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Chromacast"));
-                }
-                if (choice == 1)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Shimmerspark"));
-                }
-                if (choice == 2)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TheFundamentals"));
-                }
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystalAmalgamate"),1);
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientShard"), Main.rand.Next(5, 8));
-            }
-        }
-
-        public override void BossLoot(ref string name, ref int potionType)
-        {
-            potionType = mod.ItemType("EpicHealingPotion");
+            return false;
         }
 
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
@@ -147,20 +106,24 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
             float intensity = MathHelper.Lerp(0f, 1f, npc.ai[0] / 450f);
             MoonlordDeathDrama.RequestLight(intensity, npc.Center);
-            if (npc.localAI[0] == 0)
+            if (npc.ai[1] == 0)
             {
                 for (int i = 0; i < 15; i++)
                 {
                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("Lightbeam"), 0, 0f, 0, i);
                 }
-                npc.localAI[0]++;
+                npc.ai[1]++;
             }
             if (npc.ai[0] > 450)
             {
                 npc.immortal = false;
                 npc.dontTakeDamage = false;
                 npc.StrikeNPCNoInteraction(npc.life, 0f, 0, false, false, false);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("DeathShockwave"), 0, 0f);
+                if (Main.netMode == 0 && !MyWorld.downedAncients) Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("CreditsStarter"), 0, 0f);
+                MyWorld.downedAncients = true;
             }
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
     }
 }

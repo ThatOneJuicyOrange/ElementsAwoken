@@ -63,7 +63,7 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Desolation II");
-            Tooltip.SetDefault("Turns normal arrows into shattering crystalline arrows\nRight click to shoot a disc that bounces between enemies\nCooldown is shown on the item");
+            Tooltip.SetDefault("Turns normal arrows into shattering crystalline arrows\nRight Click to shoot a disc that bounces between enemies\nCooldown is shown on the item\n25% chance not to consume ammo");
         }
         public override bool AltFunctionUse(Player player)
         {
@@ -76,6 +76,10 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
         public override void UpdateInventory(Player player)
         {
             discCooldown--;
+        }
+        public override bool ConsumeAmmo(Player player)
+        {
+            return Main.rand.NextFloat() > .75f;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

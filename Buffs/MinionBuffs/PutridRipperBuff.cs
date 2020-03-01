@@ -9,7 +9,7 @@ namespace ElementsAwoken.Buffs.MinionBuffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Putrid Ripper");
-            Description.SetDefault("Claws like knives. Spit like acid");
+            Description.SetDefault("Claws like knives, spit like acid");
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = true;
 

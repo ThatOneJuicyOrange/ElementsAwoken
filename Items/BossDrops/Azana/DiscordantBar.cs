@@ -22,11 +22,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Discordant Bar");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 6));
-        }
-        public override Color? GetAlpha(Color lightColor)
-        {
-            return Color.White;
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(12, 4));
         }
         public override void AddRecipes()
         {

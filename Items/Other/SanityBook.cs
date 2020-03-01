@@ -19,7 +19,7 @@ namespace ElementsAwoken.Items.Other
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Book of Shadows");
-            Tooltip.SetDefault("Your mind throbs\nShows all the players sanity regeneration\nRight click in the inventory to open and close");
+            Tooltip.SetDefault("Your mind throbs\nShows all the players sanity regeneration\nRight Click in the inventory to open and close");
         }
         public override bool CanRightClick()
         {

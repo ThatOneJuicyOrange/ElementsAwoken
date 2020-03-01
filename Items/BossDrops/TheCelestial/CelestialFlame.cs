@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.BossDrops.TheCelestial
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Astra's Flare");
-            Tooltip.SetDefault("10% increased critical strike chance\nShoot lasers at nearby enemies");
+            Tooltip.SetDefault("10% increased critical strike chance\nShoots lasers at nearby enemies");
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {

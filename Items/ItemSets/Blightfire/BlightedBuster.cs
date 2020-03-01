@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blighted Buster");
-            Tooltip.SetDefault("Turns normal bullets into a tight cluster of blighted bullets\nRight click to shoot a wider spread");
+            Tooltip.SetDefault("Turns normal bullets into a tight cluster of blighted bullets\nRight Click to shoot a wider spread");
         }
         public override bool AltFunctionUse(Player player)
         {
@@ -73,6 +73,16 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
                 player.velocity -= toTarget * 3f;
             }
             return false;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(null, "Blightfire", 10);
+            recipe.AddIngredient(ItemID.LunarBar, 2);
+            recipe.AddIngredient(ItemID.ChlorophyteBar, 3);
+            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

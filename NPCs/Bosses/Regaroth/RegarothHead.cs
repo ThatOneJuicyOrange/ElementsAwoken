@@ -128,6 +128,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
             }
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("SkyEssence"), Main.rand.Next(5, 25));
             MyWorld.downedRegaroth = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void BossLoot(ref string name, ref int potionType)
         {

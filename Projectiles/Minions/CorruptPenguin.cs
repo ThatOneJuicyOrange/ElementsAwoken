@@ -31,6 +31,7 @@ namespace ElementsAwoken.Projectiles.Minions
              projectile.timeLeft *= 5;
              aiType = 266;*/
 
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
             projectile.netImportant = true;
             projectile.minion = true;

@@ -23,7 +23,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Meat Shield");
-            Tooltip.SetDefault("What?\n4 defense\nEnemies more likely to target the player");
+            Tooltip.SetDefault("What?\n4 defense\nEnemies are more likely to target the player");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

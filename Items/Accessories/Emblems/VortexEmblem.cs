@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
             item.width = 26;
             item.height = 22;
             item.rare = 10;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.accessory = true;
         }
 
@@ -54,7 +54,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.FragmentVortex, 8);
             recipe.AddIngredient(ItemID.RangerEmblem, 1);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

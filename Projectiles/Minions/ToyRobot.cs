@@ -20,6 +20,7 @@ namespace ElementsAwoken.Projectiles.Minions
 
             projectile.netImportant = true;
             projectile.minion = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
             projectile.timeLeft *= 5;
             projectile.minionSlots = 1f;
@@ -52,7 +53,11 @@ namespace ElementsAwoken.Projectiles.Minions
             {
                 projectile.timeLeft = 2;
             }
-
+            projectile.localAI[0] = 0; // responsible for pooping
+            // platform collision
+            Vector2 platform = projectile.Bottom / 16;
+            Tile platformTile = Framing.GetTileSafely((int)platform.X, (int)platform.Y);
+            if (TileID.Sets.Platforms[platformTile.type] && player.Center.Y < projectile.Center.Y && platformTile.active() && projectile.ai[0] != 1) projectile.velocity.Y = 0;
         }
     }
 }

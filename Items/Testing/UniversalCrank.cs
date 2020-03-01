@@ -23,7 +23,7 @@ namespace ElementsAwoken.Items.Testing
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Universal Crank");
-            Tooltip.SetDefault("Right click in inventory to generate 25 energy\nTESTING ITEM");
+            Tooltip.SetDefault("Right Click in inventory to generate 1000 energy\nTESTING ITEM");
         }
 
         public override bool CanRightClick()
@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Testing
         {
             PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
             Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/HandCrank"), 1, 0);
-            modPlayer.energy += 25;
+            modPlayer.energy += 1000;
             item.stack++;
         }
     }

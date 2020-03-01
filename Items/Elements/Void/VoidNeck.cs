@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Elements.Void
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Idol of Darkness");
-            Tooltip.SetDefault("Life regen increased by 4\nDamage increased by 25%");
+            Tooltip.SetDefault("25% increased damage\nLife regen increased by 4");
         }
 
 

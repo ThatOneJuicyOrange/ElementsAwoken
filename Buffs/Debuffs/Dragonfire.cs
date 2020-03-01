@@ -25,6 +25,7 @@ namespace ElementsAwoken.Buffs.Debuffs
             Main.dust[num1].scale = (float)Main.rand.Next(70, 110) * 0.02f;
             Main.dust[num1].velocity *= 3f;
             Main.dust[num1].noGravity = true;
+            if (npc.wet) npc.buffTime[buffIndex] = 0;
         }
         public override void Update(Player player, ref int buffIndex)
         {
@@ -33,6 +34,7 @@ namespace ElementsAwoken.Buffs.Debuffs
             Main.dust[num1].scale = (float)Main.rand.Next(70, 110) * 0.02f;
             Main.dust[num1].velocity *= 3f;
             Main.dust[num1].noGravity = true;
+            if (player.wet) player.buffTime[buffIndex] = 0;
         }
     }
 }

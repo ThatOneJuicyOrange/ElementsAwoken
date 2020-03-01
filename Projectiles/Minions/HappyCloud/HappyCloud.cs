@@ -25,6 +25,7 @@ namespace ElementsAwoken.Projectiles.Minions.HappyCloud
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
             ProjectileID.Sets.Homing[projectile.type] = true;
             inertia = 30f;
             shoot = mod.ProjectileType("CloudBolt");

@@ -21,6 +21,7 @@ namespace ElementsAwoken.Projectiles.Minions
             projectile.ignoreWater = true;
             projectile.timeLeft = 18000;
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
             projectile.penetrate = -1;
             projectile.timeLeft *= 5;

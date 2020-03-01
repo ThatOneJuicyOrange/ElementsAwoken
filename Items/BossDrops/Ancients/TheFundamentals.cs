@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Fundamentals");
-            Tooltip.SetDefault("Hold the weapon without damage for 10 seconds to deal a strike that does 8x damage");
+            Tooltip.SetDefault("Hold the weapon in your hand without dealing damage for 10 seconds for your next strike to do 8x damage");
         }
         public override void HoldStyle(Player player)
         {

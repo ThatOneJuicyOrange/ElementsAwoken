@@ -33,11 +33,25 @@ namespace ElementsAwoken.NPCs
         {
             if (MyWorld.awakenedMode)
             {
-                if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC)
+                if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC && npc.realLife == -1)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
-                        elite = Main.rand.Next(1, 5);
+                        elite = Main.rand.Next(1, 6);
+                    }
+                    if (elite == 3)
+                    {
+                        if (!NPC.downedBoss1)
+                        {
+                            while (elite == 3)
+                            {
+                                elite = Main.rand.Next(1, 6);
+                            }
+                        }
+                        else if (!Main.hardMode)
+                        {
+                            if (Main.rand.NextBool(3)) elite = Main.rand.Next(1, 6);
+                        }
                     }
                 }
 
@@ -50,10 +64,6 @@ namespace ElementsAwoken.NPCs
             if (npc.GivenName == "") basename = npc.TypeName;
             else basename = npc.GivenName;
 
-            if (npc.realLife != -1)
-            {
-                elite = 0; // so worms cant
-            }
 
             if (elite > 0 && !hasAssignedElite)
             {
@@ -64,7 +74,6 @@ namespace ElementsAwoken.NPCs
                         break;
                     case 2:
                         npc.GivenName = "Frozen " + basename;
-                        npc.color = new Color(175, 247, 240);
                         break;
                     case 3:
                         npc.GivenName = "Electrifying " + basename;
@@ -77,7 +86,9 @@ namespace ElementsAwoken.NPCs
                         break;
                     default: break;
                 }
+
                 hasAssignedElite = true;
+                npc.netUpdate = true;
             }
         }
         public override void AI(NPC npc)
@@ -171,7 +182,12 @@ namespace ElementsAwoken.NPCs
                 }
             }
         }
-        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (elite == 2) drawColor = new Color(175, 247, 240);
+            if (elite == 5) drawColor = new Color(44, 199, 44);
+        }
+        public override bool PreDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
         {
             if (elite == 4 && npc.life > npc.lifeMax / 2)
             {
@@ -183,8 +199,13 @@ namespace ElementsAwoken.NPCs
                 spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(0, -4), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
                 spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(4, 0), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
                 spriteBatch.Draw(Main.npcTexture[npc.type], drawPos + new Vector2(-4, 0), npc.frame, color, npc.rotation, drawOrigin, npc.scale, effects, 0f);
-                spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, npc.GetAlpha(drawColor), npc.rotation, drawOrigin, npc.scale, effects, 0f);
+                //spriteBatch.Draw(Main.npcTexture[npc.type], drawPos, npc.frame, npc.GetAlpha(drawColor), npc.rotation, drawOrigin, npc.scale, effects, 0f);
             }
+            return base.PreDraw(npc, spriteBatch, drawColor);
+        }
+        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+        {
+
         }
         public override void ScaleExpertStats(NPC npc, int numPlayers, float bossLifeScale)
         {
@@ -219,6 +240,7 @@ namespace ElementsAwoken.NPCs
         {
             if (npc.type == NPCID.TheDestroyer) return true;
             else if (npc.type == NPCID.TheDestroyerBody) return true;
+            else if (npc.type == NPCID.SkeletronHand) return true;
             else if (npc.type == NPCID.TheDestroyerTail) return true;
             else if (npc.type == NPCID.EaterofWorldsHead) return true;
             else if (npc.type == NPCID.EaterofWorldsBody) return true;
@@ -418,11 +440,12 @@ namespace ElementsAwoken.NPCs
         {
             if (MyWorld.awakenedMode)
             {
-                if (!ElementsAwoken.calamityEnabled)
-                {
-                    spawnRate = (int)(spawnRate / 2f);
-                    maxSpawns = (int)(maxSpawns * 2f);
-                }
+                float spawnMult = 1.3f;
+                if (NPC.downedBoss1 || WorldGen.shadowOrbSmashed || MyWorld.downedToySlime) spawnMult = 1.5f;
+                if (NPC.downedBoss3) spawnMult = 2;
+                spawnRate = (int)(spawnRate / spawnMult);
+                maxSpawns = (int)(maxSpawns * spawnMult);
+
             }
         }
     }

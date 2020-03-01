@@ -122,6 +122,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 }
             }
             MyWorld.downedAncientWyrm = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
@@ -178,7 +179,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                 if (Main.rand.Next(7) == 0)
                 {
                     int damage = Main.expertMode ? 35 : 50; // reduce damage in expert mode because it doubles anyway
-                    Projectile.NewProjectile(vector8.X + npc.velocity.X, vector8.Y + npc.velocity.Y, npc.velocity.X * 0.8f + Main.rand.NextFloat(-0.7f, 0.7f) * 3, npc.velocity.Y * 0.8f + Main.rand.NextFloat(-0.7f, 0.7f) * 3, mod.ProjectileType("WyrmBreath"), damage, 0f, 0);
+                    Projectile.NewProjectile(vector8.X + npc.velocity.X, vector8.Y + npc.velocity.Y, npc.velocity.X * 0.8f + Main.rand.NextFloat(-0.7f, 0.7f) * 3, npc.velocity.Y * 0.8f + Main.rand.NextFloat(-0.7f, 0.7f) * 3, mod.ProjectileType("WyrmBreath"), damage, 0f, Main.myPlayer);
                     if (Main.rand.Next(2) == 0)
                     {
                         Main.PlaySound(SoundID.DD2_BetsyFlameBreath, npc.position);

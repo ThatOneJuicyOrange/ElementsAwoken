@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Kinetic Energy Converter");
+            DisplayName.SetDefault("Kinetic Energy Converter Generator");
             Tooltip.SetDefault("Projectiles that hit the player are converted into energy\nThe more damage and speed the projectile has, the more energy is transformed");
         }
 

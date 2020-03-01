@@ -34,11 +34,11 @@ namespace ElementsAwoken.Items.Weapons.Magic
             item.shootSpeed = 13f;
         }
 
-    public override void SetStaticDefaults()
-    {
-      DisplayName.SetDefault("Cursed Scepter");
-      Tooltip.SetDefault("Fires an exploding cursed flame ball");
-    }
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Cursed Scepter");
+            Tooltip.SetDefault("Fires a cursed flame ball that explodes into sparks upon contact");
+        }
 
 
         public override void AddRecipes()

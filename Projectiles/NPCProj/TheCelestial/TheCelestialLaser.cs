@@ -41,6 +41,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheCelestial
             }
             else
             {
+                float numDusts = 2;
                 for (int i = 0; i < 5; i++)
                 {
                     int dustType = 6;
@@ -62,7 +63,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.TheCelestial
                     }
                     Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, dustType)];
                     dust.velocity = Vector2.Zero;
-                    dust.position -= projectile.velocity / 6f * (float)i;
+                    dust.position -= projectile.velocity / numDusts * (float)i;
                     dust.noGravity = true;
                     dust.scale = 1f;
                 }

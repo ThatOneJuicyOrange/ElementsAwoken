@@ -1,9 +1,0 @@
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\ElementsAwoken.csprojResolveAssemblyReference.cache
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\ElementsAwoken.dll
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\ElementsAwoken.pdb
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\Microsoft.Xna.Framework.Xact.dll
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\ReLogic.dll
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\Terraria.exe
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\Windows.dll
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\ElementsAwoken.dll
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\ElementsAwoken.pdb

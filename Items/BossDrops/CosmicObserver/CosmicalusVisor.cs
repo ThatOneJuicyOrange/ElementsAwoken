@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.BossDrops.CosmicObserver
 
         public override void UpdateArmorSet(Player player)
         {
-            player.setBonus = "Summons a cosmic ring to shoot at nearby enemies";
+            player.setBonus = "Summons a cosmic ring to shoot at nearby enemies\nStops sanity from being drained in space";
             player.GetModPlayer<MyPlayer>().cosmicalusArmor = true;
             if (player.ownedProjectileCounts[mod.ProjectileType("CosmicalusRing")] <= 0)
             {

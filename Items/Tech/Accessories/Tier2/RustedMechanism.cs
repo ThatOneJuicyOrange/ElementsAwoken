@@ -23,7 +23,7 @@ namespace ElementsAwoken.Items.Tech.Accessories.Tier2
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rusted Mechanism");
-            Tooltip.SetDefault("When you are hit, you shoot out a bunch of the first ammo you have consuming 3 energy");
+            Tooltip.SetDefault("When you are hit, you shoot out a bunch of the first ammo you have\nConsumes 3 energy on use");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

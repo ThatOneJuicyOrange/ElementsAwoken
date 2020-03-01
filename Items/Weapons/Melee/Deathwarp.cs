@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Deathwarp");
-            Tooltip.SetDefault("Ripple through time and space\nRight click to activate the Deathwarp");
+            Tooltip.SetDefault("Fires multiple death beams to annihilate your enemies\nRight Click to activate the Deathwarp\n'Ripple through time and space'");
         }
         public override bool AltFunctionUse(Player player)
         {

@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Treasure Bag");
-            Tooltip.SetDefault("Right click to open");
+            Tooltip.SetDefault("Right Click to open");
         }
         public override bool CanRightClick()
         {
@@ -34,42 +34,46 @@ namespace ElementsAwoken.Items.BossDrops.Azana
 
         public override void OpenBossBag(Player player)
         {
-            player.TryGettingDevArmor();
-            int choice = Main.rand.Next(5);
+            player.GetModPlayer<MyPlayer>().TryGettingDevArmor();
+            int choice = Main.rand.Next(6);
             if (choice == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("Anarchy"));      
+                player.QuickSpawnItem(ModContent.ItemType<Anarchy>());
             }
             if (choice == 1)
             {
-                player.QuickSpawnItem(mod.ItemType("PurgeRifle"));
+                player.QuickSpawnItem(ModContent.ItemType<PurgeRifle>());
             }
             if (choice == 2)
             {
-                player.QuickSpawnItem(mod.ItemType("ChaoticImpaler"));
+                player.QuickSpawnItem(ModContent.ItemType<ChaoticImpaler>());
             }
             if (choice == 3)
             {
-                player.QuickSpawnItem(mod.ItemType("GleamOfAnnhialation"));
+                player.QuickSpawnItem(ModContent.ItemType<GleamOfAnnhialation>());
             }
             if (choice == 4)
             {
-                player.QuickSpawnItem(mod.ItemType("Pandemonium"));
+                player.QuickSpawnItem(ModContent.ItemType<Pandemonium>());
             }
-            player.QuickSpawnItem(mod.ItemType("RingOfChaos"));
+            if (choice == 5)
+            {
+                player.QuickSpawnItem(ModContent.ItemType<AzanaMinionStaff>());
+            }
+            player.QuickSpawnItem(ModContent.ItemType<RingOfChaos>());
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("AzanaMask"));
+                player.QuickSpawnItem(ModContent.ItemType<AzanaMask>());
             }
             if (Main.rand.Next(10) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("AzanaTrophy"));
+                player.QuickSpawnItem(ModContent.ItemType<AzanaTrophy>());
             }
             if (Main.rand.Next(5) == 0)
             {
-                player.QuickSpawnItem(mod.ItemType("EntropicCoating"));
+                player.QuickSpawnItem(ModContent.ItemType<EntropicCoating>());
             }
-            player.QuickSpawnItem(mod.ItemType("DiscordantOre"), Main.rand.Next(45, 90));
+            player.QuickSpawnItem(ModContent.ItemType<DiscordantOre>(), Main.rand.Next(15, 20));
 
         }
     }

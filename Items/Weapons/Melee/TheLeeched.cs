@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Leeched");
-            Tooltip.SetDefault("Restores health on hit");
+            Tooltip.SetDefault("Restores health on hitting an enemy");
         }
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)

@@ -60,6 +60,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
             !spawnInfo.player.ZoneTowerVortex &&
             !spawnInfo.player.ZoneTowerNebula &&
             !spawnInfo.playerInTown &&
+            !spawnInfo.invasion &&
             !Main.snowMoon && !Main.pumpkinMoon && Main.dayTime && !Main.hardMode ? 0.065f : 0f;
         }
         public override void NPCLoot()  //Npc drop

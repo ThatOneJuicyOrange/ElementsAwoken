@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,12 +16,43 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
     [AutoloadBossHead]
     public class TheGuardianFly : ModNPC
     {
-        public int orbCooldown = 75;
-        int projectileBaseDamage = 65;
+        private int projectileBaseDamage = 65;
+        private int moveAI = 1;
+        private float shootTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        private float minionTimer
+        {
+            get => npc.ai[1];
+            set => npc.ai[1] = value;
+        }
+        private float aiTimer
+        {
+            get => npc.ai[2];
+            set => npc.ai[2] = value;
+        }
+        private float shootTimer2
+        {
+            get => npc.ai[3];
+            set => npc.ai[3] = value;
+        }
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(moveAI);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            moveAI = reader.ReadInt32();
+        }
         public override void SetDefaults()
         {
             npc.width = 252;
             npc.height = 152;
+
+            npc.aiStyle = -1;
 
             npc.lifeMax = 115000;
             npc.damage = 120;
@@ -36,7 +68,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             npc.netAlways = true;
 
             npc.HitSound = SoundID.NPCHit2;
-            npc.DeathSound = SoundID.NPCDeath1;
+            npc.DeathSound = SoundID.NPCDeath14;
             npc.value = Item.buyPrice(0, 55, 0, 0);
 
             music = MusicID.Boss4;
@@ -84,7 +116,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
         {
             potionType = ItemID.GreaterHealingPotion;
         }
-
         public override void NPCLoot()
         {
             if (Main.rand.Next(10) == 0)
@@ -116,8 +147,8 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 }
             }
             MyWorld.downedGuardian = true;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
-
         public override void AI()
         { 
             Player P = Main.player[npc.target];
@@ -139,73 +170,68 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 npc.active = false;
             }
             #endregion
-            npc.ai[0]--; // shoot timer
-            npc.ai[1]--; // minion timer
-            npc.ai[2]++; // ai timer
-            npc.ai[3]--; // portals & infernoballs
-            orbCooldown--;
-            if (orbCooldown <= 0)
-            {
-                orbCooldown = 75;
-            }
+            shootTimer--; 
+            minionTimer--;
+            aiTimer++;
+            shootTimer2--; // portals & infernoballs
             if (npc.life >= npc.lifeMax * 0.5f)
             {
-                if (npc.ai[2] > 1700f)
+                if (aiTimer > 1700f)
                 {
-                    npc.ai[2] = 0f;
+                    aiTimer = 0f;
                 }
             }
             if (npc.life <= npc.lifeMax * 0.5f)
             {
-                if (npc.ai[2] > 2500f)
+                if (aiTimer > 2500f)
                 {
-                    npc.ai[2] = 0f;
+                    aiTimer = 0f;
                 }
             }
             // minions
-            if (npc.ai[1] <= 0)
+            if (minionTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("GuardianProbe"));
-                npc.ai[1] = Main.rand.Next(300, 1200);
+                minionTimer = Main.rand.Next(300, 1200);
+                npc.netUpdate = true;
             }
 
             //attack 1- flys left and right of the player and leaves shooting orbs 
-            if (npc.ai[2] <= 500)
+            if (aiTimer <= 500)
             {
-                if (npc.ai[2] <= 250)
+                Vector2 target = P.Center + new Vector2(400 * moveAI, -300);
+                if (Vector2.Distance(target,npc.Center) <= 20)
                 {
-                    Move(P, 0.2f, P.Center.X - npc.Center.X + 400, P.Center.Y - npc.Center.Y - 300);
+                    moveAI *= -1;
                 }
-                if (npc.ai[2] >= 250)
-                {
-                    Move(P, 0.2f, P.Center.X - npc.Center.X - 400, P.Center.Y - npc.Center.Y - 300);
-                }
-                if (Main.netMode != NetmodeID.MultiplayerClient && npc.ai[0] <= 0 && orbCooldown <= 25)
+                Move(P, 0.2f, target);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer <= 25 && shootTimer % 5 == 0)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("GuardianOrb"), projectileBaseDamage, 0f, 0);
-                    npc.ai[0] = 5;
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("GuardianOrb"), projectileBaseDamage, 0f, Main.myPlayer);
                 }
+                if (shootTimer <= 0) shootTimer = 75;
             }
 
             //attack 2- flys above the player and drops fire/lasers
-            if (npc.ai[2] >= 500 && npc.ai[2] <= 800)
+            if (aiTimer >= 500 && aiTimer <= 800)
             {
-                Move(P, 0.25f, P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y - 400);
+                Move(P, 0.09f, P.Center - new Vector2(0, 400), 1f);
                 if (npc.life >= npc.lifeMax * 0.5f)
                 {
-                    if (npc.ai[0] <= 0)
+                    if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         //Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 1);
-                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-2, 2), 8f, mod.ProjectileType("GuardianFire"), projectileBaseDamage, 0f, 0);
+                        int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-2, 2), 8f, mod.ProjectileType("GuardianFire"), projectileBaseDamage, 0f, Main.myPlayer);
                         Projectile fire = Main.projectile[proj];
                         fire.timeLeft = 120;
-                        npc.ai[0] = 4;
+                        shootTimer = 12;
                     }
                 }
                 if (npc.life <= npc.lifeMax * 0.5f)
                 {
-                    if (npc.ai[0] <= 30)
+                    if (shootTimer <= 30 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         int maxdusts = 10;
                         for (int i = 0; i < maxdusts; i++)
@@ -218,46 +244,43 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                             vortex.noGravity = true;
                         }
                     }
-                    if (npc.ai[0] <= 0)
+                    if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 122);
                         for (int i = 0; i < 6; i++)
                         {
-                            int proj = Projectile.NewProjectile(npc.position.X + 140 + 6.6f * i, npc.Bottom.Y, 0f, 9f, mod.ProjectileType("GuardianBeam"), projectileBaseDamage, 0f, 0);
+                            int proj = Projectile.NewProjectile(npc.position.X + 140 + 6.6f * i, npc.Bottom.Y, 0f, 9f, mod.ProjectileType("GuardianBeam"), projectileBaseDamage, 0f, Main.myPlayer);
                             Projectile Beam = Main.projectile[proj];
                             Beam.timeLeft = 75;
                         }
-                        npc.ai[0] = 50;
+                        shootTimer = 50;
                     }
 
                 }
             }
-
             // so the guardian wont instantly shoot the player in the face 
-            if (npc.ai[2] == 800)
+            if (aiTimer == 800)
             {
-                npc.ai[0] = 100;
+                shootTimer = 100;
             }
-
             //attack 3 - throws multiple sticky grenades at the player
-            if (npc.ai[2] >= 800 && npc.ai[2] <= 1200)
+            if (aiTimer >= 800 && aiTimer <= 1200)
             {
-                Move(P, 0.2f, P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y - 300);
+                Move(P, 0.1f, P.Center - new Vector2(0, 300));
 
-                if (npc.ai[0] <= 0)
+                if (shootTimer <= 0)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     Bolts(P, 18f, projectileBaseDamage - 20, Main.rand.Next(4, 6), 13);
-                    npc.ai[0] = Main.rand.Next(30, 80);
+                    shootTimer = Main.rand.Next(30, 80);
                 }
             }
-
             //attack 4 - fireball cluster
-            if (npc.ai[2] >= 1200 && npc.ai[2] <= 1700)
+            if (aiTimer >= 1200 && aiTimer <= 1700)
             {
                 npc.velocity.X = 0f;
                 npc.velocity.Y = 0f;
-                if (npc.ai[0] <= 0)
+                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
@@ -267,34 +290,34 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                         Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1)).RotatedByRandom(MathHelper.ToRadians(5));
                         Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("GuardianFireball"), projectileBaseDamage - 10, 0f, 0);
                     }
-                    npc.ai[0] = 50;
+                    shootTimer = 50;
                 }
             }
 
             //attack 5 - shoots a fast exploding bolt at the player 
-            if (npc.life <= npc.lifeMax * 0.5f && npc.ai[2] >= 1700f && npc.ai[2] <= 2000f)
+            if (npc.life <= npc.lifeMax * 0.5f && aiTimer >= 1700f && aiTimer <= 2000f)
             {
-                Move(P, 0.2f, P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y - 300);
-                if (npc.ai[0] <= 0)
+                Move(P, 0.1f, P.Center - new Vector2(0, 300));
+                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float Speed = 20f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 20);
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianStrike"), projectileBaseDamage + 20, 0f, 0, 0, 1);
-                    npc.ai[0] = 100;
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), mod.ProjectileType("GuardianStrike"), projectileBaseDamage + 20, 0f, Main.myPlayer, 0, 1);
+                    shootTimer = 100;
                 }
             }
 
             //attack 6 - releases shots in a circle
-            if (npc.life <= npc.lifeMax * 0.5f && npc.ai[2] >= 2000f && npc.ai[2] <= 2500f)
+            if (npc.life <= npc.lifeMax * 0.5f && aiTimer >= 2000f && aiTimer <= 2500f)
             {
                 npc.velocity.X = 0f;
                 npc.velocity.Y = 0f;
-                if (npc.ai[0] <= 0)
+                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 perturbedSpeed = new Vector2(4f, 4f).RotatedByRandom(MathHelper.ToRadians(360));
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("GuardianShot"), projectileBaseDamage, 0f, 0);
-                    npc.ai[0] = 5;
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("GuardianShot"), projectileBaseDamage, 0f, Main.myPlayer);
+                    shootTimer = 5;
                 }
             }
 
@@ -302,7 +325,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             if (npc.life <= npc.lifeMax * 0.5f)
             {
                 // infernoballs
-                if (npc.ai[3] == 200)
+                if (shootTimer2 == 200 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int direction = 1;
                     switch (Main.rand.Next(2))
@@ -319,13 +342,12 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                     int damage = projectileBaseDamage - 20;
                     for (int i = 0; i < 3; i++)
                     {
-                        Projectile.NewProjectile(P.Center.X - 1000 * direction + i * 50, P.Center.Y - i * 200, speed * direction, 0f, mod.ProjectileType("GuardianInfernoball"), damage, 0f);
-                        Projectile.NewProjectile(P.Center.X - 1000 * direction + i * 50, P.Center.Y + i * 200, speed * direction, 0f, mod.ProjectileType("GuardianInfernoball"), damage, 0f);
+                        Projectile.NewProjectile(P.Center.X - 1300 * direction + i * 50, P.Center.Y - i * 200, speed * direction, 0f, mod.ProjectileType("GuardianInfernoball"), damage, 0f, Main.myPlayer);
+                        Projectile.NewProjectile(P.Center.X - 1300 * direction + i * 50, P.Center.Y + i * 200, speed * direction, 0f, mod.ProjectileType("GuardianInfernoball"), damage, 0f, Main.myPlayer);
                     }
-                    Projectile.NewProjectile(P.Center.X - 1000 * direction, P.Center.Y, speed * direction, 0f, mod.ProjectileType("GuardianInfernoball"), damage, 0f);
                 }
                 // portal
-                if (npc.ai[3] <= 0)
+                if (shootTimer2 <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int minDist = 400;
                     int vectorX = Main.rand.Next(-800, 800);
@@ -346,8 +368,8 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                     {
                         vectorY = -minDist;
                     }
-                    Projectile.NewProjectile(P.Center.X + vectorX, P.Center.Y + vectorY, 0f, 0f, mod.ProjectileType("GuardianPortal"), projectileBaseDamage * 2, 0f);
-                    npc.ai[3] = 400;
+                    Projectile.NewProjectile(P.Center.X + vectorX, P.Center.Y + vectorY, 0f, 0f, mod.ProjectileType("GuardianPortal"), projectileBaseDamage * 2, 0f, Main.myPlayer);
+                    shootTimer2 = 400;
                 }
             }
 
@@ -358,61 +380,75 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 {
                     float posX = P.Center.X + Main.rand.Next(5000) - 3000;
                     float posY = P.Center.Y + 1000;
-                    Projectile.NewProjectile(posX, posY, 0f, -10f, mod.ProjectileType("GuardianStrike"), projectileBaseDamage, 0f);
+                    Projectile.NewProjectile(posX, posY, 0f, -10f, mod.ProjectileType("GuardianStrike"), projectileBaseDamage, 0f, Main.myPlayer);
                 }
             }
 
             // create circle
-            if (npc.life <= npc.lifeMax * 0.2f && npc.localAI[1] == 0f)
+            if (npc.life <= npc.lifeMax * 0.2f && npc.localAI[1] == 0f && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 npc.localAI[1]++;
-                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("GuardianCircle"), npc.damage, 0f, 0, 0, npc.whoAmI);
+                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("GuardianCircle"), npc.damage, 0f, Main.myPlayer, 0, npc.whoAmI);
             }
         }
-
-        private void Move(Player P, float speed, float playerX, float playerY)
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
-            int maxDist = 1000;
-            if (Vector2.Distance(P.Center, npc.Center) >= maxDist)
+            Texture2D texture = mod.GetTexture("NPCs/Bosses/TheGuardian/" + GetType().Name + "_Glow");
+            Rectangle frame = new Rectangle(0, npc.frame.Y, texture.Width, texture.Height / Main.npcFrameCount[npc.type]);
+            Vector2 origin = new Vector2(texture.Width * 0.5f, (texture.Height / Main.npcFrameCount[npc.type]) * 0.5f);
+            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition + new Vector2(0, npc.gfxOffY) + new Vector2(0, 11), frame, new Color(255, 255, 255, 0), npc.rotation, origin, npc.scale, effects, 0.0f);
+        }
+        private void Move(Player P, float speed, Vector2 target, float slowScale = 0.99f)
+        {
+            Vector2 desiredVelocity = target - npc.Center;
+            if (Main.expertMode) speed *= 1.1f;
+            if (MyWorld.awakenedMode) speed *= 1.1f;
+            if (Vector2.Distance(P.Center, npc.Center) >= 2500) speed = 2;
+
+            if (npc.velocity.X < desiredVelocity.X)
             {
-                float moveSpeed = 14f;
-                Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-                toTarget.Normalize();
-                npc.velocity = toTarget * moveSpeed;
+                npc.velocity.X = npc.velocity.X + speed;
+                if (npc.velocity.X < 0f && desiredVelocity.X > 0f)
+                {
+                    npc.velocity.X = npc.velocity.X + speed;
+                }
             }
-            else
+            else if (npc.velocity.X > desiredVelocity.X)
             {
-                if (Main.expertMode)
+                npc.velocity.X = npc.velocity.X - speed;
+                if (npc.velocity.X > 0f && desiredVelocity.X < 0f)
                 {
-                    speed += 0.1f;
+                    npc.velocity.X = npc.velocity.X - speed;
                 }
-                if (npc.velocity.X < playerX)
-                {
-                    npc.velocity.X = npc.velocity.X + speed * 2;
-                }
-                else if (npc.velocity.X > playerX)
-                {
-                    npc.velocity.X = npc.velocity.X - speed * 2;
-                }
-                if (npc.velocity.Y < playerY)
+            }
+            if (npc.velocity.Y < desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y + speed;
+                if (npc.velocity.Y < 0f && desiredVelocity.Y > 0f)
                 {
                     npc.velocity.Y = npc.velocity.Y + speed;
-                    if (npc.velocity.Y < 0f && playerY > 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y + speed;
-                        return;
-                    }
+                    return;
                 }
-                else if (npc.velocity.Y > playerY)
+            }
+            else if (npc.velocity.Y > desiredVelocity.Y)
+            {
+                npc.velocity.Y = npc.velocity.Y - speed;
+                if (npc.velocity.Y > 0f && desiredVelocity.Y < 0f)
                 {
                     npc.velocity.Y = npc.velocity.Y - speed;
-                    if (npc.velocity.Y > 0f && playerY < 0f)
-                    {
-                        npc.velocity.Y = npc.velocity.Y - speed;
-                        return;
-                    }
+                    return;
                 }
+            }
+            float slowSpeed = Main.expertMode ? slowScale * 0.97f : slowScale;
+            if (MyWorld.awakenedMode) slowSpeed = slowScale * 0.95f;
+            int xSign = Math.Sign(desiredVelocity.X);
+            if ((npc.velocity.X < xSign && xSign == 1) || (npc.velocity.X > xSign && xSign == -1)) npc.velocity.X *= slowSpeed;
+
+            int ySign = Math.Sign(desiredVelocity.Y);
+            if (MathHelper.Distance(target.Y, npc.Center.Y) > 1000)
+            {
+                if ((npc.velocity.X < ySign && ySign == 1) || (npc.velocity.X > ySign && ySign == -1)) npc.velocity.Y *= slowSpeed;
             }
         }
 

@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.BossDrops.Ancients
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shimmerspark");
-            Tooltip.SetDefault("Hold down shoot to charge a reality breaking blast");
+            Tooltip.SetDefault("Hold Left Click to charge a reality breaking blast");
         }
 
     }

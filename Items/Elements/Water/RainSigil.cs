@@ -41,9 +41,12 @@ namespace ElementsAwoken.Items.Elements.Water
                 Main.rainTime = 0;
                 Main.raining = false;
                 Main.maxRaining = 0f;
+                CombatText.NewText(player.getRect(), Color.Aqua, "Clear", true, false);
             }
-            if (!Main.raining)
+            else if (!Main.raining)
             {
+                CombatText.NewText(player.getRect(), Color.Aqua, "Raining", true, false);
+
                 int num = 86400;
                 int num2 = num / 24;
                 Main.rainTime = Main.rand.Next(num2 * 8, num);
@@ -90,6 +93,7 @@ namespace ElementsAwoken.Items.Elements.Water
                 }
                 Main.rainTime = (int)((float)Main.rainTime * num3);
                 Main.raining = true;
+                Main.maxRaining = Main.rand.NextFloat(0.2f,0.8f);
             }
             return true;
         }

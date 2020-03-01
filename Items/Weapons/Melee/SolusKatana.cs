@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Solus Katana");
-            Tooltip.SetDefault("A weapon used by a feared cultist...\nRight click to shoot 3 solus kunais");
+            Tooltip.SetDefault("A weapon used by a feared cultist...\nRight Click to shoot 3 solus kunais");
         }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

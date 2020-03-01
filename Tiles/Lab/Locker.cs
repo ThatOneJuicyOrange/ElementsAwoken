@@ -84,7 +84,7 @@ namespace ElementsAwoken.Tiles.Lab
             Chest.DestroyChest(i, j);
         }
 
-        public override void RightClick(int i, int j)
+        public override bool NewRightClick(int i, int j)
         {
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
@@ -154,6 +154,8 @@ namespace ElementsAwoken.Tiles.Lab
                     Recipe.FindRecipes();
                 }
             }
+            return true;
+
         }
 
         public override void MouseOver(int i, int j)

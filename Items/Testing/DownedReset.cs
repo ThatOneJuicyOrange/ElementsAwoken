@@ -89,6 +89,7 @@ namespace ElementsAwoken.Items.Testing
                         MyWorld.downedShadeWyrm = false;
                         MyWorld.downedVolcanox = false;
                         MyWorld.downedAzana = false;
+                        MyWorld.sparedAzana = false;
                         MyWorld.downedAncients = false;
                         MyWorld.downedCosmicObserver = false;
                         break;
@@ -112,6 +113,7 @@ namespace ElementsAwoken.Items.Testing
                         MyWorld.downedShadeWyrm = true;
                         MyWorld.downedVolcanox = true;
                         MyWorld.downedAzana = true;
+                        MyWorld.sparedAzana = true;
                         MyWorld.downedAncients = true;
                         MyWorld.downedCosmicObserver = true;
                         break;

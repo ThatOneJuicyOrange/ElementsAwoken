@@ -13,7 +13,7 @@ namespace ElementsAwoken.Projectiles.Thrown
         public override void SetDefaults()
         {
             projectile.width = 12;
-            projectile.height = 30;
+            projectile.height = 12;
             projectile.friendly = true;
             projectile.thrown = true;
             projectile.penetrate = 1;
@@ -48,7 +48,8 @@ namespace ElementsAwoken.Projectiles.Thrown
         {
             if (Main.rand.Next(2) == 0)
             {
-                Item.NewItem((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, mod.ItemType("DrakoniteKnife"));
+                int item = Item.NewItem((int)projectile.position.X, (int)projectile.position.Y, projectile.width, projectile.height, mod.ItemType("DrakoniteKnife"));
+                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, item, 1f);
             }
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 10);
         }

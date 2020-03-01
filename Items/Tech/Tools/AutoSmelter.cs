@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Tech.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Auto Smelter");
-            Tooltip.SetDefault("Automatically turns ores into bars\nConsumes energy to smelt bars\nRight click to turn on");
+            Tooltip.SetDefault("Automatically turns ores into bars\nConsumes energy to smelt bars\nRight Click to turn on");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(6, 4));
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)

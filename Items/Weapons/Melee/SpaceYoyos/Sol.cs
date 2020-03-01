@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Weapons.Melee.SpaceYoyos
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sol");
-            Tooltip.SetDefault("Has a medium gravitational pull");
+            Tooltip.SetDefault("Has a strong gravitational pull");
         }
         public override void AddRecipes()
         {

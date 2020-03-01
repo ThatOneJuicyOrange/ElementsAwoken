@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blight Lobber");
-            Tooltip.SetDefault("Fires a bouncing Blight Ring\nRight click to throw fast returning rings");
+            Tooltip.SetDefault("Fires a bouncing Blight Ring\nRight Click to throw fast returning rings");
         }
         public override bool AltFunctionUse(Player player)
         {

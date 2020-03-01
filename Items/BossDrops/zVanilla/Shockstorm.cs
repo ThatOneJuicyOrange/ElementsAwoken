@@ -41,7 +41,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Shockstorm");
-            Tooltip.SetDefault("Only two lightning orbs can be active at once");
+            Tooltip.SetDefault("Summons a lightning orb which attacks nearby enemies\nOnly two lightning orbs can be active at once");
         }
         public override bool CanUseItem(Player player)
         {

@@ -63,7 +63,7 @@ namespace ElementsAwoken.Items.Weapons.Ranged
         }
         public override Vector2? HoldoutOffset()
         {
-            return new Vector2(-5, 0);
+            return new Vector2(-16, 0);
         }
 
         public override bool ConsumeAmmo(Player player)

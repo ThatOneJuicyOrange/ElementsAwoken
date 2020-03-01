@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class StellarPortal : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public override void SetDefaults()
         {
             projectile.width = 30;

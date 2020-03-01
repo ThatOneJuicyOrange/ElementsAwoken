@@ -15,12 +15,13 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 20;
             projectile.height = 20;
+
             projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.tileCollide = true;
-            projectile.melee = true;
+            projectile.magic = true;
+
             projectile.penetrate = -1;
             projectile.extraUpdates = 1;
+
             projectile.timeLeft = 200;
             projectile.scale = 0.9f;
         }

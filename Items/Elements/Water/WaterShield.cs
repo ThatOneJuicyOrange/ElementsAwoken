@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Elements.Water
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Great Barrier Reef");
-            Tooltip.SetDefault("The creatures of the ocean accept you\nTurns you into a merfolk when in the water\nOcean monsters won't attack you");
+            Tooltip.SetDefault("The creatures of the ocean accept you\nTurns you into a merfolk when in the water\nOcean monsters won't attack you\nGrants immunity to knockback");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -48,7 +48,6 @@ namespace ElementsAwoken.Items.Elements.Water
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "WaterEssence", 8);
             recipe.AddIngredient(ItemID.ChlorophyteBar, 10);
-            recipe.AddIngredient(ItemID.CobaltShield, 1);
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();

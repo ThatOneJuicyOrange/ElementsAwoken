@@ -33,7 +33,7 @@ namespace ElementsAwoken.Projectiles.Thrown
             {
                 return false;
             }
-            return true;
+            return base.CanHitNPC(target);
         }
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {

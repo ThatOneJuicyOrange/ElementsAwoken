@@ -16,13 +16,13 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
 
             item.defense = 22;
 
-            item.value = Item.buyPrice(0, 7, 50, 0);
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = 7;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dragonmail Chestpiece");
-            Tooltip.SetDefault("5% increased damage\nImmunity to On Fire\nYour body glows\nMining speed increased by 5%");
+            Tooltip.SetDefault("5% increased damage\nImmunity to On Fire\nYour body glows\n5% increased mining speed");
         }
         public override void UpdateEquip(Player player)
         {

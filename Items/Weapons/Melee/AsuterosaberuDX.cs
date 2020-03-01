@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Asuterosaberu DX");
-            Tooltip.SetDefault("Right click to tear a hole in reality");
+            Tooltip.SetDefault("Right Click to tear a hole in reality");
         }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {

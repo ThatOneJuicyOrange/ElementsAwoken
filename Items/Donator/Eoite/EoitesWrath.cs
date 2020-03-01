@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Eoite's Wrath");
-            Tooltip.SetDefault("Magenta beams strike your foes\nRight click to switch modes\nEoite's donator item");
+            Tooltip.SetDefault("Magenta beams strike your foes\nRight Click to switch modes\nEoite's donator item");
         }
         public override bool AltFunctionUse(Player player)
         {

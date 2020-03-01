@@ -54,7 +54,7 @@ namespace ElementsAwoken.Items.GemLasers.Tier1
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.MeteoriteBar, 8);
+            recipe.AddRecipeGroup("ElementsAwoken:EvilBar", 8);
             recipe.AddIngredient(ItemID.Sapphire, 5);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

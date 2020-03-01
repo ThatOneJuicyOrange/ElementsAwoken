@@ -29,12 +29,12 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier2
             item.rare = 2;
             
             item.shootSpeed = 14f;
-            item.shoot = mod.ProjectileType("RifleSentryBase");
+            item.shoot = mod.ProjectileType("RifleSentry");
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Rifle Sentry Remote");
-            Tooltip.SetDefault("Summons a rifle sentry to defend you\nRifle uses 1 energy per second");
+            Tooltip.SetDefault("Summons a rifle sentry to defend you\nThe rifle sentry uses 1 energy every two seconds");
         }
         public override bool CanUseItem(Player player)
         {

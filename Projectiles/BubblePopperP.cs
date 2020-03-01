@@ -7,8 +7,9 @@ using Terraria.ModLoader;
 
 namespace ElementsAwoken.Projectiles
 {
-    class BubblePopperP : ModProjectile
+    public class BubblePopperP : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
 
         public override void SetDefaults()
         {

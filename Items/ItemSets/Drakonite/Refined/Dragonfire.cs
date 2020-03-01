@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
             item.useTime = 5;
             item.useStyle = 5;
 
-            item.value = Item.buyPrice(0, 7, 50, 0);
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = 7;
 
             item.UseSound = SoundID.Item11;
@@ -39,18 +39,17 @@ namespace ElementsAwoken.Items.ItemSets.Drakonite.Refined
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Dragonfire");
-            Tooltip.SetDefault("Turns musketballs into Dragonfire bullets\n20% chance to not consume ammo");
+            Tooltip.SetDefault("Turns musketballs into dragonfire bullets\n20% chance to not consume ammo");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            //innacurate fire
-            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(7));
+            Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(5));
             speedX = perturbedSpeed.X;
             speedY = perturbedSpeed.Y;
             if (type == ProjectileID.Bullet) // The normal musket ball
             {
-                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("DragonfireBullet"), (int)(item.damage * 1.1f), 0, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(position.X, position.Y, speedX, speedY, mod.ProjectileType("DragonfireBullet"), (int)(item.damage * 1.1f), knockBack, player.whoAmI, 0f, 0f);
                 return false;
             }
             else

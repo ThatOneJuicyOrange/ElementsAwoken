@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Immortal Resolve");
-            Tooltip.SetDefault("Greatly increased life regen\nMax life increased by 50\nStanding still increases life regen\nCritical strikes heal the player\nAbove 50% critical strike chance only has 50% chance to heal");
+            Tooltip.SetDefault("Greatly increased life regen\nMax life increased by 50\nStanding still increases life regen\nCritical strikes heal the player\nThe higher the weapon's critical strike chance, the less it heals");
         }
 
 

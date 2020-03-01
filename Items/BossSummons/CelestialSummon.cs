@@ -41,7 +41,8 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheCelestial"));
+            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheCelestial"));
+            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("TheCelestial"), 0f, 0f, 0, 0, 0);
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }

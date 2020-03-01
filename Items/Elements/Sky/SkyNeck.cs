@@ -23,7 +23,7 @@ namespace ElementsAwoken.Items.Elements.Sky
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Badge of the Sky");
-            Tooltip.SetDefault("The wind blesses you\nInceased wingtime\nGreatly increased movement speed\nWhen in space:\n5% increased all damage\n8 defense");
+            Tooltip.SetDefault("The wind blesses you\nInceased wingtime\nGreatly increased movement speed\nWhen in space:\n5% increased damage\n8 defense");
         }
 
 

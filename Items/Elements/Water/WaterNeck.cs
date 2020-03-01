@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Elements.Water
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Emblem of the Ocean");
-            Tooltip.SetDefault("Become one with the ocean\nUpon entering water:\n20% increased all damage\n20% increased melee speed and throwing velocity\nGrants effects of the Magic Cuffs\nIncreased movement speed\n10 defense");
+            Tooltip.SetDefault("Become one with the ocean\nUpon entering water:\n20% increased damage\n20% increased melee speed and throwing velocity\nGrants effects of the Magic Cuffs\nIncreased movement speed\n10 increased defense");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

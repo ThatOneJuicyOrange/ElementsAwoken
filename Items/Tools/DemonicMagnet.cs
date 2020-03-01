@@ -29,19 +29,22 @@ namespace ElementsAwoken.Items.Tools
 
         public override void HoldItem(Player player)
         {
-            for (int i = 0; i < Main.item.Length; i++)
+            if (Main.myPlayer == player.whoAmI)
             {
-                Item succ = Main.item[i];
-                if (Vector2.Distance(succ.Center, player.Center) < 800)
+                for (int i = 0; i < Main.maxItems; i++)
                 {
-                    Vector2 toTarget = new Vector2(player.Center.X - succ.Center.X, player.Center.Y - succ.Center.Y);
-                    toTarget.Normalize();
-                    succ.velocity += toTarget *= 0.3f;
+                    Item succ = Main.item[i];
+                    if (Vector2.Distance(succ.Center, player.Center) < 800 && item.active && item.type != 0)
+                    {
+                        Vector2 toTarget = new Vector2(player.Center.X - succ.Center.X, player.Center.Y - succ.Center.Y);
+                        toTarget.Normalize();
+                        succ.velocity += toTarget *= 0.3f;
 
-                    int dust = Dust.NewDust(succ.Center, 8, 8, 6);
-                    Main.dust[dust].velocity *= 0.1f;
-                    Main.dust[dust].scale *= 1.5f;
-                    Main.dust[dust].noGravity = true;
+                        int dust = Dust.NewDust(succ.Center, 8, 8, 6);
+                        Main.dust[dust].velocity *= 0.1f;
+                        Main.dust[dust].scale *= 1.5f;
+                        Main.dust[dust].noGravity = true;
+                    }
                 }
             }
         }

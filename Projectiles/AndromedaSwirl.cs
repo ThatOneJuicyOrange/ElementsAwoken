@@ -9,6 +9,8 @@ namespace ElementsAwoken.Projectiles
 {
     public class AndromedaSwirl : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+
         public float shrink = 150;
         public float dustAI = 20;
         public override void SetDefaults()

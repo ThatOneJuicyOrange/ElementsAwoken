@@ -16,11 +16,13 @@ namespace ElementsAwoken.Projectiles
             projectile.penetrate = 1;
 
             projectile.friendly = true;
-            projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            projectile.ranged = true;
 
             projectile.light = 1f;
             projectile.timeLeft = 300;
+
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 5;
+            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
         {
@@ -32,16 +34,6 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            projectile.localAI[0]++;
-            if (projectile.localAI[0] < 5)
-            {
-                projectile.alpha = 255;
-            }
-            else
-            {
-                projectile.alpha = 0;
-            }
-
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
             if (Main.rand.Next(3) == 0)
             {
@@ -51,6 +43,19 @@ namespace ElementsAwoken.Projectiles
                 dust.noGravity = true;
                 dust.scale = 1f;
             }
+        }
+        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        {
+                Texture2D tex = Main.projectileTexture[projectile.type];
+                Vector2 drawOrigin = new Vector2(tex.Width * 0.5f, projectile.height * 0.5f);
+                for (int k = 0; k < projectile.oldPos.Length; k++)
+                {
+                    Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                    Color color = projectile.GetAlpha(lightColor) * ((float)(projectile.oldPos.Length - k) / (float)projectile.oldPos.Length);
+                    Rectangle rectangle = new Rectangle(0, (tex.Height / Main.projFrames[projectile.type]) * projectile.frame, tex.Width, tex.Height / Main.projFrames[projectile.type]);
+                    sb.Draw(tex, drawPos, rectangle, color, projectile.rotation, drawOrigin, projectile.scale, SpriteEffects.None, 0f);
+                }
+            return true;
         }
     }
 }

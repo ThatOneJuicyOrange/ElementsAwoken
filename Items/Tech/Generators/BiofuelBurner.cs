@@ -34,8 +34,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Biofuel Burner");
-            Tooltip.SetDefault("Consumes certain plant materials in the inventory\nDifferent plants have different power outputs\nRight click to turn on");
+            DisplayName.SetDefault("Biofuel Burner Generator");
+            Tooltip.SetDefault("Consumes certain plant materials in the inventory\nDifferent plants have different power outputs\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {

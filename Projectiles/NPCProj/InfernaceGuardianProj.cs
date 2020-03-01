@@ -25,7 +25,7 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Blade");
+            DisplayName.SetDefault("Infernal Spell");
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {

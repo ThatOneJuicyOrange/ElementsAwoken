@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("The Destroyer");
-            Tooltip.SetDefault("Hold down shoot to charge the laser");
+            Tooltip.SetDefault("Hold Left Click to charge the laser");
         }
 
     }

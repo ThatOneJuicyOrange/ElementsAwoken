@@ -1,4 +1,3 @@
-C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.AssemblyInfo.cs
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\net45\ElementsAwoken.dll
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\net45\ElementsAwoken.pdb
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\net45\Ionic.Zip.Reduced.dll
@@ -27,6 +26,7 @@ C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\Elemen
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\bin\Debug\net45\MonoMod.Utils.xml
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.csprojAssemblyReference.cache
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.AssemblyInfoInputs.cache
+C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.AssemblyInfo.cs
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.csproj.CopyComplete
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.dll
 C:\Users\alexb\OneDrive\Documents\My Games\Terraria\ModLoader\Mod Sources\ElementsAwoken\obj\Debug\net45\ElementsAwoken.pdb

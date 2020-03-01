@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
             recipe.AddIngredient(ItemID.FragmentSolar, 2);
             recipe.AddIngredient(ItemID.FragmentStardust, 2);
             recipe.AddIngredient(ItemID.FragmentVortex, 2);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

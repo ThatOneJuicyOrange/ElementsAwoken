@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Tiny Pick");
-            Tooltip.SetDefault("How is this even functional");
+            Tooltip.SetDefault("How is this even functional?");
         }
     }
 }

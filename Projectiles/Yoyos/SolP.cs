@@ -53,7 +53,7 @@ namespace ElementsAwoken.Projectiles.Yoyos
                     npc.velocity.Y += toTarget.Y * gravStength * 5;
                 }
             }
-            for (int i = 0; i < Main.item.Length; i++)
+            for (int i = 0; i < Main.maxItems; i++)
             {
                 Item item = Main.item[i];
                 if (item.active && Vector2.Distance(item.Center, projectile.Center) < maxDist)

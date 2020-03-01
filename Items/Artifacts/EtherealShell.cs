@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.Artifacts
             item.width = 26;
             item.height = 22;
             item.rare = 7;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.accessory = true;
 
             item.GetGlobalItem<EATooltip>().artifact = true;
@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Artifacts
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ethereal Shell");
-            Tooltip.SetDefault("20% increased magic damage\nMana increased by 100\nGrants immunity to knockback\nRestores mana when damaged\nIncreases pickup range for stars\nAutomatically use mana potions when needed\nEmits light when underwater");
+            Tooltip.SetDefault("20% increased magic damage\nMana increased by 100\nRestores mana when damaged\nIncreases pickup range for stars\nAutomatically use mana potions when needed\nEmits light when underwater");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -47,7 +47,6 @@ namespace ElementsAwoken.Items.Artifacts
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.noKnockback = true;
             player.magicCuffs = true;
             player.manaMagnet = true;
             player.manaFlower = true;

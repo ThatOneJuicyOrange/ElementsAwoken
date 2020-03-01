@@ -63,7 +63,7 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
                 int damage = 35;
                 int type = mod.ProjectileType("PermafrostBolt");
                 float rotation = (float)Math.Atan2(vector8.Y - (P.position.Y + (P.height * 0.5f)), vector8.X - (P.position.X + (P.width * 0.5f)));
-                int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, 0, 0, 1);
+                int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer, 0, 1);
                 shootTimer1 = Main.rand.Next(60, 180);
             }
             /*if (!NPC.AnyNPCs(mod.NPCType("Permafrost")))

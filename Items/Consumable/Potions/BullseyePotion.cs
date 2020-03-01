@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             DisplayName.SetDefault("Bullseye Potion");
             Tooltip.SetDefault("Critical strike chance increased by 15%\n25% increased ranged damage");
         }
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.BottledWater, 1);
@@ -46,6 +46,6 @@ namespace ElementsAwoken.Items.Consumable.Potions
             recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

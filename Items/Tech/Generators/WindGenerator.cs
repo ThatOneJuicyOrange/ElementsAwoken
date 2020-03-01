@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Wind Generator");
-            Tooltip.SetDefault("Produces energy based on the wind speed\nRight click to turn on");
+            Tooltip.SetDefault("Produces energy based on the wind speed\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -101,6 +101,17 @@ namespace ElementsAwoken.Items.Tech.Generators
                 enabled = true;
             }
             item.stack++;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddRecipeGroup("ElementsAwoken:CobaltBar", 12);
+            recipe.AddIngredient(null, "CopperWire", 12);
+            recipe.AddIngredient(null, "GoldWire", 3);
+            recipe.AddIngredient(null, "SiliconBoard", 4);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.Artifacts
             item.width = 26;
             item.height = 22;
             item.rare = 9;
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 25, 0, 0);
             item.accessory = true;
 
             item.GetGlobalItem<EATooltip>().artifact = true;

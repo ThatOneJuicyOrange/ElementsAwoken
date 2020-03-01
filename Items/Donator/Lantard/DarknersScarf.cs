@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Donator.Lantard
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Darkner's Scarf");
-            Tooltip.SetDefault("Whoever had this before you didnt like fighting, but they did anything to help\nCan also be worn as a vanity\nLantard's donator item");
+            Tooltip.SetDefault("Whoever had this before you didn’t like fighting, but they did anything to help\nCan also be worn as a vanity\nLantard's donator item");
         }
         public override void AddRecipes()
         {

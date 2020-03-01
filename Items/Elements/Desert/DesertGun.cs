@@ -19,11 +19,10 @@ namespace ElementsAwoken.Items.Elements.Desert
 
             item.ranged = true;
             item.noMelee = true;
-            item.autoReuse = true;
             item.autoReuse = false;
 
-            item.useTime = 28;
-            item.useAnimation = 28;
+            item.useTime = 22;
+            item.useAnimation = 22;
             item.useStyle = 5;
             item.UseSound = SoundID.Item11;
 

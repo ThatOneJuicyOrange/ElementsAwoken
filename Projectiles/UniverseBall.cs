@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,18 +11,20 @@ namespace ElementsAwoken.Projectiles
 {
     class UniverseBall : ModProjectile
     {
-
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
+            projectile.width = 2;
+            projectile.height = 2;
+
             projectile.friendly = true;
-            projectile.ignoreWater = true;
             projectile.melee = true;
+
             projectile.alpha = 255;
             projectile.penetrate = 1;
-            projectile.extraUpdates = 2;
             projectile.timeLeft = 600;
+
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 8;
+            ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
         {
@@ -28,62 +32,30 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            if (projectile.ai[1] == 0f)
-            {
-                projectile.ai[1] = 1f;
-            }
-            if (projectile.alpha > 0)
-            {
-                projectile.alpha -= 15;
-            }
-            if (projectile.alpha < 0)
-            {
-                projectile.alpha = 0;
-            }
-            Lighting.AddLight(projectile.Center, 0.4f, 0.2f, 0.4f);
-            for (int num121 = 0; num121 < 5; num121++)
-            {
-                Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 176)];
-                dust.velocity *= 2f;
-                dust.position -= projectile.velocity / 6f * (float)num121;
-                dust.noGravity = true;
-                dust.scale = 1f;
-            }
+            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
-            float centerY = projectile.Center.X;
-            float centerX = projectile.Center.Y;
-            float num = 400f;
-            bool home = false;
-            for (int i = 0; i < 200; i++)
+            Lighting.AddLight(projectile.Center, 0.4f, 0.2f, 0.4f);
+            ProjectileGlobal.Home(projectile, 5f);
+        }
+        public override bool PreDraw(SpriteBatch sb, Color lightColor)
+        {
+            Vector2 drawOrigin = new Vector2(Main.projectileTexture[projectile.type].Width * 0.5f, projectile.height * 0.5f);
+            Texture2D outlineTex = mod.GetTexture("Projectiles/UniverseBall1");
+            int trailNum = 0;
+            for (int k = 0; k < projectile.oldPos.Length; k++)
             {
-                if (Main.npc[i].CanBeChasedBy(projectile, false) && Collision.CanHit(projectile.Center, 1, 1, Main.npc[i].Center, 1, 1))
+                for (int i = 0; i < 2; i++) // to draw between the positions
                 {
-                    float num1 = Main.npc[i].position.X + (float)(Main.npc[i].width / 2);
-                    float num2 = Main.npc[i].position.Y + (float)(Main.npc[i].height / 2);
-                    float num3 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num1) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num2);
-                    if (num3 < num)
-                    {
-                        num = num3;
-                        centerY = num1;
-                        centerX = num2;
-                        home = true;
-                    }
+                    trailNum++;
+                    Vector2 drawPos = projectile.oldPos[k] - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                    if (k < projectile.oldPos.Length - 1) drawPos = (projectile.oldPos[k] + projectile.oldPos[k + i]) / 2 - Main.screenPosition + drawOrigin + new Vector2(0f, projectile.gfxOffY);
+                    float alpha = 1 - ((float)trailNum / (float)(projectile.oldPos.Length * 2));
+                    Color color = Color.Lerp(Color.White, new Color(85, 44, 156), (float)trailNum / (float)(projectile.oldPos.Length*2)) * alpha;
+                    float scale = 1 - ((float)trailNum / (float)(projectile.oldPos.Length * 2));
+                    sb.Draw(Main.projectileTexture[projectile.type], drawPos, null, color, projectile.rotation, drawOrigin, scale, SpriteEffects.None, 0f);
                 }
             }
-            if (home)
-            {
-                float speed = 5f;
-                Vector2 vector35 = new Vector2(projectile.position.X + (float)projectile.width * 0.5f, projectile.position.Y + (float)projectile.height * 0.5f);
-                float num4 = centerY - vector35.X;
-                float num5 = centerX - vector35.Y;
-                float num6 = (float)Math.Sqrt((double)(num4 * num4 + num5 * num5));
-                num6 = speed / num6;
-                num4 *= num6;
-                num5 *= num6;
-                projectile.velocity.X = (projectile.velocity.X * 20f + num4) / 21f;
-                projectile.velocity.Y = (projectile.velocity.Y * 20f + num5) / 21f;
-                return;
-            }
+            return true;
         }
     }
 }

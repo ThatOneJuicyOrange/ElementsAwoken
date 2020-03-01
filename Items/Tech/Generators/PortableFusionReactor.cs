@@ -32,8 +32,8 @@ namespace ElementsAwoken.Items.Tech.Generators
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Portable Fusion Reactor");
-            Tooltip.SetDefault("Consumes 2 luminite ore to generate power\nProduces 15 seconds of power\nCreates lunar waste which harms the player if it builds up too much\nRight click to turn on");
+            DisplayName.SetDefault("Portable Fusion Generator");
+            Tooltip.SetDefault("Consumes 2 luminite ore to generate power\nProduces 15 seconds of power\nCreates lunar waste which harms the player if it builds up too much\nRight Click to turn on");
         }
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
@@ -112,7 +112,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             recipe.AddIngredient(null, "SiliconBoard", 2);
             recipe.AddIngredient(null, "Microcontroller", 1);
             recipe.AddIngredient(null, "PortableFissionReactor", 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

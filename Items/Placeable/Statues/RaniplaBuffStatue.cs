@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.Placeable.Statues
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Arctic Roamer Statue");
-            Tooltip.SetDefault("Furries don't recieve enough appreciation and I'd like it to stay that way.\n25% increased speed\n15% increased summon damage\n25% reduced jump height and wingtime");
+            Tooltip.SetDefault("Underground, overground, Wombling free. The Wombles of Wimbledon Common are we.\n25% increased speed\n15% increased summon damage\n25% reduced jump height and wingtime");
         }
         public override bool CanUseItem(Player player)
         {

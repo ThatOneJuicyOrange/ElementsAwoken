@@ -21,7 +21,7 @@ namespace ElementsAwoken.Projectiles.NPCProj
             projectile.penetrate = -1;
             projectile.timeLeft = 100000;
 
-            ProjectileID.Sets.TrailCacheLength[projectile.type] = 8;
+            ProjectileID.Sets.TrailCacheLength[projectile.type] = 6;
             ProjectileID.Sets.TrailingMode[projectile.type] = 0;
         }
         public override void SetStaticDefaults()
@@ -42,14 +42,13 @@ namespace ElementsAwoken.Projectiles.NPCProj
         public override void AI()
         {
             NPC parent = Main.npc[(int)projectile.ai[1]];
-            if (parent != Main.npc[0])
-            {
-                projectile.ai[0] += 3f; // speed
-                int distance = 25;
-                double rad = projectile.ai[0] * (Math.PI / 180); // angle to radians
-                projectile.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - projectile.width / 2;
-                projectile.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - projectile.height / 2;
-            }
+
+            projectile.ai[0] += 3f; // speed
+            int distance = 25;
+            double rad = projectile.ai[0] * (Math.PI / 180); // angle to radians
+            projectile.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - projectile.width / 2;
+            projectile.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - projectile.height / 2;
+
             if (!parent.active)
             {
                 projectile.Kill();

@@ -87,13 +87,14 @@ namespace ElementsAwoken.Tiles
                     digCooldown--;
                     if (digCooldown >= 55)
                     {
-                        for (int k = 0; k < Main.item.Length; k++)
+                        for (int k = 0; k < Main.maxItems; k++)
                         {
                             Item other = Main.item[k];
                             if (other.getRect().Intersects(new Rectangle((int)justDugOre.X, (int)justDugOre.Y, 16, 16)))
                             {
                                 other.Center = tileCenter - new Vector2(32, 0);
                                 other.velocity = new Vector2(-5, 0);
+                                NetMessage.SendData(MessageID.SyncItem, -1, -1, null, other.whoAmI, 1f);
                             }
 
                         }
@@ -110,6 +111,7 @@ namespace ElementsAwoken.Tiles
                                 {
                                     Player randP = Main.player[Main.myPlayer];
                                     randP.PickTile(i, j, 100);
+                                    NetMessage.SendData(MessageID.TileChange, -1, -1, null, 0, (float)i, (float)j, 0f, 0, 0, 0);
                                     justDugOre = new Vector2(i * 16, j * 16);
                                     Vector2 justDugOreCenter = new Vector2(i * 16 + 8, j * 16 + 8);
 
@@ -132,19 +134,23 @@ namespace ElementsAwoken.Tiles
         {
             return new TagCompound {
                 {"tileOwner", tileOwner},
+                {"enabled", enabled},
             };
         }
         public override void Load(TagCompound tag)
         {
             tileOwner = tag.GetString("tileOwner");
+            enabled = tag.GetBool("enabled");
         }
         public override void NetSend(BinaryWriter writer, bool lightSend)
         {
             writer.Write(tileOwner);
+            writer.Write(enabled);
         }
         public override void NetReceive(BinaryReader reader, bool lightReceive)
         {
             tileOwner = reader.ReadString();
+            enabled = reader.ReadBoolean();
         }
         public override void OnNetPlace()
         {

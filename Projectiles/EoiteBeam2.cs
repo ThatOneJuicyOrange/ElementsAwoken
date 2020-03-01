@@ -9,6 +9,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class EoiteBeam2 : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
 
         public override void SetDefaults()
         {

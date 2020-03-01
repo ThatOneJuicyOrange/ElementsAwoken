@@ -15,19 +15,18 @@ namespace ElementsAwoken.Items.Accessories
             item.value = Item.buyPrice(0, 1, 0, 0);
             item.rare = 2;    
             item.accessory = true;
-
+            item.defense = 2;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Sharktooth Shackle");
-            Tooltip.SetDefault("Increases armor penetration by 5\n2 defense");
+            Tooltip.SetDefault("Increases armor penetration by 5");
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.armorPenetration += 7;
-            player.statDefense += 2;
+            player.armorPenetration += 5;
         }
         public override void AddRecipes()
         {

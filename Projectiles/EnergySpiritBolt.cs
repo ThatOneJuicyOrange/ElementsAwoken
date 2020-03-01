@@ -8,9 +8,10 @@ using Terraria.ModLoader;
 namespace ElementsAwoken.Projectiles
 {
 	public class EnergySpiritBolt : ModProjectile
-	{
-		//MINION FIREBALL
-		private int[] dusts = {160, 600, 64, 61, 50, 60, 590}; 
+    {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
+        //MINION FIREBALL
+        private int[] dusts = {160, 600, 64, 61, 50, 60, 590}; 
 		
 		public override void SetDefaults()
 		{

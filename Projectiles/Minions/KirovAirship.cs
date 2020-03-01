@@ -27,6 +27,7 @@ namespace ElementsAwoken.Projectiles.Minions
 
             ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
             ProjectileID.Sets.Homing[projectile.type] = true;
+            ProjectileID.Sets.MinionTargettingFeature[projectile.type] = true;
 
             inertia = 50f;
             shoot = ProjectileID.RocketI;

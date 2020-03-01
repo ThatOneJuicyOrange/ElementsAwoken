@@ -28,7 +28,7 @@ namespace ElementsAwoken.Projectiles
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {
             projectile.frameCounter++;
-            if (projectile.frameCounter >= 2)
+            if (projectile.frameCounter >= 12)
             {
                 projectile.frame++;
                 projectile.frameCounter = 0;
@@ -87,6 +87,13 @@ namespace ElementsAwoken.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.immune[projectile.owner] = 5;
+        }
+        public override void Kill(int timeLeft)
+        {
+            Gore gore = Main.gore[Gore.NewGore(projectile.position, projectile.velocity, mod.GetGoreSlot("Gores/ExlitureEye1"))];
+            Gore gore2 = Main.gore[Gore.NewGore(projectile.position, projectile.velocity, mod.GetGoreSlot("Gores/ExlitureEye2"))];
+            gore.timeLeft = 60;
+            gore2.timeLeft = 60;
         }
     }
 }

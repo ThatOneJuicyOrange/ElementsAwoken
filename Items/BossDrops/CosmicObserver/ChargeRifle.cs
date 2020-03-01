@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -32,14 +33,19 @@ namespace ElementsAwoken.Items.BossDrops.CosmicObserver
             item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = 4;
 
-            item.shoot = mod.ProjectileType("ChargeRifleHeld");
+            item.shoot = ModContent.ProjectileType<ChargeRifleHeld>();
             item.shootSpeed = 20f;
-           // item.useAmmo = 97;
+            item.useAmmo = AmmoID.Bullet;
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Projectile.NewProjectile(position.X, position.Y, speedX, speedY, ModContent.ProjectileType<ChargeRifleHeld>(), damage, knockBack, player.whoAmI, 0.0f, type);
+            return false;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Charge Rifle");
-            Tooltip.SetDefault("Hold left mouse to charge");
+            Tooltip.SetDefault("Hold Left Click to charge");
         }
         public override void AddRecipes()
         {

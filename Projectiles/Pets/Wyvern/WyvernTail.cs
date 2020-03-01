@@ -16,14 +16,11 @@ namespace ElementsAwoken.Projectiles.Pets.Wyvern
 
             projectile.friendly = true;
             projectile.ignoreWater = true;
-            projectile.netImportant = true;
             projectile.tileCollide = false;
-            projectile.minion = true;
-            //Main.projPet[projectile.type] = true;
+            Main.projPet[projectile.type] = true;
 
             projectile.penetrate = -1;
             projectile.timeLeft = 18000;
-            ProjectileID.Sets.MinionSacrificable[projectile.type] = true;
             projectile.timeLeft *= 5;
         }
 

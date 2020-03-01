@@ -8,6 +8,7 @@ namespace ElementsAwoken.Projectiles
 {
     public class BlightfireSpawner : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/Blank"; } }
         public int outOfLava = 120;
         public override void SetDefaults()
         {

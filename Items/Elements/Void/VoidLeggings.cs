@@ -21,7 +21,7 @@ namespace ElementsAwoken.Items.Elements.Void
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Void Greaves");
+            DisplayName.SetDefault("Gloomhandler Greaves");
             Tooltip.SetDefault("10% increased melee speed\nGreater speed when low health");
         }
         public override void UpdateEquip(Player player)

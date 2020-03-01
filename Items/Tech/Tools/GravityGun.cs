@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Tech.Tools
             PlayerEnergy modPlayer = player.GetModPlayer<PlayerEnergy>();
 
             Vector2 mouse = Main.MouseWorld;
-            for (int i = 0; i < Main.item.Length; i++)
+            for (int i = 0; i < Main.maxItems; i++)
             {
                 Item otherItem = Main.item[i];
 

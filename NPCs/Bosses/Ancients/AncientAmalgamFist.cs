@@ -110,7 +110,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             if (!hasOverlay)
             {
                 // bad way to do this probably :lul:
-                Projectile.NewProjectile(npc.position.X, npc.position.Y, 0, 0, mod.ProjectileType("AAHandOverlay"), 0, 0, 0, 0, npc.whoAmI);
+                Projectile.NewProjectile(npc.position.X, npc.position.Y, 0, 0, mod.ProjectileType("AAHandOverlay"), 0, 0, Main.myPlayer, 0, npc.whoAmI);
                 npc.alpha = 255; // so u cant see the weird ass offset :shruggy:
                 hasOverlay = true;
             }

@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Placeable
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.LunarBar, 10);
-            recipe.AddIngredient(null, "NeutronFragment", 15);
+            recipe.AddIngredient(null, "NeutronFragment", 8);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
