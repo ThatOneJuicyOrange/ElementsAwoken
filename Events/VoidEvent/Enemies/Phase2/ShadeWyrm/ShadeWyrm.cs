@@ -84,6 +84,10 @@ namespace ElementsAwoken.Events.VoidEvent.Enemies.Phase2.ShadeWyrm
         {
             potionType = mod.ItemType("EpicHealingPotion");
         }
+        public override bool CheckActive()
+        {
+            return false;
+        }
     }
 
     class ShadeWyrmBody : ShadeWyrm
@@ -134,6 +138,10 @@ namespace ElementsAwoken.Events.VoidEvent.Enemies.Phase2.ShadeWyrm
                 }
             }
         }
+        public override bool CheckActive()
+        {
+            return false;
+        }
     }
 
     class ShadeWyrmTail : ShadeWyrm
@@ -154,6 +162,10 @@ namespace ElementsAwoken.Events.VoidEvent.Enemies.Phase2.ShadeWyrm
         {
             base.Init();
             tail = true;
+        }
+        public override bool CheckActive()
+        {
+            return false;
         }
     }
 
@@ -756,10 +768,7 @@ namespace ElementsAwoken.Events.VoidEvent.Enemies.Phase2.ShadeWyrm
             Main.spriteBatch.Draw(texture, npc.Center - Main.screenPosition, npc.frame, color, npc.rotation, origin, npc.scale, SpriteEffects.None, 0);
             return false;
         }
-        public override bool CheckActive()
-        {
-            return false;
-        }
+
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
                 Texture2D texture = mod.GetTexture("Events/VoidEvent/Enemies/Phase2/ShadeWyrm/" + GetType().Name + "_Glow");

@@ -20,8 +20,8 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
             item.UseSound = SoundID.Item4;
             item.useAnimation = 30;
             item.rare = 11;
-            item.GetGlobalItem<EARarity>().rare = 13;
             item.value = Item.sellPrice(0, 2, 0, 0);
+            item.expert = true;
         }
         public override void SetStaticDefaults()
         {
@@ -42,6 +42,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.DemonHeart, 1);
             recipe.AddIngredient(null, "DiscordantBar", 25);
             recipe.AddIngredient(null, "VoidAshes", 12);
             recipe.AddIngredient(null, "VoidEssence", 15);

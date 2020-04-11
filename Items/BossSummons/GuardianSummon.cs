@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using ElementsAwoken.NPCs.Bosses.TheGuardian;
 
 namespace ElementsAwoken.Items.BossSummons
 {
@@ -33,8 +34,11 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override bool UseItem(Player player)
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheGuardian"));
-            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("TheGuardian"), 0f, 0f, 0, 0, 0);
+            //if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("TheGuardian"));
+            // else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("TheGuardian"), 0f, 0f, 0, 0, 0);
+            int npcIndex = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y - 400, ModContent.NPCType<TheGuardian>(), 0, 0f, 0f, 0f, 0f, 255);
+            NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npcIndex, 0f, 0f, 0f, 0, 0, 0);
+
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }

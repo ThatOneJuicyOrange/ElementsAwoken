@@ -37,16 +37,38 @@ namespace ElementsAwoken.Items.Elements.Fire
             Tooltip.SetDefault("Throws three exploding fire daggers");
         }
 
-
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+        public override bool CanUseItem(Player player)
+        {
+            return true;
+        }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            float numberProjectiles = 3;
-            float rotation = MathHelper.ToRadians(5);
-            position += Vector2.Normalize(new Vector2(speedX, speedY)) * 5f;
-            for (int i = 0; i < numberProjectiles; i++)
+            if (player.altFunctionUse == 2)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 1f;
-                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+                for (int i = 0; i < Main.maxProjectiles; i++)
+                {
+                    Projectile proj = Main.projectile[i];
+                    if (proj.active && proj.type == item.shoot && proj.alpha < 150)
+                    {
+
+                        proj.Kill();
+                    }
+                }
+            }
+            else
+            {
+                float numberProjectiles = 3;
+                float rotation = MathHelper.ToRadians(5);
+                position += Vector2.Normalize(new Vector2(speedX, speedY)) * 5f;
+                for (int i = 0; i < numberProjectiles; i++)
+                {
+                    Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 1f;
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+                }
             }
             return false;
         }

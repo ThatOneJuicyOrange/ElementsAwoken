@@ -45,7 +45,7 @@ namespace ElementsAwoken.Projectiles.Yoyos
                         immune = true;
                     }
                 }
-                if (!immune && npc.active && npc.damage > 0 && !npc.boss && npc.lifeMax < 10000 && Vector2.Distance(npc.Center, projectile.Center) < maxDist)
+                if (!immune && npc.CanBeChasedBy(this) && !npc.boss && npc.lifeMax < 10000 && Vector2.Distance(npc.Center, projectile.Center) < maxDist)
                 {
                     Vector2 toTarget = new Vector2(projectile.Center.X - npc.Center.X, projectile.Center.Y - npc.Center.Y);
                     toTarget.Normalize();

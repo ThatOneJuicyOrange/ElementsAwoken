@@ -1,7 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -33,9 +35,31 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-
-            Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/Dubstep"), 1, 0);
-        
+            //why wont this work aaa
+            //LegacySoundStyle f = new LegacySoundStyle(2, mod.GetSoundSlot(Terraria.ModLoader.SoundType.Item, "Sounds/Item/Dubstep"));
+            //LegacySoundStyle f = new LegacySoundStyle(2, mod.GetSoundSlot(Terraria.ModLoader.SoundType.Item, "Sounds/Item/Dubstep"), 1);
+            //LegacySoundStyle f = new LegacySoundStyle(SoundID.Trackable, mod.GetSoundSlot(Terraria.ModLoader.SoundType.Item, "Sounds/Custom/Dubstep"));
+            //LegacySoundStyle f = new LegacySoundStyle(SoundID.Trackable, mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Sounds/Custom/Dubstep"));
+            /*if (projectile.soundDelay == 0)
+            {
+                projectile.soundDelay = -1;
+                projectile.localAI[1] = Main.PlayTrackedSound(mod.GetLegacySoundSlot(Terraria.ModLoader.SoundType.Custom, "Sounds/Custom/Dubstep"), projectile.Center).ToFloat();
+            }
+            ActiveSound activeSound = Main.GetActiveSound(SlotId.FromFloat(projectile.localAI[1]));
+            if (activeSound != null)
+            {
+                activeSound.Position = projectile.Center;
+                //activeSound.Volume = 1f;
+            }
+            else
+            {
+                float[] arg_9B_0 = projectile.localAI;
+                int arg_9B_1 = 1;
+                SlotId invalid = SlotId.Invalid;
+                arg_9B_0[arg_9B_1] = invalid.ToFloat();
+            }*/
+            Main.PlaySound(2, -1,-1, mod.GetSoundSlot(Terraria.ModLoader.SoundType.Item, "Sounds/Item/Dubstep"));
+            //Main.NewText(mod.GetSoundSlot(Terraria.ModLoader.SoundType.Item, "Sounds/Item/Dubstep"));
             Player player = Main.player[projectile.owner];
             Vector2 vector = player.RotatedRelativePoint(player.MountedCenter, true);
 

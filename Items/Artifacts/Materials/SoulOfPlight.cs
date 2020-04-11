@@ -20,6 +20,7 @@ namespace ElementsAwoken.Items.Artifacts.Materials
         {
             DisplayName.SetDefault("Gem of the Universe");
             //Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
+            Tooltip.SetDefault("");
         }
     }
 }

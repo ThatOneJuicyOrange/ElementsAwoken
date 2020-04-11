@@ -73,7 +73,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
 
             NPC parent = Main.npc[(int)npc.ai[1]];
 
-            if (!parent.active) npc.active = false;
+            if (!parent.active || parent.type != ModContent.NPCType<HealingHearth>()) npc.active = false;
 
             float movespeed = 5f;
             if (Vector2.Distance(parent.Center, npc.Center) >= 120)

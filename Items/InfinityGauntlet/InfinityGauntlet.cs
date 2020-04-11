@@ -166,6 +166,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                 {
                     player.position = targetPos;
                     player.velocity = Vector2.Zero;
+                    player.fallStart = (int)targetPos.Y/16; // to stop fall damage
                     if (Main.netMode != 0)
                     {
                         NetMessage.SendData(65, -1, -1, null, 0, player.whoAmI, targetPos.X, targetPos.Y, 1, 0, 0);
@@ -365,7 +366,7 @@ namespace ElementsAwoken.Items.InfinityGauntlet
                     {
                         for (int l = 0; l < 20; l++)
                         {
-                            for (int k = 0; k < Main.projectile.Length; k++)
+                            for (int k = 0; k < Main.maxProjectiles; k++)
                             {
                                 Projectile other = Main.projectile[k];
                                 if (other.active && other.type != mod.ProjectileType("InfinityBubble") && other.hostile && !other.friendly)

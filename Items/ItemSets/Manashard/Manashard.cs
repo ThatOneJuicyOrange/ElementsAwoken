@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
             recipe.AddIngredient(null, "Stardust", 1);
             recipe.AddIngredient(ItemID.SoulofLight, 1);
             recipe.AddIngredient(ItemID.CrystalShard, 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

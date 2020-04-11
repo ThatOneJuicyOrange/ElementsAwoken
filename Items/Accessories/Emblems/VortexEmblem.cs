@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Vortex Emblem");
-            Tooltip.SetDefault("30% increased ranged damage\n75% decreased non-ranged damage");
+            Tooltip.SetDefault("22% increased ranged damage\n75% decreased non-ranged damage");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.meleeDamage -= 0.75f;
-            player.rangedDamage += 0.3f;
+            player.rangedDamage += 0.22f;
             player.magicDamage -= 0.75f;
             player.minionDamage -= 0.75f;
         }

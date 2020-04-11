@@ -15,7 +15,11 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
 {
     public class Railgun : ModItem
     {
-        public float heat = 0;
+        public float heat = 0; 
+        public override bool CloneNewInstances
+        {
+            get { return true; }
+        }
         public override void SetDefaults()
         {
             item.width = 60;
@@ -61,16 +65,9 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
             Main.PlaySound(SoundID.Item113, (int)player.position.X, (int)player.position.Y); 
             Vector2 muzzleOffset = Vector2.Normalize(new Vector2(speedX, speedY)) * 70f;
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
-            if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))
-            {
-                position += muzzleOffset;
-            }
-            float damageScale = MathHelper.Lerp(1, 2, MathHelper.Clamp((float)modPlayer.aeroflakHits / 10,0,1));
-            Projectile.NewProjectile(position.X, position.Y , speedX, speedY, ProjectileType<RailgunBeam>(), (int)(damage * damageScale), knockBack, player.whoAmI, 0.0f, 0.0f);
-            if (heat > 1300)
-            {
-                player.AddBuff(BuffType<BurningHands>(), 180, false);
-            }
+            if (Collision.CanHit(position, 0, 0, position + muzzleOffset, 0, 0))  position += muzzleOffset;           
+            Projectile.NewProjectile(position.X, position.Y , speedX, speedY, ProjectileType<RailgunBeam>(), damage, knockBack, player.whoAmI, 0.0f, 0.0f);
+            if (heat > 1300) player.AddBuff(BuffType<BurningHands>(), 180, false);          
             if (heat > 1700)
             {
                 int amount = (int)(player.statLifeMax2 * 0.2f);
@@ -84,7 +81,8 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier6
         {
             if (heat > 1300)
             {
-                mult = heat / 1800f;
+                mult *= 1 - ((float)(heat - 1300) / 500f);
+                Main.NewText(mult);
             }
         }
         public override Vector2? HoldoutOffset()

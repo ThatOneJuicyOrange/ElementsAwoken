@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hell Fury");
-            Tooltip.SetDefault("For 30 seconds, damage is increased by 25% but defense decreased by 10\nYou inflict fire on attack");
+            Tooltip.SetDefault("For 30 seconds, damage is increased by 20% but you take double damage\nYou inflict fire on attack");
         }
         public override void AddRecipes()
         {

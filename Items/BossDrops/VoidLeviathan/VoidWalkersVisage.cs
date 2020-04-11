@@ -27,7 +27,11 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         }
         public override bool DrawHead()
         {
-            return false;
+            return true;
+        }
+        public override void DrawHair(ref bool drawHair, ref bool drawAltHair)
+        {
+            drawHair = true;
         }
         public override void UpdateEquip(Player player)
         {

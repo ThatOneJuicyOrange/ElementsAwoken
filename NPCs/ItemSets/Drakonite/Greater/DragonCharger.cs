@@ -103,6 +103,10 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
                 {
                     Dust.NewDust(npc.position, npc.width, npc.height, 6, hitDirection, -1f, 0, default(Color), 1f);
                 }
+                for (int i = 0; i < 3; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/DragonCharger" + i), npc.scale);
+                }
             }
         }
         public override void NPCLoot()

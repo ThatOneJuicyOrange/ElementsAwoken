@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Items.Essence;
+using ElementsAwoken.Projectiles;
+using ElementsAwoken.Tiles.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Elements.Desert
 {
@@ -30,7 +34,7 @@ namespace ElementsAwoken.Items.Elements.Desert
             item.value = Item.buyPrice(0, 5, 0, 0);
             item.rare = 3;
 
-            item.shoot = mod.ProjectileType("SandSpray");
+            item.shoot = ProjectileType<SandSpray>();
             item.shootSpeed = 4.5f;
             item.useAmmo = AmmoID.Sand;
         }
@@ -40,8 +44,6 @@ namespace ElementsAwoken.Items.Elements.Desert
             DisplayName.SetDefault("Sand Sprayer");
             Tooltip.SetDefault("Sprays coarse sand at your enemies... Useful\n20% chance to not consume ammo");
         }
-
-
         public override bool ConsumeAmmo(Player player)
         {
             return Main.rand.NextFloat() > .8f;
@@ -49,11 +51,10 @@ namespace ElementsAwoken.Items.Elements.Desert
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DesertEssence", 4);
+            recipe.AddIngredient(ItemType<DesertEssence>(), 4);
             recipe.AddRecipeGroup("ElementsAwoken:SandGroup", 25);
             recipe.AddRecipeGroup("ElementsAwoken:SandstoneGroup", 10);
-            recipe.AddIngredient(ItemID.Sandgun);
-            recipe.AddTile(null, "ElementalForge");
+            recipe.AddTile(TileType<ElementalForge>());
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

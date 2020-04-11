@@ -71,7 +71,7 @@ namespace ElementsAwoken.Projectiles.Held
                 }
                 else
                 {
-                    for (int p = 0; p < Main.projectile.Length; p++)
+                    for (int p = 0; p < Main.maxProjectiles; p++)
                     {
                         if (Main.projectile[p].active && Main.projectile[p].owner == player.whoAmI && Main.projectile[p].type == mod.ProjectileType("MeteoricFireball"))
                         {
@@ -81,31 +81,18 @@ namespace ElementsAwoken.Projectiles.Held
                     }
                     projectile.Kill();
                 }
+                int soundDelay = (int)MathHelper.Lerp(12, 0, projectile.ai[1] / 40);
+
+                if (projectile.soundDelay <= 0)
+                {
+                    projectile.soundDelay = 2 + soundDelay;
+                    projectile.soundDelay *= 2;
+                    Main.PlaySound(SoundID.Item15, projectile.position);
+                }
+
+                ProjectileUtils.HeldWandPos(projectile, player);
             }
 
-            int soundDelay = (int)MathHelper.Lerp(12,0, projectile.ai[1] / 40);
-
-            if (projectile.soundDelay <= 0)
-            {
-                projectile.soundDelay = 2 + soundDelay;
-                projectile.soundDelay *= 2;
-                Main.PlaySound(SoundID.Item15, projectile.position);
-            }
-
-            Vector2 offset = projectile.velocity;
-            offset.Normalize();
-            offset *= Main.projectileTexture[projectile.type].Width / 3;
-
-            Vector2 vector24 = player.RotatedRelativePoint(player.MountedCenter, true) + offset.RotatedBy((double)(MathHelper.Pi / 10), default(Vector2));
-            player.heldProj = projectile.whoAmI;
-            player.itemTime = player.itemAnimation;
-            projectile.position.X = vector24.X - (float)(projectile.width / 2);
-            projectile.position.Y = vector24.Y - (float)(projectile.height / 2);
-            player.ChangeDir(projectile.direction);
-            player.heldProj = projectile.whoAmI;
-            player.itemTime = 2;
-            player.itemAnimation = 2;
-            player.itemRotation = (float)Math.Atan2((double)(projectile.velocity.Y * (float)projectile.direction), (double)(projectile.velocity.X * (float)projectile.direction));
 
 
             if (projectile.ai[1] < 40)
@@ -117,32 +104,6 @@ namespace ElementsAwoken.Projectiles.Held
                 dust.noGravity = true;
                 dust.customData = player;
             }
-
-
-            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + (float)(Math.PI / 4);
-            if (projectile.spriteDirection == -1)
-            {
-                projectile.rotation -= 1.57f;
-            }
-
-            float scaleFactor = player.inventory[player.selectedItem].shootSpeed * projectile.scale;
-            Vector2 vector3 = player.RotatedRelativePoint(player.MountedCenter, true);
-            Vector2 value2 = Main.screenPosition + new Vector2((float)Main.mouseX, (float)Main.mouseY) - vector3;
-            if (player.gravDir == -1f)
-            {
-                value2.Y = (float)(Main.screenHeight - Main.mouseY) + Main.screenPosition.Y - vector3.Y;
-            }
-            Vector2 vector4 = Vector2.Normalize(value2);
-            if (float.IsNaN(vector4.X) || float.IsNaN(vector4.Y))
-            {
-                vector4 = -Vector2.UnitY;
-            }
-            vector4 *= scaleFactor;
-            if (vector4.X != projectile.velocity.X || vector4.Y != projectile.velocity.Y)
-            {
-                projectile.netUpdate = true;
-            }
-            projectile.velocity = vector4;
         }
         private void CreateProj()
         {

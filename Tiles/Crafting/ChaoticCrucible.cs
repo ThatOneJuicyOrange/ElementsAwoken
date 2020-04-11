@@ -4,6 +4,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.DataStructures;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ElementsAwoken.Tiles.Crafting
 {
@@ -19,44 +20,37 @@ namespace ElementsAwoken.Tiles.Crafting
             Main.tileLavaDeath[Type] = false;
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
             ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Chaotic Crucible");
+            name.SetDefault("Chaotron Crucible");
             AddMapEntry(new Color(217, 137, 85), name);
             disableSmartCursor = true;
 			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
             TileObjectData.addTile(Type);
 			adjTiles = new int[] { TileID.Furnaces, mod.TileType("ElementalForge"), };
-			animationFrameHeight = 38;
-			dustType = 6;
         }
- 
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = fail ? 1 : 3;
-        }
+
  
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Item.NewItem(i * 16, j * 16, 32, 16, mod.ItemType("ChaoticCrucible"));
         }
-		
-		public override void AnimateTile(ref int frame, ref int frameCounter)
-		{
-			frameCounter++;
-			if (frameCounter > 6)
-			{
-				frameCounter = 0;
-				frame++;
-				if (frame > 3)
-				{
-					frame = 0;
-				}
-			}
-		}
+
 		public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)   //light colors
         {
             r = 0.8f;
             g = 0.3f;
-            b = 0.6f; 
+            b = 0.6f;
+        }
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+             if (Main.rand.NextBool(20))
+            {
+                Vector2 position = new Vector2(i * 16, j * 16 - 16);
+                Dust dust = Main.dust[Dust.NewDust(position, 8, 2, 127)];
+                dust.velocity.Y = Main.rand.NextFloat(-2, -0.2f);
+                dust.fadeIn = 1.5f;
+                dust.scale = 0.2f;
+                dust.noGravity = true;
+            }
         }
     }
 }

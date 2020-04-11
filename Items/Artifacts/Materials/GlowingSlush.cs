@@ -18,6 +18,7 @@ namespace ElementsAwoken.Items.Artifacts.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Glowing Slush");
+            Tooltip.SetDefault("");
         }
     }
 }

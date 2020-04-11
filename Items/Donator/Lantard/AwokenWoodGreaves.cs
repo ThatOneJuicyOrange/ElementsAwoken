@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Donator.Lantard
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Awoken Wooden Greaves");
-            Tooltip.SetDefault("6% increased damage\n10% increased movement speed\nSomething so simple has become so powerful... As have you\nLantards's donator item");
+            Tooltip.SetDefault("6% increased damage\n10% increased movement speed\nSomething so simple has become so powerful... As have you\nLantard's donator item");
         }
         public override void UpdateEquip(Player player)
         {

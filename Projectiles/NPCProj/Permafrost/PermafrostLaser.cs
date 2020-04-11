@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,58 +11,79 @@ namespace ElementsAwoken.Projectiles.NPCProj.Permafrost
 {
     public class PermafrostLaser : ModProjectile
     {
+        public override string Texture { get { return "ElementsAwoken/Projectiles/LaserTex"; } }
         public override void SetDefaults()
         {
-            projectile.width = 4;
-            projectile.height = 4;
+            projectile.width = 6;
+            projectile.height = 6;
             projectile.hostile = true;
-            projectile.magic = true;
-            projectile.tileCollide = false;
-            projectile.penetrate = -1;
-            projectile.extraUpdates = 100;
-            projectile.timeLeft = 200;
             projectile.alpha = 255;
+            projectile.penetrate = 1;
+            projectile.extraUpdates = 2;
+            projectile.timeLeft = 600;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Permafrost");
+            DisplayName.SetDefault("Frozen Laser");
         }
         public override void AI()
         {
-            if (projectile.velocity.X != projectile.velocity.X)
+            projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
+
+            Lighting.AddLight((int)projectile.Center.X, (int)projectile.Center.Y, 0f, 0.1f, 0.5f);
+            float trailLength = 75f;
+            if (projectile.ai[1] == 0f)
             {
-                projectile.position.X = projectile.position.X + projectile.velocity.X;
-                projectile.velocity.X = -projectile.velocity.X;
-            }
-            if (projectile.velocity.Y != projectile.velocity.Y)
-            {
-                projectile.position.Y = projectile.position.Y + projectile.velocity.Y;
-                projectile.velocity.Y = -projectile.velocity.Y;
-            }
-            projectile.localAI[0] += 1f;
-            if (projectile.localAI[0] > 9f)
-            {
-                int dustlength = 3;
-                for (int i = 0; i < dustlength; i++)
+                projectile.localAI[0] += 3f;
+                if (projectile.localAI[0] > trailLength)
                 {
-                    Vector2 vector33 = projectile.position;
-                    vector33 -= projectile.velocity * ((float)i * (1 / dustlength));
-                    projectile.alpha = 255;
-                    int num448 = Dust.NewDust(vector33, 1, 1, 135, 0f, 0f, 0, default(Color), 0.75f);
-                    Main.dust[num448].position = vector33;
-                    Main.dust[num448].scale = (float)Main.rand.Next(70, 110) * 0.013f;
-                    Main.dust[num448].velocity *= 0.05f;
-                    Main.dust[num448].noGravity = true;
+                    projectile.localAI[0] = trailLength;
                 }
-                return;
+            }
+            else
+            {
+                projectile.localAI[0] -= 3f;
+                if (projectile.localAI[0] <= 0f)
+                {
+                    projectile.Kill();
+                    return;
+                }
             }
         }
-        public override void Kill(int timeLeft)
+        public override Color? GetAlpha(Color lightColor)
         {
-            for (int k = 0; k < 5; k++)
+            return new Color(128, 177, 240, 0);
+        }
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            Color color25 = Lighting.GetColor((int)((double)projectile.position.X + (double)projectile.width * 0.5) / 16, (int)(((double)projectile.position.Y + (double)projectile.height * 0.5) / 16.0));
+
+            Rectangle value7 = new Rectangle((int)Main.screenPosition.X - 500, (int)Main.screenPosition.Y - 500, Main.screenWidth + 1000, Main.screenHeight + 1000);
+            float num148 = (float)(Main.projectileTexture[projectile.type].Width - projectile.width) * 0.5f + (float)projectile.width * 0.5f;
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if (projectile.spriteDirection == -1)
             {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 135, projectile.oldVelocity.X * 0.5f, projectile.oldVelocity.Y * 0.5f);
+                spriteEffects = SpriteEffects.FlipHorizontally;
             }
+            if (projectile.getRect().Intersects(value7))
+            {
+                Vector2 value8 = new Vector2(projectile.position.X - Main.screenPosition.X + num148, projectile.position.Y - Main.screenPosition.Y + (float)(projectile.height / 2) + projectile.gfxOffY);
+                float num173 = 100f;
+                float scaleFactor = 3f;
+                if (projectile.ai[1] == 1f)
+                {
+                    num173 = (float)((int)projectile.localAI[0]);
+                }
+                for (int num174 = 1; num174 <= (int)projectile.localAI[0]; num174++)
+                {
+                    Vector2 value9 = Vector2.Normalize(projectile.velocity) * (float)num174 * scaleFactor;
+                    Color color32 = projectile.GetAlpha(color25);
+                    color32 *= (num173 - (float)num174) / num173;
+                    color32.A = 0;
+                    spriteBatch.Draw(Main.projectileTexture[projectile.type], value8 - value9, null, color32, projectile.rotation, new Vector2(num148, (float)(projectile.height / 2)), projectile.scale, spriteEffects, 0f);
+                }
+            }
+            return false;
         }
     }
 }

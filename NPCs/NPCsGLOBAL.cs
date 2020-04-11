@@ -6,6 +6,14 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Items.Accessories;
+using ElementsAwoken.Items.Weapons.Thrown;
+using ElementsAwoken.Items.BossDrops.Ancients;
+using ElementsAwoken.Items.Donator.Buildmonger;
+using ElementsAwoken.Items.Donator.Crow;
+using ElementsAwoken.Items.Placeable;
+using ElementsAwoken.Buffs.Debuffs;
 
 namespace ElementsAwoken.NPCs
 {
@@ -23,12 +31,11 @@ namespace ElementsAwoken.NPCs
         public bool electrified = false;
         public bool acidBurn = false;
         public bool corroding = false;
-        // public bool soulRip = false;
-        //public int soulRipTimer = 0;
-        //public float soulRipAlpha = 0.3f;
+        public bool fastPoison = false;
 
         public bool impishCurse = false;
 
+        public bool variableLifeDrain = false;
         public int lifeDrainAmount = 0;
 
         public bool hasHands = false;
@@ -55,8 +62,11 @@ namespace ElementsAwoken.NPCs
             electrified = false;
             acidBurn = false;
             corroding = false;
+            fastPoison = false;
 
             impishCurse = false;
+
+            variableLifeDrain = false;
         }
 
         public override bool InstancePerEntity
@@ -69,15 +79,15 @@ namespace ElementsAwoken.NPCs
 
         public static void ImmuneAllEABuffs(NPC npc)
         {
-            Mod mod = ModLoader.GetMod("ElementsAwoken");
-            npc.buffImmune[mod.BuffType("IceBound")] = true;
-            npc.buffImmune[mod.BuffType("ExtinctionCurse")] = true;
-            npc.buffImmune[mod.BuffType("HandsOfDespair")] = true;
-            npc.buffImmune[mod.BuffType("EndlessTears")] = true;
-            npc.buffImmune[mod.BuffType("AncientDecay")] = true;
-            npc.buffImmune[mod.BuffType("SoulInferno")] = true;
-            npc.buffImmune[mod.BuffType("DragonFire")] = true;
-            npc.buffImmune[mod.BuffType("Discord")] = true;
+            npc.buffImmune[BuffType<IceBound>()] = true;
+            npc.buffImmune[BuffType<ExtinctionCurse>()] = true;
+            npc.buffImmune[BuffType<HandsOfDespair>()] = true;
+            npc.buffImmune[BuffType<EndlessTears>()] = true;
+            npc.buffImmune[BuffType<AncientDecay>()] = true;
+            npc.buffImmune[BuffType<SoulInferno>()] = true;
+            npc.buffImmune[BuffType<Dragonfire>()] = true;
+            npc.buffImmune[BuffType<Discord>()] = true;
+            npc.buffImmune[BuffType<FastPoison>()] = true;
         }
         public override void AI(NPC npc)
         {
@@ -230,7 +240,17 @@ namespace ElementsAwoken.NPCs
                 maxSpawns = 0;
             }
         }
-
+        public override bool SpecialNPCLoot(NPC npc)
+        {
+            Player player = Main.LocalPlayer;
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            if (modPlayer.glassHeart && npc.boss)
+            {
+                CombatText.NewText(npc.getRect(), Color.Red, "No-hit!", true);
+                npc.NPCLoot();
+            }
+            return base.SpecialNPCLoot(npc);
+        }
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
             if (AnyBoss()) pool.Clear();
@@ -254,96 +274,53 @@ namespace ElementsAwoken.NPCs
             if (acidBurn)
             {
                 npc.lifeRegen -= 20;
-                if (damage < 3)
-                {
-                    damage = 3;
-                }
+                if (damage < 3) damage = 3;
             }
             if (dragonfire)
             {
                 npc.lifeRegen -= 40;
-                if (damage < 2)
-                {
-                    damage = 2;
-                }
+                if (damage < 2)  damage = 2;
             }
             if (electrified)
             {
                 npc.lifeRegen -= 40;
-                if (damage < 4)
-                {
-                    damage = 4;
-                }
+                if (damage < 4) damage = 4;
             }
             if (ancientDecay)
             {
                 npc.lifeRegen -= 50;
-                if (damage < 3)
-                {
-                    damage = 3;
-                }
+                if (damage < 5)  damage = 5;
             }
-            if (soulInferno)
+            if (corroding || soulInferno)
             {
                 npc.lifeRegen -= 75;
-                if (damage < 3)
-                {
-                    damage = 3;
-                }
-            }
-            if (corroding)
-            {
-                npc.lifeRegen -= 75;
-                if (damage < 4) damage = 4;
+                if (damage < 8) damage = 8;
             }
             if (handsOfDespair)
             {
-                npc.lifeRegen -= 75;
-                if (damage < 10)
-                {
-                    damage = 10;
-                }
+                npc.lifeRegen -= 120;
+                if (damage < 15) damage = 15;
                 if (!hasHands && !npc.boss)
                 {
                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, mod.ProjectileType("HandsOfDespair"), 0, 0f, 0, 1f, npc.whoAmI);
                     hasHands = true;
                 }
             }
-            else
-            {
-                hasHands = false;
-            }
+            else hasHands = false;
             if (extinctionCurse)
             {
-                npc.lifeRegen -= 100;
-                if (damage < 12)
-                {
-                    damage = 12;
-                }
+                npc.lifeRegen -= 150;
+                if (damage < 30)   damage = 30;
             }
-            if (discordDebuff)
+            if (chaosBurn || discordDebuff || fastPoison)
             {
                 npc.lifeRegen -= 300;
-                if (damage < 26)
-                {
-                    damage = 26;
-                }
+                if (damage < 50) damage = 50;
             }
-            if (chaosBurn)
-            {
-                npc.lifeRegen -= 300;
-                if (damage < 26)
-                {
-                    damage = 26;
-                }
-            }
-            if (lifeDrainAmount > 0 && !npc.SpawnedFromStatue)
+            if (variableLifeDrain && lifeDrainAmount > 0 && !npc.SpawnedFromStatue)
             {
                 npc.lifeRegen -= lifeDrainAmount;
-                if (damage < lifeDrainAmount / 2)
-                {
-                    damage = lifeDrainAmount / 2;
-                }
+                if (damage < lifeDrainAmount / 2)  damage = lifeDrainAmount / 2;
             }
             if (delete)
             {
@@ -361,6 +338,7 @@ namespace ElementsAwoken.NPCs
 
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
+            if (fastPoison) drawColor = new Color(14, 150, 45);
             if (ancientDecay)
             {
                 drawColor = Color.LightYellow;
@@ -429,6 +407,7 @@ namespace ElementsAwoken.NPCs
                 else drawColor = new Color(255, 180, 40);
                 Lighting.AddLight(npc.Center, 0.6f, 0.2f, 0.3f);
             }
+
             // seeing the npc id
             //Main.spriteBatch.DrawString(Main.fontMouseText, "whoAmI: " + npc.whoAmI, new Vector2(npc.Center.X - 30 - Main.screenPosition.X, npc.Top.Y - 20 - Main.screenPosition.Y), Color.White);
         }
@@ -532,51 +511,54 @@ namespace ElementsAwoken.NPCs
         {
             if (type == NPCID.Merchant && NPC.downedBoss1)
             {
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("ThrowableBook"));
+                shop.item[nextSlot].SetDefaults(ItemType<ThrowableBook>());
                 shop.item[nextSlot].shopCustomPrice = 80;
+                nextSlot++; 
+                shop.item[nextSlot].SetDefaults(ItemType<RainMeter>());
+                shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0,5,0,0);
                 nextSlot++;
             }
             if (type == NPCID.Dryad && Main.bloodMoon)
             {
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("DryadsRadar"));
+                shop.item[nextSlot].SetDefaults(ItemType<DryadsRadar>());
                 nextSlot++;
             }
             if (type == NPCID.Wizard)
             {
                 if (Main.hardMode)
                 {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Dictionary"));
+                    shop.item[nextSlot].SetDefaults(ItemType<Dictionary>());
                     shop.item[nextSlot].shopCustomPrice = 800;
                     nextSlot++;
                 }
                 if (MyWorld.downedAncients)
                 {
-                    shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("CrystalAmalgamate"));
+                    shop.item[nextSlot].SetDefaults(ItemType<CrystalAmalgamate>());
                     shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 25, 0, 0);
                     nextSlot++;
                 }
             }
             if (type == NPCID.Steampunker)
             {
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("SonicArm"));
+                shop.item[nextSlot].SetDefaults(ItemType<SonicArm>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 25, 0, 0);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("FeatheredGoggles"));
+                shop.item[nextSlot].SetDefaults(ItemType<FeatheredGoggles>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(2, 0, 0, 0);
                 nextSlot++;
             }
             if (type == NPCID.Cyborg)
             {
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Computer"));
+                shop.item[nextSlot].SetDefaults(ItemType<Computer>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 5, 0, 0);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("Desk"));
+                shop.item[nextSlot].SetDefaults(ItemType<Desk>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 1, 50, 0);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("OfficeChair"));
+                shop.item[nextSlot].SetDefaults(ItemType<OfficeChair>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 1, 50, 0);
                 nextSlot++;
-                shop.item[nextSlot].SetDefaults(ModLoader.GetMod("ElementsAwoken").ItemType("LabLightFunctional"));
+                shop.item[nextSlot].SetDefaults(ItemType<LabLightFunctional>());
                 shop.item[nextSlot].shopCustomPrice = Item.buyPrice(0, 1, 50, 0);
                 nextSlot++;
             }
@@ -616,7 +598,7 @@ namespace ElementsAwoken.NPCs
                     {
                         switch (Main.rand.Next(3))
                         {
-                            case 0: chat = "That scorpion, 'Wasteland' as you call it, why do we fear it?"; break;
+                            case 0: chat = "That scorpion, 'Wasteland' as you call it, why do we fear her?"; break;
                             case 1: chat = "I feel her speaking to me... she’s afraid... "; break;
                             case 2: chat = "All creatures deserve a chance to live. Live and be free..."; break;
                         }

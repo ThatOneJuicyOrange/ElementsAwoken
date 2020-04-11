@@ -22,8 +22,8 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
 
             item.scale = 1.3f;
 
-            item.useTime = 11;
-            item.useAnimation = 11;
+            item.useTime = 5;
+            item.useAnimation = 16;
             item.useStyle = 1;
             item.UseSound = SoundID.Item1;
 

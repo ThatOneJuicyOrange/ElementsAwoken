@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.Pets;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.Bosses.Ancients
 {
@@ -29,7 +31,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
         public int invertAttack = 1;
         public Vector2 playerOrigin = new Vector2();
 
-        public bool[] hasInverted = new bool[Main.projectile.Length];
+        public bool[] hasInverted = new bool[Main.maxProjectiles];
 
         public int previousAttackNum = 0;
 
@@ -41,7 +43,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
             npc.aiStyle = -1;
 
-            npc.lifeMax = 1000000;
+            npc.lifeMax = 1200000;
             npc.damage = 200;
             npc.defense = 90;
             npc.knockBackResist = 0f;
@@ -85,12 +87,12 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 1250000;
+            npc.lifeMax = 1500000;
             npc.damage = 250;
             npc.defense = 120;
             if (MyWorld.awakenedMode)
             {
-                npc.lifeMax = 1500000;
+                npc.lifeMax = 1750000;
                 npc.damage = 300;
                 npc.defense = 130;
             }
@@ -138,7 +140,9 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             }
             if (Main.rand.Next(10) == 0)
             {
+                
                 //Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("AncientsMask"));
+           Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<ElderSignet>());
             }
 
             if (Main.expertMode)
@@ -182,10 +186,10 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
 
             // despawn if no players
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+            if (!P.active || P.dead)
             {
                 npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
+                if (!P.active || P.dead)
                 {
                     npc.localAI[0]++;
                     npc.velocity.Y = npc.velocity.Y + 0.11f;
@@ -213,7 +217,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     {
                         Main.PlaySound(SoundLoader.customSoundType, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/AncientMergeFall"));
 
-                        for (int i = 0; i < Main.projectile.Length; i++)
+                        for (int i = 0; i < Main.maxProjectiles; i++)
                         {
                             if (Main.projectile[i].type == mod.ProjectileType("IzarisShard") ||
                                 Main.projectile[i].type == mod.ProjectileType("KirveinShard") ||
@@ -370,7 +374,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                     npc.ai[3]++;
                     if (npc.ai[3] >= 60)
                     {
-                        for (int i = 0; i < Main.projectile.Length; i++)
+                        for (int i = 0; i < Main.maxProjectiles; i++)
                         {
                             Projectile oProj = Main.projectile[i];
                             if (Vector2.Distance(oProj.Center, npc.Center) <= 300 && !hasInverted[i] && oProj.active && !oProj.minion && !ProjectileID.Sets.MinionSacrificable[oProj.type])
@@ -611,7 +615,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         npc.ai[3] = 0;
                         ResetShootTimers();
 
-                        for (int i = 0; i < Main.projectile.Length; i++)
+                        for (int i = 0; i < Main.maxProjectiles; i++)
                         {
                             Projectile other = Main.projectile[i];
                             if ((other.type == mod.ProjectileType("AncientProjectionSwirl") || other.type == mod.ProjectileType("AncientProjectionSwirl2")) && other.ai[1] == npc.whoAmI && other.active)
@@ -830,7 +834,7 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
                         npc.ai[3] = 0;
                         ResetShootTimers();
 
-                        for (int i = 0; i < Main.projectile.Length; i++)
+                        for (int i = 0; i < Main.maxProjectiles; i++)
                         {
                             Projectile other = Main.projectile[i];
                             if ((other.type == mod.ProjectileType("AncientProjectionSwirl") || other.type == mod.ProjectileType("AncientProjectionSwirl2")) && other.ai[1] == npc.whoAmI && other.active)

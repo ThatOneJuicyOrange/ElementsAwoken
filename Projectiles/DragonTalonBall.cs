@@ -34,11 +34,13 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
-            int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 130, default(Color), 3.75f);   //this defines the flames dust and color, change DustID to wat dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
-            Main.dust[dust].velocity *= 0.6f;
-            Main.dust[dust].scale *= 0.6f;
-            Main.dust[dust].noGravity = true;
-
+            if (!projectile.wet)
+            {
+                int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 130, default(Color), 3.75f);   //this defines the flames dust and color, change DustID to wat dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
+                Main.dust[dust].velocity *= 0.6f;
+                Main.dust[dust].scale *= 0.6f;
+                Main.dust[dust].noGravity = true;
+            }
             projectile.localAI[1]++;
             if (projectile.localAI[1] > 100)
             {

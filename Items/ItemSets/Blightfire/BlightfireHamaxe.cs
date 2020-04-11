@@ -18,7 +18,7 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
 
             item.damage = 65;
             item.axe = 35;
-            item.hammer = 140;
+            item.hammer = 160;
             item.knockBack = 8f;
 
             item.scale = 1.3f;
@@ -27,8 +27,8 @@ namespace ElementsAwoken.Items.ItemSets.Blightfire
             item.melee = true;
             item.autoReuse = true;
 
-            item.useTime = 11;
-            item.useAnimation = 11;
+            item.useTime = 7;
+            item.useAnimation = 17;
             item.useStyle = 1;
             item.UseSound = SoundID.Item1;
 

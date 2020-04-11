@@ -92,7 +92,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(null, "LunarShell", 1);
             recipe.AddIngredient(null, "EnergyGeode", 1);
             recipe.AddIngredient(null, "VoiditeBar", 8);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

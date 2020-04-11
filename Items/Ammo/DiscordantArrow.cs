@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.Ammo
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Discordant Arrow");
-            Tooltip.SetDefault("Leaves a trail of arrows from the chaos dimension\nSome of these arrows phase through dimensions and shoot at enemies\nAlso inflicts 'Chaos Burn'");
+            Tooltip.SetDefault("Leaves a trail of arrows from the chaos dimension\nSome of these arrows phase through dimensions and shoot at enemies\nAlso inflicts 'Chaotic Necrosis'");
         }
 
         public override void AddRecipes()

@@ -1,4 +1,5 @@
 ﻿using ElementsAwoken.Projectiles.GlobalProjectiles;
+using ElementsAwoken.Projectiles.NPCProj.Infernace;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,6 +12,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.Bosses.Infernace
 {
@@ -116,6 +118,21 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                 npc.defense = 30;
             }
         }
+        public override bool CheckDead()
+        {
+            if (aiTimer > -1 && !MyWorld.downedInfernace)
+            {
+                int duration = 270 * 4;
+                aiTimer = -duration;
+                shootTimer = NPC.AnyNPCs(NPCType<Furosia>()) ? 1 : 0;
+                npc.damage = 0;
+                npc.life = npc.lifeMax;
+                npc.dontTakeDamage = true;
+                npc.netUpdate = true;
+                return false;
+            }
+            return true;
+        }
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             NPC healer = null;
@@ -187,7 +204,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
 
         public override void NPCLoot()
         {
-
+            if (shootTimer == 1) Main.NewText("You have some heart in you...", Color.Orange);
             if (Main.expertMode)
             {
                 npc.DropBossBags();
@@ -280,23 +297,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         public override void AI()
         {
             Player P = Main.player[npc.target];
-            #region despawning
-            if (!P.active || P.dead || !P.ZoneUnderworldHeight)
-            {
-                npc.TargetClosest(true);
-                if (!P.active || P.dead || !P.ZoneUnderworldHeight)
-                {
-                    despawnTimer++;
-                }
-                else
-                {
-                    despawnTimer = 0;
-                }
-            }
-            if (despawnTimer >= 300) npc.active = false;
-            #endregion
-            #region teleport alpha
-            if (tpAlphaChangeTimer > 0)
+            if (tpAlphaChangeTimer > 0) // teleporting
             {
                 tpAlphaChangeTimer--;
                 if (tpAlphaChangeTimer > (int)(tpDuration / 2))
@@ -318,228 +319,259 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                     }
                 }
             }
-            #endregion
-
-            if ((npc.life > npc.lifeMax * 0.75f && aiTimer > 1060f) ||
-                (npc.life <= npc.lifeMax * 0.75f && npc.life > npc.lifeMax * 0.45f && aiTimer > 1660f) ||
-                (npc.life <= npc.lifeMax * 0.45f && aiTimer > 1900f)) aiTimer = 0f;
-        
-            if (npc.life <= npc.lifeMax * 0.25f && MyWorld.awakenedMode)
+            if (aiTimer < 0) // death anim
             {
-                monolithTimer--;
-                if (monolithTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                int duration = 270 * 4;
+                npc.velocity *= 0.9f;
+                if (aiTimer == -duration)
                 {
-                    Vector2 monolithPos = P.Bottom;
-
-                    Point monolithPoint = monolithPos.ToTileCoordinates();
-                    for (int j = monolithPoint.Y; j < Main.maxTilesY; j++)
-                    {
-                        Tile newTile = Framing.GetTileSafely(monolithPoint.X, j);
-                        if (newTile.active() && Main.tileSolid[newTile.type] /*&& !TileID.Sets.Platforms[newTile.type]*/)
-                        {
-                            monolithPoint = new Point(monolithPoint.X, j);
-                            monolithPos = new Vector2(monolithPoint.X * 16, monolithPoint.Y * 16);
-                            break;
-                        }
-                    }
-                    Projectile.NewProjectile(monolithPos.X, monolithPos.Y, 0f, 0f, mod.ProjectileType("InfernalMonolithSpawn"), projectileBaseDamage + 20, 0f, Main.myPlayer);
-                    monolithTimer = (int)(MathHelper.Lerp(120, 500, (float)npc.life / (float)(npc.lifeMax * 0.25f)));
+                    Projectile wife = Main.projectile[Projectile.NewProjectile(npc.Center.X - 200, npc.Center.Y, 0f, 0f, ProjectileType<InfernaceWifeSoul>(), 0, 0f, Main.myPlayer)];
+                    wife.ai[1] = shootTimer;
+                    if (shootTimer == 0) Projectile.NewProjectile(npc.Center.X - 300, npc.Center.Y, 0f, 0f, ProjectileType<FurosiaSoul>(), 0, 0f, Main.myPlayer);
+                }
+                aiTimer++;
+                if (aiTimer > -2)
+                {
+                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0f, 0f, ProjectileType<InfernaceSoul>(), 0, 0f, Main.myPlayer);
+                    npc.life = 0;
+                    npc.HitEffect(0, 0);
+                    npc.checkDead();
                 }
             }
-            if (npc.life <= npc.lifeMax * 0.65f && MyWorld.awakenedMode && dropNum == 0)
+            else
             {
-                EnterDroppingAI();
-                dropNum++;
-            }
-            if (npc.life <= npc.lifeMax * 0.15f)
-            {
-                bool canDrop = dropNum == 0;
-                if (MyWorld.awakenedMode) canDrop = dropNum == 1;
-                if (canDrop)
+                #region despawning
+                if (!P.active || P.dead || !P.ZoneUnderworldHeight)
                 {
-                    Main.NewText("I will kill you in my dying breaths!", Color.Orange.R, Color.Orange.G, Color.Orange.B);
+                    npc.TargetClosest(true);
+                    if (!P.active || P.dead || !P.ZoneUnderworldHeight) despawnTimer++;
+                    else despawnTimer = 0;
+                }
+                if (despawnTimer >= 300) npc.active = false;
+                #endregion
+
+
+                if ((npc.life > npc.lifeMax * 0.75f && aiTimer > 1060f) ||
+                    (npc.life <= npc.lifeMax * 0.75f && npc.life > npc.lifeMax * 0.45f && aiTimer > 1660f) ||
+                    (npc.life <= npc.lifeMax * 0.45f && aiTimer > 1900f)) aiTimer = 0f;
+
+                if (npc.life <= npc.lifeMax * 0.25f && MyWorld.awakenedMode)
+                {
+                    monolithTimer--;
+                    if (monolithTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 monolithPos = P.Bottom;
+
+                        Point monolithPoint = monolithPos.ToTileCoordinates();
+                        for (int j = monolithPoint.Y; j < Main.maxTilesY; j++)
+                        {
+                            Tile newTile = Framing.GetTileSafely(monolithPoint.X, j);
+                            if (newTile.active() && Main.tileSolid[newTile.type] /*&& !TileID.Sets.Platforms[newTile.type]*/)
+                            {
+                                monolithPoint = new Point(monolithPoint.X, j);
+                                monolithPos = new Vector2(monolithPoint.X * 16, monolithPoint.Y * 16);
+                                break;
+                            }
+                        }
+                        Projectile.NewProjectile(monolithPos.X, monolithPos.Y, 0f, 0f, mod.ProjectileType("InfernalMonolithSpawn"), projectileBaseDamage + 20, 0f, Main.myPlayer);
+                        monolithTimer = (int)(MathHelper.Lerp(120, 500, (float)npc.life / (float)(npc.lifeMax * 0.25f)));
+                    }
+                }
+                if (npc.life <= npc.lifeMax * 0.65f && MyWorld.awakenedMode && dropNum == 0)
+                {
                     EnterDroppingAI();
                     dropNum++;
                 }
-            }
-            #region furosia 
-            if (P.active && Main.expertMode)
-            {
-                bool validLife = npc.life <= npc.lifeMax * 0.5f;
-                if (MyWorld.awakenedMode) validLife = npc.life <= npc.lifeMax * 0.75f;
-                if (validLife && furosiaState == 0)
+                if (npc.life <= npc.lifeMax * 0.15f)
                 {
-                    Furosia furosiaNPC = (Furosia)Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Furosia"))].modNPC;
-                    //furosiaNPC.dashAI = 30;
-                    Main.NewText("Furosia, help me rid of this pest!", Color.Orange.R, Color.Orange.G, Color.Orange.B);
-                    furosiaState++;
-                }
-                if (furosiaState == 1 && !NPC.AnyNPCs(mod.NPCType("Furosia")))
-                {
-                    Main.NewText("My daughter... I will be your downfall, monster!", Color.Orange.R, Color.Orange.G, Color.Orange.B);
-                    Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 10);
-                    furosiaState++;
-                }
-            }
-            if (MyWorld.awakenedMode)
-            {
-                if (NPC.AnyNPCs(mod.NPCType("Furosia")))
-                {
-                    npc.immortal = true;
-                    npc.dontTakeDamage = true;
-                }
-                else
-                {
-                    npc.immortal = false;
-                    npc.dontTakeDamage = false;
-                }
-            }
-            #endregion
-
-            if (npc.life < npc.lifeMax / 2 && npc.localAI[0] == 0 && MyWorld.awakenedMode)
-            {
-                NPC healer = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("HealingHearth"))];
-                healer.ai[1] = npc.whoAmI;
-                npc.localAI[0]++;
-            }
-            aiTimer++;
-            shootTimer--;
-            if (monsterDropAI <= 0)
-            {
-                npc.color = default(Color);
-
-                float movementSpeed = Main.expertMode ? 3 : 2.5f;
-                if (MyWorld.awakenedMode) movementSpeed = 3.5f;
-                if (aiTimer < 700f)
-                {
-                    MoveDirect(P, movementSpeed);
-
-                    int tpTimer = (int)(aiTimer - Math.Floor(aiTimer / 300f) * 300) + 1;
-                    if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer <= 0f)
+                    bool canDrop = dropNum == 0;
+                    if (MyWorld.awakenedMode) canDrop = dropNum == 1;
+                    if (canDrop)
                     {
-                        Spike(P, 10f, projectileBaseDamage);
-                        shootTimer = Main.expertMode ? 90 : 130f;
-                        if (MyWorld.awakenedMode) shootTimer = 70;
+                        Main.NewText("I will kill you in my dying breaths!", Color.Orange);
+                        EnterDroppingAI();
+                        dropNum++;
                     }
-                    //tp dust
-                    int maxdusts = 20;
-                    if (tpTimer >= 280f && tpTimer % 5 == 0 && !ModContent.GetInstance<Config>().lowDust)
+                }
+                #region furosia 
+                if (P.active && Main.expertMode)
+                {
+                    bool validLife = npc.life <= npc.lifeMax * 0.5f;
+                    if (MyWorld.awakenedMode) validLife = npc.life <= npc.lifeMax * 0.75f;
+                    if (validLife && furosiaState == 0)
                     {
-                        for (int i = 0; i < maxdusts; i++)
+                        Furosia furosiaNPC = (Furosia)Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("Furosia"))].modNPC;
+                        //furosiaNPC.dashAI = 30;
+                        Main.NewText("Furosia, help me rid of this pest!", Color.Orange);
+                        furosiaState++;
+                    }
+                    if (furosiaState == 1 && !NPC.AnyNPCs(mod.NPCType("Furosia")))
+                    {
+                        Main.NewText("My daughter... I will be your downfall, monster!", Color.Orange);
+                        Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 10);
+                        furosiaState++;
+                    }
+                }
+                /*if (MyWorld.awakenedMode)
+                {
+                    if (NPC.AnyNPCs(mod.NPCType("Furosia")))
+                    {
+                        npc.immortal = true;
+                        npc.dontTakeDamage = true;
+                    }
+                    else
+                    {
+                        npc.immortal = false;
+                        npc.dontTakeDamage = false;
+                    }
+                }*/
+                #endregion
+
+                if (npc.life < npc.lifeMax / 2 && npc.localAI[0] == 0 && MyWorld.awakenedMode)
+                {
+                    NPC healer = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, mod.NPCType("HealingHearth"))];
+                    healer.ai[1] = npc.whoAmI;
+                    npc.localAI[0]++;
+                }
+                aiTimer++;
+                shootTimer--;
+                if (monsterDropAI <= 0)
+                {
+                    npc.color = default(Color);
+
+                    float movementSpeed = Main.expertMode ? 3 : 2.5f;
+                    if (MyWorld.awakenedMode) movementSpeed = 3.5f;
+                    if (aiTimer < 700f)
+                    {
+                        MoveDirect(P, movementSpeed);
+
+                        int tpTimer = (int)(aiTimer - Math.Floor(aiTimer / 300f) * 300) + 1;
+                        if (Main.netMode != NetmodeID.MultiplayerClient && shootTimer <= 0f)
                         {
-                            float dustDistance = 100;
-                            float dustSpeed = 10;
-                            Vector2 offset = Vector2.UnitX.RotateRandom(MathHelper.Pi) * dustDistance;
-                            Vector2 velocity = -offset.SafeNormalize(-Vector2.UnitY) * dustSpeed;
-                            Dust vortex = Dust.NewDustPerfect(npc.Center + offset, 6, velocity, 0, default(Color), 1.5f);
-                            vortex.noGravity = true;
+                            Spike(P, 10f, projectileBaseDamage);
+                            shootTimer = Main.expertMode ? 90 : 130f;
+                            if (MyWorld.awakenedMode) shootTimer = 70;
+                        }
+                        //tp dust
+                        int maxdusts = 20;
+                        if (tpTimer >= 280f && tpTimer % 5 == 0 && !ModContent.GetInstance<Config>().lowDust)
+                        {
+                            for (int i = 0; i < maxdusts; i++)
+                            {
+                                float dustDistance = 100;
+                                float dustSpeed = 10;
+                                Vector2 offset = Vector2.UnitX.RotateRandom(MathHelper.Pi) * dustDistance;
+                                Vector2 velocity = -offset.SafeNormalize(-Vector2.UnitY) * dustSpeed;
+                                Dust vortex = Dust.NewDustPerfect(npc.Center + offset, 6, velocity, 0, default(Color), 1.5f);
+                                vortex.noGravity = true;
+                            }
+                        }
+                        //teleport
+                        if (tpTimer >= 300)
+                        {
+                            int distance = 200 + Main.rand.Next(0, 200);
+                            int choice = Main.rand.Next(4);
+                            if (choice == 0) Teleport(P.position.X + distance, P.position.Y - distance);
+                            else if (choice == 1) Teleport(P.position.X - distance, P.position.Y - distance);
+                            else if (choice == 2) Teleport(P.position.X + distance, P.position.Y + distance);
+                            else if (choice == 3) Teleport(P.position.X - distance, P.position.Y + distance);
                         }
                     }
-                    //teleport
-                    if (tpTimer >= 300)
+
+                    // greek fire and fly upwards
+                    if (aiTimer >= 700f && aiTimer <= 1060)
                     {
-                        int distance = 200 + Main.rand.Next(0, 200);
-                        int choice = Main.rand.Next(4);
-                        if (choice == 0) Teleport(P.position.X + distance, P.position.Y - distance);
-                        else if (choice == 1) Teleport(P.position.X - distance, P.position.Y - distance);
-                        else if (choice == 2) Teleport(P.position.X + distance, P.position.Y + distance);
-                        else if (choice == 3) Teleport(P.position.X - distance, P.position.Y + distance);
+                        if (aiTimer == 700) shootTimer = 0;
+
+                        if (aiTimer >= 700 + tpDuration / 2) npc.velocity = new Vector2(0, -6);
+
+                        if (aiTimer == 700) Teleport(P.position.X + 300, P.position.Y + 300);
+                        if (aiTimer == 880) Teleport(P.position.X - 300, P.position.Y + 300);
+                        if (aiTimer == 1060) Teleport(P.position.X, P.position.Y - 300);
+                        float projSpeedX = aiTimer < 880f ? -5f : 5f;
+                        if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
+                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, projSpeedX, -1, mod.ProjectileType("InfernaceFire"), projectileBaseDamage, 0f, Main.myPlayer);
+                            shootTimer = Main.rand.Next(15, 35);
+                        }
+                    }
+                    if (aiTimer > 1060f && aiTimer <= 1660)
+                    {
+                        if (aiTimer == 1061) shootTimer = 30;
+                        // waves
+                        npc.velocity = Vector2.Zero;
+                        if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            int damage = Main.expertMode ? (int)(projectileBaseDamage * 1.3f) : (int)(projectileBaseDamage * 0.8f);
+                            if (MyWorld.awakenedMode) damage = (int)(projectileBaseDamage * 1.6f);
+
+                            float speed = Main.expertMode ? 8f : 6f;
+                            if (MyWorld.awakenedMode) speed = 10f;
+                            Waves(P, speed, damage, 4);
+                            shootTimer = Main.rand.Next(50, 80);
+                            npc.netUpdate = true;
+                        }
+                    }
+                    if (aiTimer > 1660)
+                    {
+                        int tpTimer = (int)(aiTimer - 1660);
+                        float speed = Main.expertMode ? 5f : 4f;
+                        if (MyWorld.awakenedMode) speed = 7f;
+
+                        if (tpTimer == 1)
+                        {
+                            Teleport(P.position.X + 500, P.position.Y + 500);
+                        }
+                        if (tpTimer >= 1 + tpDuration / 2 && tpTimer < 120)
+                        {
+                            npc.velocity.X = -speed;
+                            npc.velocity.Y = -speed;
+                        }
+                        if (tpTimer == 120)
+                        {
+                            Teleport(P.position.X - 500, P.position.Y + 500);
+                        }
+                        if (tpTimer >= 120 + tpDuration / 2 && tpTimer < 240)
+                        {
+                            npc.velocity.X = speed;
+                            npc.velocity.Y = -speed;
+                        }
                     }
                 }
-
-                // greek fire and fly upwards
-                if (aiTimer >= 700f && aiTimer <= 1060)
+                // lava slimes and bats
+                else
                 {
-                    if (aiTimer == 700) shootTimer = 0;
-
-                    if (aiTimer >= 700 + tpDuration / 2) npc.velocity = new Vector2(0, -6);
-
-                    if (aiTimer == 700) Teleport(P.position.X + 300, P.position.Y + 300);
-                    if (aiTimer == 880) Teleport(P.position.X - 300, P.position.Y + 300);
-                    if (aiTimer == 1060) Teleport(P.position.X, P.position.Y - 300);
-                    float projSpeedX = aiTimer < 880f ? -5f : 5f;
-                    if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 13);
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, projSpeedX, -1, mod.ProjectileType("InfernaceFire"), projectileBaseDamage, 0f, Main.myPlayer);
-                        shootTimer = Main.rand.Next(15, 35);
-                    }
-                }
-                if (aiTimer > 1060f && aiTimer <= 1660)
-                {
-                    if (aiTimer == 1061) shootTimer = 30;
-                    // waves
                     npc.velocity = Vector2.Zero;
-                    if (shootTimer <= 0f && Main.netMode != NetmodeID.MultiplayerClient)
+                    float scaleValue = (float)(Math.Sin(monsterDropAI / 17) + 1) / 2f;
+                    int r = 255;
+                    int g = (int)MathHelper.Lerp(60, 255, scaleValue);
+                    int b = (int)MathHelper.Lerp(20, 255, scaleValue);
+                    //Main.NewText(r + " " + g + " " + b);
+                    npc.color = new Color(r, g, b);
+                    monsterDropAI--;
+                    if (monsterDropAI > 750)
                     {
-                        int damage = Main.expertMode ? (int)(projectileBaseDamage * 1.3f) : (int)(projectileBaseDamage * 0.8f);
-                        if (MyWorld.awakenedMode) damage = (int)(projectileBaseDamage * 1.6f);
+                        int modNum = Main.expertMode ? 45 : 60;
+                        if (MyWorld.awakenedMode) modNum = 20;
+                        if (monsterDropAI % modNum == 0)
+                        {
+                            NPC monster = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, GetDropIDs()[Main.rand.Next(GetDropIDs().Count)])];
+                            monster.velocity = new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8f, 8f));
+                            monster.SpawnedFromStatue = true; // so it doesnt drop stuff
+                        }
+                    }
+                    if ((AnyDropNPCs() || monsterDropAI > 750) && monsterDropAI > 0)
+                    {
+                        npc.immortal = true;
+                        npc.dontTakeDamage = true;
+                    }
+                    else if ((!AnyDropNPCs() && monsterDropAI <= 750) || monsterDropAI <= 0)
+                    {
+                        ExitDroppingAI();
+                    }
 
-                        float speed = Main.expertMode ? 8f : 6f;
-                        if (MyWorld.awakenedMode) speed = 10f;
-                        Waves(P, speed, damage, 4);
-                        shootTimer = Main.rand.Next(50, 80);
-                        npc.netUpdate = true;
-                    }
                 }
-                if (aiTimer > 1660)
-                {
-                    int tpTimer = (int)(aiTimer - 1660);
-                    float speed = Main.expertMode ? 5f : 4f;
-                    if (MyWorld.awakenedMode) speed = 7f;
-
-                    if (tpTimer == 1)
-                    {
-                        Teleport(P.position.X + 500, P.position.Y + 500);
-                    }
-                    if (tpTimer >= 1 + tpDuration / 2 && tpTimer < 120)
-                    {
-                        npc.velocity.X = -speed;
-                        npc.velocity.Y = -speed;
-                    }
-                    if (tpTimer == 120)
-                    {
-                        Teleport(P.position.X - 500, P.position.Y + 500);
-                    }
-                    if (tpTimer >= 120 + tpDuration / 2 && tpTimer < 240)
-                    {
-                        npc.velocity.X = speed;
-                        npc.velocity.Y = -speed;
-                    }
-                }
-            }
-            // lava slimes and bats
-            else
-            {
-                npc.velocity = Vector2.Zero;
-                float scaleValue = (float)(Math.Sin(monsterDropAI / 17) + 1) / 2f;
-                int r = 255;
-                int g = (int)MathHelper.Lerp(60, 255, scaleValue);
-                int b = (int)MathHelper.Lerp(20, 255, scaleValue);
-                //Main.NewText(r + " " + g + " " + b);
-                npc.color = new Color(r, g, b);
-                monsterDropAI--;
-                if (monsterDropAI > 750)
-                {
-                    int modNum = Main.expertMode ? 45 : 60;
-                    if (MyWorld.awakenedMode) modNum = 20;
-                    if (monsterDropAI % modNum == 0)
-                    {
-                        NPC monster = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, GetDropIDs()[Main.rand.Next(GetDropIDs().Count)])];
-                        monster.velocity = new Vector2(Main.rand.NextFloat(-8f, 8f), Main.rand.NextFloat(-8f, 8f));
-                        monster.SpawnedFromStatue = true; // so it doesnt drop stuff
-                    }
-                }
-                if ((AnyDropNPCs() || monsterDropAI > 750) && monsterDropAI > 0)
-                {
-                    npc.immortal = true;
-                    npc.dontTakeDamage = true;
-                }
-                else if ((!AnyDropNPCs() && monsterDropAI <= 750) || monsterDropAI <= 0)
-                {
-                    ExitDroppingAI();
-                }
-
             }
 
             Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.4f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
@@ -587,7 +619,6 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
         private void MoveDirect(Player P, float moveSpeed)
         {
             Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
             toTarget.Normalize();
             npc.velocity = toTarget * moveSpeed;
         }

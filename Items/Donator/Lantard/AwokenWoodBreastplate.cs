@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Donator.Lantard
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Awoken Wooden Breastplate");
-            Tooltip.SetDefault("12% increased damage\nIncreases your max number of minions by 2\nSomething so simple has become so powerful... As have you\nLantards's donator item");
+            Tooltip.SetDefault("12% increased damage\nIncreases your max number of minions by 2\nSomething so simple has become so powerful... As have you\nLantard's donator item");
         }
         public override void UpdateEquip(Player player)
         {

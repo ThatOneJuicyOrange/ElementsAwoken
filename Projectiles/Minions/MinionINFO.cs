@@ -17,7 +17,7 @@ namespace ElementsAwoken.Projectiles.Minions
         protected float shootCool = 50f;       //how fast the minion can shoot 
         protected float shootSpeed;
         protected int shoot;
-
+        protected bool customShoot = false;
         public virtual void CreateDust()
         {
         }
@@ -25,7 +25,9 @@ namespace ElementsAwoken.Projectiles.Minions
         public virtual void SelectFrame()
         {
         }
-
+        public virtual void ShootExtraAction()
+        {
+        }
         public override void Behavior()
         {
             Player player = Main.player[projectile.owner];
@@ -186,17 +188,21 @@ namespace ElementsAwoken.Projectiles.Minions
                         projectile.ai[1] = 1f;
                         if (Main.myPlayer == projectile.owner)
                         {
-                            Vector2 shootVel = targetPos - projectile.Center;
-                            if (shootVel == Vector2.Zero)
+                            ShootExtraAction();
+                            if (!customShoot)
                             {
-                                shootVel = new Vector2(0f, 1f);
+                                Vector2 shootVel = targetPos - projectile.Center;
+                                if (shootVel == Vector2.Zero)
+                                {
+                                    shootVel = new Vector2(0f, 1f);
+                                }
+                                shootVel.Normalize();
+                                shootVel *= shootSpeed;
+                                int proj = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, shootVel.X, shootVel.Y, shoot, projectile.damage, projectile.knockBack, Main.myPlayer, 0f, 0f);
+                                Main.projectile[proj].timeLeft = 300;
+                                Main.projectile[proj].netUpdate = true;
+                                projectile.netUpdate = true;
                             }
-                            shootVel.Normalize();
-                            shootVel *= shootSpeed;
-                            int proj = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, shootVel.X, shootVel.Y, shoot, projectile.damage, projectile.knockBack, Main.myPlayer, 0f, 0f);
-                            Main.projectile[proj].timeLeft = 300;
-                            Main.projectile[proj].netUpdate = true;
-                            projectile.netUpdate = true;
                         }
                     }
                 }
@@ -207,5 +213,9 @@ namespace ElementsAwoken.Projectiles.Minions
         {
             fallThrough = true;
         }*/
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            return false;
+        }
     }
 }

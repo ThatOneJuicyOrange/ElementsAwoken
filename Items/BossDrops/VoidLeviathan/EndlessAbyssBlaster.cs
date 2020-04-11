@@ -35,6 +35,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Singularity Mortar");
+            Tooltip.SetDefault("");
         }
     }
 }

@@ -12,6 +12,10 @@ using Terraria.ObjectData;
 using Terraria.Utilities;
 using Terraria.ModLoader;
 using ElementsAwoken.NPCs;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Buffs.Debuffs;
+using ElementsAwoken.Items.Materials;
+using ElementsAwoken.Projectiles;
 
 namespace ElementsAwoken.Items.Accessories
 {
@@ -23,7 +27,7 @@ namespace ElementsAwoken.Items.Accessories
             item.width = 20;
             item.height = 26;
             item.value = Item.buyPrice(0, 20, 0, 0);
-            item.rare = 6;
+            item.rare = 1;
             item.accessory = true;
         }
 
@@ -39,7 +43,7 @@ namespace ElementsAwoken.Items.Accessories
                 int maxAccessoryIndex = 5 + player.extraAccessorySlots;
                 for (int i = 3; i < 3 + maxAccessoryIndex; i++)
                 {
-                    if (slot != i && player.armor[i].type == mod.ItemType("LifeDiamond") && player.armor[i].type == mod.ItemType("VoidDiamond"))
+                    if (slot != i && (player.armor[i].type == ItemType<LifeDiamond>() || player.armor[i].type == ItemType<VoidDiamond>()))
                     {
                         return false;
                     }
@@ -52,7 +56,7 @@ namespace ElementsAwoken.Items.Accessories
             float maxDistance = 250f;
             float targetDist = maxDistance;
             NPC drainTarget = null;
-            if (player.statLife < player.statLifeMax2 && player.ownedProjectileCounts[mod.ProjectileType("HealProjBlood")] < 15)
+            if (player.statLife < player.statLifeMax2 && player.ownedProjectileCounts[ProjectileType<HealProjBlood>()] < 15)
             {
                 for (int l = 0; l < Main.npc.Length; l++)
                 {
@@ -66,14 +70,15 @@ namespace ElementsAwoken.Items.Accessories
                 }
                 if (drainTarget != null)
                 {
+                    drainTarget.AddBuff(BuffType<VariableLifeRegen>(), 20);
+                    drainTarget.GetGlobalNPC<NPCsGLOBAL>().lifeDrainAmount = 5;
                     drainLifeTimer--;
                     if (drainLifeTimer <= 0)
                     {
-                        drainTarget.GetGlobalNPC<NPCsGLOBAL>().lifeDrainAmount = 5;
                         if (Main.myPlayer == player.whoAmI)
                         {
                             float healAmount = Main.rand.Next(1, 3);
-                            Projectile.NewProjectile(drainTarget.Center.X, drainTarget.Center.Y, 0f, 0f, mod.ProjectileType("HealProjBlood"), 0, 0f, Main.myPlayer, Main.myPlayer, healAmount); // ai 1 is how much it heals
+                            Projectile.NewProjectile(drainTarget.Center.X, drainTarget.Center.Y, 0f, 0f, ProjectileType<HealProjBlood>(), 0, 0f, Main.myPlayer, Main.myPlayer, healAmount); // ai 1 is how much it heals
                             drainLifeTimer = 45;
                         }
                     }
@@ -83,7 +88,7 @@ namespace ElementsAwoken.Items.Accessories
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "FleshClump", 6);
+            recipe.AddIngredient(ItemType<FleshClump>(), 6);
             recipe.AddIngredient(ItemID.Diamond, 1);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

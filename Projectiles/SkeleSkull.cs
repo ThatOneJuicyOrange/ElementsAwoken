@@ -43,7 +43,7 @@ namespace ElementsAwoken.Projectiles
             Main.dust[dust].noGravity = true;
             Main.dust[dust].scale *= 1.5f;
 
-            ProjectileGlobal.Home(projectile, 6f);
+            ProjectileUtils.Home(projectile, 6f);
         }
     }
 }

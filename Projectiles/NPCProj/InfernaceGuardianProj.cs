@@ -67,7 +67,7 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.HostileExplosion(projectile, new int[] { 6 }, projectile.damage);
+            ProjectileUtils.HostileExplosion(projectile, new int[] { 6 }, projectile.damage);
         }
     }
 }

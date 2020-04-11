@@ -69,6 +69,16 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
         {
             potionType = ItemID.GreaterHealingPotion;
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/TheEye" + i), npc.scale);
+                }
+            }
+        }
         public override void NPCLoot()
         {
             if (!NPC.AnyNPCs(mod.NPCType("AncientWyrmHead")))
@@ -158,7 +168,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheTempleKeepers
                     player.grappling[0] = -1;
                     // to stop grappling
                     player.grapCount = 0;
-                    for (int p = 0; p < Main.projectile.Length; p++)
+                    for (int p = 0; p < Main.maxProjectiles; p++)
                     {
                         if (Main.projectile[p].active && Main.projectile[p].owner == player.whoAmI && Main.projectile[p].aiStyle == 7)
                         {

@@ -38,13 +38,13 @@ namespace ElementsAwoken.Projectiles
             if (target.active && !target.friendly && target.damage > 0 && !target.dontTakeDamage && !target.boss && Main.rand.Next(20) == 0 && target.lifeMax < 30000 && !immune && Main.rand.Next(10) == 0)
             {
                 target.StrikeNPCNoInteraction(target.lifeMax, 0f, -target.direction, true);
-                ProjectileGlobal.Explosion(projectile, new int[] { 219 }, projectile.damage, "melee");
+                ProjectileUtils.Explosion(projectile, new int[] { 219 }, projectile.damage, "melee");
             }
             target.AddBuff(mod.BuffType("ChaosBurn"), 180);
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
+            ProjectileUtils.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
         }
         public override void AI()
         {
@@ -64,10 +64,10 @@ namespace ElementsAwoken.Projectiles
 
             if (!ModContent.GetInstance<Config>().lowDust)
             {
-                ProjectileGlobal.CreateDustCircle(projectile,127, 21, 1);
+                ProjectileUtils.CreateDustRing(projectile,127, 21, 1);
 
             }
-            ProjectileGlobal.Home(projectile, 6f);
+            ProjectileUtils.Home(projectile, 6f);
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

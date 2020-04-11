@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.Donator.Lantard
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Suffer With Me");
-            Tooltip.SetDefault("You took a part of me, so I'll take a part of you\nGrants immunity to Chaos Burn\nAttacks have a 25% to inflict Chaos Burn\nIncreases armor penetration by 10\nLantard's donator item");
+            Tooltip.SetDefault("You took a part of me, so I'll take a part of you\nGrants immunity to Chaotic Necrosis\nAttacks have a 25% to inflict Chaotic Necrosis\nIncreases armor penetration by 10\nLantard's donator item");
         }
 
 

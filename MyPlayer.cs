@@ -19,6 +19,12 @@ using Microsoft.Xna.Framework.Input;
 using ElementsAwoken.Effects;
 using ElementsAwoken.Projectiles;
 using ElementsAwoken.Buffs;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Buffs.Cooldowns;
+using ElementsAwoken.NPCs.Bosses.VoidLeviathan;
+using ElementsAwoken.Buffs.Debuffs;
+using ElementsAwoken.Projectiles.Other;
+using ElementsAwoken.Mounts;
 
 namespace ElementsAwoken
 {
@@ -29,9 +35,17 @@ namespace ElementsAwoken
         public bool voidBlood = false;
         public int generalTimer = 0;
 
+        public bool glassHeart = false;
+
+        public int sansUseCD = 0;
+        public int sansNote = 0;
+
         public bool talkToAzana = false;
 
         public int saveAmmo = 0;
+
+        public int toySlimed = 0;
+        public int toySlimedID = -1;
 
         #region minions
         public bool fireElemental = false;
@@ -47,7 +61,7 @@ namespace ElementsAwoken
         public bool iceAxe = false;
         public bool eyeballMinion = false;
         public bool scorpionMinion = false;
-        public bool fireHarpy = false;
+        public bool hearthMinion = false;
         public bool energySpirit = false;
         public bool icicleMinion = false;
         public bool deathwatcher = false;
@@ -66,6 +80,7 @@ namespace ElementsAwoken
         public bool corroder = false;
         public bool crystalEntity = false;
         public bool putridRipper = false;
+        public bool globule = false;
         #endregion   
         #region pets
         public bool voidCrawler = false;
@@ -77,6 +92,7 @@ namespace ElementsAwoken
         public bool turboDoge = false;
         public bool wyvernPet = false;
         public bool chamchamRat = false;
+        public bool stellate = false;
         #endregion
         #region debuffs
         public bool iceBound = false;
@@ -91,12 +107,15 @@ namespace ElementsAwoken
         public bool superSlow = false;
         public int behemothGazeTimer = 0;
         public int leviathanDist = 0;
+        public bool starstruck = false;
+        public int starstruckCounter = 0;
         #endregion   
         #region buffs
         public bool extinctionCurseImbue = false;
         public bool discordantPotion = false;
         public bool superSpeed = false;
         public bool vilePower = false;
+        public bool hellFury = false;
         #endregion
         #region other
         public bool dashCooldown = false;
@@ -127,6 +146,7 @@ namespace ElementsAwoken
         public bool templeSpikeBoots = false;
         public bool sonicArm = false;
         public bool nyanBoots = false;
+        public bool voidBoots = false;
         public bool theAntidote = false;
         public bool cosmicGlass = false;
         public int cosmicGlassCD = 0;
@@ -137,6 +157,14 @@ namespace ElementsAwoken
         public bool meteoricPendant = false;
         public int crystallineLocketCrit = 0;
         public bool prismPolish = false;
+        public bool fireAcc = false;
+        public int fireAccCD = 0;
+        public int boostDrive = 0;
+        public int boostDriveTimer = 0;
+
+        public bool wispForm = false;
+        public bool forceWisp = false;
+        public int wispDust = 0;
 
         public int noDamageCounter = 0;
         //amulet of despair
@@ -200,6 +228,10 @@ namespace ElementsAwoken
         public bool mechArmor = false;
         public int mechArmorCD = 0;
         public bool awokenWood = false;
+        public bool arid = false;
+        public int aridTimer = 0;
+        public float aridFalling = 0;
+        public bool putridArmour = false;
         #endregion
         // zones
         public static bool zoneTemple = false;
@@ -267,10 +299,10 @@ namespace ElementsAwoken
         public int buffDPSCount = 0;
         public int buffDPS = 0;
         public bool alchemistTimer = false;
-        public bool[] hideEAInfo = new bool[2];
+        public bool[] hideEAInfo = new bool[3];
         public bool dryadsRadar = false;
         public string nearbyEvil = "No evil";
-
+        public bool rainMeter = false;
         //encounters
         public string encounterText = "";
         public int encounterTextAlpha = 0;
@@ -321,6 +353,8 @@ namespace ElementsAwoken
         public bool abyssalMatter = false;
         public int abyssalRage = 0;
 
+        public bool radiantCrown = false;
+
         public Vector2 archaicProtectionPos = new Vector2();
         public int archaicProtectionTimer = 0;
         public override void Initialize()
@@ -349,7 +383,7 @@ namespace ElementsAwoken
             iceAxe = false;
             eyeballMinion = false;
             scorpionMinion = false;
-            fireHarpy = false;
+            hearthMinion = false;
             energySpirit = false;
             icicleMinion = false;
             deathwatcher = false;
@@ -368,6 +402,7 @@ namespace ElementsAwoken
             corroder = false;
             crystalEntity = false;
             putridRipper = false;
+            globule = false;
             #endregion
             #region pets
             lilOrange = false;
@@ -379,6 +414,7 @@ namespace ElementsAwoken
             turboDoge = false;
             wyvernPet = false;
             chamchamRat = false;
+            stellate = false;
             #endregion
             #region debuffs
             iceBound = false;
@@ -391,7 +427,10 @@ namespace ElementsAwoken
             chaosBurn = false;
             acidBurn = false;
             superSlow = false;
+            starstruck = false;
             #endregion
+
+            glassHeart = false;
 
             dashCooldown = false;
             medicineCooldown = false;
@@ -404,7 +443,7 @@ namespace ElementsAwoken
             discordantPotion = false;
             vilePower = false;
             superSpeed = false;
-
+            hellFury = false;
 
             cantFly = false;
             cantROD = false;
@@ -423,6 +462,7 @@ namespace ElementsAwoken
             templeSpikeBoots = false;
             sonicArm = false;
             nyanBoots = false;
+            voidBoots = false;
             skylineFlying = false;
             vleviAegis = false;
             theAntidote = false;
@@ -433,6 +473,9 @@ namespace ElementsAwoken
             eaMagmaStone = false;
             meteoricPendant = false;
             prismPolish = false;
+            fireAcc = false;
+            boostDrive = 0;
+            wispForm = false;
 
             oceanicArmor = false;
             voidArmor = false;
@@ -452,11 +495,14 @@ namespace ElementsAwoken
             energyWeaverArmor = false;
             cosmicalusArmor = false;
             mechArmor = false;
+            arid = false;
+            putridArmour = false;
 
             oiniteStatue = false;
 
             alchemistTimer = false;
             dryadsRadar = false;
+            rainMeter = false;
             nearbyEvil = "No evil";
 
             damageTaken = 1f;
@@ -495,6 +541,7 @@ namespace ElementsAwoken
             hellHeart = false;
             icyHeart = false;
             abyssalMatter = false;
+            radiantCrown = false;
         }
         // for the bonus life
         public override void clientClone(ModPlayer clientClone)
@@ -551,6 +598,13 @@ namespace ElementsAwoken
                 player.QuickSpawnItem(mod.ItemType("OrangesLeggings"));
             }
         }
+        public override void PreUpdateMovement()
+        {
+            if (arid && !Main.tileSolid[Framing.GetTileSafely((int)(player.Bottom.X / 16), (int)(player.Bottom.Y / 16)).type])
+            {
+                aridFalling = player.velocity.Y;
+            }
+        }
         public override void PostUpdateMiscEffects()
         {
             //Tile orbTile = Framing.GetTileSafely((int)(Main.MouseWorld.X / 16), (int)(Main.MouseWorld.Y / 16));
@@ -577,15 +631,112 @@ namespace ElementsAwoken
             icyHeartTimer++;
             aeroflakTimer--;
             mechArmorCD--;
+            toySlimed--;
+
+            /*
+            if (generalTimer % 60 == 0)
+            {
+                for (int k = 0; k < Main.maxNPCs; k++)
+                {
+                    NPC other = Main.npc[k];
+                    if (other.CanBeChasedBy(this) && Vector2.Distance(other.Center, player.Center) < 500)
+                    {
+                        float time = 60;
+                        float grav = 0.16f;
+                        float xSPD = (other.Center.X - player.Center.X) / time;
+                        float ySPD = (other.Center.Y - player.Center.Y - 0.5f * grav * time * time) / time;
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, xSPD, ySPD, ProjectileType<MortarTest>(), 200, 0f, Main.myPlayer, 0f, 0f);
+                    }
+                }
+            }*/
+
+            //    Main.NewText(player.mount._type);
+            if (wispForm) player.noKnockback = false;
+            if (arid)
+            {
+                if (player.controlJump && aridTimer < 600)
+                {
+                    aridTimer++;
+                    if (player.velocity.Y > -4)
+                    {
+                        player.velocity.Y -= 0.6f;
+                        Dust dust = Main.dust[Dust.NewDust(player.BottomLeft - new Vector2(0 , 6), player.width, 6, 32, 0f, 0f)];
+                        dust.velocity = new Vector2(Main.rand.NextFloat(-1,1), Main.rand.NextFloat(3,5));
+                    }
+                    if (player.velocity.Y < 4)
+                    {
+                        player.fallStart = (int)player.position.Y / 16;
+                    }
+                }
+                if (player.velocity.Y == 0)
+                {
+                    aridTimer = 0;
+                }
+            }
+            if (boostDriveTimer > 0 && boostDrive > 0)
+            {
+                boostDriveTimer--;
+                if (boostDrive == 1)
+                {
+                    player.moveSpeed *= 1.5f;
+                    player.accRunSpeed *= 1.5f;
+                    player.runAcceleration *= 2f;
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, 226, 0f, 0f, 100, default(Color), 1.4f)];
+                    dust.noGravity = true;
+                }
+                else if (boostDrive == 2)
+                {
+                    player.moveSpeed *= 2.5f;
+                    player.accRunSpeed *= 2.5f;
+                    player.runAcceleration *= 3f;
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, 205, 0f, 0f, 100, default(Color), 1.4f)];
+                    dust.noGravity = true;
+                }
+            }
+
+            if (putridArmour)
+            {
+                int num = player.velocity.Y == 0 ? 30 : 60;
+                    if (generalTimer % num == 0)
+                    {
+                        Vector2 startVec = player.Center + Main.rand.NextVector2Square(-60, 60);
+                        for (int i = 0; i < 6; i++)
+                        {
+                            float distance = i < 3 ? 30 : 15;
+                            Projectile proj = Main.projectile[Projectile.NewProjectile(startVec + Main.rand.NextVector2Square(-distance, distance), Vector2.Zero, ProjectileType<PutridCloud>(), 0, 0, player.whoAmI, i < 3 ? 0 : 1)];
+                            proj.localAI[0] = Main.rand.NextBool() ? -1 : 1;
+                            proj.rotation = Main.rand.NextFloat((float)Math.PI * 2);
+                        }
+                    }
+            }
+
+            if (toySlimedID != -1)
+            {
+                CantMove();
+                if (Main.npc[toySlimedID].active)
+                {
+                    player.Center = Main.npc[toySlimedID].Center;
+                    player.immune = true;
+                    if (toySlimed <= 0)
+                    {
+                        toySlimedID = -1;
+                        player.velocity.X = Main.rand.NextFloat(-8, 8);
+                        player.velocity.Y = Main.rand.NextFloat(-12, -20);
+                        Main.PlaySound(SoundID.Item95, player.Center);
+                    }
+                    player.AddBuff(BuffID.Slimed, 20);
+                }
+                else toySlimedID = -1;
+            }
             if (flare) flareShieldCD--; // so the cooldonw doesnt decrease when the player isnt using it
             if (aeroflakTimer <= 0) aeroflakHits = 0;
             if (bleedingHeart)
             {
-                if (player.dashDelay != 0 || eaDashDelay != 0)
+                if ((player.dashDelay != 0 || eaDashDelay != 0) && player.velocity != Vector2.Zero)
                 {
                     if (Main.rand.NextBool(8))
                     {
-                        Projectile.NewProjectile(player.Center, Main.rand.NextVector2Square(-6, 6), ModContent.ProjectileType<BloodbathDashP>(), 30, 6f, player.whoAmI);
+                        Projectile.NewProjectile(player.Center, Main.rand.NextVector2Square(-6, 6), ProjectileType<BloodbathDashP>(), 30, 6f, player.whoAmI);
                     }
                 }
             }
@@ -610,7 +761,7 @@ namespace ElementsAwoken
             {
                 if (Main.rand.NextBool(60))
                 {
-                    Projectile.NewProjectile(player.Center + Main.rand.NextVector2Square(-300,300), Main.rand.NextVector2Square(-1, 1), ModContent.ProjectileType<AbyssalPortal>(), 300, 6f, player.whoAmI);
+                    Projectile.NewProjectile(player.Center + Main.rand.NextVector2Square(-300,300), Main.rand.NextVector2Square(-1, 1), ProjectileType<AbyssalPortal>(), 300, 6f, player.whoAmI);
                 }
                 if (abyssalRage > 0)
                 {
@@ -619,7 +770,7 @@ namespace ElementsAwoken
                     player.moveSpeed *= 1.5f;
                     player.accRunSpeed *= 1.5f;
 
-                    int num = ModContent.GetInstance<Config>().lowDust ? 1 : 3;
+                    int num = GetInstance<Config>().lowDust ? 1 : 3;
                     for (int l = 0; l < num; l++)
                     {
                         Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, DustID.PinkFlame, 0f, 0f, 100, default(Color), 1.4f)];
@@ -633,10 +784,11 @@ namespace ElementsAwoken
                         if (Main.rand.Next(2) == 0) randAi0 *= -1f;
                         float randAi1 = Main.rand.Next(10, 80) * 0.001f;
                         if (Main.rand.Next(2) == 0) randAi1 *= -1f;
-                        Projectile.NewProjectile(player.Center, speed, ModContent.ProjectileType<AbyssalTentacle>(), 300, 6f, player.whoAmI, randAi0, randAi1);
+                        Projectile.NewProjectile(player.Center, speed, ProjectileType<AbyssalTentacle>(), 300, 6f, player.whoAmI, randAi0, randAi1);
                     }
                 }
             }
+            if (!starstruck)  starstruckCounter = 0;
 
             if (voidBlood && player.statLife < player.statLifeMax2 * 0.3f && generalTimer % 60 == 0)
             {
@@ -651,7 +803,7 @@ namespace ElementsAwoken
                 Projectile proj = Main.projectile[Projectile.NewProjectile(player.Center.X, player.Center.Y, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f), mod.ProjectileType("VoidBlood"), damage, 0f, Main.myPlayer, 0f, 0f)];
 
             }
-            if (!NPC.AnyNPCs(mod.NPCType("VoidLeviathanHead"))) behemothGazeTimer = 0;
+            if (!NPC.AnyNPCs(NPCType<VoidLeviathanHead>())) behemothGazeTimer = 0;
             if (behemothGazeTimer > 600)
             {
                 float amount = MathHelper.Clamp((float)(leviathanDist - 3000) / 9000f, 0, 1);
@@ -663,7 +815,7 @@ namespace ElementsAwoken
             else if (behemothGazeTimer > 0)
             {
                 int num = (int)MathHelper.Lerp(1, 8, (float)(leviathanDist - 3000) / 9000f);
-                if (ModContent.GetInstance<Config>().lowDust) num = 1;
+                if (GetInstance<Config>().lowDust) num = 1;
                 for (int l = 0; l < num; l++)
                 {
                     Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, DustID.PinkFlame, 0f, 0f, 100, default(Color), 1.4f)];
@@ -680,26 +832,26 @@ namespace ElementsAwoken
             {
                 player.moveSpeed *= 0.1f;
             }
+            // need to fix this up, its messy and makes no sense. modifed vanilla code
             #region dashes
             if (eaDashDelay > 0)
             {
                 eaDashDelay--;
                 //return;
             }
-            if (eaDashDelay < 0)
+            if (eaDashDelay > 0)
             {
-                float maxDashSpeed = 18f;
+                float maxDashSpeed = 15f;
                 float maxSpeed = Math.Max(player.accRunSpeed, player.maxRunSpeed);
                 float slowdown1 = 0.985f;
                 float slowdown2 = 0.94f;
-                int dashDelayAmount = 20;
                 if (eaDash == 1 || eaDash == 2)
                 {
                     int dustID = 127;
                     if (eaDash == 2)
                     {
                         dustID = 63;
-                        maxDashSpeed = 24f;
+                        maxDashSpeed = 18f;
                     }
                     for (int k = 0; k < 3; k++)
                     {
@@ -733,15 +885,14 @@ namespace ElementsAwoken
                         player.velocity.X = player.velocity.X * slowdown2;
                         //return;
                     }
-                    eaDashDelay = dashDelayAmount;
                     if (player.velocity.X < 0f)
                     {
-                        player.velocity.X = -maxSpeed;
+                        player.velocity.X = -maxDashSpeed;
                         //return;
                     }
                     if (player.velocity.X > 0f)
                     {
-                        player.velocity.X = maxSpeed;
+                        player.velocity.X = maxDashSpeed;
                         //return;
                     }
                 }
@@ -752,30 +903,39 @@ namespace ElementsAwoken
                 bool flag = false;
                 if (eaDashTime > 0) eaDashTime--;
                 if (eaDashTime < 0) eaDashTime++;
-                if (player.controlRight && player.releaseRight)
+                if (eaDashDelay <= 0)
                 {
-                    if (eaDashTime > 0)
+                    if (player.controlRight && player.releaseRight)
                     {
-                        dashDir = 1;
-                        flag = true;
-                        eaDashTime = 0;
+                        if (eaDashTime > 0)
+                        {
+                            dashDir = 1;
+                            flag = true;
+                            eaDashTime = 0;
+                        }
+                        else eaDashTime = 15;
                     }
-                    else eaDashTime = 15;
-                }
-                else if (player.controlLeft && player.releaseLeft)
-                {
-                    if (eaDashTime < 0)
+                    else if (player.controlLeft && player.releaseLeft)
                     {
-                        dashDir = -1;
-                        flag = true;
-                        eaDashTime = 0;
+                        if (eaDashTime < 0)
+                        {
+                            dashDir = -1;
+                            flag = true;
+                            eaDashTime = 0;
+                        }
+                        else eaDashTime = -15;
                     }
-                    else eaDashTime = -15;
                 }
                 if (flag)
                 {
-                    if (eaDash == 1)
+                    int dashDelayAmount = 40;
+                    if (eaDash == 1 || eaDash == 2)
                     {
+                        int dustID = 127;
+                        if (eaDash == 2)
+                        {
+                            dustID = 63;
+                        }
                         player.velocity.X = 26f * (float)dashDir;
                         Point point = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), player.gravDir * (float)(-(float)player.height) / 2f + player.gravDir * 2f)).ToTileCoordinates();
                         Point point2 = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), 0f)).ToTileCoordinates();
@@ -783,38 +943,18 @@ namespace ElementsAwoken
                         {
                             player.velocity.X = player.velocity.X / 2f;
                         }
-                        eaDashDelay = -1;
                         for (int i = 0; i < 20; i++)
                         {
-                            Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 127, 0f, 0f, 100, default(Color), 2f)];
+                            Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, dustID, 0f, 0f, 100, default(Color), 2f)];
                             dust.position.X = dust.position.X + (float)Main.rand.Next(-5, 6);
                             dust.position.Y = dust.position.Y + (float)Main.rand.Next(-5, 6);
                             dust.velocity *= 3f;
                             dust.scale *= 1f + (float)Main.rand.NextFloat(-0.4f, 0.4f);
                             dust.shader = GameShaders.Armor.GetSecondaryShader(player.cShoe, player);
                             dust.noGravity = true;
+                            if (eaDash == 2) dust.color = Main.DiscoColor;
                         }
-                    }
-                    if (eaDash == 2)
-                    {
-                        player.velocity.X = 26f * (float)dashDir;
-                        Point point = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), player.gravDir * (float)(-(float)player.height) / 2f + player.gravDir * 2f)).ToTileCoordinates();
-                        Point point2 = (player.Center + new Vector2((float)(dashDir * player.width / 2 + 2), 0f)).ToTileCoordinates();
-                        if (WorldGen.SolidOrSlopedTile(point.X, point.Y) || WorldGen.SolidOrSlopedTile(point2.X, point2.Y))
-                        {
-                            player.velocity.X = player.velocity.X / 2f;
-                        }
-                        eaDashDelay = -1;
-                        for (int i = 0; i < 20; i++)
-                        {
-                            Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 127, 0f, 0f, 100, default(Color), 2f)];
-                            dust.position.X = dust.position.X + (float)Main.rand.Next(-5, 6);
-                            dust.position.Y = dust.position.Y + (float)Main.rand.Next(-5, 6);
-                            dust.velocity *= 3f;
-                            dust.scale *= 1f + (float)Main.rand.NextFloat(-0.4f, 0.4f);
-                            dust.shader = GameShaders.Armor.GetSecondaryShader(player.cShoe, player);
-                            dust.noGravity = true;
-                        }
+                        eaDashDelay = dashDelayAmount;
                     }
                 }
             }
@@ -900,14 +1040,7 @@ namespace ElementsAwoken
                 shackleFlingCooldown = 60;
             }
 
-            if (skylineFlying)
-            {
-                if (skylineAlpha < 1) skylineAlpha += 0.05f;
-            }
-            else
-            {
-                if (skylineAlpha > 0) skylineAlpha -= 0.05f;
-            }
+
             if (skylineAlpha > 0)
             {
                 if (skylineFrameTimer % 6 == 0) skylineFrame++;
@@ -1492,7 +1625,7 @@ namespace ElementsAwoken
                 Main.playerInventory = false;
                 Main.inputTextEnter = false;
                 Main.menuMode = 0;
-                for (int k = 0; k < Main.projectile.Length; k++)
+                for (int k = 0; k < Main.maxProjectiles; k++)
                 {
                     Main.projectile[k].Kill();
                 }
@@ -1577,7 +1710,7 @@ namespace ElementsAwoken
                     }
                     creditPoints[9] = new Vector2(Main.spawnTileX * 16 + 600, (Main.maxTilesY - 200) * 16); // hell
                     creditPoints[10] = new Vector2(Main.dungeonX * 16, Main.dungeonY * 16); // dungeon
-                    creditPoints[11] = new Vector2(1800, (float)Main.worldSurface * 16 - 16 * 150); // ocean, doesnt run unless one is missing
+                    creditPoints[11] = new Vector2(1800, (float)Main.worldSurface * 16 - 16 * 150); // ocean
 
                     player.FindSpawn();
                     creditPoints[0] = new Vector2(player.SpawnX * 16, player.SpawnY * 16);
@@ -1607,7 +1740,7 @@ namespace ElementsAwoken
                 }
                 if (MyWorld.creditsCounter > screenTransDuration / 2 && MyWorld.creditsCounter < screenDuration + screenTransDuration / 2) desiredScPos += new Vector2(1, 1);
 
-                int creditsLength = screenDuration * 11;
+                int creditsLength = screenDuration * 11 + 300;
                 if (MyWorld.creditsCounter >= screenDuration && MyWorld.creditsCounter < creditsLength)
                 {
                     int screenNum = pointsNotFound + (int)Math.Floor((decimal)(MyWorld.creditsCounter / screenDuration));
@@ -1680,7 +1813,7 @@ namespace ElementsAwoken
                 }
             }
             #region PROMPTS!!
-            if (!ModContent.GetInstance<Config>().promptsDisabled)
+            if (!GetInstance<Config>().promptsDisabled)
             {
                 bool activeBoss = false;
                 bool inTown = false;
@@ -1715,7 +1848,7 @@ namespace ElementsAwoken
                             float num13 = MathHelper.Lerp(0.2f, 0.35f, 0.5f);
                             float num14 = MathHelper.Lerp(0.5f, 0.7f, 0.5f);
                             Vector2 speed = new Vector2(Main.windSpeed * 10f, 3f);
-                            if (Main.rand.Next(3) == 0 && !ModContent.GetInstance<Config>().lowDust)
+                            if (Main.rand.Next(3) == 0 && !GetInstance<Config>().lowDust)
                             {
                                 /*Dust ash = Main.dust[Dust.NewDust(new Vector2(player.Center.X - Main.screenWidth / 2, player.Center.Y - Main.screenHeight / 2), Main.screenWidth, Main.screenHeight, 31, speed.X, speed.Y, 0, default(Color), 1f)];
                                 ash.scale = 1.2f;
@@ -1954,6 +2087,17 @@ namespace ElementsAwoken
                     t.type == TileID.Fireplace) return true;
                 return false;
             }
+        public override void PostUpdate() // misc effects is called before wing update and other stuff
+        {
+            if (skylineFlying)
+            {
+                if (skylineAlpha < 1) skylineAlpha += 0.05f;
+            }
+            else
+            {
+                if (skylineAlpha > 0) skylineAlpha -= 0.05f;
+            }
+        }
         public override void PostUpdateBuffs()
         {
             if (oiniteStatue)
@@ -2310,7 +2454,7 @@ namespace ElementsAwoken
             {
                 player.armorEffectDrawShadow = true;
             }
-            if (eaDashDelay < 0)
+            if (eaDashDelay > 0)
             {
                 player.armorEffectDrawShadow = true;
             }
@@ -2354,6 +2498,13 @@ namespace ElementsAwoken
         }
         public override void PreUpdate()
         {
+            if (forceWisp)
+            {
+                //player.mount._type = MountType<WispForm>();
+                //player.mount._active = true;
+                player.mount.SetMount(MountType<WispForm>(), player, false);
+                player.releaseMount = false;
+            }
             /*// to fix broken players
             {
                 lunarStarsUsed = 0;
@@ -2372,36 +2523,30 @@ namespace ElementsAwoken
         public override void UpdateBadLifeRegen()
         {
             neovirtuoTimer--; // wtf is this doin ghere
-            // poison - 4
-            // on fire - 8
-            // frostburn - 12
+                              // poison - 4
+                              // on fire - 8
+                              // frostburn - 12
 
-            if (acidBurn)
+            if (boostDriveTimer > 0 && boostDrive == 2)
             {
-                player.lifeRegen -= 16;
+                    if (Math.Abs(player.velocity.X) > 25)
+                {
+                    player.lifeRegen -= (int)MathHelper.Lerp(0, 30, (Math.Abs(player.velocity.X) - 25) / 5);
+                }
             }
-            if (dragonfire)
-            {
-                player.lifeRegen -= 20;
-            }
-            if (extinctionCurse || handsOfDespair)
-            {
-                player.lifeRegen -= 30;
-            }
-            if (chaosBurn || discordDebuff)
-            {
-                player.lifeRegen -= 40;
-            }
+
+            if (acidBurn) player.lifeRegen -= 16;
+            if (toySlimed > 0) player.lifeRegen -= 18;
+            if (dragonfire || starstruck) player.lifeRegen -= 20;
+            if (extinctionCurse || handsOfDespair)  player.lifeRegen -= 30;
+            if (chaosBurn || discordDebuff)player.lifeRegen -= 40;
 
             if (behemothGazeTimer > 600)
             {
                 int amount = (int)MathHelper.Lerp(0, 80, (float)(leviathanDist - 3000) / 9000f);
                 player.lifeRegen -= amount;
             }
-            if (endlessTears)
-            {
-                player.velocity *= 0.8f;
-            }
+            if (endlessTears)  player.velocity *= 0.8f;
             if (iceBound)
             {
                 player.velocity.Y = 0f;
@@ -2459,6 +2604,9 @@ namespace ElementsAwoken
             bool useVoidEventDark = MyWorld.voidInvasionUp && Main.time > 16220 && !Main.dayTime;
             player.ManageSpecialBiomeVisuals("ElementsAwoken:VoidEventDark", useVoidEventDark);
 
+            bool useRadRain = MyWorld.radiantRain && player.position.Y / 16 < Main.worldSurface;
+            player.ManageSpecialBiomeVisuals("ElementsAwoken:RadiantRain", useRadRain);
+
             int useRegaroth = 0;
             for (int i = 0; i < Main.npc.Length; ++i)
             {
@@ -2503,24 +2651,24 @@ namespace ElementsAwoken
 
 
             //Point point = player.Center.ToTileCoordinates();
-            bool useblizzard = MyWorld.hailStormTime > 0 && player.ZoneOverworldHeight && !player.ZoneDesert && !ActiveBoss() && !ModContent.GetInstance<Config>().lowDust;
+            bool useblizzard = MyWorld.hailStormTime > 0 && player.ZoneOverworldHeight && !player.ZoneDesert && !ActiveBoss() && !GetInstance<Config>().lowDust;
             player.ManageSpecialBiomeVisuals("Blizzard", useblizzard, default(Vector2));
 
-            bool useInfWrath = MyWorld.firePrompt > ElementsAwoken.bossPromptDelay && !ActiveBoss();
-            player.ManageSpecialBiomeVisuals("ElementsAwoken:AshShader", useInfWrath);
-            player.ManageSpecialBiomeVisuals("ElementsAwoken:AshSky", useInfWrath);
+                bool useInfWrath = MyWorld.firePrompt > ElementsAwoken.bossPromptDelay && !ActiveBoss() && !GetInstance<Config>().promptsDisabled;
+                player.ManageSpecialBiomeVisuals("ElementsAwoken:AshShader", useInfWrath);
+                player.ManageSpecialBiomeVisuals("ElementsAwoken:AshBlizzardEffect", useInfWrath && player.position.Y / 16 < Main.worldSurface);
 
             if (useInfWrath)
             {
                 SkyManager.Instance.Activate("ElementsAwoken:InfernacesWrath", player.Center);
-                if (!ModContent.GetInstance<Config>().lowDust) Overlays.Scene.Activate("ElementsAwoken:AshParticles", player.Center);
+                if (!GetInstance<Config>().lowDust) Overlays.Scene.Activate("ElementsAwoken:AshParticles", player.Center);
             }
-            else 
+            else
             {
                 SkyManager.Instance.Deactivate("ElementsAwoken:InfernacesWrath");
                 Overlays.Scene.Deactivate("ElementsAwoken:AshParticles");
             }
-            if (ModContent.GetInstance<Config>().lowDust) Overlays.Scene.Deactivate("ElementsAwoken:AshParticles");
+            if (GetInstance<Config>().lowDust) Overlays.Scene.Deactivate("ElementsAwoken:AshParticles");
             NPC aqueous = null;
             for (int i = 0; i < Main.npc.Length; ++i)
             {
@@ -2584,7 +2732,7 @@ namespace ElementsAwoken
         {
             MiscEffects.visible = true;
             layers.Add(MiscEffects);
-            if (MyWorld.credits && MyWorld.creditsCounter > screenTransDuration / 2)
+            if ((MyWorld.credits && MyWorld.creditsCounter > screenTransDuration / 2) || wispForm)
             {
                 foreach (PlayerLayer layer in layers)
                 {
@@ -2593,12 +2741,13 @@ namespace ElementsAwoken
             }
         }
         public static readonly PlayerLayer MiscEffects = new PlayerLayer("ElementsAwoken", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo) {
-            if (drawInfo.shadow != 0f)
-            {
-                return;
-            }
+        if (drawInfo.shadow != 0f)
+        {
+            return;
+        }
             Player drawPlayer = drawInfo.drawPlayer;
             Mod mod = ModLoader.GetMod("ElementsAwoken");
+            if (drawInfo.drawPlayer.wings != mod.GetEquipSlot("SkylineWhirlwind", EquipType.Wings)) return;
             MyPlayer modPlayer = drawPlayer.GetModPlayer<MyPlayer>();
             if (drawInfo.drawPlayer.active &&!drawInfo.drawPlayer.dead)
             {
@@ -2794,7 +2943,7 @@ namespace ElementsAwoken
             {
                 if (target.life <= 0 && playerUtils.enemiesKilledLast10Secs >= 4 && !target.SpawnedFromStatue)
                 {
-                    player.AddBuff(ModContent.BuffType<Bloodbath>(), 600, false);
+                    player.AddBuff(BuffType<Bloodbath>(), 600, false);
                 }
             }
         }
@@ -2830,7 +2979,7 @@ namespace ElementsAwoken
             if (eaMagmaStone && item.melee && !item.noMelee && !item.noUseGraphic)
             {
                 bool makeDust = Main.rand.Next(3) == 0;
-                if (ModContent.GetInstance<Config>().lowDust) makeDust = makeDust = Main.rand.Next(8) == 0;
+                if (GetInstance<Config>().lowDust) makeDust = makeDust = Main.rand.Next(8) == 0;
                 if (makeDust)
                 {
                     int num311 = Dust.NewDust(new Vector2((float)hitbox.X, (float)hitbox.Y), hitbox.Width, hitbox.Height, 6, player.velocity.X * 0.2f + (float)(player.direction * 3), player.velocity.Y * 0.2f, 100, default(Color), 2.5f);
@@ -2859,6 +3008,18 @@ namespace ElementsAwoken
         }
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
+            if (wispForm)
+            {
+                playSound = false;
+                Main.PlaySound(SoundID.NPCHit5,player.position);
+                for (int i = 0; i < 16; i++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, wispDust)];
+                    dust.noGravity = true;
+                    dust.velocity.X = (hitDirection * 12) * Main.rand.NextFloat(0.8f,1.2f);
+                    dust.velocity.Y = -6f * Main.rand.NextFloat(0.8f, 1.2f);
+                }
+            }
             damage = (int)(damage * damageTaken);
 
             if (scourgeDrive)
@@ -2868,8 +3029,6 @@ namespace ElementsAwoken
                     explosionEffect(player, mod.ProjectileType("Explosion"), 100, 0f, DustID.PinkFlame);
                 }
             }
-
-
             if (lightningCloud && lightningCloudCharge > 60)
             {
                 if (damage > 0 && damageSource.SourceOtherIndex != 0)
@@ -2906,7 +3065,6 @@ namespace ElementsAwoken
                     lightningCloudCharge = 0;
                 }
             }
-
             if (mechArmor && mechArmorCD <= 0)
             {
                 int numLightning = 0;
@@ -2919,20 +3077,18 @@ namespace ElementsAwoken
                         float rotation = (float)Math.Atan2(player.Center.Y - other.Center.Y, player.Center.X - other.Center.X);
 
                         Vector2 projVel = new Vector2((float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1));
-                        Projectile.NewProjectile(player.Center.X, player.Center.Y, projVel.X, projVel.Y, ModContent.ProjectileType<MechLightning>(), 200, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(player.Center.X, player.Center.Y, projVel.X, projVel.Y, ProjectileType<MechLightning>(), 200, 0f, Main.myPlayer, 0f, 0f);
                         numLightning++;
                         if (numLightning > 3) break;
                     }
                 }
                 mechArmorCD = 20;
             }
-
             if (player.FindBuffIndex(mod.BuffType("ChaosShield")) != -1 && !player.dead)
             {
                 chaosBoost += damage;
                 damage /= 5;
             }
-
             if (puffFall)
             {
                 if (damageSource.SourceOtherIndex == 0)
@@ -2940,7 +3096,10 @@ namespace ElementsAwoken
                     damage /= 2;
                 }
             }
-
+            if (arid && damageSource.SourceOtherIndex == 0)
+            {
+                damage = (int)(damage * (MathHelper.Clamp(aridFalling,0, player.maxFallSpeed) / player.maxFallSpeed));
+            }
             if (gelticConqueror)
             {
                 if (damageSource.SourceOtherIndex == 0 && !player.controlDown)
@@ -2948,7 +3107,6 @@ namespace ElementsAwoken
                     damage = (int)(damage * 0.25);
                 }
             }
-
             if (oceanicArmor)
             {
                 if (damage > 25)
@@ -2960,38 +3118,43 @@ namespace ElementsAwoken
                     }
                 }
             }
-
             if (viridiumDash)
             {
                 explosionEffect(player, mod.ProjectileType("Explosion"), 1000, 10f, 21);
                 return false;
             }
-
             if (spikeBoots && damageSource.SourceOtherIndex == 3 && damage <= 46) return false;
             if (templeSpikeBoots && damageSource.SourceOtherIndex == 3) return false;
             if (aegisDashTimer > 0)
             {
                 damage = (int)(damage * 0.1f);
             }
-
             if (voidEnergyTimer > 0)
             {
                 damage = (int)(damage * 0.5f);
             }
-
             if (flingToShackle)
             {
                 return false;
             }
-
             if (icyHeart)
             {
                 damage = (int)(damage * icyHeartDR);
                 icyHeartTimer = -600;
                 if (damage == 0) return false;
             }
+            if (starstruck)
+            {
+                damage = (int)(damage * MathHelper.Lerp(1, 4, (float)starstruckCounter / 20));
+            }
+            if (hellFury) damage *= 2;
+            if (glassHeart)
+            {
+                playSound = false;
+                Main.PlaySound(SoundID.Shatter, player.position);
+                player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " shattered"), 1, 1);
 
-
+            }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
         }
         public override bool ConsumeAmmo(Item weapon, Item ammo)
@@ -3014,7 +3177,10 @@ namespace ElementsAwoken
             }
             if (toyArmor && toyArmorCooldown <= 0)
             {
-                Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("LegoBrickFriendly"), 5, 2f, 0);
+                for (int i = 0; i < Main.rand.Next(1, 4); i++)
+                {
+                    Projectile brick = Main.projectile[Projectile.NewProjectile(player.Center.X, player.Center.Y, Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-3, -1), ProjectileType<LegoBrickFriendly>(), 25, 0, player.whoAmI)];
+                }
                 toyArmorCooldown = 60;
             }
             if (voidWalkerChest && damage > player.statLifeMax2 / 2)
@@ -3051,7 +3217,12 @@ namespace ElementsAwoken
             }
             if (awokenWood)
             {
-                player.AddBuff(ModContent.BuffType<AwokenHealing>(), 180);
+                player.AddBuff(BuffType<AwokenHealing>(), 180);
+            }
+            if (starstruck && starstruckCounter < 20)
+            {
+                starstruckCounter++;
+                CombatText.NewText(player.getRect(), Color.HotPink, starstruckCounter, true, false);
             }
         }
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
@@ -3080,6 +3251,8 @@ namespace ElementsAwoken
         }
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>();
+
             if (neovirtuoBonus)
             {
                 if (ElementsAwoken.neovirtuo.JustPressed)
@@ -3105,6 +3278,39 @@ namespace ElementsAwoken
                         player.AddBuff(mod.BuffType("ChaosShieldCooldown"), 3600);
                     }
                 }
+            }
+            if (boostDrive != 0 && ElementsAwoken.specialAbility.JustPressed && player.FindBuffIndex(BuffType<BoostDriveCD>()) == -1)
+            {
+                bool hasEnergy = false;
+                int dustID = 226;
+                if (boostDrive == 1 && energyPlayer.energy >= 50)
+                {
+                    energyPlayer.energy -= 50;
+                    hasEnergy = true;
+                }
+                else if (boostDrive == 2 && energyPlayer.energy >= 150)
+                {
+                    energyPlayer.energy -= 150;
+                    hasEnergy = true;
+                    dustID = 205;
+                }
+                if (hasEnergy)
+                {
+                    int duration = GetInstance<Config>().debugMode ? 420 : 2700;
+                    player.AddBuff(BuffType<BoostDriveCD>(), duration);
+                    boostDriveTimer = 300;
+
+                    int numDusts = 30;
+                    for (int p = 0; p < numDusts; p++)
+                    {
+                        Vector2 position = (Vector2.One * new Vector2((float)player.width / 2f, (float)player.height) * 0.3f * 0.5f).RotatedBy((double)((float)(p - (numDusts / 2 - 1)) * 6.28318548f / (float)numDusts), default(Vector2)) + player.Center;
+                        Vector2 velocity = position - player.Center;
+                        int dust = Dust.NewDust(position + velocity, 0, 0, dustID, velocity.X * 2f, velocity.Y * 2f, 100, default(Color), 1.4f);
+                        Main.dust[dust].noGravity = true;
+                        Main.dust[dust].velocity = Vector2.Normalize(velocity) * 2f;
+                    }
+                }
+                else CombatText.NewText(player.getRect(), Color.Red, "Insufficient Energy", true, false);
             }
             if (flare)
             {
@@ -3173,7 +3379,121 @@ namespace ElementsAwoken
             }
             if (doubleTappedDown && awokenWood)
             {
-                Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<LifesAura>(), 0, 0, player.whoAmI);
+                Projectile.NewProjectile(player.Center, Vector2.Zero, ProjectileType<LifesAura>(), 0, 0, player.whoAmI);
+            }
+            if (doubleTappedDown && fireAccCD < 0 && fireAcc)
+            {
+                var mod = ModLoader.GetMod("ElementsAwoken");
+                Projectile exp = Main.projectile[Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ProjectileType<Explosion>(), 40, 12, player.whoAmI, 0f, 0f)];
+                exp.width = 100;
+                exp.height = 20;
+                exp.Center = player.Bottom + new Vector2(0, -10);
+                Main.PlaySound(2, (int)player.position.X, (int)player.position.Y, 14);
+                int num = GetInstance<Config>().lowDust ? 10 : 20;
+                for (int i = 0; i < num; i++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, 31, 0f, 0f, 100, default(Color), 1.5f)];
+                    if (dust.position.X < player.Center.X) dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * -3f;
+                    else dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * 3f;
+                    dust.velocity.Y = -2f;
+                }
+                int num2 = GetInstance<Config>().lowDust ? 5 : 10;
+                for (int i = 0; i < num2; i++)
+                {
+                    int dustID = 6;
+                    Dust dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, dustID, 0f, 0f, 100, default(Color), 2.5f)];
+                    dust.noGravity = true;
+                    dust.velocity *= 5f;
+                    if (dust.position.X < player.Center.X) dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * -3f;
+                    else dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * 3f;
+                    dust.velocity.Y = -2f; int dustID2 = 6;
+                    dust = Main.dust[Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, dustID2, 0f, 0f, 100, default(Color), 1.5f)];
+                    dust.velocity *= 3f;
+                    if (dust.position.X < player.Center.X) dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * -3f;
+                    else dust.velocity.X = Main.rand.NextFloat(0.8f, 1.2f) * 3f;
+                    dust.velocity.Y = -2f;
+                }
+                int num373 = Gore.NewGore(new Vector2(player.position.X, player.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+                Main.gore[num373].velocity *= 0.4f;
+                Gore gore85 = Main.gore[num373];
+                gore85.velocity.X = gore85.velocity.X + 1f;
+                Gore gore86 = Main.gore[num373];
+                gore86.velocity.Y = gore86.velocity.Y + 1f;
+                num373 = Gore.NewGore(new Vector2(player.position.X, player.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+                Main.gore[num373].velocity *= 0.4f;
+                Gore gore87 = Main.gore[num373];
+                gore87.velocity.X = gore87.velocity.X - 1f;
+                Gore gore88 = Main.gore[num373];
+                gore88.velocity.Y = gore88.velocity.Y + 1f;
+                num373 = Gore.NewGore(new Vector2(player.position.X, player.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+                Main.gore[num373].velocity *= 0.4f;
+                Gore gore89 = Main.gore[num373];
+                gore89.velocity.X = gore89.velocity.X + 1f;
+                Gore gore90 = Main.gore[num373];
+                gore90.velocity.Y = gore90.velocity.Y - 1f;
+                num373 = Gore.NewGore(new Vector2(player.position.X, player.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
+                Main.gore[num373].velocity *= 0.4f;
+                Gore gore91 = Main.gore[num373];
+                gore91.velocity.X = gore91.velocity.X - 1f;
+                Gore gore92 = Main.gore[num373];
+                gore92.velocity.Y = gore92.velocity.Y - 1f;
+
+                player.velocity.Y -= 8;
+                fireAccCD = 60;
+            }
+            if (doubleTappedDown && radiantCrown)
+            {
+                Vector2 toPos = Main.MouseWorld;
+                Tile tileTest = Framing.GetTileSafely((int)(toPos.X / 16), (int)(toPos.Y / 16));
+                if (!Collision.SolidCollision(toPos, player.width, player.height) && toPos.X > 50f && toPos.X < (float)(Main.maxTilesX * 16 - 50) && toPos.Y > 50f && toPos.Y < (float)(Main.maxTilesY * 16 - 50))
+                {
+                    if (player.chaosState)
+                    {
+                        player.statLife -= player.statLifeMax2 / 7;
+                        if (player.statLife < 0) player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " became one with the stars"), 1, 1);
+                    }
+                    int numProj = 5;
+                    Vector2 distance = (toPos - player.Center) / numProj;
+                    for (int k = 0; k < numProj; k++)
+                    {
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(player.Center + distance - new Vector2(0, 23), Vector2.Zero, ProjectileType<RadiantPTeleport>(), 0, 0f, Main.myPlayer)];
+                        proj.spriteDirection = player.direction;
+                        distance += (toPos - player.Center) / numProj;
+                    }
+                    float num2 = Vector2.Distance(player.position, toPos);
+                    player.Center = toPos;
+                    NetMessage.SendData(65, -1, -1, null, 0, (float)player.whoAmI, toPos.X, toPos.Y, 1, 0, 0);
+
+                    // screen stuff
+                    player.fallStart = (int)(player.position.Y / 16f);
+                    if (player.whoAmI == Main.myPlayer)
+                    {
+                        bool flag = false;
+                        if (num2 < new Vector2((float)Main.screenWidth, (float)Main.screenHeight).Length() / 2f + 100f)
+                        {
+                            int time = 10;
+                            Main.SetCameraLerp(0.1f, time);
+                            flag = true;
+                        }
+                        else
+                        {
+                            Main.BlackFadeIn = 255;
+                            Lighting.BlackOut();
+                            Main.screenLastPosition = Main.screenPosition;
+                            Main.screenPosition.X = player.position.X + (float)(player.width / 2) - (float)(Main.screenWidth / 2);
+                            Main.screenPosition.Y = player.position.Y + (float)(player.height / 2) - (float)(Main.screenHeight / 2);
+                            Main.quickBG = 10;
+                        }
+                            if (Main.mapTime < 5)
+                            {
+                                Main.mapTime = 5;
+                            }
+                            Main.maxQ = true;
+                            Main.renderNow = true;
+                    }
+
+                    player.AddBuff(BuffID.ChaosState, 300);
+                }
             }
             if (player.controlDown && player.releaseDown && forgedShackled > 0)
             {
@@ -3183,7 +3503,7 @@ namespace ElementsAwoken
             if (crystallineLocket && ElementsAwoken.specialAbility.JustPressed && player.FindBuffIndex(mod.BuffType("CrystallineLocketCD")) == -1)
             {
                 crystallineLocketCrit = 600;
-                if (!ModContent.GetInstance<Config>().debugMode) player.AddBuff(mod.BuffType("CrystallineLocketCD"), 3600);
+                if (!GetInstance<Config>().debugMode) player.AddBuff(mod.BuffType("CrystallineLocketCD"), 3600);
                 else player.AddBuff(mod.BuffType("CrystallineLocketCD"), 60);
 
             }
@@ -3198,21 +3518,24 @@ namespace ElementsAwoken
                 ElementsAwoken.DebugModeText(rotation);
                 if (rotation < -(Math.PI / 2 - Math.PI / 8) && rotation > -(Math.PI / 2 + Math.PI / 8))
                 {
-                    player.velocity.Y -= 16f;
+                    float jumpSpd = 16f;
+                    if (player.slowFall) jumpSpd *= 0.5f;
+                    if (player.HeldItem.type == 946) jumpSpd *= 0.5f;
+                    player.velocity.Y -= jumpSpd;
                     int numberProjectiles = Main.rand.Next(3, 7);
                     for (int i = 0; i < numberProjectiles; i++)
                     {
                         Vector2 perturbedSpeed = projVel.RotatedByRandom(MathHelper.ToRadians(35));
-                        Projectile.NewProjectile(player.Center,perturbedSpeed, ModContent.ProjectileType<SlimeClawBall>(), 20, 3f, player.whoAmI);
+                        Projectile.NewProjectile(player.Center,perturbedSpeed, ProjectileType<SlimeClawBall>(), 20, 3f, player.whoAmI);
                     }
                 }
-                Projectile.NewProjectile(player.Center, projVel, ModContent.ProjectileType<SlimeClawBall>(), 20, 3f, player.whoAmI);
+                Projectile.NewProjectile(player.Center, projVel, ProjectileType<SlimeClawBall>(), 20, 3f, player.whoAmI);
                 toySlimeClawCD = 60;
             }
             if (greatLens && player.FindBuffIndex(mod.BuffType("GreatLensCD")) == -1 && ElementsAwoken.specialAbility.JustPressed)
             {
                 greatLensTimer = 600;
-                if (!ModContent.GetInstance<Config>().debugMode) player.AddBuff(mod.BuffType("GreatLensCD"), 3600);
+                if (!GetInstance<Config>().debugMode) player.AddBuff(mod.BuffType("GreatLensCD"), 3600);
                 else player.AddBuff(mod.BuffType("GreatLensCD"), 60);
             }
             if (ElementsAwoken.armorAbility.JustPressed && voidWalkerCooldown <= 0 && voidWalkerArmor > 0)

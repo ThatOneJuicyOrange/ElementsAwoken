@@ -38,6 +38,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Inferno");
+            Tooltip.SetDefault("");
         }
     }
 }

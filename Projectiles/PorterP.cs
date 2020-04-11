@@ -64,23 +64,9 @@ namespace ElementsAwoken.Projectiles
                         isntColliding = true;
                     }
                 }
-                CircleDust(target);
+                ProjectileUtils.OutwardsCircleDust(projectile, DustID.PinkFlame, 36, 3f, targetX: target.Center.X, targetY: target.Center.Y);
                 target.Center = newPos;
-                CircleDust(target);
-            }
-        }
-        private void CircleDust(NPC target)
-        {
-            // make dust in an expanding circle
-            int numDusts = 36;
-            for (int i = 0; i < numDusts; i++)
-            {
-                Vector2 position = (Vector2.Normalize(new Vector2(5,5)) * new Vector2((float)target.width / 2f, (float)target.height) * 0.75f * 0.5f).RotatedBy((double)((float)(i - (numDusts / 2 - 1)) * 6.28318548f / (float)numDusts), default(Vector2)) + target.Center;
-                Vector2 velocity = position - target.Center;
-                int dust = Dust.NewDust(position + velocity, 0, 0, DustID.PinkFlame, velocity.X * 2f, velocity.Y * 2f, 100, default(Color), 1.4f);
-                Main.dust[dust].noGravity = true;
-                Main.dust[dust].noLight = true;
-                Main.dust[dust].velocity = Vector2.Normalize(velocity) * 3f;
+                ProjectileUtils.OutwardsCircleDust(projectile, DustID.PinkFlame, 36, 3f, targetX: target.Center.X, targetY: target.Center.Y);
             }
         }
     }

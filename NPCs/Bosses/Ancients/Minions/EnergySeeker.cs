@@ -152,6 +152,14 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients.Minions
             {
                 npc.active = false;
             }
-        }      
+        }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            //gore
+            if (npc.life <= 0)
+            {
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/EnergySeeker"), npc.scale);
+            }
+        }
     }
 }

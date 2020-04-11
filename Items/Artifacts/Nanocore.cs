@@ -75,7 +75,7 @@ namespace ElementsAwoken.Items.Artifacts
             recipe.AddIngredient(ItemID.CelestialShell, 1);
             recipe.AddIngredient(ItemID.CharmofMyths, 1);
             recipe.AddIngredient(ItemID.AvengerEmblem, 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

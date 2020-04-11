@@ -48,7 +48,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
             recipe.AddIngredient(ItemID.HellstoneBar, 12);
             recipe.AddIngredient(ItemID.LavaBucket, 2);
             recipe.AddIngredient(ItemID.Bone, 5);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

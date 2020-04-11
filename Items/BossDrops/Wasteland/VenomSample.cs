@@ -14,6 +14,7 @@ using Terraria.ModLoader;
 
 namespace ElementsAwoken.Items.BossDrops.Wasteland
 {
+    [AutoloadEquip(EquipType.HandsOn)]
     public class VenomSample : ModItem
     {
         public override void SetDefaults()

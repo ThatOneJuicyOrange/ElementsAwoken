@@ -7,6 +7,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.DataStructures;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Items.Materials;
+using ElementsAwoken.Items.BossDrops.VoidLeviathan;
 
 namespace ElementsAwoken.Items.Tech.Tools
 {
@@ -173,13 +176,13 @@ namespace ElementsAwoken.Items.Tech.Tools
                             player.QuickSpawnItem(ItemID.CobaltBar);
                             break;
                         }
-                        if (other.type == ItemID.PalladiumBar && other.stack >= 3)
+                        if (other.type == ItemID.PalladiumOre && other.stack >= 3)
                         {
                             smeltCooldown = 90;
                             modPlayer.energy -= energyConsumed;
 
                             other.stack -= 3;
-                            player.QuickSpawnItem(ItemID.PalladiumOre);
+                            player.QuickSpawnItem(ItemID.PalladiumBar);
                             break;
                         }
                         if (other.type == ItemID.MythrilOre && other.stack >= 4)
@@ -266,7 +269,33 @@ namespace ElementsAwoken.Items.Tech.Tools
                         player.QuickSpawnItem(ItemID.HellstoneBar);
                     }
                 }
+                if (smeltCooldown <= 0)
+                {
+                    // hellstone
+                    Item voidOre = null;
+                    Item ashes = null;
+                    for (int i = 0; i < 50; i++)
+                    {
+                        Item other = Main.LocalPlayer.inventory[i];
+                        if (other.type == ItemType<VoiditeOre>())
+                        {
+                            voidOre = other;
+                        }
+                        if (other.type == ItemType<VoidAshes>())
+                        {
+                            ashes = other;
+                        }
+                    }
+                    if ((voidOre != null && voidOre.stack >= 4) && (ashes != null && ashes.stack >= 1))
+                    {
+                        smeltCooldown = 90;
+                        modPlayer.energy -= energyConsumed;
 
+                        voidOre.stack -= 4;
+                        ashes.stack--;
+                        player.QuickSpawnItem(ItemType<VoiditeBar>());
+                    }
+                }
             }
         }
         public override bool CanRightClick()

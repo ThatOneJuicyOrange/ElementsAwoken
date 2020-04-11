@@ -34,10 +34,7 @@ namespace ElementsAwoken.Projectiles.Yoyos
         }
         public override void AI()
         {
-            if (Main.rand.Next(1) == 0)
-            {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, DustID.PinkFlame, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-            }
+ Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, DustID.PinkFlame, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);          
             if (cooldown <= 0)
             {
                 cooldown = 45;

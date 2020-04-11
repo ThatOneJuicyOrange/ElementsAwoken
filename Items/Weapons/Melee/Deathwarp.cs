@@ -4,6 +4,12 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Projectiles.Spears;
+using ElementsAwoken.Projectiles;
+using ElementsAwoken.Buffs.Cooldowns;
+using ElementsAwoken.Items.BossDrops.Azana;
+using ElementsAwoken.Tiles.Crafting;
 
 namespace ElementsAwoken.Items.Weapons.Melee
 {
@@ -14,7 +20,7 @@ namespace ElementsAwoken.Items.Weapons.Melee
             item.height = 60;
             item.width = 60;
 
-            item.damage = 420;
+            item.damage = 326;
             item.knockBack = 4.75f;
 
             item.melee = true;
@@ -23,8 +29,8 @@ namespace ElementsAwoken.Items.Weapons.Melee
             item.noUseGraphic = true;
             item.autoReuse = true;
 
-            item.useAnimation = 12;
-            item.useTime = 12;
+            item.useAnimation = 18;
+            item.useTime = 18;
             item.useStyle = 5;
             item.UseSound = SoundID.Item1;
 
@@ -34,8 +40,8 @@ namespace ElementsAwoken.Items.Weapons.Melee
 
             item.maxStack = 1;
 
-            item.shoot = mod.ProjectileType("DeathwarpP");
-            item.shootSpeed = 19f;
+            item.shoot = ProjectileType<DeathwarpP>();
+            item.shootSpeed = 14f;
         }
         public override void SetStaticDefaults()
         {
@@ -48,37 +54,29 @@ namespace ElementsAwoken.Items.Weapons.Melee
         }
         public override bool CanUseItem(Player player)
         {
-            if (player.altFunctionUse == 2)
-            {
-                if (player.FindBuffIndex(mod.BuffType("DeathwarpCooldown")) == -1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return player.ownedProjectileCounts[item.shoot] < 1;
-            }
-            //return base.CanUseItem(player);
+            if (player.altFunctionUse == 2) return player.FindBuffIndex(BuffType<DeathwarpCooldown>()) == -1;
+            else return player.ownedProjectileCounts[item.shoot] < 1;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             if (player.altFunctionUse == 2)
             {
-                Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, mod.ProjectileType("DeathwarpCenter"), 120, 5f, Main.myPlayer, 0f, 0f);
-                player.AddBuff(mod.BuffType("DeathwarpCooldown"), 1200);
+                int swirlCount = 2;
+                for (int l = 0; l < swirlCount; l++)
+                {
+                    int distance = 180;
+
+                   Projectile.NewProjectile(player.Center.X, player.Center.Y, 0f, 0f, ProjectileType<DeathwarpSpinner>(), damage, knockBack, player.whoAmI, l * distance);
+                }
+                player.AddBuff(BuffType<DeathwarpCooldown>(), 1200);
             }
             else
             {
-                int numberProjectiles = 2 + Main.rand.Next(4);
+                int numberProjectiles = Main.rand.Next(2,5);
                 for (int i = 0; i < numberProjectiles; i++)
                 {
                     Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(2));
-                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("DeathwarpLaser"), damage, knockBack, player.whoAmI);
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileType<DeathwarpLaser>(), damage, knockBack, player.whoAmI);
                 }
             }
             return true;
@@ -86,8 +84,8 @@ namespace ElementsAwoken.Items.Weapons.Melee
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "DiscordantBar", 15);
-            recipe.AddTile(null, "ChaoticCrucible");
+            recipe.AddIngredient(ItemType<DiscordantBar>(), 15);
+            recipe.AddTile(TileType<ChaoticCrucible>());
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

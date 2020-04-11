@@ -106,41 +106,19 @@ namespace ElementsAwoken.Projectiles.Flails
                     Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, Main.rand.Next(-2, 2), Main.rand.Next(-2, 2), mod.ProjectileType("ChaosFireball"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
                 }
             }
-            for (int k = 0; k < 200; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.type == projectile.type && other.active && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushAway;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushAway;
-                    }
-                }
-            }
+            ProjectileUtils.PushOtherEntities(projectile);
+
         }
-        
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
+            ProjectileUtils.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
             projectile.ai[0] = 1;
                 return false;
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
+            ProjectileUtils.Explosion(projectile, new int[] { 127 }, projectile.damage, "melee");
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {

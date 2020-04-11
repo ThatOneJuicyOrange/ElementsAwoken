@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.DataStructures;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using ElementsAwoken.Items.Accessories;
+using ElementsAwoken.Items.Elements.Desert;
+using ElementsAwoken.Items.Elements.Sky;
+using ElementsAwoken.Items.Elements.Frost;
+using ElementsAwoken.Items.Elements.Void;
+using ElementsAwoken.Items.Elements.Water;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Elements.Fire
 {
@@ -26,13 +29,38 @@ namespace ElementsAwoken.Items.Elements.Fire
             Tooltip.SetDefault("Cool speed!\nGrants immunity to fire blocks\nTemporary immunity to lava");
         }
 
-
+        public override bool CanEquipAccessory(Player player, int slot)
+        {
+            if (slot < 10)
+            {
+                int maxAccessoryIndex = 5 + player.extraAccessorySlots;
+                for (int i = 3; i < 3 + maxAccessoryIndex; i++)
+                {
+                    if (slot != i &&
+                        (player.armor[i].type == ItemID.HermesBoots ||
+                        player.armor[i].type == ItemID.SpectreBoots ||
+                        player.armor[i].type == ItemID.LightningBoots ||
+                        player.armor[i].type == ItemID.FrostsparkBoots ||
+                        player.armor[i].type == ItemType<DesertTrailers>() ||
+                        player.armor[i].type == ItemType<SkylineWhirlwind>() ||
+                        player.armor[i].type == ItemType<FrostWalkers>() ||
+                        player.armor[i].type == ItemType<AqueousWaders>() ||
+                        player.armor[i].type == ItemType<VoidBoots>() ||
+                        player.armor[i].type == ItemType<NyanBoots>()))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.accRunSpeed = 10f;
+            player.accRunSpeed = 8.8f;
             player.rocketBoots = 1;
-            player.moveSpeed += 3f;
+
             player.fireWalk = true;
+
             player.lavaMax += 420;
         }
 

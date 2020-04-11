@@ -80,7 +80,6 @@ namespace ElementsAwoken.Items.Testing
                     case 0:
                         MyWorld.downedToySlime = false;
                         MyWorld.downedScourgeFighter = false;
-                        MyWorld.downedCelestial = false;
                         MyWorld.downedObsidious = false;
                         MyWorld.downedEye = false;
                         MyWorld.downedAncientWyrm = false;
@@ -104,7 +103,6 @@ namespace ElementsAwoken.Items.Testing
                     case 2:
                         MyWorld.downedToySlime = true;
                         MyWorld.downedScourgeFighter = true;
-                        MyWorld.downedCelestial = true;
                         MyWorld.downedObsidious = true;
                         MyWorld.downedEye = true;
                         MyWorld.downedAncientWyrm = true;

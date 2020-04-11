@@ -29,6 +29,7 @@ namespace ElementsAwoken.Items.VoidEventItems
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Life's Lament");
+            Tooltip.SetDefault("");
         }
 
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)

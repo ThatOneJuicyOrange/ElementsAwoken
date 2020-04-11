@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Little Buddy");
+            DisplayName.SetDefault("Cluster Grenade");
         }
         public override void AI()
         {
@@ -65,6 +65,12 @@ namespace ElementsAwoken.Projectiles
 
         public override void Kill(int timeLeft)
         {
+            for (int i = 0; i < Main.rand.Next(1,3); i++)
+            {
+                Vector2 speed = new Vector2((float)Main.rand.Next(-5, 5), (float)Main.rand.Next(-5, 5));
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, speed.X, speed.Y, ModContent.ProjectileType<ClusterGrenade3>(), (int)(projectile.damage * 0.75f), projectile.knockBack, projectile.owner, 0f, 0f);
+            }
+
             Main.PlaySound(SoundID.Item62, projectile.position);
             Projectile exp = Main.projectile[Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ModContent.ProjectileType<Explosion>(), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f)];
             exp.ranged = true;
@@ -72,7 +78,7 @@ namespace ElementsAwoken.Projectiles
             for (int i = 0; i < num; i++)
             {
                 Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 31, 0f, 0f, 100, default(Color), 1.5f)];
-                dust.velocity *= 0.9f;
+                dust.velocity *= 1.4f;
             }
             int num2 = ModContent.GetInstance<Config>().lowDust ? 5 : 10;
             for (int i = 0; i < num2; i++)
@@ -80,31 +86,31 @@ namespace ElementsAwoken.Projectiles
                 int dustID = 6;
                 Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID, 0f, 0f, 100, default(Color), 2.5f)];
                 dust.noGravity = true;
-                dust.velocity *= 2f;
+                dust.velocity *= 5f;
                 int dustID2 = 6;
                 dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, dustID2, 0f, 0f, 100, default(Color), 1.5f)];
-                dust.velocity *= 1.5f;
+                dust.velocity *= 3f;
             }
             int num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.2f;
+            Main.gore[num373].velocity *= 0.4f;
             Gore gore85 = Main.gore[num373];
             gore85.velocity.X = gore85.velocity.X + 1f;
             Gore gore86 = Main.gore[num373];
             gore86.velocity.Y = gore86.velocity.Y + 1f;
             num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.2f;
+            Main.gore[num373].velocity *= 0.4f;
             Gore gore87 = Main.gore[num373];
             gore87.velocity.X = gore87.velocity.X - 1f;
             Gore gore88 = Main.gore[num373];
             gore88.velocity.Y = gore88.velocity.Y + 1f;
             num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.2f;
+            Main.gore[num373].velocity *= 0.4f;
             Gore gore89 = Main.gore[num373];
             gore89.velocity.X = gore89.velocity.X + 1f;
             Gore gore90 = Main.gore[num373];
             gore90.velocity.Y = gore90.velocity.Y - 1f;
             num373 = Gore.NewGore(new Vector2(projectile.position.X, projectile.position.Y), default(Vector2), Main.rand.Next(61, 64), 1f);
-            Main.gore[num373].velocity *= 0.2f;
+            Main.gore[num373].velocity *= 0.4f;
             Gore gore91 = Main.gore[num373];
             gore91.velocity.X = gore91.velocity.X - 1f;
             Gore gore92 = Main.gore[num373];

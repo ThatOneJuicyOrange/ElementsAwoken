@@ -74,6 +74,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
             {
                 spikeTimer -= 1f;
             }
+            int damage = 50;
             if (!npc.wet && !Main.player[npc.target].npcTypeNoAggro[npc.type])
             {
                 Vector2 vector3 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);
@@ -96,7 +97,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
                             vector4.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
                             vector4.Normalize();
                             vector4 *= 6f + (float)Main.rand.Next(-50, 51) * 0.01f;
-                            Projectile.NewProjectile(vector3.X, vector3.Y, vector4.X, vector4.Y, mod.ProjectileType("MagmaSlimeMagma"), npc.damage, 0f, Main.myPlayer, 0f, 0f);
+                            Projectile.NewProjectile(vector3.X, vector3.Y, vector4.X, vector4.Y, mod.ProjectileType("MagmaSlimeMagma"), damage, 0f, Main.myPlayer, 0f, 0f);
                             spikeTimer = 30f;
                         }
                     }
@@ -116,7 +117,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
                         num14 *= num16;
                         num15 *= num16;
                         spikeTimer = 50f;
-                        Projectile.NewProjectile(vector3.X, vector3.Y, num14, num15, mod.ProjectileType("MagmaSlimeMagma"), npc.damage, 0f, Main.myPlayer, 0f, 0f);
+                        Projectile.NewProjectile(vector3.X, vector3.Y, num14, num15, mod.ProjectileType("MagmaSlimeMagma"), damage, 0f, Main.myPlayer, 0f, 0f);
                     }
                 }
             }

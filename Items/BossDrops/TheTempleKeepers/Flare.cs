@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossDrops.TheTempleKeepers
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare");
+            DisplayName.SetDefault("Drakonian Guard");
             Tooltip.SetDefault("Pressing the ability key will create a shield around the player that pushes enemies and projectiles away");
         }
 

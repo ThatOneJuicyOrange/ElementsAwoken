@@ -41,7 +41,7 @@ namespace ElementsAwoken.Projectiles.Thrown
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             projectile.ai[0]++;
-            ProjectileGlobal.Explosion(projectile, new int[] { 6 }, projectile.damage, "thrown");
+            ProjectileUtils.Explosion(projectile, new int[] { 6 }, projectile.damage, "thrown");
         }
         public override void Kill(int timeLeft)
         {
@@ -52,7 +52,7 @@ namespace ElementsAwoken.Projectiles.Thrown
             projectile.penetrate--;
             if (projectile.penetrate <= 0)
             {
-                ProjectileGlobal.Explosion(projectile, new int[] { 6 }, projectile.damage, "thrown");
+                ProjectileUtils.Explosion(projectile, new int[] { 6 }, projectile.damage, "thrown");
                 projectile.ai[0]++;
             }
             else

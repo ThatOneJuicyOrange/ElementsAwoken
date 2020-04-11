@@ -48,8 +48,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         }
         public override void AI()
         {
-            npc.ai[0]--;
-            if (npc.ai[0] <= 0)
+            npc.ai[0]++;
+            if (npc.ai[0] >= 60)
             {
                 Vector2 spawnAt = npc.Center + new Vector2(0f, (float)npc.height / 2f);
                 NPC.NewNPC((int)spawnAt.X, (int)spawnAt.Y, mod.NPCType("WastelandMinion"));

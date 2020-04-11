@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Little Buddy");
+            DisplayName.SetDefault("Cluster Grenade");
         }
         public override void AI()
         {

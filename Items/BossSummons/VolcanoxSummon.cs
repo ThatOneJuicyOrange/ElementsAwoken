@@ -49,7 +49,7 @@ namespace ElementsAwoken.Items.BossSummons
             recipe.AddIngredient(null, "NeutronFragment", 3);
             recipe.AddIngredient(null, "Pyroplasm", 30);
             recipe.AddIngredient(ItemID.LunarBar, 12);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

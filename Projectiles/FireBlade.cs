@@ -53,7 +53,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 6 }, projectile.damage,"melee");
+            ProjectileUtils.Explosion(projectile, new int[] { 6 }, projectile.damage,"melee");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Solar Emblem");
-            Tooltip.SetDefault("30% increased melee damage\n75% decreased non-melee damage");
+            Tooltip.SetDefault("22% increased melee damage\n75% decreased non-melee damage");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -44,7 +44,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.meleeDamage += 0.3f;
+            player.meleeDamage += 0.22f;
             player.rangedDamage -= 0.75f;
             player.magicDamage -= 0.75f;
             player.minionDamage -= 0.75f;

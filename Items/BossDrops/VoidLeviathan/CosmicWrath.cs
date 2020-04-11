@@ -67,7 +67,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.altFunctionUse == 2)
             {
-                for (int i = 0; i < Main.projectile.Length; i++)
+                for (int i = 0; i < Main.maxProjectiles; i++)
                 {
                     Projectile proj = Main.projectile[i];
                     if (proj.active && proj.type == mod.ProjectileType("CosmicWrathP"))

@@ -47,7 +47,7 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth.RegarothMinion
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Regaroth Minion");
+            DisplayName.SetDefault("Thunderling");
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {

@@ -20,7 +20,7 @@ namespace ElementsAwoken.Items.ItemSets.Puff
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Comfy Hood");
-            Tooltip.SetDefault("Increases max minions by 1");
+            Tooltip.SetDefault("Increases maximum minions by 1");
         }
 
         public override void UpdateEquip(Player player)

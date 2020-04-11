@@ -101,7 +101,7 @@ namespace ElementsAwoken.Projectiles.Minions
                 for (int i = 0; i < Main.npc.Length; i++)
                 {
                     NPC nPC = Main.npc[i];
-                    if (nPC.active && !nPC.friendly && nPC.damage > 0 && !nPC.dontTakeDamage && Vector2.Distance(projectile.Center, nPC.Center) <= max)
+                    if (nPC.CanBeChasedBy(this) && Vector2.Distance(projectile.Center, nPC.Center) <= max)
                     {
                         float Speed = 9f;
                         if (shootTimer <= 0)
@@ -125,30 +125,8 @@ namespace ElementsAwoken.Projectiles.Minions
             }
 
 
-            for (int k = 0; k < Main.projectile.Length; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.type == projectile.type && other.active && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushAway;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushAway;
-                    }
-                }
-            }
+            ProjectileUtils.PushOtherEntities(projectile);
+
 
             float num535 = projectile.position.X;
             float num536 = projectile.position.Y;

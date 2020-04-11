@@ -37,13 +37,13 @@ namespace ElementsAwoken.Items.BossDrops.ScourgeFighter
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            float numberProjectiles = 6;
-            float rotation = MathHelper.ToRadians(360);
-            float speed = 3f;
-            for (int i = 0; i < numberProjectiles; i++)
+            float rotation = MathHelper.TwoPi;
+            float numProj = 6;
+            float speed = 12f;
+            for (int i = 0; i < numProj; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(4, 4).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * speed;
-                int num1 = Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, Main.myPlayer, Main.MouseWorld.X, Main.MouseWorld.Y);
+                Vector2 perturbedSpeed = (rotation / numProj * i).ToRotationVector2() * speed;
+                Projectile.NewProjectile(position,perturbedSpeed, type, damage, knockBack, player.whoAmI, Main.MouseWorld.X, Main.MouseWorld.Y);
             }
             return false;
         }

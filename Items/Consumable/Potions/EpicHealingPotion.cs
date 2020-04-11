@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "Pyroplasm");
             recipe.AddIngredient(ItemID.SuperHealingPotion, 2);
-            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.AddTile(TileID.Bottles);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

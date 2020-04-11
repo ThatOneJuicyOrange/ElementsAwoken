@@ -38,7 +38,8 @@ namespace ElementsAwoken.Items.Testing
             else
             {
                 MyWorld.credits = true;
-               // MyWorld.creditsCounter = player.GetModPlayer<MyPlayer>().screenDuration * 10 - 30;
+                MyWorld.creditsCounter = 1200;
+                // MyWorld.creditsCounter = player.GetModPlayer<MyPlayer>().screenDuration * 10 - 30;
                 Main.NewText("credits on", Color.Purple.R, Color.Purple.G, Color.Purple.B);
             }
             return true;

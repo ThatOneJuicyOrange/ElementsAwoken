@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Testing
 
             int head = -1;
             int tail = -1;
-            for (int i = 0; i < Main.projectile.Length; i++)
+            for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer)
                 {

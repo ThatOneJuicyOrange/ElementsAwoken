@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Elements.Frost
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hailgun");
-            Tooltip.SetDefault("It's raining snowballs, from out of the sky\n90% chance not to consume ammo");
+            Tooltip.SetDefault("'It's raining snowballs, from out of the sky'\n90% chance not to consume ammo");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

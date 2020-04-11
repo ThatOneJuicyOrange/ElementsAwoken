@@ -52,7 +52,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(null, "Pyroplasm", 25);
             recipe.AddIngredient(ItemID.LifeCrystal, 10);
             recipe.AddIngredient(ItemID.LifeFruit, 10);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

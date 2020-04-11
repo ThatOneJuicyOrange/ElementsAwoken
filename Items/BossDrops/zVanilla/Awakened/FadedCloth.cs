@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla.Awakened
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Tattered Cloth");
+            DisplayName.SetDefault("Cursed Cloth");
             Tooltip.SetDefault("Homing skulls are shot at nearby enemies\nTrue melee damage is increased by:\nBase: 50%\nAfter Wall of Flesh: 75%\nAfter Plantera: 100%\nAfter Moonlord: 300%");
         }
         public override void UpdateAccessory(Player player, bool hideVisual)

@@ -4,21 +4,21 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Projectiles
 {
     public class DeathwarpSpinner : ModProjectile
     {
-        int aiTimer = 0;
-        int shootTimer = 0;
-        float increase = 0f;
+        private int aiTimer = 0;
+        private int shootTimer = 0;
+        private float increase = 0f;
         public override void SetDefaults()
         {
             projectile.width = 50;
             projectile.height = 50;
             projectile.friendly = true;
-            projectile.ignoreWater = true;
-            projectile.magic = true;
+            projectile.melee = true;
             projectile.tileCollide = false;
             projectile.penetrate = -1;
             projectile.timeLeft = 600;
@@ -51,40 +51,24 @@ namespace ElementsAwoken.Projectiles
             aiTimer++;
             shootTimer--;
             Vector2 offset = new Vector2(100, 0);
-            Projectile parent = Main.projectile[(int)projectile.ai[1]];
-            if (increase <= 0.25f) // 0.3
+            if (increase <= 0.25f)
             {
                 increase += 0.001f;
-                if (aiTimer > 30)
-                {
-                    increase += 0.001f;
-                }
-                if (aiTimer > 45)
-                {
-                    increase += 0.001f;
-                }
-                if (aiTimer > 50)
-                {
-                    increase += 0.001f;
-                }
+                if (aiTimer > 30) increase += 0.001f;
+                if (aiTimer > 45) increase += 0.001f;
+                if (aiTimer > 50)  increase += 0.001f;
             }
             projectile.ai[0] += increase;
-            projectile.position = parent.Center + offset.RotatedBy(projectile.ai[0]  * (Math.PI * 2 / 8)) - new Vector2(projectile.width/2, projectile.height/2); // if the projectile isnt dust, you gotta subtract half the size to make it change the projectile center
+            projectile.Center = player.Center + offset.RotatedBy(projectile.ai[0] * (Math.PI * 2 / 8));
 
-            if (parent.active == false)
-            {
-                projectile.Kill();
-            }
+            if (!player.active || player.dead) projectile.Kill();
+
             if (increase >= 0.24f && shootTimer <= 0)
             {
                 Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 33);
-                float Speed = 15f;
-                Vector2 vector8 = new Vector2(projectile.position.X + (projectile.width / 2), projectile.position.Y + (projectile.height / 2));
-                int damage = 400;
-                int type = mod.ProjectileType("DeathwarpLaser");
-                Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 21);
-                float rotation = (float)Math.Atan2(vector8.Y - (player.position.Y + (player.height * 0.5f)), vector8.X - (player.position.X + (player.width * 0.5f)));
-                int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, -((float)((Math.Cos(rotation) * Speed) * -1)), -((float)((Math.Sin(rotation) * Speed) * -1)), type, damage, 0f, 0); // reverse speed to shoot away from player
+                float Speed = -15f;
+                float rotation = (float)Math.Atan2(projectile.Center.Y - player.Center.Y, projectile.Center.X - player.Center.X);
+                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), ProjectileType<DeathwarpLaser>(), projectile.damage, 0f, 0);
                 shootTimer = 3;
             }
         }

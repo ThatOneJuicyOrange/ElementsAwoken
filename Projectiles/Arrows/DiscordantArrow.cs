@@ -34,11 +34,10 @@ namespace ElementsAwoken.Projectiles.Arrows
             Lighting.AddLight(projectile.Center, 0.6f, 0.1f, 0.3f);
 
             int numChaosArrows = 0;
-            for (int i = 0; i < Main.projectile.Length; i++)
+            for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 if (Main.projectile[i].active && Main.projectile[i].type == mod.ProjectileType("DiscordantArrowChaos")) numChaosArrows++;
             }
-            Main.NewText(numChaosArrows);
             if (numChaosArrows < 100)
             {
                 if (Main.rand.Next(30) == 0)

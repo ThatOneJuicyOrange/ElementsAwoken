@@ -39,7 +39,8 @@ namespace ElementsAwoken.Items.Donator.YukkiKun
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Ancient Ichor Flagon\nYukki-Kun's donator item");
+            DisplayName.SetDefault("Ancient Ichor Flagon");
+            Tooltip.SetDefault("Yukki-Kun's donator item");
         }
 
         public override void AddRecipes()

@@ -32,10 +32,7 @@ namespace ElementsAwoken.Projectiles.Yoyos
         }
         public override void AI()
         {
-            if (Main.rand.Next(1) == 0)
-            {
-                Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-            }
+ Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
             int[] array = new int[20];
             int num428 = 0;
             float num429 = 300f;

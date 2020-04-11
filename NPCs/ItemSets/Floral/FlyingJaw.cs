@@ -31,6 +31,16 @@ namespace ElementsAwoken.NPCs.ItemSets.Floral
             banner = npc.type;
             bannerItem = mod.ItemType("FlyingJawBanner");
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/FlyingJaw" + i), npc.scale);
+                }
+            }
+        }
         public override void FindFrame(int frameHeight)
         {
             npc.direction = Math.Sign(npc.velocity.X);

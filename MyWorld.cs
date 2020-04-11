@@ -19,6 +19,10 @@ using System.Linq;
 using ElementsAwoken.Items.Consumable.Potions;
 using Terraria.Localization;
 using ElementsAwoken.Events.VoidEvent;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Projectiles.NPCProj;
+using ElementsAwoken.Projectiles.GlobalProjectiles;
+using ElementsAwoken.Events.RadiantRain.Enemies;
 
 namespace ElementsAwoken
 {
@@ -45,7 +49,6 @@ namespace ElementsAwoken
         public static bool downedInfernace = false;
         public static bool downedScourgeFighter = false;
         public static bool downedRegaroth = false;
-        public static bool downedCelestial = false;
         public static bool downedPermafrost = false;
         public static bool downedObsidious = false;
         public static bool downedAqueous = false;
@@ -60,12 +63,8 @@ namespace ElementsAwoken
         public static bool sparedAzana = false;
         public static bool downedAncients = false;
         public static bool downedCosmicObserver = false;
-
-        //abbraxis encounters
-       /* public static int encounter = 0;
-        public static bool encounterSetup = false;
-        public static int encounterTimer = 0;
-        public static int encounterShakeTimer = 0;*/
+        public static bool completedRadiantRain = false;
+        public static bool downedRadiantMaster = false;
 
         // events
         public static bool darkMoon = false;
@@ -73,7 +72,6 @@ namespace ElementsAwoken
         public static bool voidInvasionUp = false;
         public static bool voidInvasionWillStart = false;
         public static int voidInvasionFinished = 0;
-
 
         // hailstorm
         public static int hailStormTime = 0;
@@ -116,11 +114,19 @@ namespace ElementsAwoken
 
         public static int skyPromptRainCD = 0;
 
+        public static bool radiantRain = false;
+        public static bool prevTickRaining = false;
+
         public override void Initialize() // called when the world is loaded
         {
             awakenedMode = false;
 
             credits = false;
+
+            voidLeviathanKills = 0;
+            moonlordKills = 0;
+            ancientKills = 0;
+            ancientSummons = 0;
 
             sizeMult = (int)(Math.Floor(Main.maxTilesX / 4200f));
             generatedLabs = false;
@@ -130,7 +136,6 @@ namespace ElementsAwoken
             downedInfernace = false;
             downedScourgeFighter = false;
             downedRegaroth = false;
-            downedCelestial = false;
             downedPermafrost = false;
             downedObsidious = false;
             downedAqueous = false;
@@ -145,6 +150,8 @@ namespace ElementsAwoken
             sparedAzana = false;
             downedAncients = false;
             downedCosmicObserver = false;
+            completedRadiantRain = false;
+            downedRadiantMaster = false;
 
             Main.invasionSize = 0;
 
@@ -177,6 +184,19 @@ namespace ElementsAwoken
             volcanoxDrive = false;
             wastelandDrive = false;
 
+            desertPrompt = 0;
+            firePrompt = 0;
+            skyPrompt = 0;
+            frostPrompt = 0;
+            waterPrompt = 0;
+            voidPrompt = 0;
+
+            skyPromptRainCD = 0;
+
+            hailStormTime = 0;
+
+            radiantRain = false;
+            prevTickRaining = false;
         }
         public override TagCompound Save()
         {
@@ -188,7 +208,6 @@ namespace ElementsAwoken
             tag["downedRegaroth"] = downedRegaroth;
             tag["downedAqueous"] = downedAqueous;
             tag["downedVoidLeviathan"] = downedVoidLeviathan;
-            tag["downedCelestial"] = downedCelestial;
             tag["downedWasteland"] = downedWasteland;
             tag["downedPermafrost"] = downedPermafrost;
             tag["downedGuardian"] = downedGuardian;
@@ -201,6 +220,8 @@ namespace ElementsAwoken
             tag["downedAzana"] = downedAzana;
             tag["downedAncients"] = downedAncients;
             tag["downedCosmicObserver"] = downedCosmicObserver;
+            tag["completedRadiantRain"] = completedRadiantRain;
+            tag["downedRadiantMaster"] = downedRadiantMaster;
 
             tag["downedVoidEvent"] = downedVoidEvent;
 
@@ -231,6 +252,7 @@ namespace ElementsAwoken
             tag["waterPrompt"] = waterPrompt;
             tag["voidPrompt"] = voidPrompt;
 
+            tag["radiantRain"] = radiantRain;
 
             for (int i = 0; i < mysteriousPotionColours.Length; i++)
             {
@@ -247,7 +269,7 @@ namespace ElementsAwoken
             downedVoidLeviathan = tag.GetBool("downedVoidLeviathan");
             downedScourgeFighter = tag.GetBool("downedScourgeFighter");
             downedRegaroth = tag.GetBool("downedRegaroth");
-            downedCelestial = tag.GetBool("downedCelestial");
+            completedRadiantRain = tag.GetBool("completedRadiantRain");
             downedWasteland = tag.GetBool("downedWasteland");
             downedPermafrost = tag.GetBool("downedPermafrost");
             downedGuardian = tag.GetBool("downedGuardian");
@@ -261,6 +283,7 @@ namespace ElementsAwoken
             sparedAzana = tag.GetBool("sparedAzana");
             downedAncients = tag.GetBool("downedAncients");
             downedCosmicObserver = tag.GetBool("downedCosmicObserver");
+            downedRadiantMaster = tag.GetBool("downedRadiantMaster");
 
             downedVoidEvent = tag.GetBool("downedVoidEvent");
 
@@ -291,6 +314,8 @@ namespace ElementsAwoken
             waterPrompt = tag.GetInt("waterPrompt");
             voidPrompt = tag.GetInt("voidPrompt");
 
+            radiantRain = tag.GetBool("radiantRain");
+
             for (int i = 0; i < mysteriousPotionColours.Length; i++)
             {
                 mysteriousPotionColours[i] = tag.GetString("potColours" + i);
@@ -305,7 +330,7 @@ namespace ElementsAwoken
             flags1[2] = downedInfernace;
             flags1[3] = downedScourgeFighter;
             flags1[4] = downedRegaroth;
-            flags1[5] = downedCelestial;
+            flags1[5] = completedRadiantRain;
             flags1[6] = downedWasteland;
             flags1[7] = downedPermafrost;
             writer.Write(flags1);
@@ -326,6 +351,7 @@ namespace ElementsAwoken
             flags3[1] = downedAncients;
             flags3[2] = downedCosmicObserver;
             flags3[3] = sparedAzana;
+            flags3[4] = downedRadiantMaster;
             writer.Write(flags3);
 
             // lab gen & drive obtained
@@ -358,6 +384,9 @@ namespace ElementsAwoken
             flags6[0] = awakenedMode;
             flags6[1] = genLuminite;
             flags6[2] = genVoidite;
+            flags6[3] = radiantRain;
+            flags6[4] = prevTickRaining;
+            flags6[5] = voidInvasionUp;
             writer.Write(flags6);
 
             // prompts
@@ -385,7 +414,7 @@ namespace ElementsAwoken
             downedInfernace = flags1[2];
             downedScourgeFighter = flags1[3];
             downedRegaroth = flags1[4];
-            downedCelestial = flags1[5];
+            completedRadiantRain = flags1[5];
             downedWasteland = flags1[6];
             downedPermafrost = flags1[7];
 
@@ -404,6 +433,7 @@ namespace ElementsAwoken
             downedAncients = flags3[1];
             downedCosmicObserver = flags3[2];
             sparedAzana = flags3[3];
+            downedRadiantMaster = flags3[4];
 
             // lab gen & drive obtained
             BitsByte flags4 = reader.ReadByte();
@@ -433,6 +463,9 @@ namespace ElementsAwoken
             awakenedMode = flags6[0];
             genLuminite = flags6[1];
             genVoidite = flags6[2];
+            radiantRain = flags6[3];
+            prevTickRaining = flags6[4];
+            voidInvasionUp = flags6[5];
 
             // essence notifacations
             desertPrompt = reader.ReadInt32();
@@ -648,7 +681,7 @@ namespace ElementsAwoken
                 {
                     Main.NewText("Darkness seeps through your veins...", 31, 34, 66, false);
                 }
-                if (!NPC.AnyNPCs(mod.NPCType("ShadeWyrmHead")) && (Main.time == 19800 || Main.time == 27000))NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ShadeWyrmHead"));
+                if (!NPC.AnyNPCs(mod.NPCType("ShadeWyrmHead")) && (Main.time == 19800 || Main.time == 27000)) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ShadeWyrmHead")); // at 1 and 3
                 if (!Main.dayTime && Main.time > 16220)
                 {
                     MoonlordShake(1f);
@@ -735,6 +768,43 @@ namespace ElementsAwoken
                 genVoidite = false;
             }
             #endregion
+            if (downedAzana || sparedAzana)
+            {
+                if (Main.raining && !prevTickRaining)
+                {
+                    if (Main.rand.NextBool(4) || !completedRadiantRain)
+                    {
+                        radiantRain = true;
+                        Main.NewText("The rain glistens with unknown magic...", Color.HotPink);
+                    }
+                }
+            }
+            if (radiantRain)
+            {
+                if (Main.rainTime == 7200) NPC.SpawnOnPlayer(player.whoAmI, NPCType<RadiantMaster>());
+                if (!Main.raining)
+                {
+                    radiantRain = false;
+                    completedRadiantRain = true;
+                    Main.NewText("The radiant rain dissipates...", Color.HotPink);
+                }
+                int amount = Main.expertMode ? awakenedMode ? 100 : 120 : 240;
+                if (Main.rand.NextBool(120))
+                {
+                    for (int i = 0; i < Main.maxPlayers; i++)
+                    {
+                        Player starShowerP = Main.player[i];
+                        if (starShowerP.active)
+                        {
+                            Vector2 pos = new Vector2(starShowerP.Center.X - Main.rand.Next(-1000,1000), starShowerP.Center.Y - 1000);
+                            Vector2 vel = new Vector2(Main.windSpeed * 10, 10f);
+                            Projectile proj = Main.projectile[Projectile.NewProjectile(pos.X, pos.Y, vel.X, vel.Y, ProjectileType<RadiantStarRain>(), Main.expertMode ? awakenedMode ? 150 : 100 : 75, 10f, Main.myPlayer, 0f, 0f)];
+                            proj.GetGlobalProjectile<ProjectileGlobal>().dontScaleDamage = true;
+                        }
+                    }
+                }
+            }
+            prevTickRaining = Main.raining;
         }
         // thanks laugic !
         #region lab gen
@@ -999,7 +1069,7 @@ namespace ElementsAwoken
             else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.DeepPink);
             for (int k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 4E-05); k++) // xE-05 x is how many veins will spawn
             {
-                int x = WorldGen.genRand.Next(0, Main.maxTilesX);
+                int x = WorldGen.genRand.Next(100, Main.maxTilesX - 100);
                 int y = WorldGen.genRand.Next((int)(Main.maxTilesY * .4f), Main.maxTilesY - 200);
 
                 WorldGen.OreRunner(x, y, WorldGen.genRand.Next(3, 5), WorldGen.genRand.Next(4, 7), (ushort)(ushort)ElementsAwoken.instance.TileType("Voidite"));
@@ -1081,13 +1151,16 @@ namespace ElementsAwoken
     {
         public override void ModifyLight(int i, int j, int type, ref float r, ref float g, ref float b)
         {
-            Player player = Main.player[Main.myPlayer];
-            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
-            if (Main.tile[i, j].active() == false && MyWorld.credits && MyWorld.creditsCounter >= modPlayer.screenTransDuration / 2)
+            if (MyWorld.credits)
             {
-                r = 0.7f;
-                g = 0.7f;
-                b = 0.7f;
+                Player player = Main.player[Main.myPlayer];
+                MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+                if (Main.tile[i, j].active() == false &&  MyWorld.creditsCounter >= modPlayer.screenTransDuration / 2)
+                {
+                    r = 0.7f;
+                    g = 0.7f;
+                    b = 0.7f;
+                }
             }
         }
     }

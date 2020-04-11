@@ -40,10 +40,7 @@ namespace ElementsAwoken.Projectiles.Yoyos
         }
         public override void AI()
         {
-            if (Main.rand.Next(1) == 0)
-            {
-                int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 63, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 0, new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), 1f);   //this defines the flames dust and color, change DustID to wat dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
-            }
+  int dust = Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, 63, projectile.velocity.X * 1.2f, projectile.velocity.Y * 1.2f, 0, new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB), 1f);   //this defines the flames dust and color, change DustID to wat dust you want from Terraria, or add mod.DustType("CustomDustName") for your custom dust
             if (Main.rand.Next(7) == 0)
             {
                 int type = mod.ProjectileType("FusionOrb1");

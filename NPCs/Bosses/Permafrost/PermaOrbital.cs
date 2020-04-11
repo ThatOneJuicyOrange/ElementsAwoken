@@ -12,8 +12,8 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
 
         public override void SetDefaults()
         {
-            npc.width = 26;
-            npc.height = 20;
+            npc.width = 50;
+            npc.height = 50;
 
             npc.damage = 20;
             npc.defense = 18;
@@ -38,6 +38,8 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
             npc.noTileCollide = true;
             npc.noGravity = true;
             animationType = NPCID.Harpy;
+
+            npc.alpha = 255;
         }
         public override void SetStaticDefaults()
         {
@@ -55,7 +57,11 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
         public override void AI()
         {
             Player P = Main.player[npc.target];
-            shootTimer1--;
+            if (npc.alpha > 0)
+            {
+                npc.alpha -= 255 / 60;
+            }
+           /* shootTimer1--;
             if (shootTimer1 <= 0)
             {
                 float Speed = 6f;
@@ -65,35 +71,16 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
                 float rotation = (float)Math.Atan2(vector8.Y - (P.position.Y + (P.height * 0.5f)), vector8.X - (P.position.X + (P.width * 0.5f)));
                 int num54 = Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * Speed) * -1), (float)((Math.Sin(rotation) * Speed) * -1), type, damage, 0f, Main.myPlayer, 0, 1);
                 shootTimer1 = Main.rand.Next(60, 180);
-            }
-            /*if (!NPC.AnyNPCs(mod.NPCType("Permafrost")))
-            {
-                npc.active = false;
-            }
-            NPC center = Main.npc[0];
-            for (int i = 0; i < Main.npc.Length; ++i)
-            {
-                if (Main.npc[i].type == mod.NPCType("Permafrost"))
-                {
-                    center = Main.npc[i];
-                    break;
-                }
-            }
-            Vector2 offset = new Vector2(100, 0);
-            if (center != Main.npc[0])
-            {
-                npc.ai[0] += 0.04f;
-                npc.Center = center.Center + offset.RotatedBy(npc.ai[0] + npc.ai[1] * (Math.PI * 2 / 8));
             }*/
-            NPC parent = Main.npc[(int)npc.ai[1]];
-            if (parent != Main.npc[0])
-            {
-                npc.ai[0] += 2f; // speed
-                int distance = 100;
-                double rad = npc.ai[0] * (Math.PI / 180); // angle to radians
-                npc.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - npc.width / 2;
-                npc.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - npc.height / 2;
-            }
+
+            NPC parent = Main.npc[(int)npc.ai[0]];
+
+            npc.ai[2] += 1f; // wave
+            npc.ai[1] += 2f; // speed
+            int distance = 100 + (int)(Math.Sin(npc.ai[2] / 60) * 30);
+            double rad = npc.ai[1] * (Math.PI / 180); // angle to radians
+            npc.position.X = parent.Center.X - (int)(Math.Cos(rad) * distance) - npc.width / 2;
+            npc.position.Y = parent.Center.Y - (int)(Math.Sin(rad) * distance) - npc.height / 2;
             if (!parent.active)
             {
                 npc.active = false;

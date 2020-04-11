@@ -433,14 +433,14 @@ namespace ElementsAwoken
         {
             if (MyWorld.awakenedMode && damage > 0)
             {
-                    sanity -= 2;
+                    sanity -= 1;
             }
         }
         public override void OnHitByProjectile(Projectile proj, int damage, bool crit)
         {
             if (MyWorld.awakenedMode && damage > 0)
             {
-                sanity -= 2;
+                sanity -= 1;
             }
         }
 
@@ -453,11 +453,11 @@ namespace ElementsAwoken
         {
             if (MyWorld.awakenedMode)
             {
-                health = (int)((player.statLifeMax2 * 0.75f) - player.statLife);
+                /*health = (int)((player.statLifeMax2 * 0.75f) - player.statLife);
                 if (player.statLife > player.statLifeMax2 * 0.75f)
                 {
                     return false;
-                }
+                }*/
                 if (nurseCooldown > 0)
                 {
                     int nurseCDSeconds = nurseCooldown / 60;
@@ -507,7 +507,6 @@ namespace ElementsAwoken
             if (MyWorld.downedScourgeFighter) scale += 1f;
             if (MyWorld.downedRegaroth) scale += 2f;
             if (NPC.downedPlantBoss) scale += 2f;
-            if (MyWorld.downedCelestial) scale += 1f;
             if (MyWorld.downedPermafrost) scale += 2f;
             if (MyWorld.downedObsidious) scale += 1f;
             if (NPC.downedFishron) scale += 2f;

@@ -51,11 +51,12 @@ namespace ElementsAwoken.Items.Tech.Accessories.Tier2
                     if (modPlayer.energy > 3)
                     {
                         modPlayer.energy -= 3;
-                        float rotation = MathHelper.ToRadians(360);
-                        float numberProjectiles = 8;
-                        for (int i = 0; i < numberProjectiles; i++)
+                        float rotation = MathHelper.TwoPi;
+                        float numProj = 8;
+                        float speed = 4;
+                        for (int i = 0; i < numProj; i++)
                         {
-                            Vector2 perturbedSpeed = new Vector2(2, 2).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))) * 2f;
+                            Vector2 perturbedSpeed = (rotation / numProj * i).ToRotationVector2() * speed;
                             int num1 = Projectile.NewProjectile(player.Center.X, player.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, ammoType, 10, 2f, 0);
                             Main.projectile[num1].noDropItem = true;
                         }

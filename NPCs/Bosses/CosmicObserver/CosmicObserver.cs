@@ -169,6 +169,16 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
             MyWorld.downedCosmicObserver = true;
             if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CosmicObserver" + i), npc.scale);
+                }
+            }
+        }
         public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
         {
             if (aiTimer >= 1400)
@@ -411,7 +421,7 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 }
                 if (MyWorld.awakenedMode)
                 {
-                    for (int i = 0; i < Main.projectile.Length; i++)
+                    for (int i = 0; i < Main.maxProjectiles; i++)
                     {
                         Projectile proj = Main.projectile[i];
                         if (proj.active && proj.friendly && Vector2.Distance(proj.Center, npc.Center) < 150)

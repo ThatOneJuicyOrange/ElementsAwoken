@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.UI;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -14,10 +15,10 @@ namespace ElementsAwoken.NPCs
             {
                 if (!NPC.downedBoss1)
                 {
-                    string text = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes. These can be disabled in the EA Config.";
+                    /*string text = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes. These can be disabled in the EA Config.";
                     if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.IndianRed);
-                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.IndianRed);
-
+                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.IndianRed);*/
+                    PromptInfoUI.Visible = true;
                 }
             }
             if (npc.type == NPCID.EyeofCthulhu)

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Weapons.Magic
 {
@@ -13,58 +15,50 @@ namespace ElementsAwoken.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            item.damage = 100;
-            item.magic = true;
-            item.mana = 18;
             item.width = 54;
             item.height = 52;
+
+            item.damage = 50;
+            item.mana = 18;
+            item.knockBack = 12f;
+
+            item.magic = true;
+            Item.staff[item.type] = true;
+            item.noMelee = true; 
+            item.autoReuse = true;
+            item.useTurn = true;
+
+            item.UseSound = SoundID.Item113;
             item.useTime = 25;
             item.useAnimation = 25;
             item.useStyle = 5;
-            Item.staff[item.type] = true;
-            item.noMelee = true;
-            item.knockBack = 12f;
-            item.value = Item.buyPrice(0, 15, 0, 0);
-            item.UseSound = SoundID.Item113;
-            item.autoReuse = true;
-            item.useTurn = true;
-            item.shoot = mod.ProjectileType("Barrier");
-            item.shootSpeed = 9f;
+
+            item.value = Item.sellPrice(0, 5, 0, 0);
             item.rare = 5;
+
+            item.shoot = ProjectileType<Barrier>();
+            item.shootSpeed = 9f;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Force Barrier");
+            Tooltip.SetDefault("Summons a magical barrier that pushes enemies away\nOnly 3 barriers can be active at once");
         }
-        public override bool CanUseItem(Player player)
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            if (player.FindBuffIndex(mod.BuffType("BarrierCooldown")) == -1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public override bool Shoot(Player player, ref Microsoft.Xna.Framework.Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
-        {
-            int i = Main.myPlayer;
-            float num72 = item.shootSpeed;
-            float num74 = knockBack;
-            num74 = player.GetWeaponKnockback(item, num74);
-            player.itemTime = item.useTime;
-            Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
-            vector2.X = (float)Main.mouseX + Main.screenPosition.X;
-            vector2.Y = (float)Main.mouseY + Main.screenPosition.Y;
-            int numberProjectiles = 3;
-            for (int num131 = 0; num131 < numberProjectiles; num131++)
-            {
-                Projectile.NewProjectile(vector2.X, vector2.Y, 0, 0, mod.ProjectileType("Barrier"), damage, num74, i, 0f, 0f);
-            }
-            player.AddBuff(mod.BuffType("BarrierCooldown"), 380);
+            Projectile.NewProjectile(Main.MouseWorld.X, Main.MouseWorld.Y, 0, 0, type, damage, knockBack, player.whoAmI);
             return false;
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.UnicornHorn, 1);
+            recipe.AddIngredient(ItemID.CrystalShard, 15);
+            recipe.AddIngredient(ItemID.HallowedBar, 8);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
         }
     }
 }

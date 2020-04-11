@@ -61,7 +61,7 @@ namespace ElementsAwoken.Effects
 
         public override void Update(GameTime gameTime)
         {
-            if (!Main.gameMenu)
+            if (!Main.gameMenu && Main.netMode != 2)
             {
                 int ashToSpawn = Main.rand.Next(2);
                 for (int i = 0; i < ashToSpawn; i++)
@@ -91,6 +91,11 @@ namespace ElementsAwoken.Effects
                         _ashes[i].UpdatePosition(gameTime);
                         Point tilePos = _ashes[i].center.ToTileCoordinates();
                         Vector2 worldMapSize = new Vector2(Main.maxTilesX - 1, Main.maxTilesY - 1);
+                        if (tilePos.X < 0 || tilePos.Y < 0 || tilePos.X > worldMapSize.X || tilePos.Y > worldMapSize.Y)
+                        {
+                            _ashes[i].active = false;
+                            continue;
+                        }
                         if (tilePos.X < 0) tilePos.X = 0;
                         else if (tilePos.X > worldMapSize.X) tilePos.X = (int)worldMapSize.X;
                         if (tilePos.Y < 0) tilePos.Y = 0;
@@ -100,7 +105,7 @@ namespace ElementsAwoken.Effects
                         {
                             _ashes[i].active = false;
                         }
-                        else if (Main.tile[tilePos.X, tilePos.Y].liquid > 230)
+                        else if (Framing.GetTileSafely(tilePos.X, tilePos.Y).liquid > 230)
                         {
                             _ashes[i].velocity *= 0.9f;
                             _ashes[i].center.Y -= 0.3f;

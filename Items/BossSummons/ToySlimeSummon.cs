@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.BossSummons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Large Slimeball");
-            Tooltip.SetDefault("It sticks to your hands\nIncreases the spawn chance of the Toy Slime for a minute");
+            Tooltip.SetDefault("It sticks to your hands\nIncreases the spawn chance of Toy Slimes for a minute");
         }
 
         public override bool CanUseItem(Player player)
@@ -47,6 +47,7 @@ namespace ElementsAwoken.Items.BossSummons
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Gel, 30);
+            recipe.AddIngredient(ItemID.Bone, 3);
             recipe.AddRecipeGroup("ElementsAwoken:CopperBar", 4);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);

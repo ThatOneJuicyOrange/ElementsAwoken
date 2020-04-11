@@ -53,7 +53,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override Color? GetAlpha(Color lightColor)
         {
-            return new Color(209, 145, 255, 0);
+            return new Color(211, 28, 214, 0);
         }
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
@@ -89,7 +89,7 @@ namespace ElementsAwoken.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 173 }, projectile.damage, "melee");
+            ProjectileUtils.Explosion(projectile, new int[] { 173 }, projectile.damage, "melee");
         }
     }
 }

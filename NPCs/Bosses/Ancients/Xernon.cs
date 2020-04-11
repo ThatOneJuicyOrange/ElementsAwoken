@@ -75,12 +75,12 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
-            npc.lifeMax = 250000;
+            npc.lifeMax = 300000;
             npc.damage = 120;
             npc.defense = 70;
             if (MyWorld.awakenedMode)
             {
-                npc.lifeMax = 300000;
+                npc.lifeMax = 400000;
                 npc.damage = 175;
                 npc.defense = 80;
             }

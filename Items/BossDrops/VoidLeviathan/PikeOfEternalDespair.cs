@@ -43,6 +43,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Pike of Eternal Despair");
+            Tooltip.SetDefault("");
         }
     }
 }

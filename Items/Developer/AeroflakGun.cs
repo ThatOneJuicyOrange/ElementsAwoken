@@ -4,7 +4,10 @@ using ElementsAwoken.Items.BossDrops.Azana;
 using ElementsAwoken.Items.ItemSets.Drakonite.Refined;
 using ElementsAwoken.Items.ItemSets.Drakonite.Regular;
 using ElementsAwoken.Items.ItemSets.Mortemite;
+using ElementsAwoken.Items.ItemSets.Radia;
 using ElementsAwoken.Items.ItemSets.Stellarium;
+using ElementsAwoken.Items.Tech.Materials;
+using ElementsAwoken.Items.Tech.Weapons.Tier6;
 using ElementsAwoken.Projectiles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -40,7 +43,7 @@ namespace ElementsAwoken.Items.Developer
 
             item.shootSpeed = 12f;
             item.shoot = ProjectileType<AeroflakP>();
-            item.GetGlobalItem<ItemEnergy>().energy = 30;
+            item.GetGlobalItem<ItemEnergy>().energy = 10;
         }
         public override void SetStaticDefaults()
         {
@@ -68,12 +71,13 @@ namespace ElementsAwoken.Items.Developer
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemType<DiscordantBar>(), 5);
-            //recipe.AddIngredient(ItemType<Railgun>(), 1);
+            recipe.AddIngredient(ItemType<Railgun>(), 1);
+            recipe.AddIngredient(ItemType<LRM>(), 1);
             recipe.AddIngredient(ItemType<Drakonite>(), 8);
             recipe.AddIngredient(ItemType<RefinedDrakonite>(), 8);
             recipe.AddIngredient(ItemType<MortemiteDust>(), 8);
             recipe.AddIngredient(ItemType<StellariumBar>(), 8);
+            recipe.AddIngredient(ItemType<Radia>(), 8);
             recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

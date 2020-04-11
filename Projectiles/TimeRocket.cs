@@ -51,7 +51,7 @@ namespace ElementsAwoken.Projectiles
                 Main.dust[num249].velocity *= 0.05f;
             }
 
-            ProjectileGlobal.Home(projectile, 9f);
+            ProjectileUtils.Home(projectile, 9f);
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -61,7 +61,7 @@ namespace ElementsAwoken.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 75 }, projectile.damage, "ranged");
+            ProjectileUtils.Explosion(projectile, new int[] { 75 }, projectile.damage, "ranged");
         }
     }
 }

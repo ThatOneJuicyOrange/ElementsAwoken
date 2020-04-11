@@ -1,8 +1,10 @@
 using System;
+using ElementsAwoken.Projectiles.Minions;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.BossDrops.Infernace
 {  
@@ -16,7 +18,7 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
             item.summon = true;
             item.noMelee = true;
 
-            item.damage = 27;
+            item.damage = 34;
             item.mana = 10;
             item.knockBack = 3;
 
@@ -25,17 +27,17 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
             item.useStyle = 1;
             item.UseSound = SoundID.Item44;
 
-            item.value = Item.buyPrice(0, 10, 0, 0);
+            item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = 3;
 
-            item.shoot = mod.ProjectileType("FireHarpy");
+            item.shoot = ProjectileType<HearthMinion>();
             item.shootSpeed = 7f; 
         }
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Harpy Staff");
-            Tooltip.SetDefault("Summons a fire harpy to fight for you");
+            DisplayName.SetDefault("Scepter of Warmth");
+            Tooltip.SetDefault("Summons a hearth to defend you\nHearth's take 2 minion slots");
         }
     }
 }

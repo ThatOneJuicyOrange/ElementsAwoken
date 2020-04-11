@@ -78,7 +78,7 @@ namespace ElementsAwoken.Projectiles
                         npc.velocity -= toTarget * 25 * npc.knockBackResist;
                     }
                 }
-                for (int i = 0; i < Main.projectile.Length; i++)
+                for (int i = 0; i < Main.maxProjectiles; i++)
                 {
                     Projectile proj = Main.projectile[i];
                     if (proj.active && proj.hostile && Vector2.Distance(proj.Center, player.Center) < maxDist)

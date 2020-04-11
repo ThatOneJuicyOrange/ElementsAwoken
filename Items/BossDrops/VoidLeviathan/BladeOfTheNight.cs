@@ -40,24 +40,17 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blade of the Night");
-            Tooltip.SetDefault("Projectiles become more unstable the longer they are alive\nEvery 30th swing unleashes the spirit of The Void Leviathan to tear apart your enemies\nEvery 10th hit with the actual blade will do 10x damage");
+            Tooltip.SetDefault("Projectiles become more unstable the longer they are alive\nEvery 30th swing unleashes the spirit of The Void Leviathan to tear apart your enemies\nEvery 10th true melee hit deals 10x damage");
         }
         public override void ModifyHitNPC(Player player, NPC target, ref int damage, ref float knockBack, ref bool crit)
         {
-            if (hitNum == 10)
-            {
-                damage *= 10;
-            }
+            if (hitNum == 10) damage *= 10;
         }
         public override void OnHitNPC(Player player, NPC target, int damage, float knockback, bool crit)
         {
             target.immune[item.owner] = 3;
             hitNum++;
-            if (hitNum > 10)
-            {
-                damage *= 10;
-                hitNum = 1;
-            }
+            if (hitNum > 10) hitNum = 1;
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
@@ -83,13 +76,13 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
                 int numDusts = 36;
                 for (int i = 0; i < numDusts; i++)
                 {
-                    Vector2 dustPos = (Vector2.Normalize(new Vector2(5, 5)) * new Vector2((float)player.width / 2f, (float)player.height) * 0.75f * 0.5f).RotatedBy((double)((float)(i - (numDusts / 2 - 1)) * 6.28318548f / (float)numDusts), default(Vector2)) + player.Center;
+                    Vector2 dustPos = (Vector2.One * new Vector2((float)player.width / 2f, (float)player.height) * 0.75f * 0.5f).RotatedBy((double)((float)(i - (numDusts / 2 - 1)) * 6.28318548f / (float)numDusts), default(Vector2)) + player.Center;
                     Vector2 velocity = dustPos - player.Center;
-                    int dust = Dust.NewDust(dustPos + velocity, 0, 0, DustID.PinkFlame, velocity.X * 2f, velocity.Y * 2f, 100, default(Color), 1.4f);
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].noLight = true;
-                    Main.dust[dust].velocity = Vector2.Normalize(velocity) * 3f;
-                    Main.dust[dust].fadeIn = 1.3f;
+                    Dust dust = Main.dust[Dust.NewDust(dustPos + velocity, 0, 0, DustID.PinkFlame, velocity.X * 2f, velocity.Y * 2f, 100, default, 1.4f)];
+                    dust.noGravity = true;
+                    dust.noLight = true;
+                    dust.velocity = Vector2.Normalize(velocity) * 3f;
+                    dust.fadeIn = 1.3f;
                 }
 
                 swingNum = 1;
@@ -109,41 +102,10 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
                 for (int i = 0; i < numProj2; i++)
                 {
                     Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(20));
-                    Projectile proj = Main.projectile[Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * Main.rand.NextFloat(0.75f, 1f), perturbedSpeed.Y * Main.rand.NextFloat(0.75f, 1f), mod.ProjectileType("VoidOrb"), damage, knockBack, player.whoAmI)];
+                    Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X * Main.rand.NextFloat(0.75f, 1f), perturbedSpeed.Y * Main.rand.NextFloat(0.75f, 1f), mod.ProjectileType("VoidOrb"), damage, knockBack, player.whoAmI);
                 }
             }
-            /* int numberProjectiles = 3;
-             for (int index = 0; index < numberProjectiles; ++index)
-             {
-                 Vector2 vector2_1 = new Vector2((float)((double)player.position.X + (double)player.width * 0.5 + (double)(Main.rand.Next(201) * -player.direction) + ((double)Main.mouseX + (double)Main.screenPosition.X - (double)player.position.X)), (float)((double)player.position.Y + (double)player.height * 0.5 - 600.0));   //this defines the projectile width, direction and position
-                 vector2_1.X = (float)(((double)vector2_1.X + (double)player.Center.X) / 2.0) + (float)Main.rand.Next(-200, 201);
-                 vector2_1.Y -= (float)(100 * index);
-                 float num12 = (float)Main.mouseX + Main.screenPosition.X - vector2_1.X;
-                 float num13 = (float)Main.mouseY + Main.screenPosition.Y - vector2_1.Y;
-                 if ((double)num13 < 0.0) num13 *= -1f;
-                 if ((double)num13 < 20.0) num13 = 20f;
-                 float num14 = (float)Math.Sqrt((double)num12 * (double)num12 + (double)num13 * (double)num13);
-                 float num15 = item.shootSpeed / num14;
-                 float num16 = num12 * num15;
-                 float num17 = num13 * num15;
-                 int num18 = damage / 2;
-                 float SpeedX = num16 + (float)Main.rand.Next(-40, 41) * 0.02f;
-                 float SpeedY = num17 + (float)Main.rand.Next(-40, 41) * 0.02f;
-                 Projectile.NewProjectile(vector2_1.X, vector2_1.Y, SpeedX, SpeedY, mod.ProjectileType("NightSword"), num18, knockBack, Main.myPlayer, 0.0f, (float)Main.rand.Next(5));
-             }
-             int num6 = Main.rand.Next(2, 4);
-             for (int index = 0; index < num6; ++index)
-             {
-                 float SpeedX = speedX + (float)Main.rand.Next(-25, 26) * 0.05f;
-                 float SpeedY = speedY + (float)Main.rand.Next(-25, 26) * 0.05f;
-                 switch (Main.rand.Next(3))
-                 {
-                     case 0: type = mod.ProjectileType("ExtinctionBall"); break;
-                     default: break;
-                 }
-                 int num19 = damage / 2;
-                 Projectile.NewProjectile(position.X, position.Y, SpeedX, SpeedY, type, num19, knockBack, player.whoAmI, 0.0f, 0.0f);
-             }*/
+
             return false;
         }
     }

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ElementsAwoken.Projectiles.Other
 {
@@ -55,7 +53,7 @@ namespace ElementsAwoken.Projectiles.Other
             for (int k = 0; k < Main.maxItems; k++)
             {
                 Item other = Main.item[k];
-                if (other.Name.Contains("Ore") && other.type != mod.ItemType("DiscordantOre") && other.maxStack > 1 && other.active && Vector2.Distance(other.Center,projectile.Center) < maxDist)
+                if ((other.Name.Contains("Ore") || VanillaOreIDs().Contains(other.type)) && other.type != mod.ItemType("DiscordantOre") && other.maxStack > 1 && other.active && Vector2.Distance(other.Center,projectile.Center) < maxDist)
                 {
                     if (other.stack + projectile.ai[0] >= maxConvert)
                     {
@@ -89,6 +87,33 @@ namespace ElementsAwoken.Projectiles.Other
             {
                 projectile.Kill();
             }
+        }
+        private List<int> VanillaOreIDs()
+        {
+            List<int> idList = new List<int>()
+            {
+                ItemID.CopperOre,
+                ItemID.TinOre,
+                ItemID.IronOre,
+                ItemID.LeadOre,
+                ItemID.SilverOre,
+                ItemID.TungstenOre,
+                ItemID.GoldOre,
+                ItemID.PlatinumOre,
+                ItemID.Meteorite,
+                ItemID.DemoniteOre,
+                ItemID.CrimtaneOre,
+                ItemID.Hellstone,
+                ItemID.CobaltOre,
+                ItemID.PalladiumOre,
+                ItemID.MythrilOre,
+                ItemID.OrichalcumOre,
+                ItemID.AdamantiteOre,
+                ItemID.TitaniumOre,
+                ItemID.ChlorophyteOre,
+                ItemID.LunarOre,
+            };
+            return idList;
         }
         public override void Kill(int timeLeft)
         {

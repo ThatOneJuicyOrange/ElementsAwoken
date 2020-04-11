@@ -46,7 +46,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             projectile.Kill();
-            ProjectileGlobal.HostileExplosion(projectile, new int[] { 135, 164}, projectile.damage);
+            ProjectileUtils.HostileExplosion(projectile, new int[] { 135, 164}, projectile.damage);
             /*Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("ExplosionHostile"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
             for (int num369 = 0; num369 < 20; num369++)

@@ -173,13 +173,13 @@ namespace ElementsAwoken.Items.Tech.Tools
                             player.QuickSpawnItem(ItemID.CobaltBar);
                             break;
                         }
-                        if (other.type == ItemID.PalladiumBar && other.stack >= 3)
+                        if (other.type == ItemID.PalladiumOre && other.stack >= 3)
                         {
                             smeltCooldown = 90;
                             modPlayer.energy -= energyConsumed;
 
                             other.stack -= 3;
-                            player.QuickSpawnItem(ItemID.PalladiumOre);
+                            player.QuickSpawnItem(ItemID.PalladiumBar);
                             break;
                         }
                         if (other.type == ItemID.MythrilOre && other.stack >= 4)

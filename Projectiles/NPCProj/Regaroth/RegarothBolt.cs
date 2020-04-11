@@ -52,7 +52,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Regaroth
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.HostileExplosion(projectile, new int[] { 135, 164 }, projectile.damage);
+            ProjectileUtils.HostileExplosion(projectile, new int[] { 135, 164 }, projectile.damage);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ElementsAwoken.Items.Artifacts.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Unstable Amber");
+            Tooltip.SetDefault("");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
         }
     }

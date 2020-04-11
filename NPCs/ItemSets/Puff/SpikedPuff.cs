@@ -50,18 +50,6 @@ namespace ElementsAwoken.NPCs.ItemSets.Puff
                 player.AddBuff(mod.BuffType("Cuddled"), 500);
             }
         }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.spawnTileY < Main.rockLayer) &&
-            !spawnInfo.player.ZoneTowerStardust &&
-            !spawnInfo.player.ZoneTowerSolar &&
-            !spawnInfo.player.ZoneTowerVortex &&
-            !spawnInfo.player.ZoneTowerNebula &&
-            !spawnInfo.playerInTown &&
-            !spawnInfo.invasion &&
-            !Main.snowMoon && Main.expertMode &&!Main.pumpkinMoon && NPC.downedBoss1 && Main.dayTime && !Main.hardMode ? 0.04f : 0f;
-        }
         public override void NPCLoot()
         {
             Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Puffball"), Main.rand.Next(2, 4));

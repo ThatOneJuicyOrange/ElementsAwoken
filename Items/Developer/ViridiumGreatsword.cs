@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -133,14 +134,9 @@ namespace ElementsAwoken.Items.Developer
             }
             return base.CanUseItem(player);
         }
-        public override void GetWeaponDamage(Player player, ref int damage)
+        public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
         {
-            int velocity = (int)player.velocity.X;
-            if (velocity < 0)
-            {
-                velocity *= -1;
-            }
-            damage = (int)((400 + velocity * 28) * player.meleeDamage);
+            add += Math.Abs(player.velocity.X) * 0.28f;
         }
         public override void AddRecipes()
         {

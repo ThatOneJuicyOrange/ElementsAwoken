@@ -5,6 +5,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.Map;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Items.Tools;
 
 namespace ElementsAwoken.Tiles
 {
@@ -23,7 +25,7 @@ namespace ElementsAwoken.Tiles
         }
         public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
         {
-            Player player = Main.player[Main.myPlayer];
+            Player player = Main.LocalPlayer;
             AwakenedPlayer modPlayer = player.GetModPlayer<AwakenedPlayer>();
             if (player.position.Y > Main.maxTilesY * .25f * 16)
             {
@@ -33,7 +35,6 @@ namespace ElementsAwoken.Tiles
 
             return base.CanKillTile(i, j, type, ref blockDamaged);
         }
-
         // theres no way to find the min pick so shove it in manually
         public static int GetTileMinPick(int type)
         {

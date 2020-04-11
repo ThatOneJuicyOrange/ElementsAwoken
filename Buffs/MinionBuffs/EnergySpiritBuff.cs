@@ -17,7 +17,7 @@ namespace ElementsAwoken.Buffs.MinionBuffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            MyPlayer modPlayer = (MyPlayer)player.GetModPlayer(mod, "MyPlayer");
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             if (player.ownedProjectileCounts[mod.ProjectileType("EnergySpirit")] > 0)
             {
                 modPlayer.energySpirit = true;

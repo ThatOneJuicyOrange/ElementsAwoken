@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
     public class TheGuardian : ModNPC
     {
         private int projectileBaseDamage = 60;
+        private float despawnTimer = 0;
         private float shootTimer
         {
             get => npc.ai[0];
@@ -36,7 +38,15 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             get => npc.ai[3];
             set => npc.ai[3] = value;
         }
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(despawnTimer);
+        }
 
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            despawnTimer = reader.ReadSingle();
+        }
         public override void SetDefaults()
         {
             npc.width = 92;
@@ -58,7 +68,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             npc.scale = 1.2f;
             npc.alpha = 255;
             npc.HitSound = SoundID.NPCHit2;
-
 
             npc.value = Item.buyPrice(0, 0, 0, 0);
             music = MusicID.GoblinInvasion;
@@ -118,24 +127,28 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
 
             }
         }
-
+        public override int SpawnNPC(int tileX, int tileY)
+        {
+            npc.TargetClosest(true);
+            Player P = Main.player[npc.target];
+            Vector2 pos = (P.Center - new Vector2(0, 900)) / 16;
+            Main.NewText("F");
+            return base.SpawnNPC((int)pos.X, (int)pos.Y);
+        }
         public override void AI()
         {
+            if (npc.target < 0 || npc.target == 255) npc.TargetClosest(true);
             Lighting.AddLight(npc.Center, 1f, 1f, 1f);
             Player P = Main.player[npc.target];
-            MyPlayer modPlayer = P.GetModPlayer<MyPlayer>();
 
             #region despawning
-            if (Main.dayTime) npc.localAI[0]++;
+            if (Main.dayTime) despawnTimer++;
             else if (!P.active || P.dead || Vector2.Distance(P.Center, npc.Center) > 5000)
             {
                 npc.TargetClosest(true);
-                if (!P.active || P.dead || Vector2.Distance(P.Center, npc.Center) > 5000)
-                {
-                    npc.localAI[0]++;
-                }
+                if (!P.active || P.dead || Vector2.Distance(P.Center, npc.Center) > 5000) despawnTimer++;
             }
-            if (npc.localAI[0] >= 300) npc.active = false;
+            if (despawnTimer >= 300) npc.active = false;
             #endregion
 
             if (npc.life <= 1000)
@@ -147,11 +160,6 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
             }
             if (dropAI == 0)
             {
-                npc.Center = P.Center - new Vector2(0, 400);
-                dropAI = 1;
-            }
-            if (dropAI == 1)
-            {
                 npc.alpha -= 5;
                 if (npc.alpha > 0)
                 {
@@ -161,19 +169,23 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                 if (npc.alpha <= 0)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                    dropAI = 2;
+                    dropAI = 1;
                     npc.velocity.Y = 5f;
                     shootTimer = 120; // so it doesnt start shooting right away
                 }
             }
-            else if (dropAI == 2)
+            else if (dropAI == 1)
             {
                 if (npc.velocity.Y == 0f)
                 {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
 
-                    if (Main.netMode == 0) modPlayer.screenshakeAmount = 8;
-                    else ElementsAwoken.NPCApplyScreenShakeToAll(npc.whoAmI, 8, 2000);
+                    if (Main.netMode != NetmodeID.Server)
+                    {
+                        Player shakeP = Main.LocalPlayer;
+                        MyPlayer modPlayer = shakeP.GetModPlayer<MyPlayer>();
+                        if (Vector2.Distance(shakeP.Center, npc.Center) <= 2000) modPlayer.screenshakeAmount = 8;
+                    }
 
                     for (int k = 0; k < 200; k++)
                     {
@@ -210,7 +222,7 @@ namespace ElementsAwoken.NPCs.Bosses.TheGuardian
                             player.dashDelay = 2; // to stop dashing away
                             player.grappling[0] = -1; // to stop grappling
                             player.grapCount = 0;
-                            for (int p = 0; p < Main.projectile.Length; p++)
+                            for (int p = 0; p < Main.maxProjectiles; p++)
                             {
                                 if (Main.projectile[p].active && Main.projectile[p].owner == player.whoAmI && Main.projectile[p].aiStyle == 7)
                                 {

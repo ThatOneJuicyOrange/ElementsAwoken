@@ -60,6 +60,16 @@ namespace ElementsAwoken.NPCs.Bosses.CosmicObserver
                 npc.frame.Y = 0;
             }
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/CosmicObserverHand" + i), npc.scale);
+                }
+            }
+        }
         public override void AI()
         {
             Lighting.AddLight(npc.Center, 0.5f, 0.5f, 0.5f);

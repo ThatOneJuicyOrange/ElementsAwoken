@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using ElementsAwoken.Buffs.Debuffs;
 
 namespace ElementsAwoken.Items.Tech.Generators
 {
@@ -30,6 +31,7 @@ namespace ElementsAwoken.Items.Tech.Generators
         {
             if (item.stack >= 10)
             {
+                player.AddBuff(ModContent.BuffType<Irradiated>(), 20);
                 player.lifeRegen--;
             }
             if (item.stack >= 15)

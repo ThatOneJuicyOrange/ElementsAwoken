@@ -29,8 +29,6 @@ namespace ElementsAwoken.Projectiles
         public override void AI()
         {
             Lighting.AddLight(projectile.Center, ((255 - projectile.alpha) * 0.3f) / 255f, ((255 - projectile.alpha) * 0.4f) / 255f, ((255 - projectile.alpha) * 1f) / 255f);
-            if (Main.rand.Next(1) == 0)
-            {
                 int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 242);
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].scale = 1.2f;
@@ -43,7 +41,6 @@ namespace ElementsAwoken.Projectiles
                 int dust4 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 229);
                 Main.dust[dust4].noGravity = true;
                 Main.dust[dust4].scale = 1.2f;
-            }
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {

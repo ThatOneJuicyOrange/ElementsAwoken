@@ -40,7 +40,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(null, "SunFragment", 5);
             recipe.AddIngredient(ItemID.LihzahrdBrick, 25);
             recipe.AddIngredient(ItemID.WoodenSpike, 10);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

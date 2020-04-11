@@ -67,30 +67,7 @@ namespace ElementsAwoken.Projectiles.Minions
                     projectile.timeLeft = 2;
                 }
             }
-            for (int k = 0; k < 200; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.type == projectile.type && other.active && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushAway;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushAway;
-                    }
-                }
-            }
+            ProjectileUtils.PushOtherEntities(projectile);
 
             shootTimer--;
             float max = 400f;
@@ -99,7 +76,7 @@ namespace ElementsAwoken.Projectiles.Minions
                 NPC nPC = Main.npc[i];
                 if (nPC.active && !nPC.friendly && !nPC.dontTakeDamage && Vector2.Distance(projectile.Center, nPC.Center) <= max && Main.npc[i].CanBeChasedBy(projectile, false))
                 {
-                    int numberProjectiles = 5 + Main.rand.Next(0,1);
+                    int numberProjectiles = Main.rand.Next(4,6);
                     Vector2 vector8 = new Vector2(projectile.position.X + (projectile.width / 2), projectile.position.Y + (projectile.height / 2));
                     int type = mod.ProjectileType("AbyssCultistBolt");
                     float Speed = 12f;

@@ -35,7 +35,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.BottledWater);
-            recipe.AddIngredient(ItemID.LunarOre, 2);
+            recipe.AddIngredient(null, "VoiditeBar", 1);
             recipe.AddTile(TileID.ImbuingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

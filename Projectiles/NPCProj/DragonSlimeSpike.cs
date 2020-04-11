@@ -12,12 +12,12 @@ namespace ElementsAwoken.Projectiles.NPCProj
 
         public override void SetDefaults()
         {
-            projectile.width = 6;
-            projectile.height = 6;
+            projectile.width = 8;
+            projectile.height = 8;
             projectile.hostile = true;
-            projectile.alpha = 255;
             projectile.aiStyle = 1;
             projectile.penetrate = -1;
+            projectile.scale *= 0.8f;
         }
         public override void SetStaticDefaults()
         {
@@ -25,17 +25,13 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         public override void AI()
         {
-            if (projectile.alpha == 0 && Main.rand.Next(3) == 0)
+            if (projectile.ai[0] % 3 == 0)
             {
-                int num67 = Dust.NewDust(projectile.position - projectile.velocity * 3f, projectile.width, projectile.height, 6, 0f, 0f, 50, new Color(255, 136, 78, 150), 1.2f);
-                Main.dust[num67].velocity *= 0.3f;
-                Main.dust[num67].velocity += projectile.velocity * 0.3f;
-                Main.dust[num67].noGravity = true;
-            }
-            projectile.alpha -= 50;
-            if (projectile.alpha < 0)
-            {
-                projectile.alpha = 0;
+                Dust dust = Main.dust[Dust.NewDust(projectile.position + new Vector2(0, 12).RotatedBy(projectile.rotation), projectile.width, projectile.height, 6, 0f, 0f, 50, new Color(255, 136, 78, 150), 1.2f)];
+                dust.velocity *= 0.3f;
+                dust.velocity -= projectile.velocity * 0.3f;
+                dust.noGravity = true;
+                dust.fadeIn = 0.8f;
             }
             if (projectile.ai[1] == 0f)
             {

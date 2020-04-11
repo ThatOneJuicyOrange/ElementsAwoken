@@ -32,7 +32,7 @@ namespace ElementsAwoken.Items.BossSummons
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Energized Gel");
-            Tooltip.SetDefault("Looks strange, I would suggest to not drink it.\nSummons the Slime Rain on use");
+            Tooltip.SetDefault("The electric charge has crystallised the gel\nSummons the Slime Rain on use");
         }
 
         public override bool CanUseItem(Player player)

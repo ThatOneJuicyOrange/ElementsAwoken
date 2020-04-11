@@ -45,18 +45,10 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            int i = Main.myPlayer;
-            float num72 = item.shootSpeed;
-            float num74 = knockBack;
-            num74 = player.GetWeaponKnockback(item, num74);
-            player.itemTime = item.useTime;
-            Vector2 vector2 = player.RotatedRelativePoint(player.MountedCenter, true);
-            vector2.X = player.position.X + Main.rand.Next(-300, 300);
-            vector2.Y = player.position.Y + Main.rand.Next(-300, 300);
             int numberProjectiles = 2;
-            for (int num131 = 0; num131 < numberProjectiles; num131++)
+            for (int i = 0; i < numberProjectiles; i++)
             {
-                Projectile.NewProjectile(vector2.X + Main.rand.Next(-60, 60), vector2.Y + Main.rand.Next(-60, 60), 0, 0, mod.ProjectileType("FrostMine"), damage, num74, i, 0f, 0f);
+                Projectile.NewProjectile(player.Center.X + Main.rand.Next(-360, 360), player.Center.X + Main.rand.Next(-360, 360), 0, 0, mod.ProjectileType("FrostMine"), damage, knockBack, player.whoAmI, 0f, 0f);
             }
             return false;
         }

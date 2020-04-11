@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Developer
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blade of the Raven Prince");
-            Tooltip.SetDefault("With this blade, you can easily lead a whole army of ravens.\nJust holding it makes you feel as your heart would be consumed by the darkness...\nBurst's developer weapon");
+            Tooltip.SetDefault("Shoots a purple energy blast that rains homing sparkles when it hits an enemy\nIt is tainted with the raging blood of an long slain raven demon\nAn undescribeable desire for chaos and destruction dwells within your heart, feeling as it would darken by every passing second...\nBurst's developer weapon");
         }
         public override void HoldItem(Player player)
         {

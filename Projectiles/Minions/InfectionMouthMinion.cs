@@ -81,30 +81,8 @@ namespace ElementsAwoken.Projectiles.Minions
                 Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 5)];
                 dust.velocity = Vector2.Zero;
             }
-            for (int k = 0; k < Main.projectile.Length; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.type == projectile.type && other.active && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushAway;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushAway;
-                    }
-                }
-            }
+            ProjectileUtils.PushOtherEntities(projectile);
+
             float targetX = projectile.position.X;
             float targetY = projectile.position.Y;
             float targetDist = 1200f;
@@ -270,7 +248,7 @@ namespace ElementsAwoken.Projectiles.Minions
 
             projectile.ai[1] = 3f; // this is to make them not stick to the enemy so hard
 
-            ProjectileGlobal.Explosion(projectile, new int[] { 127 }, projectile.damage);
+            ProjectileUtils.Explosion(projectile, new int[] { 127 }, projectile.damage);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Compressor");
-            Tooltip.SetDefault("Made to refine and compress your inner darkness into the ultimate void\nAllows you to change the appearance of your hearts, but nothing else\nFighters of The Calamity need not apply");
+            Tooltip.SetDefault("Made to refine and compress your inner darkness into the ultimate void\nAllows you to change the appearance of your void hearts, but nothing else\nFighters of The Calamity need not apply");
         }
         public override bool CanUseItem(Player player)
         {

@@ -249,7 +249,6 @@ namespace ElementsAwoken.NPCs.Town
             if (MyWorld.downedScourgeFighter) scale += 1f;
             if (MyWorld.downedRegaroth) scale += 2f;
             if (NPC.downedPlantBoss) scale += 2f;
-            if (MyWorld.downedCelestial) scale += 1f;
             if (MyWorld.downedPermafrost) scale += 2f;
             if (MyWorld.downedObsidious) scale += 1f;
             if (NPC.downedFishron) scale += 2f;

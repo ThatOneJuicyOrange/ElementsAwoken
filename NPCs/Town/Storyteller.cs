@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.BossSummons;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
@@ -7,6 +8,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.Town
 {
@@ -240,7 +242,7 @@ namespace ElementsAwoken.NPCs.Town
                 {
                     if (!MyWorld.downedAzana && !MyWorld.sparedAzana)
                     {
-                        #region story
+                        Item item = new Item(); // to get the name of the item
                         bool toySlime = MyWorld.downedToySlime;
                         bool kingSlime = NPC.downedSlimeKing;
                         bool eyeOfCthulhu = NPC.downedBoss1;
@@ -258,7 +260,6 @@ namespace ElementsAwoken.NPCs.Town
                         bool plantera = NPC.downedPlantBoss;
                         bool golem = NPC.downedGolemBoss;
                         bool permafrost = MyWorld.downedPermafrost;
-                        bool celestial = MyWorld.downedCelestial;
                         bool obsidious = MyWorld.downedObsidious;
                         bool dukeFishron = NPC.downedFishron;
                         bool aqueous = MyWorld.downedAqueous;
@@ -269,83 +270,97 @@ namespace ElementsAwoken.NPCs.Town
                         bool voidLeviathan = MyWorld.downedVoidLeviathan;
                         bool azana = MyWorld.downedAzana;
 
-                        if (!toySlime)
+                        /*if (!toySlime)
                         {
                             Main.npcChatText = "Back then, when the dreaded frost moon rose, a slime filled with toys has happened to appear. A 'Large Slimeball' is enough to summon it.";
                             Main.npcChatCornerItem = mod.ItemType("ToySlimeSummon");
                         }
-                        else if (!kingSlime)
+                        else */if (!kingSlime)
                         {
-                            Main.npcChatText = "The king of the slimes roams the fields with it's followers, causing earthquakes. A 'Slime Crown' may provoke him.";
+                            item.SetDefaults(ItemID.SlimeCrown);
+                            Main.npcChatText = "The king of the slimes roams the fields with it's followers, causing earthquakes. A '" + item.Name + "' may provoke him.";
                             Main.npcChatCornerItem = ItemID.SlimeCrown;
                         }
                         else if (!eyeOfCthulhu)
                         {
-                            Main.npcChatText = "A giant eyeball is terrorizing the night, which hides sharp teeth underneath his lens. You found this 'Suspicious Looking Eye'...maybe it'll be just perfect for the eyeball to appear.";
+                            item.SetDefaults(ItemID.SuspiciousLookingEye);
+                            Main.npcChatText = "A giant eyeball is terrorizing the night, which hides sharp teeth underneath his lens. You found this '" + item.Name + "'...maybe it'll be just perfect for the eyeball to appear.";
                             Main.npcChatCornerItem = ItemID.SuspiciousLookingEye;
                         }
                         else if (!wasteland)
                         {
-                            Main.npcChatText = "Dust is spreading out within the desert, storming. Scorpions suddenly arise from the sands. No doubt, it's Wasteland hunting it's next victim. Catch one of the 'Mutated Scorpions' with a net to get his attention.";
-                            Main.npcChatCornerItem = mod.ItemType("WastelandSummon");
+                            item.SetDefaults(ItemType<WastelandSummon>());
+                            Main.npcChatText = "Dust is spreading out within the desert, storming. Scorpions suddenly arise from the sands. No doubt, it's Wasteland hunting it's next victim. Catch one of the '" + item.Name + "' with a net to get his attention.";
+                            Main.npcChatCornerItem = ItemType<WastelandSummon>();
                         }
                         else if (!eaterOrBrain)
                         {
                             if(WorldGen.crimson)
                             {
-                                Main.npcChatText = "A loud roar halled through the dead lands of the Crimson. It's guardian roams free again, it seems. Destroy three of these 'Crimson Hearts' within the caves. Alternatively, provoke it with a 'Bloody Spine'.";
+                                item.SetDefaults(ItemID.BloodySpine);
+                                Main.npcChatText = "A loud roar halled through the dead lands of the Crimson. It's guardian roams free again, it seems. Destroy three of these 'Crimson Hearts' within the caves. Alternatively, provoke it with a '" + item.Name + "'.";
                                 Main.npcChatCornerItem = ItemID.BloodySpine;
                             }
                             else
                             {
-                                Main.npcChatText = "A loud roar halled through the dead lands of the Corruption. It's guardian roams free again, it seems. Destroy three of these 'Shadow Orbs' within the caves. Alternatively, provoke it with some 'Worm Food'";
+                                item.SetDefaults(ItemID.WormFood);
+                                Main.npcChatText = "A loud roar halled through the dead lands of the Corruption. It's guardian roams free again, it seems. Destroy three of these 'Shadow Orbs' within the caves. Alternatively, provoke it with some '" + item.Name + "'";
                                 Main.npcChatCornerItem = ItemID.WormFood;
                             }
                         }
                         else if (!queenBee)
                         {
-                            Main.npcChatText = "The queen of all bees buzzes through the jungle, trying to build it's hives at every corner. Smash one of the hive's larva or use an 'Abeemination' to put an end to that madness.";
+                            item.SetDefaults(ItemID.Abeemination);
+                            Main.npcChatText = "The queen of all bees buzzes through the jungle, trying to build it's hives at every corner. Smash one of the hive's larva or use an '" + item.Name + "' to put an end to that madness.";
                             Main.npcChatCornerItem = ItemID.Abeemination;
                         }
                         else if (!skeletron)
                         {
-                            Main.npcChatText = "An ancient curse has befallen the old man near the dungeon. This curse will cause a giant skull to emerge. Kill him with a 'Clothier Voodoo Doll' or visit the halls of the dungeon to summon it.";
+                            item.SetDefaults(ItemID.ClothierVoodooDoll);
+                            Main.npcChatText = "An ancient curse has befallen the old man near the dungeon. This curse will cause a giant skull to emerge. Kill him with a '" + item.Name + "' or visit the halls of the dungeon to summon it.";
                             Main.npcChatCornerItem = ItemID.ClothierVoodooDoll;
                         }
                         else if (!infernace)
                         {
-                            Main.npcChatText = "After the skull has fallen, ash and fire rains down upon the lands. The fire lord Infernace seems to be enraged. Create a 'Fire Core' and use it within the underworld to get him to show up.";
-                            Main.npcChatCornerItem = mod.ItemType("InfernaceSummon");
+                            item.SetDefaults(ItemType<InfernaceSummon>());
+                            Main.npcChatText = "After the skull has fallen, ash and fire rains down upon the lands. The fire lord Infernace seems to be enraged. Create a '" + item.Name + "' and use it within the underworld to get him to show up.";
+                            Main.npcChatCornerItem = ItemType<InfernaceSummon>();
                         }
                         else if (!wallOfFlesh)
                         {
+                            item.SetDefaults(ItemID.GuideVoodooDoll);
                             Main.npcChatText = "I've heared that the guide is fully aware of his fate and deems you challenging to fight the underworld's master. Heh, what a fool. Little does he know what it's defeat will bring over the world...";
                             Main.npcChatCornerItem = ItemID.GuideVoodooDoll;
                         }
                         else if (!twins)
                         {
-                            Main.npcChatText = "Do you remember that giant eyeball? Some group of scientists created an mechanical copy of him - and this time, there are two of them. Use a 'Mechanical Eye'. As it's similiar to the eye you've made back then, it may cause them to appear.";
+                            item.SetDefaults(ItemID.MechanicalEye);
+                            Main.npcChatText = "Do you remember that giant eyeball? Some group of scientists created an mechanical copy of him - and this time, there are two of them. Use a '" + item.Name + "'. As it's similiar to the eye you've made back then, it may cause them to appear.";
                             Main.npcChatCornerItem = ItemID.MechanicalEye;
                         }
                         else if (!destroyer)
                         {
-                            Main.npcChatText = "You feel those earthquakes? They are way worse than the ones of the King Slime back then. Create an 'Mechanical Worm' and use it, maybe the source of the earthquake will show up then.";
+                            item.SetDefaults(ItemID.MechanicalWorm);
+                            Main.npcChatText = "You feel those earthquakes? They are way worse than the ones of the King Slime back then. Create an '" + item.Name + "' and use it, maybe the source of the earthquake will show up then.";
                             Main.npcChatCornerItem = ItemID.MechanicalWorm;
                         }
                         else if (!skeletronPrime)
                         {
-                            Main.npcChatText = "The skull has been reborn as a four armed mechanoid. And he causes more havoc than ever before. A 'Mechanical Skull' will cause it to appear.";
+                            item.SetDefaults(ItemID.MechanicalSkull);
+                            Main.npcChatText = "The skull has been reborn as a four armed mechanoid. And he causes more havoc than ever before. A '" + item.Name + "' will cause it to appear.";
                             Main.npcChatCornerItem = ItemID.MechanicalSkull;
                         }
                         else if (!scourgeFighter)
                         {
-                            Main.npcChatText = "Those scientists, which created the mechanical trio, also created a jet robot called the Scourge Fighter. It has an AI to destroy everything. You can create a duplicate of his 'Scourge Remote' to signal it your coordinates";
-                            Main.npcChatCornerItem = mod.ItemType("ScourgeFighterSummon");
+                            item.SetDefaults(ItemType<ScourgeFighterSummon>());
+                            Main.npcChatText = "A group of martians had created a powerful jet robot long ago dubbed the Scourge Fighter, with an AI to destroy whatever it comes across. If you can obtain a duplicate of his '" + item.Name + "', you may be able to signal it your coordinates.";
+                            Main.npcChatCornerItem = ItemType<ScourgeFighterSummon>();
                         }
                         else if (!regaroth)
                         {
-                            Main.npcChatText = "The mechanical trio went rogue after shocking thunders hit them. It was caused by the cosmic thunder serpent, Regaroth. If you are able to get ahold of a piece of his 'Swirling Energies', he may come to reclaim it. Prepare for the worst.";
-                            Main.npcChatCornerItem = mod.ItemType("RegarothSummon");
+                            item.SetDefaults(ItemType<RegarothSummon>());
+                            Main.npcChatText = "The mechanical trio went rogue after shocking thunders hit them. It was caused by the cosmic thunder serpent, Regaroth. If you are able to get ahold of a piece of his '" + item.Name + "', he may come to reclaim it. Prepare for the worst.";
+                            Main.npcChatCornerItem = ItemType<RegarothSummon>();
                         }
                         else if (!plantera)
                         {
@@ -353,33 +368,38 @@ namespace ElementsAwoken.NPCs.Town
                         }
                         else if (!golem)
                         {
-                            Main.npcChatText = "The Golem is a ancient automaton within the depths of the jungle temple. Right now it's deactivated, but you can reactivate it by using one of it's 'Lihzahrd Power Cells' at an Lihzahrd Altar.";
+                            item.SetDefaults(ItemID.LihzahrdPowerCell);
+                            Main.npcChatText = "The Golem is a ancient automaton within the depths of the jungle temple. Right now it's deactivated, but you can reactivate it by using one of it's '" + item.Name + "' at an Lihzahrd Altar.";
                             Main.npcChatCornerItem = ItemID.LihzahrdPowerCell;
                         }
                         else if (!permafrost)
                         {
-                            Main.npcChatText = "The once friendly ice wizard Permafrost returned as a hatred filled spirit, taking revenge upon those who forgot him. An 'Ancient Ice Crystal' will call upon him.";
-                            Main.npcChatCornerItem = mod.ItemType("PermafrostSummon");
+                            item.SetDefaults(ItemType<PermafrostSummon>());
+                            Main.npcChatText = "The once friendly ice wizard Permafrost returned as a hatred filled spirit, taking revenge upon those who forgot him. An '" + item.Name + "' will call upon him.";
+                            Main.npcChatCornerItem = ItemType<PermafrostSummon>();
                         }
-                        else if (!celestial)
+                       /* else if (!celestial)
                         {
                             Main.npcChatText = "The celestial forces once created a weaker amalgamation of their powers. That amalgamation sees a lot of things as a threat, so you better get a 'Stone of the Stars' and take it's sight in return.";
                             Main.npcChatCornerItem = mod.ItemType("CelestialSummon");
-                        }
+                        }*/
                         else if (!obsidious)
                         {
-                            Main.npcChatText = "Forbidden artifact only cause calamitous things, yet some do not want to listen. The resulted, obsidian-plated monster, Obsidious, can be summoned with a 'Ulticore.'";
-                            Main.npcChatCornerItem = mod.ItemType("ObsidiousSummon");
+                            item.SetDefaults(ItemType<ObsidiousSummon>());
+                            Main.npcChatText = "Forbidden artifact only cause calamitous things, yet some do not want to listen. The resulted, obsidian-plated monster, Obsidious, can be summoned with a '" + item.Name + "'.";
+                            Main.npcChatCornerItem = ItemType<ObsidiousSummon>();
                         }
                         else if (!dukeFishron)
                         {
-                            Main.npcChatText = "The king of the ocean, Duke Fishron recently scared me when I was looking for some fresh fish to have a nice dinner. He nearly devoured one of my arms. He is highly dangerous, so it's better to catch him with a 'Truffle Worm' and get rid of him.";
+                            item.SetDefaults(ItemID.TruffleWorm);
+                            Main.npcChatText = "The king of the ocean, Duke Fishron recently scared me when I was looking for some fresh fish to have a nice dinner. He nearly devoured one of my arms. He is highly dangerous, so it's better to catch him with a '" + item.Name + "' and get rid of him.";
                             Main.npcChatCornerItem = ItemID.TruffleWorm;
                         }
                         else if (!aqueous)
                         {
-                            Main.npcChatText = "No bad action remains unpunished. The knight of the ocean has come to take your life for taking Fishron's. Get ready for a tough battle. The knight will be further provoked by holding a 'Strange Shell' at the ocean.";
-                            Main.npcChatCornerItem = mod.ItemType("AqueousSummon");
+                            item.SetDefaults(ItemType<AqueousSummon>());
+                            Main.npcChatText = "No bad action remains unpunished. The knight of the ocean has come to take your life for taking Fishron's. Get ready for a tough battle. The knight will be further provoked by holding a '" + item.Name + "' at the ocean.";
+                            Main.npcChatCornerItem = ItemType<AqueousSummon>();
                         }
                         else if (!cultist)
                         {
@@ -387,29 +407,32 @@ namespace ElementsAwoken.NPCs.Town
                         }
                         else if (!moonLord)
                         {
-                            Main.npcChatText = "You've caused a great mess. Because of you, the moon lord and the 4 lunar pillars awaken in the land once more. This creature could mean the end of everything. Are you ready to take on him? If so, kill those pillars or use a 'Celestial Sigil' to awake him for real.";
+                            item.SetDefaults(ItemID.CelestialSigil);
+                            Main.npcChatText = "You've caused a great mess. Because of you, the moon lord and the 4 lunar pillars awaken in the land once more. This creature could mean the end of everything. Are you ready to take on him? If so, kill those pillars or use a '" + item.Name + "' to awake him for real.";
                             Main.npcChatCornerItem = ItemID.CelestialSigil;
                         }
                         else if (!volcanox)
                         {
-                            Main.npcChatText = "The divine being of the underworld, Volcanox, has been freed from it's prison. To calm the underworld down once again, you will have to make sure that he will fall. A 'Charred Core will be enough to unleash him.";
-                            Main.npcChatCornerItem = mod.ItemType("VolcanoxSummon");
+                            item.SetDefaults(ItemType<VolcanoxSummon>());
+                            Main.npcChatText = "The divine being of the underworld, Volcanox, has been freed from it's prison. To calm the underworld down once again, you will have to make sure that he will fall. A '" + item.Name + "' will be enough to unleash him.";
+                            Main.npcChatCornerItem = ItemType<VolcanoxSummon>();
                         }
                         else if (!voidLeviathan)
                         {
-                            Main.npcChatText = "The town is full of hallucinations and fatigue and the void glows with a sinister power - the Void Leviathan has returned from it's slumber. He is after your soul, so he can reach his full potenial once again. Take him down by summoning him with the 'Beacon of the Abyss.'";
-                            Main.npcChatCornerItem = mod.ItemType("VoidLeviathanSummon");
+                            item.SetDefaults(ItemType<VoidLeviathanSummon>());
+                            Main.npcChatText = "The town is full of hallucinations and fatigue and the void glows with a sinister power - the Void Leviathan has returned from it's slumber. He is after your soul, so he can reach his full potenial once again. Take him down by summoning him with the '" + item.Name + "'";
+                            Main.npcChatCornerItem = ItemType<VoidLeviathanSummon>();
                         }
                         else if (!azana)
                         {
-                            Main.npcChatText = "The spirit of chaos, Azana has reawoken and will cause annihilation over the entirety of Terraria, if you don't stop her. This is one of the final challenges before the ultimatum, so you best prepare. Use her 'Mystic Plating to cause her appearance.";
-                            Main.npcChatCornerItem = mod.ItemType("AzanaSummon");
+                            item.SetDefaults(ItemType<AzanaSummon>());
+                            Main.npcChatText = "A long forgotten chaotic infection has taken the control of a scientist, infusing her with a mechanical suit to create an mindless, horrifying abomination. If you use an '" + item.Name + "', you might be able to gain it's attention...";
+                            Main.npcChatCornerItem = ItemType<AzanaSummon>();
                         }
                         else
                         {
                             Main.npcChatText = "Sorry, I'm all out of tales"; // never actually displayed anymore
                         }
-                        #endregion
                     }
                     else
                     {

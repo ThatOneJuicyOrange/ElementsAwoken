@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Nebula Emblem");
-            Tooltip.SetDefault("30% increased magic damage\n75% decreased non-magic damage");
+            Tooltip.SetDefault("22% increased magic damage\n75% decreased non-magic damage");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Accessories.Emblems
         {
             player.meleeDamage -= 0.75f;
             player.rangedDamage -= 0.75f;
-            player.magicDamage += 0.3f;
+            player.magicDamage += 0.22f;
             player.minionDamage -= 0.75f;
         }
         public override void AddRecipes()

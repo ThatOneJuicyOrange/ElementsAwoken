@@ -11,6 +11,7 @@ using Terraria.IO;
 using Terraria.ObjectData;
 using Terraria.Utilities;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.ItemSets.Putrid
 {
@@ -50,7 +51,7 @@ namespace ElementsAwoken.Items.ItemSets.Putrid
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "PutridBar", 14);
+            recipe.AddIngredient(ItemType<PutridBar>(), 10);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

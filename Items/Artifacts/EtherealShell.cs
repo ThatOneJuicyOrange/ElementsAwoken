@@ -68,7 +68,7 @@ namespace ElementsAwoken.Items.Artifacts
             recipe.AddIngredient(null, "IllusiveCharm", 1);
             recipe.AddIngredient(ItemID.SorcererEmblem, 1);
             recipe.AddIngredient(ItemID.JellyfishDivingGear, 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

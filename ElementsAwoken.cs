@@ -4,7 +4,6 @@ using ElementsAwoken.NPCs.Bosses.Permafrost;
 using ElementsAwoken.NPCs.Bosses.Regaroth;
 using ElementsAwoken.NPCs.Bosses.TheGuardian;
 using ElementsAwoken.NPCs.Bosses.VoidLeviathan;
-using ElementsAwoken.NPCs.Bosses.TheCelestial;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -32,6 +31,9 @@ using ElementsAwoken.Events.VoidEvent;
 using MonoMod.Cil;
 using Terraria.Graphics.Shaders;
 using ElementsAwoken.Items.Tech.Weapons.Tier6;
+using ElementsAwoken.UI;
+using ElementsAwoken.Events.RadiantRain.Enemies;
+using ElementsAwoken.Items.BossSummons;
 
 namespace ElementsAwoken
 {
@@ -41,6 +43,8 @@ namespace ElementsAwoken
 
         internal UserInterface AlchemistUserInterface;
         internal UserInterface VoidTimerChangerUI;
+        internal PromptInfoUI PromptUI;
+        private UserInterface PromptInfoUserInterface;
 
         public static ModHotKey neovirtuo;
         public static ModHotKey specialAbility;
@@ -137,7 +141,7 @@ namespace ElementsAwoken
             recipe.AddIngredient(ItemID.PixieDust, 6);
             recipe.AddIngredient(ItemID.UnicornHorn, 2);
             recipe.SetResult(ItemID.RodofDiscord, 1);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.AddRecipe();
 
             recipe = new ModRecipe(this);
@@ -287,6 +291,8 @@ namespace ElementsAwoken
                 3582,
                 3588,
                 3592,
+                ItemID.ArkhalisWings,
+                ItemID.LeinforsWings,
                 ItemType("VoidWings"),
                 ItemType("BubblePack"),
                 ItemType("SkylineWings")
@@ -429,10 +435,6 @@ namespace ElementsAwoken
 
             instance = this;
 
-
-            AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_1");
-            AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_2");
-            AddBossHeadTexture("ElementsAwoken/NPCs/Bosses/TheCelestial/TheCelestial_Head_Boss_3");
             //HOTKEYS
             neovirtuo = RegisterHotKey("Neovirtuo", "C");
             specialAbility = RegisterHotKey("Special Ability", "Z");
@@ -467,9 +469,11 @@ namespace ElementsAwoken
                 Filters.Scene["ElementsAwoken:RegarothIntense"] = new Filter(new RegarothScreenShaderData("FilterMiniTower").UseColor(0.2f, 0.4f, 0.7f).UseOpacity(0.75f), EffectPriority.VeryHigh);
                 Filters.Scene["ElementsAwoken:Regaroth2Intense"] = new Filter(new RegarothScreenShaderData("FilterMiniTower").UseColor(0.9f, 0.3f, 0.7f).UseOpacity(0.75f), EffectPriority.VeryHigh);
 
+                Filters.Scene["ElementsAwoken:RadiantRain"] = new Filter(new ScreenShaderData("FilterMiniTower").UseColor(0.9f, 0.3f, 0.7f).UseOpacity(0.4f), EffectPriority.VeryHigh);
+
                 SkyManager.Instance["ElementsAwoken:InfernacesWrath"] = new InfernacesWrathSky();
                 Overlays.Scene["ElementsAwoken:AshParticles"] = new AshOverlay(EffectPriority.VeryHigh);
-                Filters.Scene["ElementsAwoken:AshSky"] = new Filter((new BlizzardShaderData("FilterBlizzardForeground")).UseColor(0.2f, 0.2f, 0.2f).UseSecondaryColor(0.05f, 0.05f, 0.05f).UseImage("Images/Misc/noise", 0, null).UseOpacity(0.04f).UseImageScale(new Vector2(3f, 0.75f), 0), EffectPriority.High);
+                Filters.Scene["ElementsAwoken:AshBlizzardEffect"] = new Filter((new BlizzardShaderData("FilterBlizzardForeground")).UseColor(0.2f, 0.2f, 0.2f).UseSecondaryColor(0.05f, 0.05f, 0.05f).UseImage("Images/Misc/noise", 0, null).UseOpacity(0.04f).UseImageScale(new Vector2(3f, 0.75f), 0), EffectPriority.High);
                 Filters.Scene["ElementsAwoken:AshShader"] = new Filter(new InfernaceScreenShaderData("FilterMiniTower").UseColor(1f, 0.4f, 0f).UseOpacity(0.2f), EffectPriority.VeryHigh);
 
                 Filters.Scene["ElementsAwoken:HeatDistortion"] = new Filter(new ScreenShaderData("FilterHeatDistortion").UseImage("Images/Misc/noise", 0, null).UseIntensity(4f), EffectPriority.Low);
@@ -487,6 +491,10 @@ namespace ElementsAwoken
 
                 AlchemistUserInterface = new UserInterface();
                 VoidTimerChangerUI = new UserInterface();
+                PromptUI = new PromptInfoUI();
+                PromptUI.Activate();
+                PromptInfoUserInterface = new UserInterface();
+                PromptInfoUserInterface.SetState(PromptUI);
             }
             // config
             //Config.Load();
@@ -846,10 +854,14 @@ namespace ElementsAwoken
                         }
                     }
                 }
-                // make rain black
-                if (ElementsAwoken.encounter == 3)
+                // rain texture
+                if (encounter == 3)
                 {
                     Main.rainTexture = GetTexture("Extra/Rain3");
+                }
+                else if (MyWorld.radiantRain)
+                {
+                    Main.rainTexture = GetTexture("Extra/Rain4");
                 }
                 else
                 {
@@ -918,16 +930,21 @@ namespace ElementsAwoken
                     delegate {
                         AlchemistUserInterface.Draw(Main.spriteBatch, new GameTime());
                         VoidTimerChangerUI.Draw(Main.spriteBatch, new GameTime());
+                        if (PromptInfoUI.Visible) PromptInfoUserInterface.Draw(Main.spriteBatch, new GameTime());
                         return true;
                     },
                     InterfaceScaleType.UI)
                 );
             }
-        }
+            }
         public override void UpdateUI(GameTime gameTime)
         {
             AlchemistUserInterface?.Update(gameTime);
             VoidTimerChangerUI?.Update(gameTime);
+            if (PromptInfoUI.Visible)
+            {
+                PromptInfoUserInterface?.Update(gameTime);
+            }
         }
         public override void MidUpdateTimeWorld()
         {
@@ -1675,8 +1692,11 @@ namespace ElementsAwoken
             for (int i = 0; i < awakenedPlayer.sanityDrains.Count; i++)
             {
                 string text = awakenedPlayer.sanityDrainsName[i] + ": " + awakenedPlayer.sanityDrains[i];
+                int textLength = (int)Main.fontMouseText.MeasureString(text).X;
+                    int xPos = Main.screenWidth - 150;
+                if (Main.screenWidth - 150 + textLength > Main.screenWidth) xPos = Main.screenWidth - textLength - 35;
                 int yPos = Main.screenHeight - 200 + 25 * i;
-                Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, Main.screenWidth - 150, yPos, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
+                Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, text, xPos, yPos, new Color((int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor, (int)Main.mouseTextColor), Color.Black, new Vector2());
             }
         }
         public void DrawInfoAccs()
@@ -1691,7 +1711,7 @@ namespace ElementsAwoken
             int whichInfoDrawing = -1;
             string text = "";
 
-            for (int infoNum = 0; infoNum < 2; infoNum++)
+            for (int infoNum = 0; infoNum < 3; infoNum++)
             {
                 string text2 = "";
                 string hoverText = "";
@@ -1726,6 +1746,22 @@ namespace ElementsAwoken
                     }
                     amountOfInfoEquipped++;
                     if (!modPlayer.hideEAInfo[1])
+                    {
+                        amountOfInfoActive++;
+                    }
+                }
+                else if (infoNum == 2 && modPlayer.rainMeter)
+                {
+                    if ((!modPlayer.hideEAInfo[2] || Main.playerInventory))
+                    {
+                        hoverText = "Rain Time";
+                        whichInfoDrawing = infoNum;
+
+                        text2 = Main.rainTime / 60 + " seconds remaining";
+                        if (Main.rainTime == 0) text2 = "Clear";
+                    }
+                    amountOfInfoEquipped++;
+                    if (!modPlayer.hideEAInfo[2])
                     {
                         amountOfInfoActive++;
                     }
@@ -2256,7 +2292,8 @@ namespace ElementsAwoken
                     "Megaswave\n" +
                     "Keydrian\n" +
                     "InstaFiz\n" +
-                    "kREEpDABoom";
+                    "kREEpDABoom\n" +
+                    "Big Spoon";
                 float scale = 0.7f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 45, Main.screenHeight / 2 - 220 * monitorScale.Y);
                 DrawScreenText(text, 7 * 60 - 60, scale, pos);
@@ -2298,6 +2335,7 @@ namespace ElementsAwoken
                     "Jofairden, jopojelly & bluemagic for creating tModloader\n" +
                     "Gameraiders101 for getting me into modding\n" +
                     "FuryForged for showcasing the mod\n" +
+                    "ChippyGaming for showcasing the mod\n" +
                     "Gameraiders101 again for showcasing the mod";
                 float scale = 1f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 60, Main.screenHeight / 2 - 220 * monitorScale.Y);
@@ -2310,28 +2348,28 @@ namespace ElementsAwoken
                 string text = "Biggest Thanks";
                 float scale = 1.3f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 360 * monitorScale.Y);
-                DrawScreenText(text, 7 * 60, scale, pos);
+                DrawScreenText(text, 12 * 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 90)
             {
                 string text = "To YOU";
                 float scale = 1.4f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 290 * monitorScale.Y);
-                DrawScreenText(text, 7 * 60 - 60, scale, pos);
+                DrawScreenText(text, 12 * 60 - 60, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 120)
             {
                 string text = "Seriously, thank you so much for playing Elements Awoken.\nIt means a lot to me and all of the dev team that you can enjoy\nsomething we spent so much time on.";
                 float scale = 1f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale), Main.screenHeight / 2 - 220 * monitorScale.Y);
-                DrawScreenText(text, 7 * 60 - 90, scale, pos);
+                DrawScreenText(text, 12 * 60 - 90, scale, pos);
             }
             if (MyWorld.creditsCounter == player.screenDuration * 10 + 180)
             {
                 string text = "From- ThatOneJuicyOrange_ and the team <3";
                 float scale = 1f * monitorScale.Y;
                 Vector2 pos = new Vector2(FindTextCenterX(text, scale) + 300, Main.screenHeight / 2 + 40 * monitorScale.Y);
-                DrawScreenText(text, 5 * 60, scale, pos);
+                DrawScreenText(text, 10 * 60, scale, pos);
             }
             #endregion
         }
@@ -2393,7 +2431,25 @@ namespace ElementsAwoken
         //boss checklist
         public override void PostSetupContent()
         {
-
+            float wasteland = 2.5f;
+            float toySlime = 5.1f;
+            float infernace = 5.5f;
+            float observer = 6.1f;
+            float scourge = 9.3f;
+            float regaroth = 9.4f;
+            //float celestials = 10.99f;
+            float permafrost = 11.1f;
+            float obsidious = 11.2f;
+            float aqueous = 12.1f;
+            float keepers = 14.1f;
+            float guardian = 14.2f;
+            float dotv = 14.4f;
+            float shadeWyrm = 14.4f;
+            float volcanox = 14.5f;
+            float vlevi = 15f;
+            float azana = 15.5f;
+            float radiantRain = 15.75f;
+            float ancients = 16f;
             Mod bossChecklist = ModLoader.GetMod("BossChecklist");
             if (bossChecklist != null)
             {
@@ -2413,113 +2469,147 @@ namespace ElementsAwoken
                 * LunaticCultist = 13f;
                 * Moonlord = 14f;
                 **/
-                bossChecklist.Call("AddMiniBoss", 0.1f, NPCType("ToySlime"), this, "Toy Slime", (Func<bool>)(() => MyWorld.downedToySlime), ItemType("ToySlimeSummon"), 
+                /*bossChecklist.Call("AddMiniBoss", toySlime, NPCType("ToySlime"), this, "Toy Slime", (Func<bool>)(() => MyWorld.downedToySlime), ItemType("ToySlimeSummon"), 
                     default,
                     new List<int>() { ItemType("ToyBlade"), ItemType("ToyBow"), ItemType("ToyWand"), ItemType("ToyRobotControlRod"), ItemType("ToyPickaxe"), ItemType("ToyHelm"), ItemType("ToyBreastplate"), ItemType("ToyLeggings") },
                     "The Toy Slime spawns naturally if it has not been defeated already and the player has atleast 140 life and 7 defence. Use a[i: " + ItemType("ToySlimeSummon") + "] to increase the chance of it spawning",
-                    "The Toy Slime hops away.", default, default, true);
+                    "The Toy Slime hops away.", default, default, true);*/
 
-                bossChecklist.Call("AddBoss", 2.5f, NPCType("Wasteland"), this, "Wasteland", (Func<bool>)(() => MyWorld.downedWasteland), ItemType("WastelandSummon"), 
+                bossChecklist.Call("AddBoss", wasteland, NPCType("Wasteland"), this, "Wasteland", (Func<bool>)(() => MyWorld.downedWasteland), ItemType("WastelandSummon"), 
                     new List<int>() { ItemType("WastelandMask"), ItemType("WastelandTrophy") },
                     new List<int>() { ItemType("TheAntidote"), ItemType("Pincer"), ItemType("ScorpionBlade"), ItemType("Stinger"), ItemType("ChitinStaff"), ItemType("VenomSample"), ItemType("WastelandBag") },
                     "Catch and use a [i:" + ItemType("WastelandSummon") + "] in the desert. They spawn naturally in the desert after the Eye of Cthulhu has been defeated",
                     "Wasteland burrows back into the sand...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 5.5f, NPCType("Infernace"), this, "Infernace", (Func<bool>)(() => MyWorld.downedInfernace), ItemType("InfernaceSummon"),
+                bossChecklist.Call("AddBoss", infernace, NPCType("Infernace"), this, "Infernace", (Func<bool>)(() => MyWorld.downedInfernace), ItemType("InfernaceSummon"),
                     new List<int>() { ItemType("InfernaceMask"), ItemType("InfernaceTrophy") },
                     new List<int>() { ItemType("FireBlaster"), ItemType("FireHarpyStaff"), ItemType("FireHeart"), ItemType("FlareSword"), ItemType("InfernaceBag") },
                     "Use the [i:" + ItemType("InfernaceSummon") + "] in the underworld. An obsidian platform arena is reccomended on expert mode because of the lava slimes.",
                     "Infernace fades into the heatwaves...", default, default, true);
 
-                bossChecklist.Call("AddMiniBoss", 6.1f, NPCType("CosmicObserver"), this, "Cosmic Observer", (Func<bool>)(() => MyWorld.downedCosmicObserver), ItemType("CosmicObserverSummon"),
+                bossChecklist.Call("AddMiniBoss", observer, NPCType("CosmicObserver"), this, "Cosmic Observer", (Func<bool>)(() => MyWorld.downedCosmicObserver), ItemType("CosmicObserverSummon"),
                     default,
                     new List<int>() { ItemType("CosmicGlass"), ItemType("ChargeRifle"), ItemType("CosmicCrusher"), ItemType("CosmicObserverStaff"), ItemType("Demolecularizer"), ItemType("EnergyFork"), ItemType("OrionsBelt"), ItemType("PlanetaryWave"), ItemType("CosmicalusVisor"), ItemType("CosmicalusBreastplate"), ItemType("CosmicalusLeggings") },
                     "The Cosmic Observer spawns naturally in the sky in hardmode. Use a[i: " + ItemType("CosmicObserverSummon") + "] to increase the chance of it spawning",
                     "The Cosmic Observer retreats into the clouds...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 9.3f, NPCType("ScourgeFighter"), this, "Scourge Fighter", (Func<bool>)(() => MyWorld.downedScourgeFighter), ItemType("ScourgeFighterSummon"),
+                bossChecklist.Call("AddBoss", scourge, NPCType("ScourgeFighter"), this, "Scourge Fighter", (Func<bool>)(() => MyWorld.downedScourgeFighter), ItemType("ScourgeFighterSummon"),
                     new List<int>() { ItemType("ScourgeFighterTrophy") },
                     new List<int>() { ItemType("ScourgeDrive"), ItemType("ScourgeSword"), ItemType("ScourgeFighterMachineGun"), ItemType("ScourgeFighterRocketLauncher"), ItemType("SignalBooster"), ItemType("ScourgeFighterBag") },
                     "Use the [i:" + ItemType("ScourgeFighterSummon") + "] at nighttime.",
                     "The Scourge Fighter flies into the night...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 9.4f, NPCType("RegarothHead"), this, "Regaroth", (Func<bool>)(() => MyWorld.downedRegaroth), ItemType("RegarothSummon"),
+                bossChecklist.Call("AddBoss", regaroth, NPCType("RegarothHead"), this, "Regaroth", (Func<bool>)(() => MyWorld.downedRegaroth), ItemType("RegarothSummon"),
                     new List<int>() { ItemType("RegarothMask"), ItemType("RegarothTrophy") },
                     new List<int>() { ItemType("EnergyStaff"), ItemType("EyeOfRegaroth"), ItemType("Starstruck"), ItemType("StoneOfHope"), ItemType("EnergyWeaversHelm"), ItemType("EnergyWeaversBreastplate"), ItemType("EnergyWeaversLeggings"), ItemType("RegarothBag") },
                     "Use a [i:" + ItemType("RegarothSummon") + "] on a sky island",
                     "Regaroth retreats into the clouds", default, default, true);
 
-                bossChecklist.Call("AddBoss", 10.99f, NPCType("Astra"), this, "The Celestials", (Func<bool>)(() => MyWorld.downedCelestial), ItemType("CelestialSummon"),
+                /*bossChecklist.Call("AddBoss", celestials, NPCType("Astra"), this, "The Celestials", (Func<bool>)(() => MyWorld.downedCelestial), ItemType("CelestialSummon"),
                     new List<int>() { ItemType("CelestialsMask"), ItemType("TheCelestialTrophy"), ItemType("CelestialCrown") },
                     new List<int>() { ItemType("Celestia"), ItemType("CelestialInferno"), ItemType("EyeballStaff"), ItemType("Solus"), ItemType("CelestialFlame"), ItemType("RegarothBag") },
                     "Use an [i:" + ItemType("CelestialSummon") + "] at nighttime",
-                    "The Celestials dissapate into energy...", default, default, true);
+                    "The Celestials dissapate into energy...", default, default, true);*/
 
-                bossChecklist.Call("AddBoss", 11.2f, NPCType("Obsidious"), this, "Obsidious", (Func<bool>)(() => MyWorld.downedObsidious), ItemType("ObsidiousSummon"),
+                bossChecklist.Call("AddBoss", obsidious, NPCType("Obsidious"), this, "Obsidious", (Func<bool>)(() => MyWorld.downedObsidious), ItemType("ObsidiousSummon"),
                     new List<int>() { ItemType("ObsidiousMask"), ItemType("ObsidiousTrophy"), ItemType("ObsidiousRobes"), ItemType("ObsidiousPants")},
                     new List<int>() { ItemType("ObsidiousWings"), ItemType("Magmarox"), ItemType("TerreneScepter"), ItemType("Ultramarine"), ItemType("VioletEdge"), ItemType("SacredCrystal"), ItemType("ObsidiousBag") },
                     "Use an [i:" + ItemType("ObsidiousSummon") + "] at nighttime",
                     "Obsidious siezes the crystal...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 11.1f, NPCType("Permafrost"), this, "Permafrost", (Func<bool>)(() => MyWorld.downedPermafrost), ItemType("PermafrostSummon"),
+                bossChecklist.Call("AddBoss", permafrost, NPCType("Permafrost"), this, "Permafrost", (Func<bool>)(() => MyWorld.downedPermafrost), ItemType("PermafrostSummon"),
                     new List<int>() { ItemType("PermafrostMask"), ItemType("PermafrostTrophy") },
                     new List<int>() { ItemType("Flurry"), ItemType("Frigidblaster"), ItemType("IceReaver"), ItemType("IceWrath"), ItemType("Snowdrift"), ItemType("SoulOfTheFrost"), ItemType("PermafrostBag") },
                     "Use an[i: " + ItemType("PermafrostSummon") + "] in the snow",
                     "Permafrost fades into a blizzard...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 12.1f, NPCType("Aqueous"), this, "Aqueous", (Func<bool>)(() => MyWorld.downedAqueous), ItemType("AqueousSummon"),
+                bossChecklist.Call("AddBoss", aqueous, NPCType("Aqueous"), this, "Aqueous", (Func<bool>)(() => MyWorld.downedAqueous), ItemType("AqueousSummon"),
                     new List<int>() { ItemType("AqueousTrophy") },
                     new List<int>() { ItemType("BrinyBuster"), ItemType("BubblePopper"), ItemType("HighTide"), ItemType("OceansRazor"), ItemType("TheWave"), ItemType("Varee"), ItemType("AqueousMask"), ItemType("AqueousBag") },
                     "Use a [i:" + ItemType("AqueousSummon") + "] in the ocean",
                     "Aqueous sinks deep into the ocean...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 14.1f, new List<int>() { NPCType("TheEye"), NPCType("AncientWyrmHead") }, this, "Temple Keepers", (Func<bool>)(() => (MyWorld.downedAncientWyrm && MyWorld.downedEye)), ItemType("AncientDragonSummon"),
+                bossChecklist.Call("AddBoss", keepers, new List<int>() { NPCType("TheEye"), NPCType("AncientWyrmHead") }, this, "Temple Keepers", (Func<bool>)(() => (MyWorld.downedAncientWyrm && MyWorld.downedEye)), ItemType("AncientDragonSummon"),
                     default,
                     new List<int>() { ItemType("TemplesCrystal"), ItemType("TheAllSeer"), ItemType("WyrmClaw"), ItemType("GazeOfInferno"), ItemType("Flare"), ItemType("TempleKeepersBag") },
                     "Use the [i:" + ItemType("AncientDragonSummon") + "] at nighttime",
                     default, default, default, true);
 
-                bossChecklist.Call("AddBoss", 14.2f, new List<int>() { NPCType("TheGuardian"), NPCType("TheGuardianFly") }, this, "The Guardian", (Func<bool>)(() => MyWorld.downedGuardian), ItemType("GuardianSummon"),
+                bossChecklist.Call("AddBoss", guardian, new List<int>() { NPCType("TheGuardian"), NPCType("TheGuardianFly") }, this, "The Guardian", (Func<bool>)(() => MyWorld.downedGuardian), ItemType("GuardianSummon"),
                     new List<int>() { ItemType("TheGuardianMask"), ItemType("TheGuardianTrophy") },
                     new List<int>() { ItemType("Godslayer"), ItemType("InfernoStorm"), ItemType("TemplesWrath"), ItemType("FieryCore"), ItemType("GuardianBag")},
                     "Use an [i:" + ItemType("GuardianSummon") + "] at nighttime",
                     "The Guardian vanishes in a scene of flames", default, default, true);
 
-                bossChecklist.Call("AddEvent", 14.4f, new List<int>() { NPCType("Immolator"), NPCType("ReaverSlime"), NPCType("ZergCaster"), NPCType("VoidKnight"), NPCType("EtherealHunter"), NPCType("VoidCrawler"), NPCType("VoidGolem") },
+                bossChecklist.Call("AddEvent", dotv, new List<int>() { NPCType("Immolator"), NPCType("ReaverSlime"), NPCType("ZergCaster"), NPCType("VoidKnight"), NPCType("EtherealHunter"), NPCType("VoidCrawler"), NPCType("VoidGolem") },
                     this, "Dawn of the Void", (Func<bool>)(() => MyWorld.downedVoidEvent), ItemType("VoidEventSummon"), ItemType("ShadeEgg"), new List<int>() { ItemType("CastersCurse"), ItemType("CrimsonShade"), ItemType("LifesLament"), ItemType("CrimsonShade"), ItemType("VoidJelly") },
                     "Use a [i:" + ItemType("VoidEventSummon") + "] at nighttime before 10pm. The item can be used during the day but the event wont start until night time, where it will start instantly.",
                     default, default, /*"ElementsAwoken/NPCs/VoidEventEnemies/Phase2/ShadeWyrm/ShadeWyrmHead_Head_Boss"*/default, default);
 
 
-                bossChecklist.Call("AddMiniBoss", 14.4f, NPCType("ShadeWyrmHead"), this, "Shade Wyrm", (Func<bool>)(() => MyWorld.downedShadeWyrm), ItemType("VoidEventSummon"),
+                bossChecklist.Call("AddMiniBoss", shadeWyrm, NPCType("ShadeWyrmHead"), this, "Shade Wyrm", (Func<bool>)(() => MyWorld.downedShadeWyrm), ItemType("VoidEventSummon"),
                     ItemType("ShadeEgg"),
                     new List<int>() { ItemType("LifesLament"), ItemType("CrimsonShade") },
                     "The Shade Wyrm spawns during the Dawn of the Void after midnight",
                     default, default, default, true);
 
-                bossChecklist.Call("AddBoss", 14.5f, NPCType("Volcanox"), this, "Volcanox", (Func<bool>)(() => MyWorld.downedVolcanox), ItemType("VolcanoxSummon"),
+                bossChecklist.Call("AddBoss", volcanox, NPCType("Volcanox"), this, "Volcanox", (Func<bool>)(() => MyWorld.downedVolcanox), ItemType("VolcanoxSummon"),
                     new List<int>() { ItemType("VolcanoxMask"), ItemType("VolcanoxTrophy") },
                     new List<int>() { ItemType("Combustia"), ItemType("EmberBurst"), ItemType("FatesFlame"), ItemType("FirestarterStaff"), ItemType("Hearth"), ItemType("CharredInsignia"), ItemType("VolcanoxBag") },
                     "Use a [i:" + ItemType("VolcanoxSummon") + "] in the underworld",
                     "Volcanox sinks into the lava...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 15f, NPCType("VoidLeviathanHead"), this, "Void Leviathan", (Func<bool>)(() => MyWorld.downedVoidLeviathan), ItemType("VoidLeviathanSummon"),
+                bossChecklist.Call("AddBoss", vlevi, NPCType("VoidLeviathanHead"), this, "Void Leviathan", (Func<bool>)(() => MyWorld.downedVoidLeviathan), ItemType("VoidLeviathanSummon"),
                     new List<int>() { ItemType("VoidLeviathanMask"), ItemType("VoidLeviathanTrophy") },
                     new List<int>() { ItemType("BladeOfTheNight"), ItemType("BreathOfDarkness"), ItemType("CosmicWrath"), ItemType("EndlessAbyssBlaster"), ItemType("ExtinctionBow"), ItemType("LightsAffliction"), ItemType("PikeOfEternalDespair"), ItemType("Reaperstorm"), ItemType("VoidLeviathansAegis"), ItemType("AmuletOfDestruction"), ItemType("VoidLeviathanBag"), ItemType("VoidWalkersGreatmask"), ItemType("VoidWalkersHelm"), ItemType("VoidWalkersVisage"), ItemType("VoidWalkersHood"), ItemType("VoidWalkersBreastplate"), ItemType("VoidWalkersLeggings") },
                     "Use a [i:" + ItemType("VoidLeviathanSummon") + "] at nighttime",
                     "The Void Leviathan descends into shadows...", default, default, true);
 
-                bossChecklist.Call("AddBoss", 15.5f, new List<int>() { NPCType("Azana"), NPCType("AzanaEye") }, this, "Azana", (Func<bool>)(() => (MyWorld.downedAzana || MyWorld.sparedAzana)), ItemType("AzanaSummon"),
+                bossChecklist.Call("AddBoss", azana, new List<int>() { NPCType("Azana"), NPCType("AzanaEye") }, this, "Azana", (Func<bool>)(() => (MyWorld.downedAzana || MyWorld.sparedAzana)), ItemType("AzanaSummon"),
                     new List<int>() { ItemType("AzanaMask"), ItemType("AzanaTrophy") },
                     new List<int>() { ItemType("Anarchy"), ItemType("ChaoticGaze"), ItemType("ChaoticImpaler"), ItemType("EntropicCoating"), ItemType("GleamOfAnnhialation"), ItemType("Pandemonium"), ItemType("PurgeRifle"), ItemType("RingOfChaos") },
                     "Use a [i:" + ItemType("AzanaSummon") + "] in at nighttime",
                     default, default, default, true);
 
-                bossChecklist.Call("AddBoss", 16f, new List<int>() { NPCType("AncientAmalgam"), NPCType("Izaris"), NPCType("Kirvein"), NPCType("Xernon"), NPCType("Krecheus") }, this, "The Ancients", (Func<bool>)(() => MyWorld.downedAncients), ItemType("AncientsSummon"),
+                bossChecklist.Call("AddEvent", radiantRain, new List<int>() {  },
+                   this, "Radiant Rain", (Func<bool>)(() => MyWorld.completedRadiantRain), ModContent.ItemType<RadiantRainSummon>(), default, new List<int>() {  },
+                   "Has a 25% chance to occur instead of rain or can be summoned using a [i:" + ModContent.ItemType<RadiantRainSummon>() + "]",
+                   default, default, default, default);
+
+                bossChecklist.Call("AddMiniBoss", radiantRain, ModContent.NPCType<RadiantMaster>(), this, "Radiant Master", (Func<bool>)(() => MyWorld.downedRadiantMaster), default,
+                    default,
+                    new List<int>() { },
+                    "The Radiant Master spawns near the end of the Radiant Rain",
+                    "The Radiant Master bursts into stars", default, default, true);
+
+                bossChecklist.Call("AddBoss", ancients, new List<int>() { NPCType("AncientAmalgam"), NPCType("Izaris"), NPCType("Kirvein"), NPCType("Xernon"), NPCType("Krecheus") }, this, "The Ancients", (Func<bool>)(() => MyWorld.downedAncients), ItemType("AncientsSummon"),
                     default,
                     new List<int>() { ItemType("GiftOfTheArchaic"), ItemType("Chromacast"), ItemType("Shimmerspark"), ItemType("TheFundamentals"), ItemType("CrystallineLocket"), ItemType("AncientsBag") },
                     "Speak to the storyteller or use a [i:" + ItemType("AncientsSummon") + "]",
                     "The Ancients return to their slumber", default, default, true);
+
+            }
+            Mod fargos = ModLoader.GetMod("Fargowiltas");
+            if (fargos != null)
+            {
+                // AddSummon, order or value in terms of vanilla bosses, your mod internal name, summon item internal name, inline method for retrieving downed value, price to sell for in copper
+                fargos.Call("AddSummon", wasteland, "ElementsAwoken", "WastelandSummon", (Func<bool>)(() => MyWorld.downedWasteland), Item.buyPrice(0, 10, 0, 0));
+                fargos.Call("AddSummon", toySlime, "ElementsAwoken", "ToySlimeSummon", (Func<bool>)(() => MyWorld.downedToySlime), Item.buyPrice(0, 2, 50, 0));
+                fargos.Call("AddSummon", infernace, "ElementsAwoken", "InfernaceSummon", (Func<bool>)(() => MyWorld.downedInfernace), Item.buyPrice(0, 17, 50, 0));
+                fargos.Call("AddSummon", observer, "ElementsAwoken", "CosmicObserverSummon", (Func<bool>)(() => MyWorld.downedCosmicObserver), Item.buyPrice(0, 20, 0, 0));
+                fargos.Call("AddSummon", scourge, "ElementsAwoken", "ScourgeFighterSummon", (Func<bool>)(() => MyWorld.downedScourgeFighter), Item.buyPrice(0, 45, 0, 0));
+                fargos.Call("AddSummon", regaroth, "ElementsAwoken", "RegarothSummon", (Func<bool>)(() => MyWorld.downedRegaroth), Item.buyPrice(0, 50, 0, 0));
+                //fargos.Call("AddSummon", celestials, "ElementsAwoken", "CelestialSummon", (Func<bool>)(() => MyWorld.downedCelestial), Item.buyPrice(0, 55, 0, 0));
+                fargos.Call("AddSummon", permafrost, "ElementsAwoken", "PermafrostSummon", (Func<bool>)(() => MyWorld.downedPermafrost), Item.buyPrice(0, 60, 0, 0));
+                fargos.Call("AddSummon", obsidious, "ElementsAwoken", "ObsidiousSummon", (Func<bool>)(() => MyWorld.downedObsidious), Item.buyPrice(0, 60, 0, 0));
+                fargos.Call("AddSummon", aqueous, "ElementsAwoken", "AqueousSummon", (Func<bool>)(() => MyWorld.downedAqueous), Item.buyPrice(0, 67, 50, 0));
+                fargos.Call("AddSummon", keepers, "ElementsAwoken", "AncientDragonSummon", (Func<bool>)(() => (MyWorld.downedAncientWyrm && MyWorld.downedEye)), Item.buyPrice(0, 80, 0, 0));
+                //fargos.Call("AddSummon", guardian, "ElementsAwoken", "GuardianSummon", (Func<bool>)(() => MyWorld.downedToySlime), Item.buyPrice(0, 2, 50, 0));
+                //fargos.Call("AddSummon", dotv, "ElementsAwoken", "VoidEventSummon", (Func<bool>)(() => MyWorld.downedToySlime), Item.buyPrice(0, 2, 50, 0));
+                fargos.Call("AddSummon", volcanox, "ElementsAwoken", "VolcanoxSummon", (Func<bool>)(() => MyWorld.downedVolcanox), Item.buyPrice(1, 0, 50, 0));
+                //fargos.Call("AddSummon", vlevi, "ElementsAwoken", "Summon", (Func<bool>)(() => MyWorld.downedToySlime), Item.buyPrice(0, 2, 50, 0));
+                //fargos.Call("AddSummon", azana, "ElementsAwoken", "Summon", (Func<bool>)(() => (MyWorld.downedAzana || MyWorld.sparedAzana)), Item.buyPrice(0, 2, 50, 0));
+                fargos.Call("AddSummon", ancients, "ElementsAwoken", "AncientsSummon", (Func<bool>)(() => MyWorld.downedAncients), Item.buyPrice(1, 25, 0, 0));
 
             }
             Mod mystaria = ModLoader.GetMod("Mystaria");
@@ -2566,20 +2656,6 @@ namespace ElementsAwoken
                         modPlayer.screenshakeTimer = 0;
                     }
                     Main.screenPosition += new Vector2(modPlayer.screenshakeAmount * Main.rand.NextFloat(), modPlayer.screenshakeAmount * Main.rand.NextFloat()); //NextFloat creates a random value between 0 and 1, multiply screenshake amount for a bit of variety
-                }
-            }
-        }
-        public static void NPCApplyScreenShakeToAll(int whoAmI, float amount, float range = -1, bool lerped = false)
-        {
-            for (int i = 0; i < Main.player.Length; i++)
-            {
-                NPC npc = Main.npc[whoAmI];
-                Player player = Main.player[i];
-                MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
-                if (lerped && range != -1) amount = MathHelper.Lerp(amount, 0, MathHelper.Clamp(Vector2.Distance(npc.Center, player.Center) / range, 0, 1));
-                if (player.active && (Vector2.Distance(npc.Center, player.Center) < range || range == -1))
-                {
-                    modPlayer.screenshakeAmount = amount;
                 }
             }
         }

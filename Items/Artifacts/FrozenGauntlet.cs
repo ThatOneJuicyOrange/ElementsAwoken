@@ -63,7 +63,7 @@ namespace ElementsAwoken.Items.Artifacts
             recipe.AddIngredient(null, "GlowingSlush", 1);
             recipe.AddIngredient(ItemID.FireGauntlet, 1);
             recipe.AddIngredient(ItemID.StarVeil, 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

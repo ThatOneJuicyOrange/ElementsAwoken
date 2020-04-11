@@ -13,8 +13,8 @@ namespace ElementsAwoken.Projectiles.Yoyos
         int shootTimer2 = 0;
         public override void SetDefaults()
         {
-            projectile.width = 36;
-            projectile.height = 36;
+            projectile.width = 28;
+            projectile.height = 28;
 
             projectile.aiStyle = 99;
             projectile.friendly = true;
@@ -37,10 +37,8 @@ namespace ElementsAwoken.Projectiles.Yoyos
         }
         public override void AI()
         {
-            if (Main.rand.Next(1) == 0)
-            {
                 Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 127, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
-            }
+            
             shootTimer--;
             shootTimer2--;
             if (shootTimer <= 0)

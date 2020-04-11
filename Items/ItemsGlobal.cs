@@ -7,62 +7,29 @@ using Terraria.ModLoader;
 using ElementsAwoken.Items.BossDrops.zVanilla.Awakened;
 using ElementsAwoken.Items.Donator.Crow;
 using ElementsAwoken.Items.Accessories.Emblems;
+using System;
 
 namespace ElementsAwoken.Items
 {
     public class ItemsGlobal : GlobalItem
     {
+        public override bool InstancePerEntity => true;
+        public override bool CloneNewInstances => true;
+        public int miningRadius = 0;
         public override bool CanUseItem(Item item, Player player)
         {
-            if (player.GetModPlayer<MyPlayer>().voidBlood && (item.potion || item.type == ItemID.RegenerationPotion))
-            {
-                return false;
-            }
-            if (item.type == ItemID.RodofDiscord)
-            {
-                if (player.GetModPlayer<MyPlayer>().cantROD == true)
-                {
-                    return false;
-                }
-            }
-            if (item.type == ItemID.CellPhone)
-            {
-                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
-                {
-                    return false;
-                }
-            }
-            if (item.type == ItemID.MagicMirror)
-            {
-                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
-                {
-                    return false;
-                }
-            }
-            if (item.type == ItemID.IceMirror)
-            {
-                if (player.GetModPlayer<MyPlayer>().cantMagicMirror == true)
-                {
-                    return false;
-                }
-            }
-            if (item.type == ItemID.GrapplingHook)
-            {
-                if (player.GetModPlayer<MyPlayer>().cantGrapple == true)
-                {
-                    player.cGrapple = 1;
-                    return false;
-                }
-            }
-            if (ElementsAwoken.encounter == 1)
-            {
-                if (item.type == ItemID.MagicMirror || item.type == ItemID.IceMirror || item.type == ItemID.RecallPotion || item.type == ItemID.WormholePotion || item.type == ItemID.CellPhone)return false;
-            }
-            if (MyWorld.credits)
-            {
-                if (item.type != mod.ItemType("CreditsSetup")) return false;
-            }
-            if (player.GetModPlayer<MyPlayer>().meteoricPendant && item.magic)
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            if (modPlayer.wispForm) return false;
+            if (modPlayer.voidBlood && (item.potion || item.type == ItemID.RegenerationPotion)) return false;
+            if (modPlayer.cantROD && item.type == ItemID.RodofDiscord) return false;
+            if ((ElementsAwoken.encounter == 1 || modPlayer.cantMagicMirror) && 
+                (item.type == ItemID.CellPhone ||
+                item.type == ItemID.MagicMirror ||
+                item.type == ItemID.IceMirror ||
+                item.type == ItemID.RecallPotion ||
+                item.type == ItemID.WormholePotion)) return false;
+            if (MyWorld.credits && item.type != mod.ItemType("CreditsSetup"))return false;
+            if (modPlayer.meteoricPendant && item.magic)
             {
                 Item startItem = new Item();
                 startItem.SetDefaults(item.type);
@@ -71,7 +38,7 @@ namespace ElementsAwoken.Items
                 item.useAnimation = (int)(startItem.useAnimation * 0.8f);
                 startItem.TurnToAir();
             }
-            if (!player.GetModPlayer<MyPlayer>().meteoricPendant && item.magic)
+            if (!modPlayer.meteoricPendant && item.magic)
             {
                 Item startItem = new Item();
                 startItem.SetDefaults(item.type);
@@ -138,6 +105,50 @@ namespace ElementsAwoken.Items
                 if (item.type == ItemID.LastPrism)
                 {
                     item.damage = 90;
+                }
+            }
+        }
+    }
+    public class AOEPick : ModPlayer
+    {
+        public override void PostItemCheck()
+        {
+            if (!player.HeldItem.IsAir)
+            {
+                Item item = player.HeldItem;
+                bool flag18 = player.position.X / 16f - (float)Player.tileRangeX - (float)item.tileBoost <= (float)Player.tileTargetX && (player.position.X + (float)player.width) / 16f + (float)Player.tileRangeX + (float)item.tileBoost - 1f >= (float)Player.tileTargetX && player.position.Y / 16f - (float)Player.tileRangeY - (float)item.tileBoost <= (float)Player.tileTargetY && (player.position.Y + (float)player.height) / 16f + (float)Player.tileRangeY + (float)item.tileBoost - 2f >= (float)Player.tileTargetY;
+                if (player.noBuilding)
+                {
+                    flag18 = false;
+                }
+                if (flag18)
+                {
+                    if (item.GetGlobalItem<ItemsGlobal>().miningRadius > 0)
+                    {
+                        if (player.toolTime == 0 && player.itemAnimation > 0 && player.controlUseItem)
+                        {
+                            if (item.pick > 0)
+                            {
+                                for (int i = -item.GetGlobalItem<ItemsGlobal>().miningRadius; i <= item.GetGlobalItem<ItemsGlobal>().miningRadius; i++)
+                                {
+                                    for (int j = -item.GetGlobalItem<ItemsGlobal>().miningRadius; j <= item.GetGlobalItem<ItemsGlobal>().miningRadius; j++)
+                                    {
+                                        if ((i != 0 || j != 0) && !Main.tileAxe[(int)Main.tile[Player.tileTargetX + i, Player.tileTargetY + j].type] && !Main.tileHammer[(int)Main.tile[Player.tileTargetX + i, Player.tileTargetY + j].type])
+                                        {
+                                            player.PickTile(Player.tileTargetX + i, Player.tileTargetY + j, item.pick);
+                                        }
+                                    }
+                                }
+                                player.itemTime = (int)((float)item.useTime * player.pickSpeed);
+                            }                         
+                                player.poundRelease = false;
+                         
+                        }
+                        if (player.releaseUseItem)
+                        {
+                            player.poundRelease = true;
+                        }                       
+                    }
                 }
             }
         }

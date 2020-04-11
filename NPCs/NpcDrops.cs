@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.Pets;
+using ElementsAwoken.NPCs.ItemSets.ToySlime;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs
 {
@@ -206,6 +209,10 @@ namespace ElementsAwoken.NPCs
             if (npc.type == NPCID.EyeofCthulhu)
             {
                 Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("LensFragment"), Main.rand.Next(5, 15));
+            }
+            if (npc.type == NPCID.CultistBoss)
+            {
+                if (Main.rand.NextBool(10)) Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<EldritchKeepsake>());
             }
             if (npc.type == NPCID.DukeFishron)
             {
@@ -454,7 +461,7 @@ namespace ElementsAwoken.NPCs
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("EnergyPickup"), 1);
                 }
             }
-            if (Main.slimeRain && Main.slimeRainNPC[npc.type] && !NPC.AnyNPCs(mod.NPCType("ToySlime")))
+            if (Main.slimeRain && Main.slimeRainNPC[npc.type] && !NPC.AnyNPCs(NPCType<ToySlime>()) && NPC.downedBoss3)
             {
                 int killsRequired = 75;
                 if (NPC.downedSlimeKing)
@@ -463,7 +470,7 @@ namespace ElementsAwoken.NPCs
                 }
                 if (Main.slimeRainKillCount == killsRequired)
                 {
-                    NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("ToySlime"));
+                    NPC.SpawnOnPlayer(player.whoAmI, NPCType<ToySlime>());
                 }
             }
             if (npc.type == NPCID.MoonLordCore && !ElementsAwoken.ancientsAwakenedEnabled && MyWorld.moonlordKills < 5)

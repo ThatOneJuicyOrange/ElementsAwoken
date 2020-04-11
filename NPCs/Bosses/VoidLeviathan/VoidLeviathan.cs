@@ -113,6 +113,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
                 ElementsAwoken.encounter = 3;
                 ElementsAwoken.encounterTimer = 3600;
                 ElementsAwoken.DebugModeText("encounter 3 start");
+                Main.NewText("Infection overcomes the world...", new Color(235, 70, 106));
             }
             if (MyWorld.voidLeviathanKills < 3)
             {
@@ -357,7 +358,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
         {
             base.SetDefaults();
 
-            npc.width = 65;
+            npc.width = 80;
             npc.height = 68;
 
             npc.damage = 150;
@@ -508,6 +509,8 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
             npc.defense = 50;
             npc.scale = 1.1f;
 
+            npc.aiStyle = -1;
+
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath6;
 
@@ -522,7 +525,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Void Leviathan");
-            Main.npcFrameCount[npc.type] = 2;
+            Main.npcFrameCount[npc.type] = 3;
         }
 
         public override void Init()
@@ -531,9 +534,9 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
             tailType = NPCType<VoidLeviathanTail>();
             bodyType = NPCType<VoidLeviathanBody>();
             headType = NPCType<VoidLeviathanHead>();
-            speed = 70f;
-            if (MyWorld.awakenedMode) speed = 90f;
-            else if (Main.expertMode) speed = 80f;
+            speed = 40f;
+            if (MyWorld.awakenedMode) speed = 50f;
+            else if (Main.expertMode) speed = 60f;
             turnSpeed =  0.6f;
             if (MyWorld.awakenedMode) turnSpeed = 0.8f;
             else if (Main.expertMode) turnSpeed = 0.6f;
@@ -836,6 +839,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
                         xTurnSpeedScale = 5;
                         targetX *= 15f;
                     }
+                    if (MathHelper.Distance(npc.Center.X, P.Center.X) > 2500) if ((npc.velocity.X > targetX && npc.velocity.X > 0) || npc.velocity.X < targetX && npc.velocity.X < 0) npc.velocity.X *= 0.5f;      
                     if (npc.velocity.X > 0f && targetX > 0f || npc.velocity.X < 0f && targetX < 0f || npc.velocity.Y > 0f && targetY > 0f || npc.velocity.Y < 0f && targetY < 0f)
                     {
                         if (npc.velocity.X < targetX)
@@ -1004,6 +1008,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
             if (headNPC.life <= headNPC.lifeMax * 0.3f)
             {
                 npc.frame.Y = frameHeight;
+                if (npc.alpha > 150) npc.frame.Y = frameHeight * 2;
             }
         }
         public override void OnHitPlayer(Player player, int damage, bool crit)

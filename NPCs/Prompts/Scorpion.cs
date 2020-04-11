@@ -54,6 +54,15 @@ namespace ElementsAwoken.NPCs.Prompts
                 npc.knockBackResist = 0.2f;
             }
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                Gore.NewGore(npc.position, npc.velocity, 561, npc.scale);
+                Gore.NewGore(npc.position, npc.velocity, 562, npc.scale);
+                Gore.NewGore(npc.position, npc.velocity, 563, npc.scale);
+            }
+        }
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             return (spawnInfo.spawnTileY < Main.rockLayer) &&

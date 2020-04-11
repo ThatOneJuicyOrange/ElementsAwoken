@@ -24,19 +24,24 @@ namespace ElementsAwoken.Items.Elements.Fire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Band of Inferno");
-            Tooltip.SetDefault("Unleash the power of flames upon your enemies\nMelee attacks have flames and increased knockback\n10% increased damage");
+            Tooltip.SetDefault("Unleash the power of flames upon your enemies\nDouble tap down to create a small explosion that launches the player into the air\nMelee attacks have flames\n2% increased damage");
         }
 
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            modPlayer.fireAccCD--;
+            modPlayer.fireAcc = true;
             player.magmaStone = true;
-            player.kbGlove = true;
-            player.meleeDamage += 0.1f;
-            player.thrownDamage += 0.1f;
-            player.rangedDamage += 0.1f;
-            player.magicDamage += 0.1f;
-            player.minionDamage += 0.1f;
+            player.allDamage *= 1.02f;
+            if (player.velocity.Y != 0)
+            {
+                    Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, 6)];
+                    dust.noGravity = true;
+                    dust.scale = 2f;
+                    dust.velocity *= 0.2f;
+            }
         }
         public override void AddRecipes()
         {

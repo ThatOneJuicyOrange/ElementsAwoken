@@ -21,7 +21,7 @@ namespace ElementsAwoken.Projectiles
             projectile.tileCollide = false;
             projectile.ignoreWater = true;
 
-            projectile.penetrate = 2;
+            projectile.penetrate = 4;
         }
         public override void SetStaticDefaults()
         {

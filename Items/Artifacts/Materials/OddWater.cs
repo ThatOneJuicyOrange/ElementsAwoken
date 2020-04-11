@@ -20,6 +20,7 @@ namespace ElementsAwoken.Items.Artifacts.Materials
         {
             DisplayName.SetDefault("Odd Water");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 3));
+            Tooltip.SetDefault("");
         }
     }
 }

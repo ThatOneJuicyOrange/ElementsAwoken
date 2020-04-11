@@ -93,7 +93,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { mod.DustType("PrinceDust") }, projectile.damage, "melee");
+            ProjectileUtils.Explosion(projectile, new int[] { mod.DustType("PrinceDust") }, projectile.damage, "melee");
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {

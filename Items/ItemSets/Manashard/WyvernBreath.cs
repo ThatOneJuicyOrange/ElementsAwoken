@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "Manashard", 8);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

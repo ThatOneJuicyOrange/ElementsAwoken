@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier4
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.AdamantiteBar, 8);
+            recipe.AddRecipeGroup("ElementsAwoken:AdamantiteBar", 8);
             recipe.AddIngredient(null, "Capacitor", 1);
             recipe.AddIngredient(null, "GoldWire", 10);
             recipe.AddIngredient(null, "SiliconBoard", 3);

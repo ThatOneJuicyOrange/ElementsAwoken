@@ -127,40 +127,14 @@ namespace ElementsAwoken.Items.Storyteller
             }
             return false;
         }
-        public override void GetWeaponDamage(Player player, ref int damage)
+        public override void ModifyWeaponDamage(Player player, ref float add, ref float mult, ref float flat)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
-            damage = 60 + (int)(modPlayer.masterSwordCharge * 1.5f);
+            mult *= 1 + modPlayer.masterSwordCharge / 50;
         }
         public override void HoldItem(Player player)
         {
-            if (player.altFunctionUse == 2)
-            {
-                if (player.direction == 1) // 1 is right 
-                {
-                    player.itemRotation -= 0.785f;
-                }
-                if (player.direction == -1) // -1 is left
-                {
-                    player.itemRotation += 0.785f;
-                }
-            }
-            else
-            {
-
-            }
+            if (player.altFunctionUse == 2)  player.itemRotation -= 0.785f  * player.direction;
         }
-        /*public override Vector2? HoldoutOffset()
-        {
-            Player player = Main.player[Main.myPlayer];
-            if (player.altFunctionUse == 2)
-            {
-                return new Vector2(0, -15);
-            }
-            else
-            {
-                return new Vector2(0, 0);
-            }
-        }*/
     }
 }

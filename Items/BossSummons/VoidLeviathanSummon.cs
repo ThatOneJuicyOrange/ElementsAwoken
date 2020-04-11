@@ -53,7 +53,7 @@ namespace ElementsAwoken.Items.BossSummons
             recipe.AddIngredient(ItemID.Ectoplasm, 6);
             recipe.AddIngredient(ItemID.SoulofMight, 7);
             recipe.AddIngredient(ItemID.SoulofNight, 5);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

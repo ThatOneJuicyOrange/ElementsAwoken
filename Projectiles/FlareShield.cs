@@ -23,7 +23,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flare Shield");
+            DisplayName.SetDefault("Drakonian Guard Shield");
         }
         public override void AI()
         {
@@ -50,7 +50,7 @@ namespace ElementsAwoken.Projectiles
                     npc.velocity -= toTarget * 0.3f;
                 }
             }
-            for (int i = 0; i < Main.projectile.Length; i++)
+            for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile proj = Main.projectile[i];
                 if (proj.active && proj.hostile && Vector2.Distance(proj.Center, projectile.Center) < maxDist)

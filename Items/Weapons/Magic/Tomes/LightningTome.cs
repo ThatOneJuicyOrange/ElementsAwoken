@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.Materials;
+using ElementsAwoken.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Weapons.Magic.Tomes
 {
@@ -25,10 +28,10 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
             item.autoReuse = false;
 
             item.value = Item.sellPrice(0, 0, 5, 0);
-            item.rare = 2;
+            item.rare = 1;
 
             item.UseSound = SoundID.Item8;
-            item.shoot = mod.ProjectileType("Lightning");
+            item.shoot = ProjectileType<Lightning>();
             item.shootSpeed = 14f;
         }
 
@@ -41,7 +44,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Firefly, 8);
-            recipe.AddIngredient(null, "Stardust", 8);
+            recipe.AddIngredient(ItemType<Stardust>(), 8);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

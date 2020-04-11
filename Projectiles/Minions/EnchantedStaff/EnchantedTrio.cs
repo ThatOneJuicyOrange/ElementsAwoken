@@ -105,30 +105,8 @@ namespace ElementsAwoken.Projectiles.Minions.EnchantedStaff
             }
             projectile.frame = minion;
 
-            for (int k = 0; k < 1000; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && other.active && other.owner == projectile.owner && minionToType.Contains(other.type) && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    const float pushAway = 0.05f;
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushAway;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushAway;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushAway;
-                    }
-                }
-            }
+            ProjectileUtils.PushOtherEntities(projectile);
+
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
         {

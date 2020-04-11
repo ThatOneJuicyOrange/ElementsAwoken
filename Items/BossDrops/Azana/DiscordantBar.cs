@@ -23,6 +23,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         {
             DisplayName.SetDefault("Discordant Bar");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(12, 4));
+            Tooltip.SetDefault("");
         }
         public override void AddRecipes()
         {

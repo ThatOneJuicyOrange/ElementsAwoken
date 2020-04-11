@@ -39,7 +39,7 @@ namespace ElementsAwoken.Items.Accessories
                 for (int l = 0; l < Main.npc.Length; l++)
                 {
                     NPC nPC = Main.npc[l];
-                    if (nPC.active && !nPC.friendly && nPC.damage > 0 && !nPC.dontTakeDamage && Vector2.Distance(player.Center, nPC.Center) <= maxDistance && Collision.CanHit(player.Center, player.width, player.height, nPC.Center, nPC.width,nPC.height))
+                    if (nPC.CanBeChasedBy(this) && Vector2.Distance(player.Center, nPC.Center) <= maxDistance && Collision.CanHit(player.Center, player.width, player.height, nPC.Center, nPC.width,nPC.height))
                     {
                         if (shootTimer <= 0)
                         {

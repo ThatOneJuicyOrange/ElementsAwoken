@@ -1,20 +1,30 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Terraria;
+using System.Threading;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
+using Terraria;
+using Terraria.DataStructures;
+using Terraria.ObjectData;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.Utilities;
+using Terraria.Map;
+using Terraria.ModLoader;
+using Terraria.World.Generation;
+using BaseMod;
+
+//basemod code we love grox
 namespace ElementsAwoken.Structures
 {
-    // created with the help of basemod
-    public class TexToGen
+    public class BaseWorldGenTex
     {
-        public static Dictionary<Color, int> colorToLiquid = colorToLiquid = null;
+        public static Dictionary<Color, int> colorToLiquid = null;
 
-        //load the texture then the list of colours to tiles
-        public static TexGen GetTexGenerator(Texture2D tileTex, Dictionary<Color, int> colorToTile, Texture2D wallTex = null, Dictionary<Color, int> colorToWall = null, Texture2D liquidTex = null)
+        //NOTE: all textures MUST be the same size or horrible things happen!
+        public static TexGen GetTexGenerator(Texture2D tileTex, Dictionary<Color, int> colorToTile, Texture2D wallTex = null, Dictionary<Color, int> colorToWall = null, Texture2D liquidTex = null, Texture2D wireTex = null)
         {
-
             if (colorToLiquid == null)
             {
                 colorToLiquid = new Dictionary<Color, int>();
@@ -22,21 +32,12 @@ namespace ElementsAwoken.Structures
                 colorToLiquid[new Color(255, 0, 0)] = 1;
                 colorToLiquid[new Color(255, 255, 0)] = 2;
             }
-            Color[] tileData = new Color[tileTex.Width * tileTex.Height]; // make an array with the total amount of colours in the image
+            Color[] tileData = new Color[tileTex.Width * tileTex.Height];
             tileTex.GetData(0, tileTex.Bounds, tileData, 0, tileTex.Width * tileTex.Height);
-
-            Color[] wallData = null;
-            if (wallTex != null)
-            {
-                wallData = new Color[wallTex.Width * wallTex.Height];
-                wallTex.GetData(0, wallTex.Bounds, wallData, 0, wallTex.Width * wallTex.Height);
-            }
-            Color[] liquidData = null;
-            if (liquidTex != null)
-            {
-                liquidData = new Color[liquidTex.Width * liquidTex.Height];
-                liquidTex.GetData(0, liquidTex.Bounds, liquidData, 0, liquidTex.Width * liquidTex.Height);
-            }
+            Color[] wallData = (wallTex != null ? new Color[wallTex.Width * wallTex.Height] : null);
+            if (wallData != null) wallTex.GetData(0, wallTex.Bounds, wallData, 0, wallTex.Width * wallTex.Height);
+            Color[] liquidData = (liquidTex != null ? new Color[liquidTex.Width * liquidTex.Height] : null);
+            if (liquidData != null) liquidTex.GetData(0, liquidTex.Bounds, liquidData, 0, liquidTex.Width * liquidTex.Height);
 
             int x = 0, y = 0;
             TexGen gen = new TexGen(tileTex.Width, tileTex.Height);
@@ -54,6 +55,7 @@ namespace ElementsAwoken.Structures
             return gen;
         }
     }
+
     public class TexGen
     {
         public int width, height;
@@ -69,50 +71,23 @@ namespace ElementsAwoken.Structures
         //where x, y is the top-left hand corner of the gen
         public void Generate(int x, int y, bool silent, bool sync)
         {
-
             for (int x1 = 0; x1 < width; x1++)
             {
                 for (int y1 = 0; y1 < height; y1++)
                 {
                     int x2 = x + x1, y2 = y + y1;
                     TileInfo info = tileGen[x1, y1];
-                    if (info.tileID == -1 && info.wallID == -1 && info.liquidType == -1) continue;
-                    if (info.tileID != -1) ReplaceTile(x2, y2, info.tileID);
-                    if (info.wallID > -1) ReplaceWall(x2, y2, info.wallID);
-                    if (info.liquidType > -1) ReplaceLiquid(x2, y2, info.liquidType);
+                    if (info.tileID == -1 && info.wallID == -1 && info.liquidType == -1 && info.wire == -1) continue;
+                    if (info.tileID != -1 || info.wallID > -1 || info.wire > -1) BaseWorldGen.GenerateTile(x2, y2, info.tileID, info.wallID, (info.tileStyle != 0 ? info.tileStyle : info.tileID == TileID.Torches ? torchStyle : info.tileID == TileID.Platforms ? platformStyle : 0), info.tileID > -1, info.liquidAmt == 0, info.slope, false, sync);
+                    if (info.liquidType > -1)
+                    {
+                        BaseWorldGen.GenerateLiquid(x2, y2, info.liquidType, false, info.liquidAmt, sync);
+                    }
                 }
             }
         }
-        private void ReplaceTile(int x, int y, int tileType, int style = 0)
-        {
-            WorldGen.KillTile(x, y);
-            Main.tile[x, y].liquid = 0;
-            WorldGen.PlaceTile(x, y, tileType, true, true);
-        }
-        private void ReplaceWall(int x, int y, int wallType)
-        {
-            WorldGen.KillWall(x, y);
-            WorldGen.PlaceWall(x, y, wallType, true);
-        }
-        private void ReplaceLiquid(int x, int y, int liquidType)
-        {
-            Main.tile[x, y].liquid = 255; // 255 is the maximum level of liquid
-            if (liquidType == 0)
-            {
-                Main.tile[x, y].lava(false);
-                Main.tile[x, y].honey(false);
-            }
-            else if (liquidType == 1)
-            {
-                Main.tile[x, y].lava(true);
-                Main.tile[x, y].honey(false);
-            }
-            else if (liquidType == 2)
-            {
-                Main.tile[x, y].lava(false);
-                Main.tile[x, y].honey(true);
-            }
-        }
+
+
     }
 
     public class TileInfo

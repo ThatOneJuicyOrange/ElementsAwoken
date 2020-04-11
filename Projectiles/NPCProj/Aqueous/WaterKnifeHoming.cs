@@ -39,14 +39,10 @@ namespace ElementsAwoken.Projectiles.NPCProj.Aqueous
                     projectile.velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * speed;
                 }
             }
-            if (Main.rand.Next(1) == 0)
-            {
-                int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 111);
-                Main.dust[dust].velocity *= 0.1f;
-                Main.dust[dust].scale *= 1.5f;
-                Main.dust[dust].noGravity = true;
-            }
-
+            int dust = Dust.NewDust(projectile.position, projectile.width, projectile.height, 111);
+            Main.dust[dust].velocity *= 0.1f;
+            Main.dust[dust].scale *= 1.5f;
+            Main.dust[dust].noGravity = true;
         }
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {

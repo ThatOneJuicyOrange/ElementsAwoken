@@ -55,7 +55,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { GetDustID() }, projectile.damage);
+            ProjectileUtils.Explosion(projectile, new int[] { GetDustID() }, projectile.damage);
         }
     }
 }

@@ -31,9 +31,16 @@ namespace ElementsAwoken.NPCs
         }*/ // gimme the fckn windows.dll pls 
         public override void SetDefaults(NPC npc)
         {
-            if (MyWorld.awakenedMode)
+            
+
+        }
+        public override bool PreAI(NPC npc)
+        {
+            // needs to be done after setdefaults because worms real life is only done after setdefaults
+            if (MyWorld.awakenedMode && !hasAssignedElite)
             {
-                if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC && npc.realLife == -1)
+                hasAssignedElite = true;
+                if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC && npc.realLife == -1 && !npc.boss)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
@@ -54,18 +61,22 @@ namespace ElementsAwoken.NPCs
                         }
                     }
                 }
-
+                ChangeName(npc);
             }
-            
+            return base.PreAI(npc);
         }
-        public override void PostAI(NPC npc)
+        public virtual void Sync(ModPacket modPacket)
         {
-            string basename = "";
-            if (npc.GivenName == "") basename = npc.TypeName;
-            else basename = npc.GivenName;
+            modPacket.Write(elite);
+        }
+        private void ChangeName(NPC npc)
+        {
+            string basename = npc.GetFullNetName().ToString();
+           //if (npc.GivenName == "") basename = npc.TypeName;
+           // else basename = npc.GivenName;
 
 
-            if (elite > 0 && !hasAssignedElite)
+            if (elite > 0)
             {
                 switch (elite)
                 {
@@ -87,7 +98,6 @@ namespace ElementsAwoken.NPCs
                     default: break;
                 }
 
-                hasAssignedElite = true;
                 npc.netUpdate = true;
             }
         }
@@ -443,9 +453,9 @@ namespace ElementsAwoken.NPCs
                 float spawnMult = 1.3f;
                 if (NPC.downedBoss1 || WorldGen.shadowOrbSmashed || MyWorld.downedToySlime) spawnMult = 1.5f;
                 if (NPC.downedBoss3) spawnMult = 2;
+                if (player.ZoneJungle) spawnMult *= 0.75f;
                 spawnRate = (int)(spawnRate / spawnMult);
                 maxSpawns = (int)(maxSpawns * spawnMult);
-
             }
         }
     }

@@ -1,7 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Items.Materials;
+using ElementsAwoken.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Weapons.Magic.Tomes
 {
@@ -9,22 +12,27 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
     {
         public override void SetDefaults()
         {
+            item.width = 32;
+            item.height = 32;
+
             item.damage = 18;
-            item.magic = true;
-            item.width = 50;
-            item.height = 50;
+            item.knockBack = 2;
+            item.mana = 6;
+
             item.useTime = 26;
             item.useAnimation = 26;
             item.useStyle = 5;
-            item.noMelee = true;
-            item.knockBack = 2;
-            item.value = Item.buyPrice(0, 1, 0, 0);
-            item.rare = 2;
-            item.mana = 12;
             item.UseSound = SoundID.Item42;
+
+            item.noMelee = true;
+            item.magic = true;
             item.autoReuse = false;
-            item.shoot = mod.ProjectileType("IceMistSpike");
-            item.shootSpeed = 14f;
+
+            item.value = Item.sellPrice(0, 0, 5, 0);
+            item.rare = 1;
+
+            item.shoot = ProjectileType<Icicle>();
+            item.shootSpeed = 9f;
         }
 
         public override void SetStaticDefaults()
@@ -35,7 +43,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.IceBlock, 20);
-            recipe.AddIngredient(null, "Stardust", 8);
+            recipe.AddIngredient(ItemType<Stardust>(), 8);
             recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();

@@ -43,7 +43,7 @@ namespace ElementsAwoken.Items.Donator.Aegida
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Aegida Tempestas");
-            Tooltip.SetDefault("50% chance not to consume ammo\nAegeda's donator item");
+            Tooltip.SetDefault("50% chance not to consume ammo\nAegida's donator item");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

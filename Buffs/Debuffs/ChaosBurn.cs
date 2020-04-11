@@ -9,7 +9,7 @@ namespace ElementsAwoken.Buffs.Debuffs
     {
         public override void SetDefaults()
         {
-            DisplayName.SetDefault("Chaos Burn");
+            DisplayName.SetDefault("Chaotic Necrosis");
             Description.SetDefault("Your cells are being torn to shreds");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;

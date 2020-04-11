@@ -7,40 +7,74 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.Events;
+using static Terraria.ModLoader.ModContent;
+using ElementsAwoken.Projectiles.NPCProj.Wasteland;
+using ElementsAwoken.Items.Essence;
 
 namespace ElementsAwoken.NPCs.Bosses.Wasteland
 {
     [AutoloadBossHead]
     public class Wasteland : ModNPC
     {
-        public bool reset = true;
+        private int shootTimer = 100;
+        private int eggTimer = 75;
+        private int jumpUpTimer = 200;
+        private int[] superJumpAI = new int[2];
 
-        public float burstTimer = 0;
-        public int shootTimer = 100;
-        public int eggTimer = 75;
-        public int jumpUpTimer = 200;
-        public int[] superJumpAI = new int[2];
+        private int stormTimer = 400;
 
-        public int stormTimer = 400;
+        private int spoutSpawnTimer = 1000;
 
-        public bool enraged = false;
+        private bool underground = false;
+        private int diggingType = 0; // 0 is none, 1 is up, 2 is down
+        private int diggingTimer = 60;
 
-        public int spoutSpawnTimer = 1000;
+        private float digSpeed = 3f;
 
-        public bool underground = false;
-        public int diggingType = 0; // 0 is none, 1 is up, 2 is down
-        public int diggingTimer = 60;
+        private int aiTimer = 0;
+        private int acidBallTimer = 200;
+        private int jumpSpikeTimer = 0;
 
-        public bool collision = false;
-        public float digSpeed = 3f;
+        private int projectileBaseDamage = 25;
 
-        public float aiTimer = 0;
-        public float acidBallTimer = 200;
-        public float[] acidBallShooting = new float[3];
-        public float jumpSpikeTimer = 0;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(shootTimer);
+            writer.Write(eggTimer);
+            writer.Write(jumpUpTimer);
+            writer.Write(superJumpAI[0]);
+            writer.Write(superJumpAI[1]);
+            writer.Write(stormTimer);
+            writer.Write(diggingTimer);
+            writer.Write(diggingType);
+            writer.Write(acidBallTimer);
+            writer.Write(jumpSpikeTimer);
 
-        public int projectileBaseDamage = 25;
+            writer.Write(underground);
+        }
 
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            shootTimer = reader.ReadInt32();
+            eggTimer = reader.ReadInt32();
+            jumpUpTimer = reader.ReadInt32();
+            superJumpAI[0] = reader.ReadInt32();
+            superJumpAI[1] = reader.ReadInt32();
+            stormTimer = reader.ReadInt32();
+            diggingTimer = reader.ReadInt32();
+            diggingType = reader.ReadInt32();
+            acidBallTimer = reader.ReadInt32();
+            jumpSpikeTimer = reader.ReadInt32();
+
+            underground = reader.ReadBoolean();
+        }
+
+        private float despawnTimer
+        {
+            get => npc.ai[0];
+            set => npc.ai[0] = value;
+        }
+        // other AI's is used in fighter AI
 
         public override void BossHeadSlot(ref int index)
         {
@@ -57,6 +91,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         {
             npc.width = 140;
             npc.height = 130;
+
+            npc.aiStyle = -1;
 
             npc.damage = 0;
             npc.defense = 15;
@@ -86,7 +122,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Wasteland");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[npc.type] = 6;
         }
 
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
@@ -135,8 +171,8 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                     snapPos.X = npc.Center.X + 52;
                     snapPos2.X = npc.Center.X + 14;
                 }
-                Projectile.NewProjectile(snapPos.X, snapPos.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, Main.myPlayer, npc.whoAmI);
-                Projectile.NewProjectile(snapPos2.X, snapPos2.Y, 0f, 0f, mod.ProjectileType("WastelandSnap"), 40, 0, Main.myPlayer, npc.whoAmI);
+                Projectile.NewProjectile(snapPos.X, snapPos.Y, 0f, 0f, ProjectileType<WastelandSnap>(), 40, 0, Main.myPlayer, npc.whoAmI);
+                Projectile.NewProjectile(snapPos2.X, snapPos2.Y, 0f, 0f, ProjectileType<WastelandSnap>(), 40, 0, Main.myPlayer, npc.whoAmI);
 
                 npc.frame.Y = 0;
                 return;
@@ -158,6 +194,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
             }
 
             npc.frameCounter = 0.0;
+            if (aiTimer < 0) npc.frame.Y = 0;
         }
 
         public override bool CheckActive()
@@ -176,6 +213,10 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                 for (int k = 0; k < 20; k++)
                 {
                     Dust.NewDust(npc.position, npc.width, npc.height, 32, hitDirection, -1f, 0, default(Color), 1f);
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/Wasteland" + i), npc.scale);
                 }
             }
         }
@@ -214,11 +255,11 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                     Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ChitinStaff"));
                 }
             }
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("DesertEssence"), Main.rand.Next(5,20));
+            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<DesertEssence>(), Main.rand.Next(5,20));
             MyWorld.downedWasteland = true;
 
-            // stop the sandstorm
-            Sandstorm.Happening = false;
+                    // stop the sandstorm
+                    Sandstorm.Happening = false;
             Sandstorm.TimeLeft = 0;
             Sandstorm.IntendedSeverity = 0;
             if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
@@ -227,349 +268,324 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         {
             potionType = ItemID.LesserHealingPotion;
         }
-
         public override int SpawnNPC(int tileX, int tileY)
         {
+            npc.TargetClosest(true);
+            Player P = Main.player[npc.target];
+            npc.Center = P.Center + new Vector2(0, 700);
+
             Sandstorm.Happening = true;
-            Sandstorm.TimeLeft = (int)(3600.0 * (8.0 + (double)Main.rand.NextFloat() * 16.0));
+            Sandstorm.TimeLeft = 90000;
             SandstormStuff();
             return base.SpawnNPC(tileX, tileY);
+        }
+        public override bool PreNPCLoot()
+        {
+            if (aiTimer < 0)
+            {
+                NPCLoot();
+                Main.NewText("Wasteland sinks back into the sand",Color.MediumPurple);
+                NPC death = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<WastelandDeath>())];
+                death.spriteDirection = npc.spriteDirection;
+                death.Center = npc.Center;
+                return false;
+            }
+            return base.PreNPCLoot();
         }
         public override void AI()
         {
             Player P = Main.player[npc.target];
             npc.TargetClosest(true);
-            if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-            {
-                npc.TargetClosest(true);
-                if (!Main.player[npc.target].active || Main.player[npc.target].dead)
-                {
-                    npc.localAI[2]++;
-                    if (npc.localAI[2] >= 300)
-                    {
-                        npc.active = false;
-                    }
-                }
-                else
-                    npc.localAI[2] = 0;
-            }
-            #region collision check
-            int minTilePosX = (int)(npc.position.X / 16.0) - 1;
-            int maxTilePosX = (int)((npc.position.X + npc.width) / 16.0) + 2;
-            int minTilePosY = (int)(npc.position.Y / 16.0) - 1;
-            int maxTilePosY = (int)((npc.position.Y + npc.height) / 16.0) + 2;
-            if (minTilePosX < 0)
-                minTilePosX = 0;
-            if (maxTilePosX > Main.maxTilesX)
-                maxTilePosX = Main.maxTilesX;
-            if (minTilePosY < 0)
-                minTilePosY = 0;
-            if (maxTilePosY > Main.maxTilesY)
-                maxTilePosY = Main.maxTilesY;
-
-            collision = false;
-            for (int i = minTilePosX; i < maxTilePosX; ++i)
-            {
-                for (int j = minTilePosY; j < maxTilePosY; ++j)
-                {
-                    if (Main.tile[i, j] != null && TileID.Sets.Platforms[Main.tile[i, j].type] != true && (Main.tile[i, j].nactive() && (Main.tileSolid[(int)Main.tile[i, j].type] || Main.tileSolidTop[(int)Main.tile[i, j].type] && (int)Main.tile[i, j].frameY == 0) || (int)Main.tile[i, j].liquid > 64))
-                    {
-                        Vector2 vector2;
-                        vector2.X = (float)(i * 16);
-                        vector2.Y = (float)(j * 16);
-                        if (npc.position.X + npc.width > vector2.X && npc.position.X < vector2.X + 16.0 && (npc.position.Y + npc.height > (double)vector2.Y && npc.position.Y < vector2.Y + 16.0))
-                        {
-                            collision = true;
-                            if (Main.rand.Next(100) == 0 && Main.tile[i, j].nactive())
-                                WorldGen.KillTile(i, j, true, true, false);
-                        }
-                    }
-                }
-            }
-            #endregion
-            #region enraged stuff
-            if (P.ZoneDesert) enraged = false;
-            else enraged = true;
-            if (enraged)
-            {
-                npc.defense = 30;
-            }
-            if (!enraged)
-            {
-                npc.defense = 18;
-            }
-            #endregion
-            if (!Sandstorm.Happening)
-            {
-                Sandstorm.Happening = true;
-                Sandstorm.TimeLeft = (int)(3600.0 * (8.0 + (double)Main.rand.NextFloat() * 16.0));
-                SandstormStuff();
-            }
-
-            if (!underground && diggingType == 0)
-            {
-                spoutSpawnTimer--;
-            }
-
-            // make it so wasteland cant be hit when hes underground
-            if (underground)
+            if (aiTimer < 0)
             {
                 npc.immortal = true;
                 npc.dontTakeDamage = true;
-                npc.alpha = 255;
+                int dryad = NPC.FindFirstNPC(NPCID.Dryad);
+                if (dryad >= 0)
+                {
+                    NPC dryadNPC = Main.npc[dryad];
+                    dryadNPC.ai[0] = 0;
+                   // dryadNPC.localAI[3] = 0;
+                }
+                aiTimer++;
+                if (npc.velocity.Y < 0) npc.velocity.Y *= 0.9f;
+                npc.velocity.X = 0;
+                if (aiTimer > -5)
+                {
+                    npc.life = 0;
+                    npc.HitEffect(0, 0);
+                    npc.checkDead();
+                }
             }
             else
             {
-                npc.immortal = false;
-                npc.dontTakeDamage = false;
-                npc.alpha = 0;
-            }
-
-            #region spawn tp and too far tp
-            // spawn reset
-            if (!reset)
-            {
-                float posX = Main.player[npc.target].Center.X;
-                float posY = Main.player[npc.target].Center.Y + 700;
-                npc.Center = new Vector2(posX, posY);
-                reset = true;
-            }
-            #endregion
-
-            // Main.NewText(diggingType + " " + underground);
-            // create the wasteland spouts
-            if (spoutSpawnTimer <= 0)
-            {
-                int numFakes = 2;
-                if (Main.expertMode) numFakes = Main.rand.Next(2, 5);
-                if (MyWorld.awakenedMode) numFakes = Main.rand.Next(3, 6);
-                for (int k = 0; k < numFakes; k++)
+                if (npc.life <= npc.lifeMax * 0.1f && aiTimer >= 0)
                 {
-                    Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), mod.ProjectileType("WastelandDiggingProj"), 0, 0, Main.myPlayer);
-                }
-                Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), mod.ProjectileType("WastelandDiggingProjReal"), 0, 0, Main.myPlayer, npc.whoAmI);
-                spoutSpawnTimer = 10000; // temporary so it doesnt constantly shoot- proper time set after the projectile is killed below
-
-                diggingType = 1; // 1 is down
-                digSpeed = 4.5f;
-                diggingTimer = 120;
-
-                npc.noTileCollide = true;
-            }
-            DetectSpouts();
-            // digging up and down
-            if (diggingType != 0)
-            {
-                Dig(digSpeed);
-            }
-            // if too far away
-            int maxDist = diggingType != 0 ? 1200 : 3000;
-            if (Vector2.Distance(P.Center, npc.Center) >= 1200)
-            {
-                npc.Center = new Vector2(P.Center.X, P.Center.Y + 700);
-                //tooFarRise = true;
-                diggingType = 2;
-                digSpeed = 6f;
-            }
-
-            if (!underground && diggingType == 0)
-            {
-                aiTimer++;
-                CustomAI_3();
-                npc.noTileCollide = false;
-                if (aiTimer < 600)
-                {
-                    burstTimer--;
-                    shootTimer--;
-                    acidBallTimer--;
-                    eggTimer--;
-                    if (shootTimer <= 0)
+                    int dryad = NPC.FindFirstNPC(NPCID.Dryad);
+                    if (dryad >= 0)
                     {
-                        shootTimer = enraged ? 60 : 100;
-                    }
-
-                    if (eggTimer <= 0 && NPC.CountNPCS(mod.NPCType("WastelandMinion")) < 10)
-                    {
-                        NPC.NewNPC((int)npc.Center.X + (npc.direction == -1 ? 40 : -40), (int)npc.Center.Y + 10, mod.NPCType("WastelandEgg"));
-                        eggTimer = 120;
-                    }
-                    // shoot stingers
-                    int under = 12;
-                    if (MyWorld.awakenedMode) under = 24;
-                    if (Main.netMode != NetmodeID.MultiplayerClient && burstTimer <= 0f && shootTimer <= under) // 0 , 6 , 12 = 3 shots
-                    {
-                        float speed = 8f;
-                        int add = npc.direction == 1 ? -40 : 40;
-                        Vector2 vector8 = new Vector2(npc.Center.X + add, npc.Center.Y - 30);
-                        float rotation = (float)Math.Atan2(vector8.Y - P.Center.Y, vector8.X - P.Center.X);
-                        Projectile.NewProjectile(vector8.X, vector8.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("WastelandStinger"), projectileBaseDamage, 0f, Main.myPlayer);
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 17);
-                        burstTimer = 6f;
-                    }
-
-                    //storm
-                    if (Main.expertMode)
-                    {
-                        stormTimer--;
-                        if (stormTimer <= 0)
+                        NPC dryadNPC = Main.npc[dryad];
+                        if (Vector2.Distance(dryadNPC.Center, npc.Center) < 2000)
                         {
-                            for (int k = 0; k < 3; k++)
-                            {
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-12, -2), mod.ProjectileType("WastelandStormBolt"), 6, 0f, Main.myPlayer);
-                            }
-                            stormTimer = Main.rand.Next(1200, 2000);
-                            if (enraged) stormTimer = Main.rand.Next(200, 600);
+                            dryadNPC.alpha = 255;
+                            aiTimer = -720;
+                            Projectile.NewProjectile(dryadNPC.Center, Vector2.Zero, ProjectileType<WastelandDryad>(), 0, 0, Main.myPlayer);
                         }
-                    }
-                    //acid balls
-                    if (acidBallTimer <= 0 && MyWorld.awakenedMode)
-                    {
-                        acidBallShooting[0]--;
-                        int numProj = 4;
-                        if (acidBallShooting[0] <= 0 && acidBallShooting[1] < numProj)
-                        {
-                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 48);
-
-                            float speed = 10f;
-                            float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                            Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - acidBallShooting[1] * 2, mod.ProjectileType("AcidBall"), projectileBaseDamage, 0f, Main.myPlayer);
-                            acidBallShooting[0] = 5f;
-                            acidBallShooting[1]++;
-                        }
-                        if (acidBallShooting[1] >= numProj)
-                        {
-                            acidBallTimer = Main.rand.Next(900, 1200);
-                            acidBallShooting[1] = 0;
-                        }
-                    }
-                    //jump up
-                    jumpUpTimer--;
-                    if (jumpUpTimer <= 0) 
-                    {
-                        JumpDust();
-                        npc.velocity.Y = Main.rand.NextFloat(-12, -8);
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                        jumpUpTimer = 350;
-                    }
-                    if (npc.Center.Y > P.Center.Y + 700)
-                    {
-                        JumpDust();
-                        npc.velocity.Y = Main.rand.NextFloat(-14, -12);
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
                     }
                 }
-                else if (aiTimer >= 600)
+                if (!P.active || P.dead)
                 {
-                    if (superJumpAI[1] == 0)
+                    npc.TargetClosest(true);
+                    if (!P.active || P.dead)
                     {
-                        JumpDust();
-                        npc.velocity.Y = Main.rand.NextFloat(-20, -14);
-                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+                        despawnTimer++;
+                        if (despawnTimer >= 300) npc.active = false;
+                    }
+                    else
+                        despawnTimer = 0;
+                }
+                bool enraged = !P.ZoneDesert;
+                if (enraged) npc.defense = 30;
+                else npc.defense = 18;
 
-                        jumpSpikeTimer = 0;
-                        superJumpAI[1] = 1;
-                    }
-                    else if (superJumpAI[1] == 1)
-                    {
-                        superJumpAI[0]++;
-                        if (superJumpAI[0] >= 60 || npc.velocity.Y > 0)
-                        {
-                            superJumpAI[1] = 2;
-                        }
-                    }
-                    else if (superJumpAI[1] == 2)
-                    {
-                        if (!MyWorld.awakenedMode)
-                        {
-                            superJumpAI[1] = Main.rand.Next(3, 5);
-                        }
-                        else superJumpAI[1] = Main.rand.Next(3, 6);
-                        if (superJumpAI[1] == 5)
-                        {
-                            npc.velocity.Y = 12;
-                        }
-                        // 0 is nothing
-                        // 1 is the jump
-                        // 1 is air time
-                        // 3 is normal drop
-                        // 4 is spikes drop
-                        // 5 is slam drop
-                    }
-                    else if (superJumpAI[1] == 3)
-                    {
-                        aiTimer = 0;
-                        superJumpAI[0] = 0;
-                        superJumpAI[1] = 0;
-                        jumpUpTimer = 250;
-                    }
-                    else if (superJumpAI[1] == 4)
-                    {
-                        jumpSpikeTimer++; // jump up and circle shoot ai
+                if (!underground && diggingType == 0) spoutSpawnTimer--;
 
-                        npc.velocity = Vector2.Zero;
-                        int timeBetweenSpikes = 15;
-                        if (jumpSpikeTimer % timeBetweenSpikes == 0)
+                // make it so wasteland cant be hit when hes underground
+                if (underground)
+                {
+                    npc.immortal = true;
+                    npc.dontTakeDamage = true;
+                    npc.alpha = 255;
+                }
+                else
+                {
+                    npc.immortal = false;
+                    npc.dontTakeDamage = false;
+                    npc.alpha = 0;
+                }
+
+
+                // create the wasteland spouts
+                if (spoutSpawnTimer <= 0)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        int numFakes = Main.expertMode ? MyWorld.awakenedMode ? 4 : 3 : 2;
+                        for (int k = 0; k < numFakes; k++)
                         {
-                            float numberProjectiles = 4;
-                            if (Main.expertMode) numberProjectiles = 6;
-                            if (MyWorld.awakenedMode) numberProjectiles = 8;
-                            float projSpeed = 5.5f;
-                            for (int i = 0; i < numberProjectiles; i++)
-                            {
-                                Vector2 perturbedSpeed = new Vector2(projSpeed, projSpeed).RotatedByRandom(MathHelper.ToRadians(360));
-                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("WastelandStinger"), projectileBaseDamage - 5, 2f, Main.myPlayer);
-                            }
+                            Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), ProjectileType<WastelandDiggingProj>(), 0, 0, Main.myPlayer);
+                        }
+                        Projectile.NewProjectile(npc.Center, new Vector2(Main.rand.NextFloat(-7, 7), Main.rand.NextFloat(-7, 7)), ProjectileType<WastelandDiggingProjReal>(), 0, 0, Main.myPlayer, npc.whoAmI);
+                    }
+                    spoutSpawnTimer = 10000; // temporary so it doesnt constantly shoot- proper time set after the projectile is killed below
+
+                    diggingType = 1; // 1 is down
+                    digSpeed = 4.5f;
+                    diggingTimer = 120;
+
+                    npc.noTileCollide = true;
+                }
+                DetectSpouts();
+                // digging up and down
+                if (diggingType != 0)
+                {
+                    Dig(digSpeed);
+                }
+                // if too far away
+                if (Vector2.Distance(P.Center, npc.Center) >= 1200)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        npc.Center = new Vector2(P.Center.X, P.Center.Y + 700);
+                        npc.netUpdate = true;
+                    }
+                    diggingType = 2;
+                    digSpeed = 6f;
+                }
+
+                if (!underground && diggingType == 0)
+                {
+                    aiTimer++;
+                    CustomAI_3();
+                    npc.noTileCollide = false;
+                    if (aiTimer < 600)
+                    {
+                        shootTimer--;
+                        if (shootTimer <= 0) shootTimer = enraged ? 60 : 100;
+                        acidBallTimer--;
+                        if (acidBallTimer <= 0) acidBallTimer = 900;
+                        eggTimer--;
+
+                        if (eggTimer <= 0 && NPC.CountNPCS(NPCType<WastelandMinion>()) < 10)
+                        {
+                            NPC.NewNPC((int)npc.Center.X + (npc.direction == -1 ? 40 : -40), (int)npc.Center.Y + 10, mod.NPCType("WastelandEgg"));
+                            eggTimer = 120;
+                        }
+                        // shoot stingers
+                        int under = Main.expertMode ? MyWorld.awakenedMode ? 24 : 18 : 12;
+                        if (shootTimer % 6 == 0 && shootTimer <= under)
+                        {
                             Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 17);
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                float speed = 8f;
+                                Vector2 tailPos = new Vector2(npc.Center.X + npc.direction * 40, npc.Center.Y - 30);
+                                float rotation = (float)Math.Atan2(tailPos.Y - P.Center.Y, tailPos.X - P.Center.X);
+                                Projectile.NewProjectile(tailPos.X, tailPos.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), ProjectileType<WastelandStinger>(), projectileBaseDamage, 0f, Main.myPlayer);
+                            }
                         }
+                        //storm
+                        if (Main.expertMode)
+                        {
+                            stormTimer--;
+                            if (stormTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                for (int k = 0; k < 3; k++)
+                                {
+                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, Main.rand.NextFloat(-6, 6), Main.rand.NextFloat(-12, -2), ProjectileType<WastelandStormBolt>(), 6, 0f, Main.myPlayer);
+                                }
+                                stormTimer = 1800;
+                                if (enraged) stormTimer -= 300;
+                            }
+                        }
+                        //acid balls
+                        if (MyWorld.awakenedMode)
+                        {
+                            if (acidBallTimer % 5 == 0 && acidBallTimer <= 20 && Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 48);
 
-                        if (jumpSpikeTimer >= timeBetweenSpikes * 3.5f)
+                                float speed = 10f;
+                                float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
+                                Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1) - (acidBallTimer / 5) * 2, ProjectileType<AcidBall>(), projectileBaseDamage, 0f, Main.myPlayer);
+                            }
+                        }
+                        //jump up
+                        jumpUpTimer--;
+                        if (jumpUpTimer <= 0 || npc.Center.Y > P.Center.Y + 700)
+                        {
+                            JumpDust();
+                            npc.velocity.Y = Main.rand.NextFloat(-12, -8);
+                            Main.PlaySound(SoundID.Item69, npc.position);
+                            jumpUpTimer = 350;
+                            npc.netUpdate = true;
+                        }
+                    }
+                    else if (aiTimer >= 600)
+                    {
+                        if (superJumpAI[1] == 0)
+                        {
+                            JumpDust();
+                            npc.velocity.Y = Main.rand.NextFloat(-20, -14);
+                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+
+                            jumpSpikeTimer = 0;
+                            superJumpAI[1] = 1;
+                            npc.netUpdate = true;
+                        }
+                        else if (superJumpAI[1] == 1)
+                        {
+                            superJumpAI[0]++;
+                            if (superJumpAI[0] >= 60 || npc.velocity.Y > 0)
+                            {
+                                superJumpAI[1] = 2;
+                            }
+                        }
+                        else if (superJumpAI[1] == 2)
+                        {
+                            if (!MyWorld.awakenedMode) superJumpAI[1] = Main.rand.Next(3, 5);
+                            else superJumpAI[1] = Main.rand.Next(3, 6);
+                            if (superJumpAI[1] == 5)
+                            {
+                                npc.velocity.Y = 12;
+                            }
+                            npc.netUpdate = true;
+                            // 0 is nothing
+                            // 1 is the jump
+                            // 1 is air time
+                            // 3 is normal drop
+                            // 4 is spikes drop
+                            // 5 is slam drop
+                        }
+                        else if (superJumpAI[1] == 3)
                         {
                             aiTimer = 0;
                             superJumpAI[0] = 0;
                             superJumpAI[1] = 0;
                             jumpUpTimer = 250;
                         }
-                    }
-                    else if (superJumpAI[1] == 5)
-                    {
-                        if (npc.velocity.Y == 0f)
+                        else if (superJumpAI[1] == 4)
                         {
-                            JumpDust();
+                            jumpSpikeTimer++; // jump up and circle shoot ai
 
-                            Vector2 shockwavePosition = new Vector2(npc.Center.X, npc.Bottom.Y);
-                            Point shockwavePoint = shockwavePosition.ToTileCoordinates();
-                            Tile shockwaveTile = Framing.GetTileSafely((int)shockwavePoint.X, (int)shockwavePoint.Y);
-                            if (!Main.tileSolid[shockwaveTile.type] && shockwaveTile.active())
+                            npc.velocity = Vector2.Zero;
+                            int timeBetweenSpikes = 15;
+                            if (jumpSpikeTimer % timeBetweenSpikes == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                             {
-                                for (int i = 0; i < 3; i++)
+                                float numberProjectiles = 4;
+                                if (Main.expertMode) numberProjectiles = 6;
+                                if (MyWorld.awakenedMode) numberProjectiles = 8;
+                                float projSpeed = 5.5f;
+                                for (int i = 0; i < numberProjectiles; i++)
                                 {
-                                    if (shockwaveTile.active())
+                                    Vector2 perturbedSpeed = new Vector2(projSpeed, projSpeed).RotatedByRandom(MathHelper.ToRadians(360));
+                                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, ProjectileType<WastelandStinger>(), projectileBaseDamage - 5, 2f, Main.myPlayer);
+                                }
+                                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 17);
+                            }
+
+                            if (jumpSpikeTimer >= timeBetweenSpikes * 3.5f)
+                            {
+                                aiTimer = 0;
+                                superJumpAI[0] = 0;
+                                superJumpAI[1] = 0;
+                                jumpUpTimer = 250;
+                            }
+                        }
+                        else if (superJumpAI[1] == 5)
+                        {
+                            if (npc.velocity.Y == 0f)
+                            {
+                                JumpDust();
+
+                                Vector2 shockwavePosition = new Vector2(npc.Center.X, npc.Bottom.Y);
+                                Point shockwavePoint = shockwavePosition.ToTileCoordinates();
+                                Tile shockwaveTile = Framing.GetTileSafely((int)shockwavePoint.X, (int)shockwavePoint.Y);
+                                if (!Main.tileSolid[shockwaveTile.type] && shockwaveTile.active())
+                                {
+                                    for (int i = 0; i < 3; i++)
                                     {
-                                        if (!Main.tileSolid[shockwaveTile.type])
+                                        if (shockwaveTile.active())
                                         {
-                                            shockwavePosition -= new Vector2(0f, 16);
-                                            shockwavePoint = shockwavePosition.ToTileCoordinates();
-                                            shockwaveTile = Framing.GetTileSafely((int)shockwavePosition.X, (int)shockwavePosition.Y);
-                                        }
-                                        else
-                                        {
-                                            break;
+                                            if (!Main.tileSolid[shockwaveTile.type])
+                                            {
+                                                shockwavePosition -= new Vector2(0f, 16);
+                                                shockwavePoint = shockwavePosition.ToTileCoordinates();
+                                                shockwaveTile = Framing.GetTileSafely((int)shockwavePosition.X, (int)shockwavePosition.Y);
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, Main.myPlayer, 24f, 1f);
-                            Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, mod.ProjectileType("Shockwave"), 0, 0f, Main.myPlayer, 24f, -1f);
-                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
+                                if (Main.netMode != NetmodeID.MultiplayerClient)
+                                {
+                                    Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, ProjectileType<Shockwave>(), 0, 0f, Main.myPlayer, 24f, 1f);
+                                    Projectile.NewProjectile(shockwavePoint.X * 16 + 8, shockwavePoint.Y * 16 + 8, 0f, 0f, ProjectileType<Shockwave>(), 0, 0f, Main.myPlayer, 24f, -1f);
+                                }
+                                Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
 
-                            aiTimer = 0;
-                            superJumpAI[0] = 0;
-                            superJumpAI[1] = 0;
-                            jumpUpTimer = 250;
+                                aiTimer = 0;
+                                superJumpAI[0] = 0;
+                                superJumpAI[1] = 0;
+                                jumpUpTimer = 250;
+                            }
                         }
                     }
                 }
-            }            
+            }
         }
         private void JumpDust()
         {
@@ -592,10 +608,10 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
 
         private void DetectSpouts()
         {
-            for (int i = 0; i < Main.projectile.Length; i++)
+            for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile proj = Main.projectile[i];
-                if (proj.active && proj.type == mod.ProjectileType("WastelandDiggingSpoutReal") && proj.ai[0] == npc.whoAmI)
+                if (proj.active && proj.type == ProjectileType<WastelandDiggingSpoutReal>() && proj.ai[0] == npc.whoAmI)
                 {
                     float posX = proj.Center.X;
                     float posY = proj.Center.Y + 300;
@@ -604,19 +620,10 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                     if (proj.ai[1] >= 360)
                     {
                         int lifeTime = 0;
-                        if (npc.life < npc.lifeMax * 0.75)
-                        {
-                            lifeTime = 100;
-                        }
-                        else if (npc.life < npc.lifeMax * 0.5)
-                        {
-                            lifeTime = 200;
-                        }
-                        else if (npc.life < npc.lifeMax * 0.25)
-                        {
-                            lifeTime = 300;
-                        }
-                        spoutSpawnTimer = Main.rand.Next(1400, 1600) - lifeTime;
+                        if (npc.life < npc.lifeMax * 0.75)lifeTime = 100;
+                        else if (npc.life < npc.lifeMax * 0.5)  lifeTime = 200;
+                        else if (npc.life < npc.lifeMax * 0.25)  lifeTime = 300;
+                        spoutSpawnTimer = 1400 - lifeTime;
 
                         underground = false;
                         diggingType = 2; // 2 is up
@@ -656,7 +663,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                 }
                 if (diggingType == 2)
                 {
-                    if (collision == false)
+                    if (Collision.SolidCollision(npc.position,npc.width,npc.height) == false)
                     {
                         for (int k = 0; k < 500; k++)
                         {

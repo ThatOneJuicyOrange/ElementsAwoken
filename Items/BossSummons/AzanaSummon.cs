@@ -29,16 +29,14 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Mystic Plating");
+            DisplayName.SetDefault("Infected Microchip");
             Tooltip.SetDefault("It gleams with red light\nSummons Azana on use");
         }
 
         public override bool CanUseItem(Player player)
         {
             return
-            !Main.dayTime &&
             !NPC.AnyNPCs(mod.NPCType("AzanaEye")) &&
-            !NPC.AnyNPCs(mod.NPCType("AzanaSpawner")) &&
             !NPC.AnyNPCs(mod.NPCType("Azana"));
         }
         public override bool UseItem(Player player)

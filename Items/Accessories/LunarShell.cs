@@ -77,7 +77,7 @@ namespace ElementsAwoken.Items.Accessories
             recipe.AddIngredient(ItemID.FragmentSolar, 8);
             recipe.AddIngredient(ItemID.FragmentStardust, 8);
             recipe.AddIngredient(ItemID.FragmentVortex, 8);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

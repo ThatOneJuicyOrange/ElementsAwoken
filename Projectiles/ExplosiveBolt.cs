@@ -62,7 +62,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.Explosion(projectile, new int[] { 6 }, projectile.damage / 2, "ranged");
+            ProjectileUtils.Explosion(projectile, new int[] { 6 }, projectile.damage / 2, "ranged");
         }
     }
 }

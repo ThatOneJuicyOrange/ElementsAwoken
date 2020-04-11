@@ -73,7 +73,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.VoidLeviathan
         }
         public override void Kill(int timeLeft)
         {
-            if (!ModContent.GetInstance<Config>().lowDust) ProjectileGlobal.HostileExplosion(projectile, new int[] { DustID.PinkFlame }, projectile.damage);
+            if (!ModContent.GetInstance<Config>().lowDust) ProjectileUtils.HostileExplosion(projectile, new int[] { DustID.PinkFlame }, projectile.damage);
             else
             {
                 Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);

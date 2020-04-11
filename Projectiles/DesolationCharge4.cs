@@ -19,7 +19,7 @@ namespace ElementsAwoken.Projectiles
             projectile.ignoreWater = true;
             projectile.minion = true;
 
-            projectile.penetrate = -1;
+            projectile.penetrate = 6;
             projectile.timeLeft = 600;
         }
         public override void SetStaticDefaults()
@@ -28,6 +28,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void AI()
         {
+            Main.NewText(projectile.penetrate);
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
             Lighting.AddLight(projectile.Center, 0.2f, 0.6f, 0.3f);
@@ -56,7 +57,7 @@ namespace ElementsAwoken.Projectiles
         }
         private void Explode()
         {
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, mod.ProjectileType("DesolationExplosion"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            Projectile.NewProjectile(projectile.Center.X - projectile.velocity.X * 1.5f, projectile.Center.Y- projectile.velocity.Y * 1.5f, 0f, 0f, mod.ProjectileType("DesolationExplosion"), projectile.damage, projectile.knockBack, projectile.owner, 0f, 0f);
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);           
         }
     }

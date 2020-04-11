@@ -47,7 +47,7 @@ namespace ElementsAwoken.Projectiles
                 dust.velocity *= 0.05f;
                 dust.noGravity = true;
             }
-            ProjectileGlobal.Home(projectile, 6f);
+            ProjectileUtils.Home(projectile, 6f);
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

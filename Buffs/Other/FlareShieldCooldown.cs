@@ -9,8 +9,8 @@ namespace ElementsAwoken.Buffs.Other
 	{
 		public override void SetDefaults()
 		{
-            DisplayName.SetDefault("Flare Shield Cooldown");
-            Description.SetDefault("You cannot create a flare shield");
+            DisplayName.SetDefault("Drakonian Guard Cooldown");
+            Description.SetDefault("You cannot use the Drakonian Guard");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

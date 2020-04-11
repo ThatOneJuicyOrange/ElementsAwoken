@@ -44,7 +44,16 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
             bool rockLayer = (spawnInfo.spawnTileY >= (Main.maxTilesY * 0.4f));
             return !underworld && rockLayer && !spawnInfo.player.ZoneCrimson && !spawnInfo.player.ZoneCorrupt && !spawnInfo.player.ZoneDesert && !spawnInfo.player.ZoneDungeon && !Main.hardMode ? 0.06f : 0f;
         }
-
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/DragonSlime" + i), npc.scale);
+                }
+            }
+        }
         public override void OnHitPlayer(Player player, int damage, bool crit)
         {
             if (Main.expertMode) player.AddBuff(BuffID.OnFire, MyWorld.awakenedMode ? 150 : 90, false);
@@ -79,11 +88,8 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                         int num = MyWorld.awakenedMode ? 5 : 3;
                         for (int n = 0; n < num; n++)
                         {
-                            Vector2 vector4 = new Vector2((float)(n - 2), -4f);
-                            vector4.X *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
-                            vector4.Y *= 1f + (float)Main.rand.Next(-50, 51) * 0.005f;
-                            vector4.Normalize();
-                            vector4 *= 4f + (float)Main.rand.Next(-50, 51) * 0.01f;
+                            float speed = 4f;
+                            Vector2 vector4 = new Vector2(0, -speed).RotatedByRandom(MathHelper.ToRadians(50));
                             Projectile.NewProjectile(vector3.X, vector3.Y, vector4.X, vector4.Y, mod.ProjectileType("DragonSlimeSpike"), 9, 0f, Main.myPlayer, 0f, 0f);
                             npc.localAI[1] = 30f;
                         }

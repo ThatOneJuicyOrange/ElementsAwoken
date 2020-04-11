@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
         {
             float minions = 0;
 
-            for (int j = 0; j < Main.projectile.Length; j++)
+            for (int j = 0; j < Main.maxProjectiles; j++)
             {
                 if (Main.projectile[j].active && Main.projectile[j].owner == player.whoAmI && Main.projectile[j].minion)
                 {
@@ -63,7 +63,7 @@ namespace ElementsAwoken.Items.BossDrops.VoidLeviathan
 
             int head = -1;
             int tail = -1;
-            for (int i = 0; i < Main.projectile.Length; i++)
+            for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 if (Main.projectile[i].active && Main.projectile[i].owner == Main.myPlayer)
                 {

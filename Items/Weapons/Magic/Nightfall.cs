@@ -60,7 +60,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
             recipe.AddIngredient(ItemID.SoulofNight, 12);
             recipe.AddIngredient(null, "CInfinityCrys", 1);
             recipe.AddIngredient(null, "Pyroplasm", 50);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

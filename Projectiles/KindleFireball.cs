@@ -48,7 +48,7 @@ namespace ElementsAwoken.Projectiles
                 dust.noGravity = true;
             }
 
-            ProjectileGlobal.Home(projectile, 5f);
+            ProjectileUtils.Home(projectile, 5f);
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

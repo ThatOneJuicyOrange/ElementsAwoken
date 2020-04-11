@@ -29,7 +29,7 @@ namespace ElementsAwoken.Items.Donator.Lantard
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Awoken Wooden Helmet");
-            Tooltip.SetDefault("10% increased damage\nIncreases maximum mana by 50\nSomething so simple has become so powerful... As have you\nLantards's donator item");
+            Tooltip.SetDefault("10% increased damage\nIncreases maximum mana by 50\nSomething so simple has become so powerful... As have you\nLantard's donator item");
         }
 
         public override void UpdateEquip(Player player)

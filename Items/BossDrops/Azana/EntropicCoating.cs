@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Entropic Coating");
-            Tooltip.SetDefault("Grants immunity to Chaos Burn");
+            Tooltip.SetDefault("Grants immunity to Chaotic Necrosis");
 
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
         }

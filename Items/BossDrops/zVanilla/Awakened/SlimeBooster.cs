@@ -41,6 +41,7 @@ namespace ElementsAwoken.Items.BossDrops.zVanilla.Awakened
                 {
                     Projectile proj = Main.projectile[Projectile.NewProjectile(player.Bottom.X, player.Bottom.Y - 2, 0f, 0f, ModContent.ProjectileType<SlimeBoosterTrail>(), 10, 0f, Main.myPlayer)];
                     proj.timeLeft = timeleft;
+                    if (player.gravDir == -1) proj.position.Y -= player.height;
                 }
             }
         }

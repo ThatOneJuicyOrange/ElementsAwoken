@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Placeable
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chaotic Crucible");
+            DisplayName.SetDefault("Chaotron Crucible");
         }
         public override void AddRecipes()
         {
@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.Placeable
             recipe.AddIngredient(null, "ElementalForge", 1);
             recipe.AddIngredient(null, "DiscordantOre", 30);
             recipe.AddIngredient(null, "ChaoticFlare", 8);
-            recipe.AddTile(TileID.WorkBenches);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

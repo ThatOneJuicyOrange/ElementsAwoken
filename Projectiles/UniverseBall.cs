@@ -35,7 +35,7 @@ namespace ElementsAwoken.Projectiles
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
 
             Lighting.AddLight(projectile.Center, 0.4f, 0.2f, 0.4f);
-            ProjectileGlobal.Home(projectile, 5f);
+            ProjectileUtils.Home(projectile, 5f);
         }
         public override bool PreDraw(SpriteBatch sb, Color lightColor)
         {

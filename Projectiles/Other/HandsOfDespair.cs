@@ -39,6 +39,10 @@ namespace ElementsAwoken.Projectiles.Other
             }
             return true;
         }
+        public override bool CanDamage()
+        {
+            return false;
+        }
         public override void AI()
         {
             Player parent = Main.player[(int)projectile.ai[1]];

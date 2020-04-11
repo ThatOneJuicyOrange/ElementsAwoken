@@ -68,7 +68,7 @@ namespace ElementsAwoken.Items.GemLasers.Tier4
             recipe.AddIngredient(null, "SapphireBlaster", 1);
             recipe.AddIngredient(null, "TopazBlaster", 1);
             recipe.AddIngredient(null, "Pyroplasm", 50);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

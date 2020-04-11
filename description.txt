@@ -17,6 +17,121 @@ Donations are on the forum allowing you to get your own custom weapon, accessory
 Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
+1.3.13.1
+- Additions
+  - Pebleer Banner
+- Changes
+  - Made Majesty's projectile look better
+  - Voidite can now be smelted by the Auto Smelter II
+- Bug Fixes
+  - Permafrost now treats planterboxes like platforms
+  - Putrid Armor no longer poisons town npcs
+  - Flask of Extinciton is now crafted with a voidite bar instead of luminite ore
+  - Fixed multiple recipes being crafted at the wrong station
+1.3.13- The Radiant Frost Update
+-Other
+  - Some adjustments and clean up of multiple sections of code, please report any bugs that may have come with this
+-Additions
+  - Added Pebleers and Stoneers in place of Puffs. They only spawn 350 blocks away from spawn
+  - Radiant Rain- A post Azana rain event that has a 25% chance of happening instead of normal rain
+  - Heat Sink- T7 energy material
+  - Boost Drive
+  - Hyper Drive
+  - Infernace death animation and secret 
+  - Wasteland secret :)
+  - Force Barrier got reworked and now has a recipe, so its basically an addition :)
+  - A better warning for the first boss prompt
+  - Arid Armour (desert set)
+  - Venom Gland now has a small visual on the arm
+  - Eldritch Keepsake in honour of the celestials
+  - Giant Toad that spawns in the jungle. Lick.
+  - Plasma Thrower
+  - Zapmaster 9000
+  - Imbalancer
+  - Particle Accelerator
+  - Putrid items and armor (Rotted Reaper armor)
+  - Glass Heart for all the no-hit challenges
+  - Rain Meter to show how much longer it will be raining for. Purchasable from the merchant
+  - G O R E
+-Removals
+  - Removed Puffs
+  - The Celestials are gone *crab rave*
+-Changes
+  - Permafrost Rework
+  - Nerfed the speed of all the elemental boots :(
+  - Renamed Flare to Drakonian Guard
+  - Toy Slime is no longer a mini boss and now spawns after skeletron as an enemy
+  - Matter manipulator now has multiple sizes that it can dig (1x1, 3x3, 5x5)
+  - Made the final scene of the credits longer and added Chippy <3
+  - Fireball Tome now takes obsidian instead of fireblossoms
+  - Chaos Burn is now Chaotic Necrosis
+  - Azana's Radiance laser sweep attack is now awakened mode only
+  - Increased speed of Blightfire Pick
+  - Reduced energy cost of Hyperlight Sentinal
+  - Nerfed The Gun That Shot Time
+  - Remove Sandgun from the Sand Sprayer recipe
+  - Venom Gland now inflicts its debuffs for longer
+  - In awakened mode, the nurse now heals 100% of life instead of only 75%
+  - Renamed Mystic Plating to Defiled Plating
+  - Azana can be spawned at any time now
+  - Azana is now spawned with the Infected Microchip
+  - Nerfed Deathwarp
+  - Azana Phase 2 Resprite
+  - Different spawn animation for Azana Phase 2
+  - Energized Gel resprite
+  - Outbreak rework
+  - The mutated scorpions now scale less with mode
+  - Nerfed Lunar Emblems
+  - Reduced the awakened spawn boost in the jungle
+  - Dragon Slime spike now looks better
+  - Buffed The Ancients
+  - Buffed most EA debuffs acting on enemies
+  - Reworked Shotstorm
+  - Buffed Blightfire Hamaxe's hammer power
+  - Made the Boots of the Void dust less and able to be toggled with visibility
+  - Slight adjustments to wasteland
+  - Nerfed hell fury potion
+  - Void Fruit now requires a Demon Heart and is listed as expert exlusive
+  - Mutated Scorpion now shows up on the Lifeform Analyser
+  - Chaotic Crucible is now called Chaotron Crucible and got resprited
+-Bug Fixes
+  - Ice Spike Tome now doesnt go through walls
+  - You can no longer equip multiple elemental boots
+  - Fixed slimes that shoot spikes not shooting them correctly
+  - Fixed railguns damage not scaling with heat
+  - Fixed the Guardian and Void Golems not working in multiplayer
+  - Fixed the Void Leviathan going turbo speed after running too far
+  - Turning off the boss prompts now correctly turns off Infernace's Wrath
+  - Fixed AshOverlay destroying multiplayer sessions
+  - Fixed the Infection Heart being racist and not accepting vanilla ores in other languages
+  - Deimos is now crafted at the ancient manipulator
+  - Slime boosters trail now appears at the feet when gravity is flipped
+1.3.12.2
+-Bug Fixes
+  - Dragon Warrior Sprite
+  - Fixed some tooltips spontaneously not working 
+1.3.12.1
+-Additions
+  - Fargos Mutant Mod support :D
+  - Laser Refraction Matrix- Energy Tier 8 item (post Azana)
+-Bug fixes
+  - Worm segments dont get Elite status
+  - Fixed Voidite ore not generating for some? - needs confirmation I couldnt test it since mine always worked
+  - The Auto Smelters no longer turn palladium bars into ore
+  - Fixed Shade Wyrm instantly despawning
+  - Harp of Judgement now works outside of the inventory
+  - Boots of Nyan and Skyline Whirlwind no longer show their wing animation when other wings are equipped
+-Changes
+  - Hyperlight Sentinal now uses the Laser Refraction Matrix instead of discordant bars and also uses the Railgun
+  - Turning the Ancient weapons back into the Mystic Gemstone now requires a demon altar
+  - Adjusted Void Leviathan's speed
+  - Reworked Band of Inferno
+-Resprites
+  - Void Leviathan
+  - Deimos
+  - Nightfall
+  - Crystal Amalgamate
+  - Ancient Shard
 1.3.12
 -Additions
   - Wasteland lore quotes from the Dryad

@@ -52,7 +52,7 @@ namespace ElementsAwoken.Items.Weapons.Summon
             recipe.AddIngredient(null, "CInfinityCrys", 1);
             recipe.AddIngredient(ItemID.LunarBar, 12);
             recipe.AddIngredient(null, "Pyroplasm", 25);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

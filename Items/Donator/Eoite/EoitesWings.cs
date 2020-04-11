@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.Donator.Eoite
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Eoites Wings");
+            DisplayName.SetDefault("Eoite's Wings");
             Tooltip.SetDefault("Allows flight and slow fall\nEoite's donator item");
         }
 

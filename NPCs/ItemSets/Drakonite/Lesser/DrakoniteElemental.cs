@@ -319,7 +319,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Lesser
                         dust.position = npc.Center - vector * 15;
                     }
                 }
-                else if (npc.ai[1] == 180)
+                else if (npc.ai[1] == 180 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     float Speed = 10f;
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y,20);

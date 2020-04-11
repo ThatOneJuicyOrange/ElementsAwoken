@@ -33,7 +33,15 @@ namespace ElementsAwoken.Items.Elements.Water
             Tooltip.SetDefault("Toggles the rain\nRain will start or stop shortly after use");
         }
 
-
+        public override bool CanUseItem(Player player)
+        {
+            if (MyWorld.radiantRain && !MyWorld.completedRadiantRain)
+            {
+                Main.NewText("You dont yet have the power to dissipate the radiance...",Color.HotPink);
+                return false;
+            }
+            return base.CanUseItem(player);
+        }
         public override bool UseItem(Player player)
         {
             if (Main.raining)
@@ -94,6 +102,7 @@ namespace ElementsAwoken.Items.Elements.Water
                 Main.rainTime = (int)((float)Main.rainTime * num3);
                 Main.raining = true;
                 Main.maxRaining = Main.rand.NextFloat(0.2f,0.8f);
+                MyWorld.prevTickRaining = true; // to stop radiant rain from happening from this
             }
             return true;
         }

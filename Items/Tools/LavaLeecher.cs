@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.Tools
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "VolcanicStone", 8);
             recipe.AddIngredient(ItemID.SuperAbsorbantSponge, 1);
-            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

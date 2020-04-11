@@ -117,7 +117,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Azana
         }
         public override void Kill(int timeLeft)
         {
-            ProjectileGlobal.HostileExplosion(projectile, new int[] { 127 }, projectile.damage);
+            ProjectileUtils.HostileExplosion(projectile, new int[] { 127 }, projectile.damage);
         }
     }
 }
