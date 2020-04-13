@@ -37,8 +37,8 @@ namespace ElementsAwoken.Items.Consumable.Potions
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Potion");
-            Tooltip.SetDefault("Decreases the duration of 'Chaos State' by 25%");
+            DisplayName.SetDefault("Chaosporidic Brew");
+            Tooltip.SetDefault("Decreases the duration of 'Chaos State' by 25%\nCURRENTLY UNOBTAINABLE");
         }
         /*public override void AddRecipes() // disabled until i can figure out how to do it properly
         {

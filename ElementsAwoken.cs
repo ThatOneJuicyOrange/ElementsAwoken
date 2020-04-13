@@ -414,6 +414,17 @@ namespace ElementsAwoken
 
                 Main.tileSpelunker[TileID.LunarOre] = false;
 
+                TileID.Sets.Platforms = TileID.Sets.Factory.CreateBoolSet(new int[]
+                {
+                    19,
+                    427,
+                    435,
+                    436,
+                    437,
+                    438,
+                    439
+                });
+
                 ResetCloudTexture();
             }
         }
@@ -495,9 +506,19 @@ namespace ElementsAwoken
                 PromptUI.Activate();
                 PromptInfoUserInterface = new UserInterface();
                 PromptInfoUserInterface.SetState(PromptUI);
+
+                TileID.Sets.Platforms = TileID.Sets.Factory.CreateBoolSet(new int[]
+                {
+                    19,
+                    427,
+                    435,
+                    436,
+                    437,
+                    438,
+                    439,
+                    TileID.PlanterBox
+                });
             }
-            // config
-            //Config.Load();
 
             Mod yabhb = ModLoader.GetMod("FKBossHealthBar");
             if (yabhb != null)

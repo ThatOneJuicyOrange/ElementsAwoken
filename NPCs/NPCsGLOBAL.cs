@@ -14,6 +14,7 @@ using ElementsAwoken.Items.Donator.Buildmonger;
 using ElementsAwoken.Items.Donator.Crow;
 using ElementsAwoken.Items.Placeable;
 using ElementsAwoken.Buffs.Debuffs;
+using System.IO;
 
 namespace ElementsAwoken.NPCs
 {
@@ -32,11 +33,14 @@ namespace ElementsAwoken.NPCs
         public bool acidBurn = false;
         public bool corroding = false;
         public bool fastPoison = false;
+        public bool starstruck = false;
 
         public bool impishCurse = false;
 
         public bool variableLifeDrain = false;
         public int lifeDrainAmount = 0;
+
+        public float generalTimer = 0;
 
         public bool hasHands = false;
 
@@ -48,6 +52,7 @@ namespace ElementsAwoken.NPCs
         public bool grown = false;
         public bool storedScale = false;
         public float initialScale = 1f;
+
         public override void ResetEffects(NPC npc)
         {
             iceBound = false;
@@ -63,6 +68,7 @@ namespace ElementsAwoken.NPCs
             acidBurn = false;
             corroding = false;
             fastPoison = false;
+            starstruck = false;
 
             impishCurse = false;
 
@@ -91,6 +97,72 @@ namespace ElementsAwoken.NPCs
         }
         public override void AI(NPC npc)
         {
+            generalTimer++;
+            if (extinctionCurse)
+            {
+                /*for (int j = 0; j < 2; j++)
+                {
+                    int dustLength = ModContent.GetInstance<Config>().lowDust ? 1 : 3;
+                    for (int i = 0; i < dustLength; i++)
+                    {
+                        float X = ((float)Math.Sin(generalTimer / 10) * 10) * MathHelper.Clamp(npc.width / 30, 1, 5) * (j % 2 == 0 ? 1 : -1) + (j % 2 == 0 ? 1 : -1) * 10;
+                        float Y = (float)Math.Sin(generalTimer / 20) * npc.height * (j % 2 == 0 ? 1 : -1);
+                        Vector2 dustPos = new Vector2(X, Y);
+
+                        Dust dust = Main.dust[Dust.NewDust(npc.Center + dustPos - Vector2.One * 4f, 8, 8, DustID.PinkFlame)];
+                        dust.velocity = Vector2.Zero;
+                        dust.position -= npc.velocity / dustLength * (float)i;
+                        dust.noGravity = true;
+                        dust.alpha = npc.alpha;
+                    }
+                }*/
+                if (!GetInstance<Config>().lowDust)
+                {
+                    for (int j = 0; j < 5; j++)
+                    {
+                        float speedScale = 1;
+                        if (j == 1) speedScale = 1.2f;
+                        else if (j == 2) speedScale = 0.5f;
+                        else if (j == 3) speedScale = 0.9f;
+                        else if (j == 4) speedScale = 1.5f;
+
+                        int distance = (int)(npc.width / 2 + 20);
+                        double rad = ((generalTimer / 30) * speedScale) + npc.whoAmI + j * 60 * (Math.PI / 180); // angle to radians
+                        Vector2 dustCenter = npc.Center - new Vector2((int)(Math.Cos(rad) * distance), (int)(Math.Sin(rad) * distance));
+
+                        int maxDist = 8;
+                        if (j == 1) maxDist = 10;
+                        else if (j == 2) maxDist = 15;
+                        else if (j == 3) maxDist = 5;
+                        else if (j == 4) maxDist = 10;
+
+                        int numDusts = (int)(maxDist / 2);
+                        for (int i = 0; i < numDusts; i++)
+                        {
+                            double angle = Main.rand.NextDouble() * 2d * Math.PI;
+                            Vector2 offset = new Vector2((float)Math.Sin(angle) * maxDist, (float)Math.Cos(angle) * maxDist);
+                            Dust dust = Main.dust[Dust.NewDust(dustCenter + offset - Vector2.One * 4, 0, 0, DustID.PinkFlame, 0, 0, 100)];
+                            dust.noGravity = true;
+                            dust.velocity *= 0.2f;
+                        }
+                    }
+                }
+            }
+            if (starstruck)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    int distance = (int)(npc.width * 1.5f * ((Math.Sin(generalTimer / 10) + 1) / 2));
+                    double rad = (generalTimer * 2 * (Math.PI / 180)) + (MathHelper.ToRadians(360 / 5) * j) + MathHelper.ToRadians(npc.whoAmI * 15); // angle to radians
+                    Vector2 dustCenter = npc.Center - new Vector2((int)(Math.Cos(rad) * distance), (int)(Math.Sin(rad) * distance));
+
+                    Dust dust = Main.dust[Dust.NewDust(dustCenter, 4, 4, DustID.PinkFlame)];
+                    dust.noGravity = true;
+                    dust.velocity *= 0.2f;
+                    dust.fadeIn = 1f;
+                    dust.scale = 0.3f;
+                }
+            }
             bool immune = false;
             foreach (int k in ElementsAwoken.instakillImmune)
             {
@@ -312,7 +384,7 @@ namespace ElementsAwoken.NPCs
                 npc.lifeRegen -= 150;
                 if (damage < 30)   damage = 30;
             }
-            if (chaosBurn || discordDebuff || fastPoison)
+            if (chaosBurn || discordDebuff || fastPoison || starstruck)
             {
                 npc.lifeRegen -= 300;
                 if (damage < 50) damage = 50;

@@ -76,7 +76,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             recipe.AddIngredient(null, "GoldWire", 4);
             recipe.AddIngredient(null, "Capacitor", 2);
             recipe.AddIngredient(null, "SiliconBoard", 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

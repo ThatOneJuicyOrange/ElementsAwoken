@@ -20,7 +20,7 @@ namespace ElementsAwoken.Projectiles.Arrows
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Arrow");
+            DisplayName.SetDefault("Chaotron Arrow");
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {

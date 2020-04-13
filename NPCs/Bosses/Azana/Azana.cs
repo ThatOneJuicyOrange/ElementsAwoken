@@ -1,4 +1,5 @@
 ﻿using ElementsAwoken.Items.BossDrops.Azana;
+using ElementsAwoken.Projectiles.NPCProj.Azana;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -490,16 +491,16 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                 Vector2 target = P.Center + new Vector2(0, 400).RotatedBy(circleNum * (Math.PI * 2f / numPoints));
                 if (Vector2.Distance(target, npc.Center) < 100) circleNum++;
                 Move(P, 0.1f, target);
-                shootTimer--;
+                shootTimer--; 
                 if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
                 {
+                    float width = 1800;
                     float numProj = 10;
+                    float distBetween = width / numProj;
                     for (int i = 0; i < numProj; i++)
                     {
-                        float width = 1800;
-                        float distBetween = width / numProj;
                         Vector2 pos = new Vector2(P.Center.X - width / 2 + distBetween * i, P.Center.Y + 500);
-                        Projectile proj = Main.projectile[Projectile.NewProjectile(pos.X, pos.Y, 0, -24, mod.ProjectileType("AzanaInfectionPillar"), projectileBaseDamage, 0f, Main.myPlayer, 0, 40)];
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(pos.X, pos.Y, 0, 0, ModContent.ProjectileType<AzanaLaserWarning>(), 0, 0f, Main.myPlayer)];
                         proj.localAI[1] = 125;
                     }
                     shootTimer = 180;
@@ -923,6 +924,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         Vector2 offset = new Vector2((float)Math.Sin(angle) * dist, (float)Math.Cos(angle) * dist);
                         Teleport(P.position.X + offset.X, P.position.Y + offset.Y);
                         Main.PlaySound(SoundLoader.customSoundType, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/AzanaPowerDown"));
+                        aiState = 57;
                     }
                 }
             }

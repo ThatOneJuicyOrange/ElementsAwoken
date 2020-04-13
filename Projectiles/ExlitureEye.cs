@@ -13,12 +13,14 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 12;
             projectile.height = 12;
-            projectile.friendly = true;
             projectile.penetrate = 1;
-            projectile.hostile = false;
+
             projectile.minion = true;
             projectile.tileCollide = true;
-            projectile.ignoreWater = true;
+            projectile.friendly = true;
+
+            projectile.timeLeft = 600;
+
             Main.projFrames[projectile.type] = 2;
         }
         public override void SetStaticDefaults()

@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Elements.Desert
 
             item.maxStack = 999;
 
-            item.value = Item.buyPrice(0, 0, 1, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = 3;
 
             item.shoot = mod.ProjectileType("Sandball");

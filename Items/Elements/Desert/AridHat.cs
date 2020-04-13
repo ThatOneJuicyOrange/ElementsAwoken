@@ -16,20 +16,21 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             item.width = 18;
             item.height = 18;
-            item.value = Item.sellPrice(0, 1, 0, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = 3; 
             item.defense = 2;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Arid Hat");
-            Tooltip.SetDefault("4% increased magic damage\n3% increased magic critical strike chance");
+            Tooltip.SetDefault("4% increased magic damage\n3% increased magic critical strike chance\nIncreases maximum mana by 40");
         }
 
         public override void UpdateEquip(Player player)
         {
             player.magicCrit += 3;
             player.magicDamage *= 1.04f;
+            player.statLifeMax2 += 40;
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {

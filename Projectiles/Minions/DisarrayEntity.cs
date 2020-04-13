@@ -111,9 +111,9 @@ namespace ElementsAwoken.Projectiles.Minions
                                 NPC nPC = Main.npc[i];
                                 if (nPC.active && !nPC.friendly && nPC.damage > 0 && !nPC.dontTakeDamage && Vector2.Distance(projectile.Center, nPC.Center) <= max && Collision.CanHit(projectile.position, projectile.width, projectile.height, nPC.position, nPC.width, nPC.height))
                                 {
-                                    float Speed = 7f;
-                                    if (projectile.ai[0] == 1) Speed = 9.5f;
-                                    else if (projectile.ai[0] == 2) Speed = 11f;
+                                    float Speed = 9f;
+                                    if (projectile.ai[0] == 1) Speed = 11.5f;
+                                    else if (projectile.ai[0] == 2) Speed = 13.5f;
                                     if ((projectile.ai[0] != 1 && shootTimer <= 0) || (shootTimer <= 0f && shootTimer2 <= 24))
                                     {
                                         Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 28);
@@ -489,7 +489,7 @@ namespace ElementsAwoken.Projectiles.Minions
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
-            if (projectile.localAI[1] == 1f)
+            if (projectile.localAI[1] == 1f && projectile.ai[0] != 0)
             {
                 target.immune[projectile.owner] = 10;
             }

@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chaos Heart");
+            DisplayName.SetDefault("Chaosporidic Heart");
             Tooltip.SetDefault("Fighters of The Calamity need not apply\nPermanently increases maximum life by 10");
         }
 

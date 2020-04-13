@@ -23,11 +23,13 @@ namespace ElementsAwoken.Projectiles.NPCProj.Azana
         {
             DisplayName.SetDefault("Infection Pillar");
         }
+        public override bool ShouldUpdatePosition()
+        {
+            return false;
+        }
         public override void AI()
         {
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
-            if (projectile.localAI[0] != 0) projectile.position -= projectile.velocity * 1f;
-            projectile.localAI[0]++;
             if (projectile.ai[0] == 0f)
             {
                 projectile.alpha -= (int)projectile.localAI[1];

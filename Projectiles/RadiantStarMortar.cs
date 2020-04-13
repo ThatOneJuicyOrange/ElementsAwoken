@@ -42,6 +42,10 @@ namespace ElementsAwoken.Projectiles
             }
             return true;
         }
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(ModContent.BuffType<Buffs.Debuffs.Starstruck>(), 300);
+        }
         public override void AI()
         {
             projectile.rotation += 0.05f;

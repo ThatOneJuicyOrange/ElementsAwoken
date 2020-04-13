@@ -14,9 +14,10 @@ namespace ElementsAwoken.Projectiles
         {
             projectile.width = 4;
             projectile.height = 4;
-            //projectile.aiStyle = 48;
+
             projectile.friendly = true;
-            projectile.magic = true;
+            projectile.ranged = true;
+
             projectile.penetrate = 1;
             projectile.extraUpdates = 100;
             projectile.timeLeft = 320;
@@ -44,11 +45,12 @@ namespace ElementsAwoken.Projectiles
             projectile.localAI[1]++;
             if (projectile.localAI[1] >= 4)
             {
-                for (int i = 0; i < 4; i++)
+                float numDusts = 4;
+                for (int i = 0; i < numDusts; i++)
                 {
                     Dust dust = Main.dust[Dust.NewDust(projectile.position, projectile.width, projectile.height, 127, projectile.velocity.X, projectile.velocity.Y, 100, default(Color), 1f)];
                     dust.velocity = Vector2.Zero;
-                    dust.position -= projectile.velocity / 5f * (float)i;
+                    dust.position -= projectile.velocity / numDusts * (float)i;
                     dust.noGravity = true;
                     dust.scale = 0.8f;
                     dust.noLight = true;

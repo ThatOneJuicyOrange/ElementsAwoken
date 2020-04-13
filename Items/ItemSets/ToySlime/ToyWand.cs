@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.ItemSets.ToySlime
             item.useStyle = 1;
             item.UseSound = SoundID.Item8;
 
-            item.value = Item.sellPrice(0, 0, 10, 0);
+            item.value = Item.sellPrice(0, 0, 75, 0);
             item.rare = 3;
 
             item.shoot = mod.ProjectileType("PuzzlePiece");

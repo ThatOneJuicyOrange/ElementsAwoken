@@ -18,16 +18,66 @@ Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
 1.3.13.1
+- Important
+  - Made Planter Box's count as a platform: this could come with side effects, please report any
 - Additions
   - Pebleer Banner
+  - G O R E
+  - Globule Cannon's sprite is now correct
+  - A special Hive Crate caught in honey with some special items
+    - Honeysuckle
+    - Honeycrest- the first EA shortsword
+    - Honey Cocoon
+  - Majestic Hivefin which caught in honey which restores 120 mana
+  - Infernace has a spawning animation
 - Changes
   - Made Majesty's projectile look better
   - Voidite can now be smelted by the Auto Smelter II
+  - Changed Starstruck (the bow) to Thundering Recurve
+  - Arid Hat now increases mana by 40
+  - Increased sell prices of Toy items
+  - Decreased sell prices of Desert items
+  - Nerfed Chaotron Impaler
+  - Nerfed Manashard Longsword
+  - Lowered Awakened Mode spawnrates:
+    - 15% more normally
+    - 30% more after a shadow orb has been smashed or EoC has been defeated
+    - 50% more after Skeletron has been defeated
+    - Lowered by 25% in the Jungle
+  - Renamed Glass Heart to Fragile Heart due to confusion with SoA
+  - Further reduced magma slimes magma damage
+  - Reworked Blazeguard
+  - Renamed Discordant Bars to Chaotron Alloy and gave it a tooltip
+  - Renamed Discordant Ore to Chaotron Ore
+  - Renamed Chaos Heart to Chaosporidic Heart
+  - Renamed Discordant Arrow to Chaotron Arrow
+  - Renamed other Discordant things to Chaotron
+  - Renamed Discordant Potion to Chaosporidic Brew and indicated it is currently unobtainable
+  - Radiant items now inflict starstruck
+  - Buffed Nightfall and reworked visuals
+  - Changed some debuff effects
+  - Buffed Deimos and allowed its projectiles to go through walls for 1 second after spawning
+  - Buffed T1 Ancient Weapon
+  - Void Essence now looks different when dropped by the Void Leviathan
+  - Modified Obsidious's human forms last phase slightly
+  - Made phase 1 Azana take 2x damage
+  - Azana now makes warning lasers before creating the infection pillars
+  - Sky Crate's have a 33% chance to drop a Sky Mill
+  - Renamed Stinger to Scepter of the Tortured
+  - Renamed Scorpion Blade to Protector's Edge
+  - Renamed Chitin Staff to Mother's Magic
+  - Renamed Pincer to Defender's Recurve
 - Bug Fixes
   - Permafrost now treats planterboxes like platforms
   - Putrid Armor no longer poisons town npcs
   - Flask of Extinciton is now crafted with a voidite bar instead of luminite ore
   - Fixed multiple recipes being crafted at the wrong station
+  - Shadow Dodge no longer prevents Fragile Heart to killing the player
+  - Item magnet no longer picks up Nebula Armour pickups
+  - Ancient Amalgamate now deals contact damage
+  - Exliture eyes now despawn
+  - Azana doesnt get stuck in her dash state anymore
+  - Fixed Great Lens not drawing
 1.3.13- The Radiant Frost Update
 -Other
   - Some adjustments and clean up of multiple sections of code, please report any bugs that may have come with this

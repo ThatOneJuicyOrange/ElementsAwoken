@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using ElementsAwoken.NPCs.Bosses.Infernace;
 
 namespace ElementsAwoken.Items.BossSummons
 {
@@ -17,7 +18,7 @@ namespace ElementsAwoken.Items.BossSummons
             item.width = 28;
             item.height = 18;
             item.maxStack = 20;
-            item.rare = 6;
+            item.rare = 3;
             item.useAnimation = 45;
             item.useTime = 45;
             item.useStyle = 4;
@@ -40,9 +41,15 @@ namespace ElementsAwoken.Items.BossSummons
         }
         public override bool UseItem(Player player)
         {
-            Main.NewText("You arrive, at last.", Color.Orange.R, Color.Orange.G, Color.Orange.B);
-            if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Infernace"));
-            else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Infernace"), 0f, 0f, 0, 0, 0); 
+             Main.NewText("You arrive, at last.", Color.Orange.R, Color.Orange.G, Color.Orange.B);
+             /*if (Main.netMode != NetmodeID.MultiplayerClient) NPC.SpawnOnPlayer(player.whoAmI, mod.NPCType("Infernace"));
+             else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Infernace"), 0f, 0f, 0, 0, 0); */
+
+            int npcIndex = NPC.NewNPC((int)player.Center.X, (int)player.Center.Y - 300, ModContent.NPCType<Infernace>(), 0, 0f, 0f, 0f, 0f, 255);
+            Main.npc[npcIndex].ai[1] = -300;
+            Main.npc[npcIndex].ai[3] = -1;
+            NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, npcIndex, 0f, 0f, 0f, 0, 0, 0);
+
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
         }

@@ -9,6 +9,7 @@ using ElementsAwoken.Items.ItemSets.Stellarium;
 using ElementsAwoken.Items.Tech.Materials;
 using ElementsAwoken.Items.Tech.Weapons.Tier6;
 using ElementsAwoken.Projectiles;
+using ElementsAwoken.Tiles.Crafting;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -78,7 +79,7 @@ namespace ElementsAwoken.Items.Developer
             recipe.AddIngredient(ItemType<MortemiteDust>(), 8);
             recipe.AddIngredient(ItemType<StellariumBar>(), 8);
             recipe.AddIngredient(ItemType<Radia>(), 8);
-            recipe.AddTile(TileID.LunarCraftingStation);
+            recipe.AddTile(TileType<ChaoticCrucible>());
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

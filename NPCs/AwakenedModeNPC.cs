@@ -450,9 +450,9 @@ namespace ElementsAwoken.NPCs
         {
             if (MyWorld.awakenedMode)
             {
-                float spawnMult = 1.3f;
-                if (NPC.downedBoss1 || WorldGen.shadowOrbSmashed || MyWorld.downedToySlime) spawnMult = 1.5f;
-                if (NPC.downedBoss3) spawnMult = 2;
+                float spawnMult = 1.15f;
+                if (NPC.downedBoss1 || WorldGen.shadowOrbSmashed) spawnMult = 1.30f;
+                if (NPC.downedBoss3) spawnMult = 1.5f;
                 if (player.ZoneJungle) spawnMult *= 0.75f;
                 spawnRate = (int)(spawnRate / spawnMult);
                 maxSpawns = (int)(maxSpawns * spawnMult);

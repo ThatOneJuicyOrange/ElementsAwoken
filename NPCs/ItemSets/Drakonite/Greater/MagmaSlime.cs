@@ -74,7 +74,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Drakonite.Greater
             {
                 spikeTimer -= 1f;
             }
-            int damage = 50;
+            int damage = 40;
             if (!npc.wet && !Main.player[npc.target].npcTypeNoAggro[npc.type])
             {
                 Vector2 vector3 = new Vector2(npc.position.X + (float)npc.width * 0.5f, npc.position.Y + (float)npc.height * 0.5f);

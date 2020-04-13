@@ -75,7 +75,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             recipe.AddIngredient(ItemID.Seashell, 4);
             recipe.AddIngredient(null, "RoyalScale", 1);
             recipe.AddIngredient(null, "Microcontroller", 2);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

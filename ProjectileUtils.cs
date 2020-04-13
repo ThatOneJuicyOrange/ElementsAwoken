@@ -82,22 +82,35 @@ namespace ElementsAwoken
 
             projectile.rotation += additionalRotation;
         }
-        public static void Explosion(Projectile projectile, int[] dustIDs, int damage, string damageType = "normal", float numDustScale = 1f, float dustScale = 1f)
+        public static int Explosion(Projectile projectile, int dustID, int damage = -1, string damageType = "normal", float numDustScale = 1f, float dustScale = 1f, int soundID = 14)
         {
-            Projectile exp = Main.projectile[Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ProjectileType<Explosion>(), damage, projectile.knockBack, projectile.owner, 0f, 0f)];
+            return Explosion(projectile, new int[] { dustID }, damage, damageType, numDustScale, dustScale, soundID);
+        }
+        public static int Explosion(Projectile projectile, int[] dustIDs, int damage = -1, string damageType = "normal", float numDustScale = 1f, float dustScale = 1f, int soundID = 14)
+        {
+            if (damage == -1) damage = projectile.damage;
+            int expID = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ProjectileType<Explosion>(), damage, projectile.knockBack, projectile.owner);
+            Projectile exp = Main.projectile[expID];
             exp.melee = damageType == "melee" ? true : false;
             exp.ranged = damageType == "ranged" ? true : false;
             exp.thrown = damageType == "thrown" ? true : false;
             exp.magic = damageType == "magic" ? true : false;
             exp.minion = damageType == "minion" ? true : false;
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
+            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, soundID);
             ExplosionDust(projectile, dustIDs, numDustScale, dustScale);
+            return expID;
         }
-        public static void HostileExplosion(Projectile projectile, int[] dustIDs, int damage, float numDustScale = 1f, float dustScale = 1f)
+        public static int HostileExplosion(Projectile projectile, int dustID, int damage = -1, float numDustScale = 1f, float dustScale = 1f, int soundID = 14)
         {
-            Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ProjectileType<ExplosionHostile>(), damage, projectile.knockBack, projectile.owner, 0f, 0f);
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 14);
+            return HostileExplosion(projectile, new int[] { dustID }, damage, numDustScale, dustScale, soundID);
+        }
+        public static int HostileExplosion(Projectile projectile, int[] dustIDs, int damage = -1, float numDustScale = 1f, float dustScale = 1f, int soundID = 14)
+        {
+            if (damage == -1) damage = projectile.damage;
+            int expID = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ProjectileType<ExplosionHostile>(), damage, projectile.knockBack, projectile.owner, 0f, 0f);
+            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, soundID);
             ExplosionDust(projectile, dustIDs, numDustScale, dustScale);
+            return expID;
         }
         public static void FadeOut(Projectile projectile, int rate)
         {

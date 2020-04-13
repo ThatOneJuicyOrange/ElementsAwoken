@@ -15,6 +15,7 @@ namespace ElementsAwoken.Projectiles.GlobalProjectiles
     {
         public bool whip = false;
         public int whipAliveTime = 30;
+        public int specialPenetrate = -2;
         public EAProjectileType()
         {
             whip = false;

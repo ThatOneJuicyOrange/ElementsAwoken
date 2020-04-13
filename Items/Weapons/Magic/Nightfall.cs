@@ -16,7 +16,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
             item.width = 54;
             item.height = 52;
 
-            item.damage = 40;
+            item.damage = 80;
             item.mana = 18;
             item.knockBack = 5;
 

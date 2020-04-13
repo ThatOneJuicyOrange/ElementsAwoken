@@ -37,10 +37,7 @@ namespace ElementsAwoken.Projectiles
             }
             if (projectile.oldPos[projectile.oldPos.Length - 1] == projectile.position && projectile.ai[1] != 0) projectile.Kill();
         }
-        public override void Kill(int timeLeft)
-        {
 
-        }
         private void Explosion()
         {
             Vector2 spinningpoint = new Vector2(0f, -3f).RotatedByRandom(3.1415927410125732);
@@ -61,6 +58,8 @@ namespace ElementsAwoken.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
+            target.AddBuff(ModContent.BuffType<Buffs.Debuffs.Starstruck>(), 300);
+
             projectile.ai[1] = 1;
             Explosion();
                 }

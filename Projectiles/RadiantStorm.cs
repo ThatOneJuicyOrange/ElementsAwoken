@@ -29,7 +29,10 @@ namespace ElementsAwoken.Projectiles
         {
             DisplayName.SetDefault("Radiant Storm");
         }
-
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(ModContent.BuffType<Buffs.Debuffs.Starstruck>(), 300);
+        }
         public override bool PreDraw(SpriteBatch spritebatch, Color lightColor)
         {
             float num260 = 300f;

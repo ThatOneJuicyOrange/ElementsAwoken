@@ -33,7 +33,7 @@ namespace ElementsAwoken.Tiles
                             Chest currentChest = Main.chest[chest];
                             if (currentChest != null && !Chest.isLocked(currentChest.x, currentChest.y) && Vector2.Distance(new Vector2(currentChest.x * 16, currentChest.y * 16), tileCenter) < 48)
                             {
-                                if (sucked.type == ItemID.Star || sucked.type == ItemID.Heart) break;
+                                if (sucked.type == ItemID.Star || sucked.type == ItemID.Heart || sucked.type == ItemID.NebulaPickup1 || sucked.type == ItemID.NebulaPickup2 || sucked.type == ItemID.NebulaPickup3 || sucked.type == ItemType<Items.Tech.Generators.EnergyPickup>()) break;
                                 // adding the items
                                 foreach (Item chestItem in currentChest.item)
                                 {

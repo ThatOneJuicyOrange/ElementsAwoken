@@ -85,6 +85,13 @@ namespace ElementsAwoken.Items
                     if (arg == ItemID.WallOfFleshBossBag) player.QuickSpawnItem(ModContent.ItemType<HellishFleshHeart>());
                 }
             }
+            else if (context == "crate")
+            {
+                if (arg == ItemID.FloatingIslandFishingCrate && Main.rand.NextBool(3)) player.QuickSpawnItem(ItemID.SkyMill);
+            }
+        }
+        public override void RightClick(Item item, Player player)
+        {
         }
         public override void SetDefaults(Item item)
         {

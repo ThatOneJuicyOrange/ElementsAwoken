@@ -72,6 +72,8 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
 
             music = MusicID.Boss2;
 
+            npc.takenDamageMultiplier = 2f;
+
             NPCsGLOBAL.ImmuneAllEABuffs(npc);
             for (int k = 0; k < npc.buffImmune.Length; k++)
             {

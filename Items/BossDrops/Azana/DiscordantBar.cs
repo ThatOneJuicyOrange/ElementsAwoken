@@ -21,9 +21,9 @@ namespace ElementsAwoken.Items.BossDrops.Azana
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Bar");
+            DisplayName.SetDefault("Chaotron Alloy");
+            Tooltip.SetDefault("A dangerous mix of Chaotron particles and terran ore");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(12, 4));
-            Tooltip.SetDefault("");
         }
         public override void AddRecipes()
         {

@@ -16,7 +16,7 @@ namespace ElementsAwoken.Items.Ancient.Kirvein
             item.width = 30;
             item.height = 44;
 
-            item.damage = 10;
+            item.damage = 21;
             item.knockBack = 2f;
 
             item.useTime = 20;

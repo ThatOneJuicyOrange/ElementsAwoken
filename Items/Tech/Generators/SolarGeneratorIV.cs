@@ -79,7 +79,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             recipe.AddIngredient(null, "VoiditeBar", 4);
             recipe.AddIngredient(null, "Microcontroller", 1);
             recipe.AddIngredient(null, "Transformer", 1);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

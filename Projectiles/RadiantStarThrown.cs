@@ -56,6 +56,8 @@ namespace ElementsAwoken.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
+            target.AddBuff(BuffType<Buffs.Debuffs.Starstruck>(), 300);
+
             float rotation = MathHelper.TwoPi;
             float numProj = Main.rand.Next(5, 7);
             for (int i = 0; i < numProj; i++)

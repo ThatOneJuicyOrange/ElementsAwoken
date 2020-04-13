@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Ammo
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Bullet");
+            DisplayName.SetDefault("Chaotron Bullet");
             Tooltip.SetDefault("The chaos causes them to teleport near living organisms");
         }
 

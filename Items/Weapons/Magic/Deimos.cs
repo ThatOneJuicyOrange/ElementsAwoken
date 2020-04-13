@@ -15,7 +15,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
             item.width = 54;
             item.height = 54;
 
-            item.damage = 125;
+            item.damage = 155;
             item.mana = 10;
             item.knockBack = 4;
 
@@ -58,7 +58,7 @@ namespace ElementsAwoken.Items.Weapons.Magic
                 float num17 = num13 * num15;
                 float SpeedX = num16 + (float)Main.rand.Next(-40, 1) * 0.02f;
                 float SpeedY = num17 + (float)Main.rand.Next(-40, 1) * 0.02f;
-                Projectile.NewProjectile(vector2_1.X, vector2_1.Y, SpeedX, SpeedY, type, damage, knockBack, Main.myPlayer, 0.0f, 0.5f + (float)Main.rand.NextDouble() * 0.6f);
+                Projectile.NewProjectile(vector2_1.X, vector2_1.Y, SpeedX, SpeedY, type, damage, knockBack, player.whoAmI, 0.0f, 0.5f + (float)Main.rand.NextDouble() * 0.6f);
             }
             return false;
         }

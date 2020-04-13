@@ -210,7 +210,11 @@ namespace ElementsAwoken.Projectiles.Whips
             DelegateMethods.tilecut_0 = TileCuttingContext.AttackProjectile;
             Utils.PlotTileLine(projectile.Center, projectile.Center + projectile.velocity, (float)projectile.width * projectile.scale, new Utils.PerLinePoint(DelegateMethods.CutTiles));
         }
-
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.immune[projectile.owner] = 5;
+            target.AddBuff(BuffType<Buffs.Debuffs.Starstruck>(), 600);
+        }
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             if (projHitbox.Intersects(targetHitbox))

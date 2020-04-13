@@ -12,13 +12,13 @@ namespace ElementsAwoken.Items.Ancient.Xernon
             item.width = 50;
             item.height = 50;
 
-            item.damage = 28;
+            item.damage = 38;
             item.mana = 9;
             item.knockBack = 2;
 
             item.useStyle = 5;
-            item.useTime = 30;
-            item.useAnimation = 30;
+            item.useTime = 18;
+            item.useAnimation = 18;
 
             Item.staff[item.type] = true;
             item.magic = true;
@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Ancient.Xernon
 
             item.UseSound = SoundID.Item20;
             item.shoot = mod.ProjectileType("LamentBall");
-            item.shootSpeed = 8f;
+            item.shootSpeed = 9f;
         }
 
         public override void SetStaticDefaults()

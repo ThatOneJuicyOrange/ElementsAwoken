@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.ItemSets.ToySlime
             item.melee = true;
             item.autoReuse = true;
 
-            item.value = Item.sellPrice(0, 0, 10, 0);
+            item.value = Item.sellPrice(0, 0, 75, 0);
             item.rare = 3;
         }
 

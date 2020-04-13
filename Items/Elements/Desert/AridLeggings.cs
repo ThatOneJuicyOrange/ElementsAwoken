@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             item.width = 18;
             item.height = 18;
-            item.value = Item.sellPrice(0, 1, 0, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = 3;
             item.defense = 6;
         }

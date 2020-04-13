@@ -13,7 +13,6 @@ namespace ElementsAwoken.Items.ItemSets.Radia
 {
     public class GlobuleCannon : ModItem
     {
-        public override string Texture { get { return "ElementsAwoken/Items/TODO"; } }
         private int shotCount = 0;
         public override void SetDefaults()
         {

@@ -25,6 +25,8 @@ using ElementsAwoken.NPCs.Bosses.VoidLeviathan;
 using ElementsAwoken.Buffs.Debuffs;
 using ElementsAwoken.Projectiles.Other;
 using ElementsAwoken.Mounts;
+using ElementsAwoken.Items.Other;
+using ElementsAwoken.Items.ItemSets.HiveCrate;
 
 namespace ElementsAwoken
 {
@@ -161,6 +163,10 @@ namespace ElementsAwoken
         public int fireAccCD = 0;
         public int boostDrive = 0;
         public int boostDriveTimer = 0;
+
+        public bool honeyCocoon = false;
+        public int honeyCocooned = 0;
+        public int honeyCocoonDamage = 0;
 
         public bool wispForm = false;
         public bool forceWisp = false;
@@ -476,6 +482,7 @@ namespace ElementsAwoken
             fireAcc = false;
             boostDrive = 0;
             wispForm = false;
+            honeyCocoon = false;
 
             oceanicArmor = false;
             voidArmor = false;
@@ -632,7 +639,28 @@ namespace ElementsAwoken
             aeroflakTimer--;
             mechArmorCD--;
             toySlimed--;
+            honeyCocooned--;
 
+            if (honeyCocooned <= 0)
+            {
+                honeyCocoonDamage = 0;
+            }
+            else if (honeyCocooned > 0)
+            {
+                player.velocity.X = 0;
+                CantMove();
+            }
+            if (glassHeart)
+            {
+                for (int l = 0; l < Player.MaxBuffs; l++)
+                {
+                    if (player.buffType[l] == BuffID.ShadowDodge)
+                    {
+                        player.DelBuff(l);
+                        break;
+                    }
+                }
+            }
             /*
             if (generalTimer % 60 == 0)
             {
@@ -2339,7 +2367,15 @@ namespace ElementsAwoken
                 }
             }
         }
-
+        public override void CatchFish(Item fishingRod, Item bait, int power, int liquidType, int poolSize, int worldLayer, int questFish, ref int caughtType, ref bool junk)
+        {
+            if (Main.rand.NextBool(3) && liquidType == 2) caughtType = ItemType<MajesticHivefish>();
+            //crate chance
+            if (Main.rand.Next(100) < (10 + (player.cratePotion ? 10 : 0)))
+            {
+                if (liquidType == 2)caughtType = ItemType<HiveCrate>();
+            }
+        }
         public override void UpdateBiomes()
         {
             zoneTemple = (MyWorld.lizardTiles > 50);
@@ -2511,6 +2547,14 @@ namespace ElementsAwoken
                 chaosHeartsUsed = 0;
                 voidHeartsUsed = 0;
             }*/
+            if (glassHeart)
+            {
+                player.immune = false;
+                player.immuneTime = 0;
+                player.shadowDodgeTimer = 0;
+                player.shadowDodge = false;
+                player.shadowDodgeCount = 0;
+            }
             if (oiniteDoubledBuff.Length != Player.MaxBuffs)
             {
                 Array.Resize(ref oiniteDoubledBuff, Player.MaxBuffs);
@@ -2740,18 +2784,18 @@ namespace ElementsAwoken
                 }
             }
         }
-        public static readonly PlayerLayer MiscEffects = new PlayerLayer("ElementsAwoken", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo) {
-        if (drawInfo.shadow != 0f)
+        public static readonly PlayerLayer MiscEffects = new PlayerLayer("ElementsAwoken", "MiscEffects", PlayerLayer.MiscEffectsFront, delegate (PlayerDrawInfo drawInfo)
         {
-            return;
-        }
+            if (drawInfo.shadow != 0f)
+            {
+                return;
+            }
             Player drawPlayer = drawInfo.drawPlayer;
             Mod mod = ModLoader.GetMod("ElementsAwoken");
-            if (drawInfo.drawPlayer.wings != mod.GetEquipSlot("SkylineWhirlwind", EquipType.Wings)) return;
             MyPlayer modPlayer = drawPlayer.GetModPlayer<MyPlayer>();
-            if (drawInfo.drawPlayer.active &&!drawInfo.drawPlayer.dead)
+            if (drawInfo.drawPlayer.active && !drawInfo.drawPlayer.dead)
             {
-                if (modPlayer.skylineAlpha > 0)
+                if (modPlayer.skylineAlpha > 0 && drawInfo.drawPlayer.wings == mod.GetEquipSlot("SkylineWhirlwind", EquipType.Wings))
                 {
                     Texture2D texture = mod.GetTexture("Extra/SkylineWhirlwind");
                     int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
@@ -2769,6 +2813,15 @@ namespace ElementsAwoken
                     Color color = Lighting.GetColor((int)(drawPlayer.Center.X / 16), (int)(drawPlayer.Center.Y / 16)) * 0.7f;
                     DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, color, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1.3f, drawPlayer.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
                     data.shader = GameShaders.Armor.GetShaderIdFromItemId(ItemID.ReflectiveDye);
+                    Main.playerDrawData.Add(data);
+                }
+                else if (modPlayer.honeyCocooned > 0)
+                {
+                    Texture2D texture = mod.GetTexture("Extra/HoneyCocoonOverlay");
+                    int drawX = (int)(drawInfo.position.X + drawPlayer.width / 2f - Main.screenPosition.X);
+                    int drawY = (int)(drawInfo.position.Y + drawPlayer.height / 2f - Main.screenPosition.Y);
+                    Color color = Lighting.GetColor((int)(drawPlayer.Center.X / 16), (int)(drawPlayer.Center.Y / 16)) * 0.7f;
+                    DrawData data = new DrawData(texture, new Vector2(drawX, drawY), null, color, 0f, new Vector2(texture.Width / 2f, texture.Height / 2f), 1.1f, drawPlayer.direction == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0);
                     Main.playerDrawData.Add(data);
                 }
             }
@@ -2998,6 +3051,12 @@ namespace ElementsAwoken
                 player.ApplyDamageToNPC(npc, (int)(damage * 0.2f), 2f, Math.Sign(player.Center.X - npc.Center.X), false);
                 damage = (int)(damage * 0.8f);
             }
+            if (honeyCocooned > 0)
+            {
+                npc.velocity.X = Math.Sign(npc.Center.X - player.Center.X) * 4 * npc.knockBackResist;
+                npc.velocity.Y = Math.Sign(npc.Center.Y - (player.Center.Y + 16)) * 4 * npc.knockBackResist;
+                Main.NewText(Math.Sign(npc.Center.Y - player.Center.Y));
+            }
         }
         public override void ModifyHitByProjectile(Projectile proj, ref int damage, ref bool crit)
         {
@@ -3021,6 +3080,37 @@ namespace ElementsAwoken
                 }
             }
             damage = (int)(damage * damageTaken);
+
+            if (honeyCocooned> 0)
+            {
+                if (!player.immune)
+                {
+                    honeyCocoonDamage += damage;
+                    CombatText.NewText(player.getRect(), Color.Orange, honeyCocoonDamage);
+                    if (honeyCocoonDamage >= 100)
+                    {
+                        honeyCocooned = 0;
+                        Main.PlaySound(SoundID.NPCDeath1, player.position);
+
+                        Vector2 pos = player.Center;
+                        int numDusts = 36;
+                        for (int i = 0; i < numDusts; i++)
+                        {
+                            Vector2 position = Vector2.One.RotatedBy((double)((float)(i - (numDusts / 2 - 1)) * 6.28318548f / (float)numDusts), default(Vector2)) + pos;
+                            Vector2 velocity = position - pos;
+                            Vector2 spawnPos = position + velocity;
+                            Dust dust = Main.dust[Dust.NewDust(spawnPos, 0, 0, 153, velocity.X * 2f, velocity.Y * 2f, 100, default(Color), 1f)];
+                            dust.noGravity = true;
+                            dust.noLight = true;
+                            dust.velocity = Vector2.Normalize(velocity) * 6f * Main.rand.NextFloat(0.8f, 1.2f);
+                        }
+                    }
+                    Main.PlaySound(3, (int)player.position.X, (int)player.position.Y, 1, 1, -0.2f);
+                }
+                player.immuneTime = 30;
+                player.immune = true;
+                return false;
+            }
 
             if (scourgeDrive)
             {
@@ -3153,6 +3243,7 @@ namespace ElementsAwoken
                 playSound = false;
                 Main.PlaySound(SoundID.Shatter, player.position);
                 player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " shattered"), 1, 1);
+                return true;
 
             }
             return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
@@ -3252,7 +3343,27 @@ namespace ElementsAwoken
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             PlayerEnergy energyPlayer = player.GetModPlayer<PlayerEnergy>();
-
+            if (ElementsAwoken.specialAbility.JustPressed)
+            {
+                if (chaosRing && player.FindBuffIndex(BuffType<ChaosShieldCooldown>()) == -1 && !player.dead)
+                {
+                        player.AddBuff(BuffType<ChaosShield>(), 900);
+                        player.AddBuff(BuffType<ChaosShieldCooldown>(), 3600);
+                }
+                if (honeyCocoon)
+                {
+                    if (honeyCocooned <= 0)
+                    {
+                        if (player.FindBuffIndex(BuffType<HoneyCocoonCD>()) == -1 && !player.dead)
+                        {
+                            int duration = GetInstance<Config>().debugMode ? 300 : 3600;
+                            player.AddBuff(BuffType<HoneyCocoonCD>(), duration);
+                            honeyCocooned = 900;
+                        }
+                    }
+                    else if (honeyCocooned > 0) honeyCocooned = 0;
+                }
+            }
             if (neovirtuoBonus)
             {
                 if (ElementsAwoken.neovirtuo.JustPressed)
@@ -3268,17 +3379,7 @@ namespace ElementsAwoken
                     }
                 }
             }
-            if (chaosRing)
-            {
-                if (ElementsAwoken.specialAbility.JustPressed)
-                {
-                    if (player.FindBuffIndex(mod.BuffType("ChaosShieldCooldown")) == -1 && !player.dead)
-                    {
-                        player.AddBuff(mod.BuffType("ChaosShield"), 900);
-                        player.AddBuff(mod.BuffType("ChaosShieldCooldown"), 3600);
-                    }
-                }
-            }
+
             if (boostDrive != 0 && ElementsAwoken.specialAbility.JustPressed && player.FindBuffIndex(BuffType<BoostDriveCD>()) == -1)
             {
                 bool hasEnergy = false;
@@ -3507,6 +3608,8 @@ namespace ElementsAwoken
                 else player.AddBuff(mod.BuffType("CrystallineLocketCD"), 60);
 
             }
+
+
 
             if (toySlimeClaw && toySlimeClawCD <= 0&& ElementsAwoken.specialAbility.JustPressed)
             {

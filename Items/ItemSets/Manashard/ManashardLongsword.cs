@@ -3,6 +3,7 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.ItemSets.Manashard
 {
@@ -10,20 +11,26 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
     {
         public override void SetDefaults()
         {
-            item.damage = 51;
-            item.melee = true;
             item.width = 70;
             item.height = 70;
-            item.useTime = 21;
+            
+            item.damage = 51;
+
+            item.melee = true;
             item.useTurn = true;
-            item.useAnimation = 12;
+            item.autoReuse = true;
+
+            item.useTime = 21;
+            item.useAnimation = 21;
+
             item.useStyle = 1;
             item.knockBack = 5;
+
             item.value = Item.sellPrice(0, 2, 0, 0);
             item.rare = 5;
+
             item.UseSound = SoundID.Item1;
-            item.autoReuse = true;
-            item.shoot = mod.ProjectileType("Manaspike");
+            item.shoot = ProjectileType<Projectiles.Manaspike>();
             item.shootSpeed = 12f;
         }
         public override void SetStaticDefaults()
@@ -34,7 +41,7 @@ namespace ElementsAwoken.Items.ItemSets.Manashard
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "Manashard", 8);
+            recipe.AddIngredient(ItemType<Manashard>(), 8);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();

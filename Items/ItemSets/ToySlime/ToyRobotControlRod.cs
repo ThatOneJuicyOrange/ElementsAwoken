@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.ItemSets.ToySlime
             item.useAnimation = 26;
             item.useStyle = 1;
 
-            item.value = Item.sellPrice(0, 0, 10, 0);
+            item.value = Item.sellPrice(0, 0, 75, 0);
             item.rare = 3;
 
             item.UseSound = SoundID.Item44;

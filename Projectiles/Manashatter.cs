@@ -19,7 +19,6 @@ namespace ElementsAwoken.Projectiles
             projectile.ignoreWater = true;
             projectile.melee = true;
             projectile.penetrate = 1;
-            projectile.extraUpdates = 2;
             projectile.timeLeft = 600;
         }
         public override void SetStaticDefaults()
@@ -37,7 +36,7 @@ namespace ElementsAwoken.Projectiles
                 dust.noGravity = true;
                 dust.scale = 1f;
             }*/
-            projectile.velocity.Y += 0.1f;
+            projectile.velocity.Y += 0.16f;
             projectile.rotation = (float)Math.Atan2((double)projectile.velocity.Y, (double)projectile.velocity.X) + 1.57f;
         }
         public override void Kill(int timeLeft)

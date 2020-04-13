@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Elements.Desert
             item.channel = true;
             item.noMelee = true;
             item.shoot = 541;
-            item.value = Item.buyPrice(0, 5, 0, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.useAnimation = 25;
             item.useTime = 25;
             item.shootSpeed = 16f;

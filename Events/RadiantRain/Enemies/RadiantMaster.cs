@@ -100,6 +100,10 @@ namespace ElementsAwoken.Events.RadiantRain.Enemies
                 npc.defense = 65;
             }
         }
+        public override void BossLoot(ref string name, ref int potionType)
+        {
+            potionType = ItemType<Items.Consumable.Potions.EpicHealingPotion>();
+        }
         public override void FindFrame(int frameHeight)
         {
             npc.spriteDirection = npc.direction;

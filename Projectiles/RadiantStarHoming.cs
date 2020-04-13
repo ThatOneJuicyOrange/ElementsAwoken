@@ -55,6 +55,7 @@ namespace ElementsAwoken.Projectiles
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
+            target.AddBuff(ModContent.BuffType<Buffs.Debuffs.Starstruck>(), 300);
             target.immune[projectile.owner] = 5;
             projectile.ai[1]++;
         }

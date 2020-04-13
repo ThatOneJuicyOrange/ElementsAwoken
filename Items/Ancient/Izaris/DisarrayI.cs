@@ -21,7 +21,7 @@ namespace ElementsAwoken.Items.Ancient.Izaris
             item.width = 50;
             item.height = 50;
 
-            item.damage = 12;
+            item.damage = 24;
             item.mana = 10;
             item.knockBack = 2f;
 

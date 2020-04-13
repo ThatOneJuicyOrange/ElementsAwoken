@@ -50,7 +50,7 @@ namespace ElementsAwoken.Items.Tech.Accessories.Tier7
             if (list.Count > 0) hotkey = list[0];
             else hotkey = "<Special Ability Unbound>";
 
-            string baseTooltip = "Pressing the special ability key (" + hotkey + ") key will greatly speed up the player for 5 seconds\nWARNING: travelling at such high speeds can be damaging\nActivating it will take 150 energy";
+            string baseTooltip = "Pressing the special ability key (" + hotkey + ") will greatly speed up the player for 5 seconds\nWARNING: travelling at such high speeds can be damaging\nActivating it will consume 150 energy";
             foreach (TooltipLine line2 in tooltips)
             {
                 if (line2.mod == "Terraria" && line2.Name.StartsWith("Tooltip"))

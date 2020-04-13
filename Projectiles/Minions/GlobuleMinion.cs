@@ -190,6 +190,7 @@ namespace ElementsAwoken.Projectiles.Minions
         }
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
+            target.AddBuff(BuffType<Buffs.Debuffs.Starstruck>(), 300);
             target.immune[projectile.owner] = 5;
 
             hitNum++; 

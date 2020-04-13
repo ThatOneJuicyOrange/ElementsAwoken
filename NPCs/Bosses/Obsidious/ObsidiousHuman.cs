@@ -198,7 +198,6 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
         public override void AI()
         {
             Player P = Main.player[npc.target];
-            npc.spriteDirection = npc.direction;
             Lighting.AddLight(npc.Center, 0.5f, 0.5f, 0.5f);
             Despawn(P);
 
@@ -214,6 +213,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                 {
                     npc.position.X = telePosX;
                     npc.position.Y = telePosY;
+                    npc.direction = Math.Sign(P.Center.X - npc.Center.X);
                     npc.netUpdate = true;
                 }
                 if (tpAlphaChangeTimer < (int)(tpDuration / 2))
@@ -368,15 +368,7 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     npc.localAI[2]++;
                 }
                 shootTimer--;
-                if (npc.life <= npc.lifeMax * 0.15f)
-                {
-                    shootTimer--;
-                }
-                if (npc.life <= npc.lifeMax * 0.05f)
-                {
-                    shootTimer--;
-                }
-                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                if (shootTimer == 90)
                 {
                     int distance = Main.rand.Next(250, 400);
                     int choice = Main.rand.Next(4);
@@ -396,12 +388,20 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                     {
                         Teleport(P.position.X - distance, P.position.Y + distance);
                     }
-                    shootTimer = Main.rand.Next(140, 220);
+                }
+                if (shootTimer <= 90 && shootTimer % 30 == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                {
                     Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 8);
                     float speed = 8f;
                     float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
                     Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage - 10, 0f, Main.myPlayer);
                     //npc.netUpdate = true;
+                }
+                if (shootTimer <= 0)
+                {
+                    shootTimer = 300;
+                    if (npc.life <= npc.lifeMax * 0.15f) shootTimer -= 60;
+                    if (npc.life <= npc.lifeMax * 0.05f) shootTimer -= 30;
                 }
             }
         }

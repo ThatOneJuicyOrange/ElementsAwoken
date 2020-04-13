@@ -22,7 +22,8 @@ namespace ElementsAwoken.Items.BossDrops.Azana
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Discordant Ore");
+            DisplayName.SetDefault("Chaotron Ore");
+            Tooltip.SetDefault("A dangerous mix of Chaotron particles and terran ore");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(12, 4));
         }
     }

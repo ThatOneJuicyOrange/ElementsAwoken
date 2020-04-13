@@ -321,7 +321,7 @@ namespace ElementsAwoken.NPCs.Bosses.Permafrost
                 }
                 Tile tileTest = Framing.GetTileSafely((int)(npc.Bottom.X / 16), (int)(npc.Bottom.Y / 16));
                 shootTimer++;
-                if ((tileTest.active() && Main.tileSolid[tileTest.type] && !TileID.Sets.Platforms[tileTest.type] && tileTest.type != TileID.PlanterBox && shootTimer > 30) || shootTimer > 60)
+                if ((tileTest.active() && Main.tileSolid[tileTest.type] && !TileID.Sets.Platforms[tileTest.type] && shootTimer > 30) || shootTimer > 60)
                 {
                     shootTimer = 0;
 

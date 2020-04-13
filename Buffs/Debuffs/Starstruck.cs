@@ -33,6 +33,9 @@ namespace ElementsAwoken.Buffs.Debuffs
                 Projectile.NewProjectile(player.position.X + Main.rand.Next(player.width), player.position.Y + Main.rand.Next(player.height), Main.rand.NextFloat(-1,1), Main.rand.NextFloat(-1, 1), ProjectileType<StarstruckP>(), 0, 0, Main.myPlayer, Main.rand.Next(0, 5));
             }
         }
-
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+            npc.GetGlobalNPC<NPCsGLOBAL>().starstruck = true;
+        }
     }
 }

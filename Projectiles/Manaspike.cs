@@ -43,11 +43,10 @@ namespace ElementsAwoken.Projectiles
         public override void Kill(int timeLeft)
         {
             Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, 27);
-            int numberProjectiles = 4;
+            int numberProjectiles = Main.rand.Next(2,5);
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 value15 = new Vector2((float)Main.rand.Next(-9, 9), (float)Main.rand.Next(-9, 9));
-                Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, value15.X, value15.Y, mod.ProjectileType("Manashatter"), projectile.damage / 2, 2f, projectile.owner, 0f, 0f);
+                Projectile.NewProjectile(projectile.Center,-projectile.oldVelocity.RotatedByRandom(MathHelper.ToRadians(90)) * 0.5f, ModContent.ProjectileType<Manashatter>(), projectile.damage / 2, 2f, projectile.owner, 0f, 0f);
             }
         }
     }

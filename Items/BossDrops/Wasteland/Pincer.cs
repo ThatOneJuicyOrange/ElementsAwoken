@@ -38,7 +38,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Pincer");
+            DisplayName.SetDefault("Defender's Recurve");
             Tooltip.SetDefault("Turns normal arrows into venom imbued arrows");
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

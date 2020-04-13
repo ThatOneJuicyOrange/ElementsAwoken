@@ -122,15 +122,8 @@ namespace ElementsAwoken.NPCs.Bosses.Ancients
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-            if (npc.ai[0] < 300)
-            {
-                return false;
-            }
-            if (npc.alpha > 100)
-            {
-                return false;
-            }
-            return true;
+            if (npc.ai[0] < 180 || npc.alpha > 100) return false;
+            return base.CanHitPlayer(target, ref cooldownSlot);
         }
         public override void NPCLoot()
         {

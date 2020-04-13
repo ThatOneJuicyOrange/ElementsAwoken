@@ -36,7 +36,7 @@ namespace ElementsAwoken.Items.BossDrops.Azana
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Infection Heart");
-            Tooltip.SetDefault("A dismal fusion of technology and magic...\nReactivate by using the item\nThrow ores nearby to convert them into Discordant Ore");
+            Tooltip.SetDefault("A dismal fusion of technology and magic...\nReactivate by using the item\nThrow ores nearby to convert them into Chaotron Ore");
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {

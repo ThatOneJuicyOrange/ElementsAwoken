@@ -106,7 +106,8 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
             int essenceAmount = Main.rand.Next(2, 8);
             if (Main.expertMode) essenceAmount = Main.rand.Next(5, 13);
             if (MyWorld.awakenedMode) essenceAmount = Main.rand.Next(8, 20);
-            Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<VoidEssence>(), essenceAmount);
+            VoidEssence essence = (VoidEssence)Main.item[Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<VoidEssence>(), essenceAmount)].modItem;
+            essence.variant = 1;
 
             if (!MyWorld.downedVoidLeviathan)
             {

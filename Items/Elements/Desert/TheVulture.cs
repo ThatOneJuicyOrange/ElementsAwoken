@@ -22,7 +22,7 @@ namespace ElementsAwoken.Items.Elements.Desert
             item.useStyle = 5;
             item.noMelee = true;
             item.knockBack = 2f;
-            item.value = Item.buyPrice(0, 5, 0, 0);
+            item.value = Item.sellPrice(0, 0, 50, 0);
             item.rare = 3;
             item.UseSound = SoundID.Item5;
             item.autoReuse = false;

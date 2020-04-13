@@ -86,6 +86,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             npc.noTileCollide = true;
             npc.netAlways = true;
 
+            npc.alpha = 255;
             npc.scale = 1.3f;
             npc.HitSound = SoundID.NPCHit52;
             npc.DeathSound = SoundID.NPCDeath1;
@@ -319,7 +320,27 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
                     }
                 }
             }
-            if (aiTimer < 0) // death anim
+            if (aiTimer < 0 && shootTimer < 0)
+            {
+                if (aiTimer == -300)
+                {
+                    npc.dontTakeDamage = true;
+                    npc.netUpdate = true;
+                    npc.Center = P.Center + new Vector2(0, -300);
+                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<InfernaceSpawner>(), npc.whoAmI, -1);
+                    NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<InfernaceSpawner>(), npc.whoAmI, 1);
+                    aiTimer++;
+                }
+                npc.alpha--;
+                if (npc.alpha <= 0)
+                {
+                    aiTimer = 0;
+                    shootTimer = 0;
+                    npc.dontTakeDamage = false;
+                    npc.netUpdate = false;
+                }
+            }
+            else if (aiTimer < 0) // death anim
             {
                 int duration = 270 * 4;
                 npc.velocity *= 0.9f;
@@ -575,10 +596,13 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             }
 
             Lighting.AddLight(npc.Center, ((255 - npc.alpha) * 0.4f) / 255f, ((255 - npc.alpha) * 0.1f) / 255f, ((255 - npc.alpha) * 0f) / 255f);
-            int dust = Dust.NewDust(npc.position, npc.width, npc.height, 6);
-            Main.dust[dust].noGravity = true;
-            Main.dust[dust].scale = 1f;
-            Main.dust[dust].velocity *= 0.1f;
+            if ((aiTimer < 0 && shootTimer > 0) || aiTimer < 0)
+            {
+                int dust = Dust.NewDust(npc.position, npc.width, npc.height, 6);
+                Main.dust[dust].noGravity = true;
+                Main.dust[dust].scale = 1f;
+                Main.dust[dust].velocity *= 0.1f;
+            }
         }
         private List<int> GetDropIDs()
         {

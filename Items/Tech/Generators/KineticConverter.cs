@@ -48,7 +48,7 @@ namespace ElementsAwoken.Items.Tech.Generators
             recipe.AddRecipeGroup("ElementsAwoken:GoldBar", 12);
             recipe.AddIngredient(null, "SiliconBoard", 4);
             recipe.AddIngredient(null, "GoldWire", 8);
-            recipe.AddTile(TileID.Anvils);
+            recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

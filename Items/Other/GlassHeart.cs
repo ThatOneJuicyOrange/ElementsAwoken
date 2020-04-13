@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.Other
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Glass Heart");
+            DisplayName.SetDefault("Fragile Heart");
             Tooltip.SetDefault("Causes you to die if you take damage but bosses drop 2x loot\nOnly needs to be in the inventory");
         }
         public override void UpdateInventory(Player player)
