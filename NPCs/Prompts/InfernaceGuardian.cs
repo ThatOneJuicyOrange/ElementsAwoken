@@ -47,6 +47,7 @@ namespace ElementsAwoken.NPCs.Prompts
 
             npc.buffImmune[BuffID.OnFire] = true;
             npc.lavaImmune = true;
+            npc.GetGlobalNPC<VolcanicPlateau.PlateauNPCs>().tomeText = "Infernace’s Guardians are members of the Flamewilled cult that have been blessed by the guardian of the creatures of the Underworld, Infernace. They utilise powerful Fire magic to attack those that defy their god and can teleport to places which Infernace is focusing on.";
         }
         public override void SetStaticDefaults()
         {

@@ -145,92 +145,19 @@ namespace ElementsAwoken.NPCs.Town
         {
             int price = (int)(Item.buyPrice(0,0,30,0) * GetPriceScale());
 
-            button = Language.GetTextValue("Counselling" + " (" + GetPriceString(price) + ")");
+            button = Language.GetTextValue("Counselling" + " (" + EAUtils.GetPriceString(price) + ")");
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if (firstButton)
-            {
+            if (firstButton && Main.LocalPlayer.BuyItem((int)(Item.buyPrice(0, 0, 30, 0) * GetPriceScale()), -1))
+            { 
                 Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 29);
                 Player player = Main.LocalPlayer;
                 player.AddBuff(mod.BuffType("PsychologistSanity"), 3600 * 3);
-                Main.LocalPlayer.BuyItem((int)(Item.buyPrice(0, 0, 30, 0) * GetPriceScale()), -1);
             }
         }  
-        private string GetPriceString(int price)
-        {
-            string text2 = "";
-            int platinum = 0;
-            int gold = 0;
-            int silver = 0;
-            int copper = 0;
-
-            if (price >= 1000000)
-            {
-                platinum = price / 1000000;
-                price -= platinum * 1000000;
-            }
-            if (price >= 10000)
-            {
-                gold = price / 10000;
-                price -= gold * 10000;
-            }
-            if (price >= 100)
-            {
-                silver = price / 100;
-                price -= silver * 100;
-            }
-            if (price >= 1)
-            {
-                copper = price;
-            }
-            if (platinum > 0)
-            {
-                text2 = string.Concat(new object[]
-                {
-                        text2,
-                        platinum,
-                        " ",
-                        Lang.inter[15].Value,
-                        " "
-                });
-            }
-            if (gold > 0)
-            {
-                text2 = string.Concat(new object[]
-                {
-                        text2,
-                        gold,
-                        " ",
-                        Lang.inter[16].Value,
-                        " "
-                });
-            }
-            if (silver > 0)
-            {
-                text2 = string.Concat(new object[]
-                {
-                        text2,
-                        silver,
-                        " ",
-                        Lang.inter[17].Value,
-                        " "
-                });
-            }
-            if (copper > 0)
-            {
-                text2 = string.Concat(new object[]
-                {
-                        text2,
-                        copper,
-                        " ",
-                        Lang.inter[18].Value,
-                        " "
-                });
-            }
-            return text2;
-        }
+       
         public override void AI()
         {
             if (!MyWorld.awakenedMode) npc.active = false;

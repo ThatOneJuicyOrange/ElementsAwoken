@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Desert Trailers");
-            Tooltip.SetDefault("Nice speed!");
+            Tooltip.SetDefault("Reach speeds of up to 40mph\nAllows flight");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)

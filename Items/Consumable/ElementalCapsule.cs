@@ -38,26 +38,22 @@ namespace ElementsAwoken.Items.Consumable
 
         public override bool CanUseItem(Player player)
         {
-            if (NPCsGLOBAL.AnyBoss())
+            return Main.expertMode && (!NPCsGLOBAL.AnyBoss() || GetInstance<Config>().debugMode);
+        }
+        public override bool UseItem(Player player)
+        {
+            if (MyWorld.awakenedMode)
             {
-                player.KillMe(PlayerDeathReason.ByCustomReason(player.name + " couldn't withstand the power."), 3000, 1);
+                Main.NewText("The forces of the world settle.", Color.DeepPink);
+                MyWorld.awakenedMode = false;
             }
-            if (Main.expertMode)
+            else
             {
-                if (MyWorld.awakenedMode)
-                {
-                    Main.NewText("The forces of the world settle.", Color.DeepPink);
-                    MyWorld.awakenedMode = false;
-                }
-                else
-                {
-                    Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
-                    MyWorld.awakenedMode = true;
-                }
-                if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
-                return true;
+                Main.NewText("The forces of the world get twisted beyond imagination...", Color.DeepPink);
+                MyWorld.awakenedMode = true;
             }
-            return false;
+            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
+            return true;
         }
         public override void AddRecipes()
         {

@@ -14,12 +14,20 @@ namespace ElementsAwoken.Items
         public bool artifact = false;
         public bool developer = false;
         public bool youtuber = false;
+        public bool flyingBoots = false;
+        public bool tech = false;
+        public bool unobtainable = false;
+        public bool testing = false;
         public EATooltip()
         {
             donator = false;
             artifact = false;
             developer = false;
             youtuber = false;
+            flyingBoots = false;
+            tech = false;
+            unobtainable = false;
+            testing = false;
         }
         public override bool InstancePerEntity
         {
@@ -35,6 +43,10 @@ namespace ElementsAwoken.Items
             myClone.artifact = artifact;
             myClone.developer = developer;
             myClone.youtuber = youtuber;
+            myClone.flyingBoots = flyingBoots;
+            myClone.tech = tech;
+            myClone.unobtainable = unobtainable;
+            myClone.testing = testing;
             return myClone;
         }
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
@@ -65,6 +77,30 @@ namespace ElementsAwoken.Items
                 {
                     TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "-Youtuber Item-");
                     tip.overrideColor = new Color(3, 160, 92);
+                    tooltips.Insert(1, tip);
+                }
+                if (modItem.flyingBoots)
+                {
+                    TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "Allows wings to be attached onto the boots");
+                    tip.overrideColor = new Color(89, 255, 33);
+                    tooltips.Insert(1, tip);
+                }
+                if (modItem.tech)
+                {
+                    TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "-Tech-");
+                    tip.overrideColor = new Color(122, 230, 217);
+                    tooltips.Insert(1, tip);
+                }
+                if (modItem.unobtainable)
+                {
+                    TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "-Unobtainable-");
+                    tip.overrideColor = Color.Red;
+                    tooltips.Insert(1, tip);
+                }
+                if (modItem.testing)
+                {
+                    TooltipLine tip = new TooltipLine(mod, "Elements Awoken:Tooltip", "-Testing-");
+                    tip.overrideColor = Color.HotPink;
                     tooltips.Insert(1, tip);
                 }
                 if (eaRarity.awakened)

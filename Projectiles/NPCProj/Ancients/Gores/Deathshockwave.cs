@@ -23,6 +23,8 @@ namespace ElementsAwoken.Projectiles.NPCProj.Ancients.Gores
             projectile.width = 4;
             projectile.height = 4;
 
+            projectile.tileCollide = false;
+
             projectile.timeLeft = 400;
             projectile.alpha = 255;
         }

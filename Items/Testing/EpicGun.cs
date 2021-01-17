@@ -30,6 +30,7 @@ namespace ElementsAwoken.Items.Testing
             item.UseSound = SoundID.Item12;
             item.shootSpeed = 50f;
             item.shoot = 10;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
 
         public override void SetStaticDefaults()

@@ -46,7 +46,7 @@ namespace ElementsAwoken.Items.Tools
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Matter Manipulator");
-            Tooltip.SetDefault("Right Click to change the area dug");
+            Tooltip.SetDefault("Right Click to change the area dig size");
         }
         public override bool AltFunctionUse(Player player)
         {

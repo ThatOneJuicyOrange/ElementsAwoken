@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.Artifacts
         {
             DisplayName.SetDefault("Frozen Gauntlet");
             Tooltip.SetDefault("Inflicts chilled and frostburn on attack\nStars fall from the sky when injured\nIncreased invincibility time\nDamage increased by 15%");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 4));
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 5));
         }
 
         public override bool CanEquipAccessory(Player player, int slot)

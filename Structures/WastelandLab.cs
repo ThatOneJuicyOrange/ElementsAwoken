@@ -61,7 +61,7 @@ namespace ElementsAwoken.Structures
                         {
                             if (StructureArray[j, i] == 1) // Locker
                             {
-                                MyWorld.PlaceLabLocker(xPosO + StructureArray.GetLength(1) - i -1, yPosO + j, 177);
+                                EAWorldGen.PlaceLabLocker(xPosO + StructureArray.GetLength(1) - i -1, yPosO + j, 177);
                                 WorldGen.KillWall(xPosO + StructureArray.GetLength(1) - i, yPosO + j);
                                 WorldGen.PlaceWall(xPosO + StructureArray.GetLength(1) - i, yPosO + j, WallID.PlatinumBrick, true);
                             }
@@ -115,7 +115,7 @@ namespace ElementsAwoken.Structures
                         {
                             if (StructureArray[j, i] == 1)
                             {
-                                MyWorld.PlaceLabLocker(xPosO + i, yPosO + j, 177);
+                                EAWorldGen.PlaceLabLocker(xPosO + i, yPosO + j, 177);
 
                                 WorldGen.KillWall(xPosO + i, yPosO + j);
                                 WorldGen.PlaceWall(xPosO + i, yPosO + j, WallID.PlatinumBrick, true);

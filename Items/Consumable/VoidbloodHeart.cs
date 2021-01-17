@@ -34,7 +34,7 @@ namespace ElementsAwoken.Items.Consumable
             Tooltip.SetDefault("Disabled all natural regeneration\nHealing potions are disabled\nThe nurse costs 3x more and is disabled when injured and during bossfights\nYou leak toxic Voidblood on hit and low health");
         }
 
-        public override bool CanUseItem(Player player)
+        public override bool UseItem(Player player)
         {
             if (player.GetModPlayer<MyPlayer>().voidBlood)
             {

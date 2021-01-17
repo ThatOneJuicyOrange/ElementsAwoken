@@ -11,7 +11,6 @@ using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.Items.Elements.Frost
 {
-    [AutoloadEquip(EquipType.Wings)]
     public class FrostWalkers : ModItem
     {
 
@@ -22,14 +21,15 @@ namespace ElementsAwoken.Items.Elements.Frost
             item.value = Item.sellPrice(0, 15, 0, 0);
             item.rare = 7;
             item.accessory = true;
+
+            item.GetGlobalItem<EATooltip>().flyingBoots = true;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Frost Walkers");
-            Tooltip.SetDefault("Awesome speed!\nGreater mobility on ice\nGrants immunity to fire blocks\nTemporary immunity to lava\nAllows flight and slow fall");
+            Tooltip.SetDefault("Reach speeds of up to 55mph\nGreater mobility on ice\nGrants immunity to fire blocks\nTemporary immunity to lava\n15% increased wingtime\n15% increased wing speed");
         }
-
         public override bool CanEquipAccessory(Player player, int slot)
         {
             if (slot < 10)
@@ -57,14 +57,21 @@ namespace ElementsAwoken.Items.Elements.Frost
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            modPlayer.flyingBoots = true;
             player.accRunSpeed = 10.75f;
 
             player.iceSkate = true;
             player.fireWalk = true;
             player.noFallDmg = true;
 
+            modPlayer.wingTimeMult *= 1.15f;
+            modPlayer.wingAccXMult *= 1.15f;
+            modPlayer.wingSpdXMult *= 1.15f;
+            modPlayer.wingAccYMult *= 1.15f;
+            modPlayer.wingSpdYMult *= 1.15f;
+
             player.lavaMax += 420;
-            player.wingTimeMax = 180;
         }
 
         public override void AddRecipes()

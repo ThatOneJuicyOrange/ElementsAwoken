@@ -72,7 +72,7 @@ namespace ElementsAwoken.Projectiles.Thrown
         private int rippleCount = 3;
         private int rippleSize = 200;
         private int rippleSpeed = 15;
-        private float distortStrength = 100f;
+        //private float distortStrength = 100f;
         private void Shockwave()
         {
             projectile.alpha = 255;

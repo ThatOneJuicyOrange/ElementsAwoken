@@ -48,6 +48,7 @@ namespace ElementsAwoken.NPCs.Random
 
             npc.value = Item.buyPrice(0, 1, 50, 0);
             npc.knockBackResist = 0.5f;
+            npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
         public override void SetStaticDefaults()
         {

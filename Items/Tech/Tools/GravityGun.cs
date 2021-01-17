@@ -72,16 +72,25 @@ namespace ElementsAwoken.Items.Tech.Tools
                             modPlayer.energy -= 3;
                             energyConsume = 60;
                         }
-                        Vector2 difference = player.Center - otherItem.Center;
-                        for (int k = 0; k < 20; k++)
-                        {
-                            Dust dust = Main.dust[Dust.NewDust(otherItem.Center + difference * Main.rand.NextFloat(), 0, 0, 61)];
-                            dust.velocity = Vector2.Zero;
-                            dust.noGravity = true;
-                        }
+
+                        DrawDust(player, otherItem.Center);
                         otherItem.Center = mouse;
+                        otherItem.velocity = Vector2.Zero;
                     }
                 }
+            }
+        }
+        private void DrawDust(Player player, Vector2 other)
+        {
+            Vector2 add = new Vector2(1, 0).RotatedBy((Main.MouseWorld - player.Center).ToRotation());
+            add.Normalize();
+            Vector2 start = player.Center + add * 40;
+            Vector2 difference = start - other;
+            for (int k = 0; k < 20; k++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(start - difference * Main.rand.NextFloat(), 0, 0, 61)];
+                dust.velocity = Vector2.Zero;
+                dust.noGravity = true;
             }
         }
         public override void AddRecipes()

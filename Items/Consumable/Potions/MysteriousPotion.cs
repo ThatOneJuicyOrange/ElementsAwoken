@@ -80,7 +80,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
         {
             MyPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
 
-            string name = MyWorld.mysteriousPotionColours[potionNum];
+            string name = EAWorldGen.mysteriousPotionColours[potionNum];
             string desc = "It has a foul smell about it";
             if (modPlayer.mysteriousPotionsDrank[potionNum])
             {
@@ -135,7 +135,7 @@ namespace ElementsAwoken.Items.Consumable.Potions
                     line2.text = desc;
                     if (ModContent.GetInstance<Config>().debugMode)
                     {
-                        line2.text += "\npotionNum:" + potionNum + "\ncolor:" + MyWorld.mysteriousPotionColours[potionNum];
+                        line2.text += "\npotionNum:" + potionNum + "\ncolor:" + EAWorldGen.mysteriousPotionColours[potionNum];
                     }
                 }
                 if (line2.mod == "Terraria" && line2.Name.Contains("ItemName"))
@@ -186,16 +186,16 @@ namespace ElementsAwoken.Items.Consumable.Potions
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
             Color color = Color.Red;
-            if (MyWorld.mysteriousPotionColours[potionNum] == "Red") color = Color.Red;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Cyan") color = Color.Cyan;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Lime") color = Color.LimeGreen;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Fuschia") color = Color.HotPink;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Pink") color = Color.LightPink;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Brown") color = Color.RosyBrown;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Orange") color = Color.Orange;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Yellow") color = Color.Yellow;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Blue") color = Color.DarkBlue;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Purple") color = Color.Purple;
+            if (EAWorldGen.mysteriousPotionColours[potionNum] == "Red") color = Color.Red;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Cyan") color = Color.Cyan;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Lime") color = Color.LimeGreen;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Fuschia") color = Color.HotPink;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Pink") color = Color.LightPink;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Brown") color = Color.RosyBrown;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Orange") color = Color.Orange;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Yellow") color = Color.Yellow;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Blue") color = Color.DarkBlue;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Purple") color = Color.Purple;
 
             Texture2D tex = mod.GetTexture("Items/Consumable/Potions/MysteriousPotionContents");
             spriteBatch.Draw(tex, position, frame, color, 0f, origin, scale, SpriteEffects.None, 0f);
@@ -203,16 +203,16 @@ namespace ElementsAwoken.Items.Consumable.Potions
         public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
         {
             Color color = Color.Red;
-            if (MyWorld.mysteriousPotionColours[potionNum] == "Red") color = Color.Red;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Cyan") color = Color.Cyan;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Lime") color = Color.LimeGreen;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Fuschia") color = Color.DeepPink;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Pink") color = Color.LightPink;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Brown") color = Color.RosyBrown;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Orange") color = Color.Orange;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Yellow") color = Color.LightYellow;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Blue") color = Color.DarkBlue;
-            else if (MyWorld.mysteriousPotionColours[potionNum] == "Purple") color = Color.Purple;
+            if (EAWorldGen.mysteriousPotionColours[potionNum] == "Red") color = Color.Red;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Cyan") color = Color.Cyan;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Lime") color = Color.LimeGreen;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Fuschia") color = Color.DeepPink;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Pink") color = Color.LightPink;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Brown") color = Color.RosyBrown;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Orange") color = Color.Orange;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Yellow") color = Color.LightYellow;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Blue") color = Color.DarkBlue;
+            else if (EAWorldGen.mysteriousPotionColours[potionNum] == "Purple") color = Color.Purple;
             Texture2D tex = mod.GetTexture("Items/Consumable/Potions/MysteriousPotionContents");
             spriteBatch.Draw(tex, item.position, null, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }

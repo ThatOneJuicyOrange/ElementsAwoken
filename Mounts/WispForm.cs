@@ -75,14 +75,6 @@ namespace ElementsAwoken.Mounts
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
             modPlayer.wispForm = true;
-            modPlayer.wispDust = 242; 
-            for (int i = 0; i < 3; i++)
-            {
-                Dust dust = Main.dust[Dust.NewDust(player.position, player.width, player.height, 242, 0f, 0f)];
-                dust.noGravity = true;
-                dust.velocity.Y = -6f * Main.rand.NextFloat(0.8f, 1.2f);
-                dust.fadeIn = 0.5f;
-            }
             player.width = 10;
         }
     }

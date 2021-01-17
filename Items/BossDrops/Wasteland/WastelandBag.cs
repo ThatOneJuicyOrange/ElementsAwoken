@@ -36,32 +36,16 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
         public override void OpenBossBag(Player player)
         {
             int choice = Main.rand.Next(4);
-            if (choice == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("Pincer"));      
-            }
-            if (choice == 1)
-            {
-                player.QuickSpawnItem(mod.ItemType("ScorpionBlade"));
-            }
-            if (choice == 2)
-            {
-                player.QuickSpawnItem(mod.ItemType("Stinger"));
-            }
-            if (choice == 3)
-            {
-                player.QuickSpawnItem(mod.ItemType("ChitinStaff"));
-            }
-            player.QuickSpawnItem(mod.ItemType("VenomSample"));
-            if (MyWorld.awakenedMode) player.QuickSpawnItem(mod.ItemType("TheAntidote")); 
-            if (Main.rand.Next(10) == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("WastelandMask"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                player.QuickSpawnItem(mod.ItemType("WastelandTrophy"));
-            }
+            if (choice == 0) player.QuickSpawnItem(ModContent.ItemType<Pincer>());
+            else if (choice == 1) player.QuickSpawnItem(ModContent.ItemType<ScorpionBlade>());
+            else if (choice == 2) player.QuickSpawnItem(ModContent.ItemType<Stinger>());
+            else if (choice == 3) player.QuickSpawnItem(ModContent.ItemType<ChitinStaff>());
+
+            player.QuickSpawnItem(ModContent.ItemType<VenomSample>());
+            if (MyWorld.awakenedMode) player.QuickSpawnItem(ModContent.ItemType<TheAntidote>());
+
+            if (Main.rand.Next(10) == 0) player.QuickSpawnItem(ModContent.ItemType<WastelandMask>());
+            if (Main.rand.Next(10) == 0) player.QuickSpawnItem(ModContent.ItemType<WastelandTrophy>());
         }
     }
 }

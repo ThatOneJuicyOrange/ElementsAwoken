@@ -1,4 +1,5 @@
 using System;
+using ElementsAwoken.Projectiles.Minions;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -28,7 +29,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
             item.rare = 2;
 
             item.UseSound = SoundID.Item44;
-            item.shoot = mod.ProjectileType("ScorpionMinion");
+            item.shoot = ModContent.ProjectileType<ScorpionMinion>();
             item.shootSpeed = 7f; 
         }
 

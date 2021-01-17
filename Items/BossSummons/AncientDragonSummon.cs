@@ -17,7 +17,7 @@ namespace ElementsAwoken.Items.BossSummons
             item.width = 28;
             item.height = 18;
             item.maxStack = 20;
-            item.rare = 2;
+            item.rare = 11;
             item.useAnimation = 45;
             item.useTime = 45;
             item.useStyle = 4;

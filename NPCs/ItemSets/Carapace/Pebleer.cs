@@ -135,7 +135,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Carapace
             {
                 if (Math.Abs(npc.velocity.X) < 8) npc.velocity.X += rollDir * 0.04f;
                 npc.rotation += npc.velocity.X * 0.05f;
-                StepUpTiles();
+                NPCsGLOBAL.StepUpTiles(npc);
                 if (Math.Abs(npc.velocity.X) < 0.05f || timer > 300 || Math.Abs(P.Center.X - npc.Center.X) > 800)
                 {
                     if (Math.Abs(npc.velocity.X) < 0.05f)
@@ -255,7 +255,7 @@ namespace ElementsAwoken.NPCs.ItemSets.Carapace
             }
             if (npc.velocity.Y >= 0f)
             {
-                StepUpTiles();
+                NPCsGLOBAL.StepUpTiles(npc);
             }
             if (flag22)
             {
@@ -403,75 +403,6 @@ namespace ElementsAwoken.NPCs.ItemSets.Carapace
                 npc.ai[2] = 0f;
             }
         }
-        private void StepUpTiles()
-        {
-            int num164 = 0;
-            if (npc.velocity.X < 0f)
-            {
-                num164 = -1;
-            }
-            if (npc.velocity.X > 0f)
-            {
-                num164 = 1;
-            }
-            Vector2 position2 = npc.position;
-            position2.X += npc.velocity.X;
-            int num165 = (int)((position2.X + (float)(npc.width / 2) + (float)((npc.width / 2 + 1) * num164)) / 16f);
-            int num166 = (int)((position2.Y + (float)npc.height - 1f) / 16f);
-            if (Main.tile[num165, num166] == null)
-            {
-                Main.tile[num165, num166] = new Tile();
-            }
-            if (Main.tile[num165, num166 - 1] == null)
-            {
-                Main.tile[num165, num166 - 1] = new Tile();
-            }
-            if (Main.tile[num165, num166 - 2] == null)
-            {
-                Main.tile[num165, num166 - 2] = new Tile();
-            }
-            if (Main.tile[num165, num166 - 3] == null)
-            {
-                Main.tile[num165, num166 - 3] = new Tile();
-            }
-            if (Main.tile[num165, num166 + 1] == null)
-            {
-                Main.tile[num165, num166 + 1] = new Tile();
-            }
-            if (Main.tile[num165 - num164, num166 - 3] == null)
-            {
-                Main.tile[num165 - num164, num166 - 3] = new Tile();
-            }
-            if ((float)(num165 * 16) < position2.X + (float)npc.width && (float)(num165 * 16 + 16) > position2.X && ((Main.tile[num165, num166].nactive() && !Main.tile[num165, num166].topSlope() && !Main.tile[num165, num166 - 1].topSlope() && Main.tileSolid[(int)Main.tile[num165, num166].type] && !Main.tileSolidTop[(int)Main.tile[num165, num166].type]) || (Main.tile[num165, num166 - 1].halfBrick() && Main.tile[num165, num166 - 1].nactive())) && (!Main.tile[num165, num166 - 1].nactive() || !Main.tileSolid[(int)Main.tile[num165, num166 - 1].type] || Main.tileSolidTop[(int)Main.tile[num165, num166 - 1].type] || (Main.tile[num165, num166 - 1].halfBrick() && (!Main.tile[num165, num166 - 4].nactive() || !Main.tileSolid[(int)Main.tile[num165, num166 - 4].type] || Main.tileSolidTop[(int)Main.tile[num165, num166 - 4].type]))) && (!Main.tile[num165, num166 - 2].nactive() || !Main.tileSolid[(int)Main.tile[num165, num166 - 2].type] || Main.tileSolidTop[(int)Main.tile[num165, num166 - 2].type]) && (!Main.tile[num165, num166 - 3].nactive() || !Main.tileSolid[(int)Main.tile[num165, num166 - 3].type] || Main.tileSolidTop[(int)Main.tile[num165, num166 - 3].type]) && (!Main.tile[num165 - num164, num166 - 3].nactive() || !Main.tileSolid[(int)Main.tile[num165 - num164, num166 - 3].type]))
-            {
-                float num167 = (float)(num166 * 16);
-                if (Main.tile[num165, num166].halfBrick())
-                {
-                    num167 += 8f;
-                }
-                if (Main.tile[num165, num166 - 1].halfBrick())
-                {
-                    num167 -= 8f;
-                }
-                if (num167 < position2.Y + (float)npc.height)
-                {
-                    float num168 = position2.Y + (float)npc.height - num167;
-                    float num169 = 16.1f;
-                    if (num168 <= num169)
-                    {
-                        npc.gfxOffY += npc.position.Y + (float)npc.height - num167;
-                        npc.position.Y = num167 - (float)npc.height;
-                        if (num168 < 9f)
-                        {
-                            npc.stepSpeed = 1f;
-                        }
-                        else
-                        {
-                            npc.stepSpeed = 2f;
-                        }
-                    }
-                }
-            }
-        }
+        
     }
 }

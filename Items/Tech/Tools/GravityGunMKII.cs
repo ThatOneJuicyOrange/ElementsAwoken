@@ -84,14 +84,9 @@ namespace ElementsAwoken.Items.Tech.Tools
                                 modPlayer.energy -= 5;
                                 energyConsume = 60;
                             }
-                            Vector2 difference = player.Center - nPC.Center;
-                            for (int k = 0; k < 20; k++)
-                            {
-                                Dust dust = Main.dust[Dust.NewDust(nPC.Center + difference * Main.rand.NextFloat(), 0, 0, 59)];
-                                dust.velocity = Vector2.Zero;
-                                dust.noGravity = true;
-                            }
+                            DrawDust(player, nPC.Center);
                             nPC.Center = mouse;
+                            nPC.velocity = Vector2.Zero;
                         }
                     }
                 }
@@ -117,16 +112,23 @@ namespace ElementsAwoken.Items.Tech.Tools
 
                     if (Main.mouseLeft)
                     {
-                        Vector2 difference = player.Center - otherItem.Center;
-                        for (int k = 0; k < 20; k++)
-                        {
-                            Dust dust = Main.dust[Dust.NewDust(otherItem.Center + difference * Main.rand.NextFloat(), 0, 0, 59)];
-                            dust.velocity = Vector2.Zero;
-                            dust.noGravity = true;
-                        }
+                        DrawDust(player, otherItem.Center);
                         otherItem.Center = mouse;
                     }
                 }
+            }
+        }
+        private void DrawDust(Player player, Vector2 other)
+        {
+            Vector2 add = new Vector2(1, 0).RotatedBy((Main.MouseWorld - player.Center).ToRotation());
+            add.Normalize();
+            Vector2 start = player.Center + add * 40;
+            Vector2 difference = start - other;
+            for (int k = 0; k < 20; k++)
+            {
+                Dust dust = Main.dust[Dust.NewDust(start - difference * Main.rand.NextFloat(), 0, 0, 59)];
+                dust.velocity = Vector2.Zero;
+                dust.noGravity = true;
             }
         }
         public override void AddRecipes()

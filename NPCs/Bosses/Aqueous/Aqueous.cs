@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles.Other;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -147,7 +148,13 @@ namespace ElementsAwoken.NPCs.Bosses.Aqueous
         {
             potionType = ItemID.GreaterHealingPotion;
         }
-
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient) Projectile.NewProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<AbilityGiver>(), 0, 0, Main.myPlayer,2);
+            }
+        }
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
             if (npc.alpha > 100)

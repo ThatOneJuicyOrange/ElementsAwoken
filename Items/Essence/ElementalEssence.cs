@@ -31,7 +31,7 @@ namespace ElementsAwoken.Items.Essence
             return Color.White;
         }
 
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 1);
@@ -43,6 +43,6 @@ namespace ElementsAwoken.Items.Essence
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

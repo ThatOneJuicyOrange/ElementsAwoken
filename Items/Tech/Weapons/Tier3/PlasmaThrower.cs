@@ -22,7 +22,6 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier3
             item.useAnimation = 28;
             item.useTime = 28;
             item.useStyle = 5;
-            item.UseSound = SoundID.Item91;
 
             item.noMelee = true;
             item.ranged = true;
@@ -38,6 +37,12 @@ namespace ElementsAwoken.Items.Tech.Weapons.Tier3
         {
             DisplayName.SetDefault("Plasma Thrower");
             Tooltip.SetDefault("Instantly heats a path in front of it");
+        }
+        public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            Main.PlaySound(SoundID.Item73, position);
+            Main.PlaySound(SoundID.Item38, position);
+            return true;
         }
         public override void AddRecipes()
         {

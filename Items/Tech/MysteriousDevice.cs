@@ -45,7 +45,7 @@ namespace ElementsAwoken.Items.Tech
         }
         public override bool CanUseItem(Player player)
         {
-            if (MyWorld.generatedLabs)
+            if (EAWorldGen.generatedLabs)
             {
                 Main.NewText("Labs have already been generated", Color.White.R, Color.White.G, Color.White.B);
                 return false;
@@ -61,7 +61,7 @@ namespace ElementsAwoken.Items.Tech
         {
             int xO = Main.maxTilesX / 2;
             int yO = (int)(Main.maxTilesY * .7f);
-            if (!ModContent.GetInstance<Config>().labsDisabled && !MyWorld.generatedLabs)
+            if (!ModContent.GetInstance<Config>().labsDisabled && !EAWorldGen.generatedLabs)
             {
                 LabStructures(xO, yO);
                 Main.NewText("Generating...", Color.White.R, Color.White.G, Color.White.B);
@@ -73,7 +73,7 @@ namespace ElementsAwoken.Items.Tech
             int s = 0;
             int structX = xO - 225 * sizeMult + Main.rand.Next(225 * sizeMult * 2);
             int structY = yO - 275 * sizeMult + Main.rand.Next(275 * sizeMult / 2);
-            MyWorld.generatedLabs = true;
+            EAWorldGen.generatedLabs = true;
             Main.NewText("Generated!", Color.White.R, Color.White.G, Color.White.B);
             for (int q = 0; q < 12; q++)
             {
@@ -92,7 +92,7 @@ namespace ElementsAwoken.Items.Tech
 
         private int GenerateLab(int s, int structX, int structY)
         {
-            if (MyWorld.TileCheckSafe(structX, structY))
+            if (EAWorldGen.TileCheckSafe(structX, structY))
             {
                 if (!Chest.NearOtherChests(structX, structY))
                 {

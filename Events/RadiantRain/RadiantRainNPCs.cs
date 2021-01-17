@@ -14,7 +14,7 @@ namespace ElementsAwoken.Events.VoidEvent
     {
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo) // run on clients only
         {
-            if (MyWorld.radiantRain && spawnInfo.player.position.Y / 16 < Main.worldSurface) 
+            if (MyWorld.radiantRain && spawnInfo.player.position.Y / 16 < Main.worldSurface && !spawnInfo.player.ZoneBeach) 
             {
                 pool.Clear();
                 pool.Add(NPCType<SparklingSlime>(), 0.1f);
@@ -27,7 +27,7 @@ namespace ElementsAwoken.Events.VoidEvent
         //Changing the spawn rate
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
-            if (MyWorld.radiantRain && player.position.Y / 16 < Main.worldSurface)
+            if (MyWorld.radiantRain && player.position.Y / 16 < Main.worldSurface && !player.ZoneBeach)
             {
                 spawnRate = 300; //Lower the number, the more spawns
                 maxSpawns = 15; //Max spawns of NPCs depending on NPC value             

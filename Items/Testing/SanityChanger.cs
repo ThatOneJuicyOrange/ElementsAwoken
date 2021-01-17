@@ -22,6 +22,7 @@ namespace ElementsAwoken.Items.Testing
             item.useTime = 3;
             item.useStyle = 4;
             item.autoReuse = true;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {

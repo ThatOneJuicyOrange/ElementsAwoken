@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ElementsAwoken.Projectiles.Arrows;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -43,7 +44,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
         }
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
-            if (type == ProjectileID.WoodenArrowFriendly) type = mod.ProjectileType("PincerArrow");
+            if (type == ProjectileID.WoodenArrowFriendly) type = ModContent.ProjectileType<PincerArrow>();
             Projectile.NewProjectile(position.X, position.Y, speedX, speedY, type, damage, knockBack, player.whoAmI, 0.0f, 0.0f);
             return false;
         }

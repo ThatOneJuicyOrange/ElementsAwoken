@@ -22,11 +22,12 @@ namespace ElementsAwoken.Items.Testing
             item.useTime = 3;
             item.useStyle = 4;
             item.autoReuse = true;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Apple?");
-            Tooltip.SetDefault("an apple a day keeps the doctor a way");
+            Tooltip.SetDefault("an apple a day keeps the doctor away");
         }
         public override bool AltFunctionUse(Player player)
         {

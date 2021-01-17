@@ -10,7 +10,7 @@ namespace ElementsAwoken.Buffs.PotionBuffs
         public override void SetDefaults()
         {
             Main.buffNoTimeDisplay[Type] = false;
-            DisplayName.SetDefault("Demon Skin");
+            DisplayName.SetDefault("Demon's Giving");
             Description.SetDefault("Increased defense by 3, 10% increased movement and melee speed");
         }
         public override void Update(Player player, ref int buffIndex)

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.Achievements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
@@ -15,32 +16,13 @@ namespace ElementsAwoken
 {
     public class ProjectileUtils : GlobalProjectile
     {
+        public static bool OnScreen(Projectile projectile)
+        {
+            return MathHelper.Distance(projectile.Center.X, Main.LocalPlayer.Center.X) <= Main.screenWidth / 2 && MathHelper.Distance(projectile.Center.Y, Main.LocalPlayer.Center.Y) <= Main.screenHeight / 2;
+        }
         public static void PushOtherEntities(Projectile projectile, List<int> otherTypes = null, float pushStrength = 0.05f)
         {
-            if (otherTypes == null) otherTypes = new List<int>();
-            for (int k = 0; k < Main.maxProjectiles; k++)
-            {
-                Projectile other = Main.projectile[k];
-                if (k != projectile.whoAmI && (other.type == projectile.type || otherTypes.Contains(projectile.type)) && other.active && Math.Abs(projectile.position.X - other.position.X) + Math.Abs(projectile.position.Y - other.position.Y) < projectile.width)
-                {
-                    if (projectile.position.X < other.position.X)
-                    {
-                        projectile.velocity.X -= pushStrength;
-                    }
-                    else
-                    {
-                        projectile.velocity.X += pushStrength;
-                    }
-                    if (projectile.position.Y < other.position.Y)
-                    {
-                        projectile.velocity.Y -= pushStrength;
-                    }
-                    else
-                    {
-                        projectile.velocity.Y += pushStrength;
-                    }
-                }
-            }
+            EAUtils.PushOtherEntities(projectile, otherTypes, pushStrength);
         }
         public static void HeldWandPos(Projectile projectile, Player player, float additionalRotation = 0f)
         {
@@ -100,6 +82,104 @@ namespace ElementsAwoken
             ExplosionDust(projectile, dustIDs, numDustScale, dustScale);
             return expID;
         }
+        public static void ExplosiveKillTiles(Projectile projectile, int radius)
+        {
+            int minTileX = (int)(projectile.position.X / 16f - (float)radius);
+            int maxTileX = (int)(projectile.position.X / 16f + (float)radius);
+            int minTileY = (int)(projectile.position.Y / 16f - (float)radius);
+            int maxTileY = (int)(projectile.position.Y / 16f + (float)radius);
+            if (minTileX < 0)
+            {
+                minTileX = 0;
+            }
+            if (maxTileX > Main.maxTilesX)
+            {
+                maxTileX = Main.maxTilesX;
+            }
+            if (minTileY < 0)
+            {
+                minTileY = 0;
+            }
+            if (maxTileY > Main.maxTilesY)
+            {
+                maxTileY = Main.maxTilesY;
+            }
+            bool canKillWalls = false;
+            for (int x = minTileX; x <= maxTileX; x++)
+            {
+                for (int y = minTileY; y <= maxTileY; y++)
+                {
+                    float diffX = Math.Abs((float)x - projectile.position.X / 16f);
+                    float diffY = Math.Abs((float)y - projectile.position.Y / 16f);
+                    double distance = Math.Sqrt((double)(diffX * diffX + diffY * diffY));
+                    if (distance < (double)radius && Main.tile[x, y] != null && Main.tile[x, y].wall == 0)
+                    {
+                        canKillWalls = true;
+                        break;
+                    }
+                }
+            }
+            AchievementsHelper.CurrentlyMining = true;
+            for (int i = minTileX; i <= maxTileX; i++)
+            {
+                for (int j = minTileY; j <= maxTileY; j++)
+                {
+                    float diffX = Math.Abs((float)i - projectile.position.X / 16f);
+                    float diffY = Math.Abs((float)j - projectile.position.Y / 16f);
+                    double distanceToTile = Math.Sqrt((double)(diffX * diffX + diffY * diffY));
+                    if (distanceToTile < (double)radius)
+                    {
+                        bool canExplode = CanExplosionKillTile(i, j);
+                        if (Main.tile[i, j] != null && Main.tile[i, j].active())
+                        {
+                            if (canExplode)
+                            {
+                                WorldGen.KillTile(i, j, false, false, false);
+                                if (!Main.tile[i, j].active() && Main.netMode != 0)
+                                {
+                                    NetMessage.SendData(17, -1, -1, null, 0, (float)i, (float)j, 0f, 0, 0, 0);
+                                }
+                            }
+                        }
+                        if (canExplode)
+                        {
+                            for (int x = i - 1; x <= i + 1; x++)
+                            {
+                                for (int y = j - 1; y <= j + 1; y++)
+                                {
+                                    if (Main.tile[x, y] != null && Main.tile[x, y].wall > 0 && canKillWalls && WallLoader.CanExplode(x, y, Main.tile[x, y].wall))
+                                    {
+                                        WorldGen.KillWall(x, y, false);
+                                        if (Main.tile[x, y].wall == 0 && Main.netMode != 0)
+                                        {
+                                            NetMessage.SendData(17, -1, -1, null, 2, (float)x, (float)y, 0f, 0, 0, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            AchievementsHelper.CurrentlyMining = false;
+        }
+        public static bool CanExplosionKillTile(int i, int j)
+        {
+            bool canKillTile = true;
+            if (Main.tileDungeon[(int)Main.tile[i, j].type] || Main.tile[i, j].type == 88 || Main.tile[i, j].type == 21 || Main.tile[i, j].type == 26 || Main.tile[i, j].type == 107 || Main.tile[i, j].type == 108 || Main.tile[i, j].type == 111 || Main.tile[i, j].type == 226 || Main.tile[i, j].type == 237 || Main.tile[i, j].type == 221 || Main.tile[i, j].type == 222 || Main.tile[i, j].type == 223 || Main.tile[i, j].type == 211 || Main.tile[i, j].type == 404)
+            {
+                canKillTile = false;
+            }
+            if (!Main.hardMode && Main.tile[i, j].type == 58)
+            {
+                canKillTile = false;
+            }
+            if (!TileLoader.CanExplode(i, j))
+            {
+                canKillTile = false;
+            }
+            return canKillTile;
+        }
         public static int HostileExplosion(Projectile projectile, int dustID, int damage = -1, float numDustScale = 1f, float dustScale = 1f, int soundID = 14)
         {
             return HostileExplosion(projectile, new int[] { dustID }, damage, numDustScale, dustScale, soundID);
@@ -108,7 +188,7 @@ namespace ElementsAwoken
         {
             if (damage == -1) damage = projectile.damage;
             int expID = Projectile.NewProjectile(projectile.Center.X, projectile.Center.Y, 0f, 0f, ProjectileType<ExplosionHostile>(), damage, projectile.knockBack, projectile.owner, 0f, 0f);
-            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, soundID);
+            if (soundID != 0)Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, soundID);
             ExplosionDust(projectile, dustIDs, numDustScale, dustScale);
             return expID;
         }

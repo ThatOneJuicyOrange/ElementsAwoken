@@ -100,12 +100,12 @@ namespace ElementsAwoken.Effects
                         else if (tilePos.X > worldMapSize.X) tilePos.X = (int)worldMapSize.X;
                         if (tilePos.Y < 0) tilePos.Y = 0;
                         else if (tilePos.Y > worldMapSize.Y) tilePos.Y = (int)worldMapSize.Y;
-
-                        if (_ashes[i].timeLeft <= 0f || (Main.tile[tilePos.X, tilePos.Y] != null && Main.tile[tilePos.X, tilePos.Y].active() && Main.tileSolid[Main.tile[tilePos.X, tilePos.Y].type]))
+                        Tile ashTile = Framing.GetTileSafely(tilePos.X, tilePos.Y);
+                        if (_ashes[i].timeLeft <= 0f || (ashTile != null && ashTile.active() && Main.tileSolid[ashTile.type]))
                         {
                             _ashes[i].active = false;
                         }
-                        else if (Framing.GetTileSafely(tilePos.X, tilePos.Y).liquid > 230)
+                        else if (ashTile.liquid > 230)
                         {
                             _ashes[i].velocity *= 0.9f;
                             _ashes[i].center.Y -= 0.3f;

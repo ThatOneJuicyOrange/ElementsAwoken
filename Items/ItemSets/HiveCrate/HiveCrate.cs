@@ -24,7 +24,7 @@ namespace ElementsAwoken.Items.ItemSets.HiveCrate
             item.value = Item.sellPrice(0, 1, 0, 0);
             item.rare = 1;
 
-            item.createTile = ModContent.TileType<Tiles.HiveCratePlaced>();
+            item.createTile = TileType<Tiles.Objects.HiveCratePlaced>();
         }
 
         public override void SetStaticDefaults()

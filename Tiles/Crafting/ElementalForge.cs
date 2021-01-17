@@ -24,11 +24,11 @@ namespace ElementsAwoken.Tiles.Crafting
 
             disableSmartCursor = true;
 
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
+			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 16 };
             TileObjectData.addTile(Type);
 
 			adjTiles = new int[] { TileID.Furnaces };
-			animationFrameHeight = 38;
+			animationFrameHeight = 36;
 			dustType = 6;
         }
  
@@ -49,7 +49,7 @@ namespace ElementsAwoken.Tiles.Crafting
 			{
 				frameCounter = 0;
 				frame++;
-				if (frame > 5)
+				if (frame > 4)
 				{
 					frame = 0;
 				}

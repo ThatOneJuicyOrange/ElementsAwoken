@@ -24,6 +24,7 @@ namespace ElementsAwoken.Items.Testing
             item.UseSound = SoundID.Item60;
             item.consumable = false;
             item.color = new Color(Main.DiscoR, Main.DiscoG, Main.DiscoB);
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {

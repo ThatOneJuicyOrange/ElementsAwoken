@@ -23,23 +23,46 @@ namespace ElementsAwoken.Items.Testing
             item.useStyle = 4;
             item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Demon's Doll");
-            Tooltip.SetDefault("help");
+            Tooltip.SetDefault("help\nleft click to toggle hjardmode\nright click to toggle post moonlord");
+        }
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
         }
         public override bool UseItem(Player player)
         {
-            if (Main.hardMode)
+            if (player.altFunctionUse == 2)
             {
-                Main.hardMode = false;
-                Main.NewText("The ancient spirits of light and dark have been sealed away once more...", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                if (NPC.downedMoonlord)
+                {
+                    NPC.downedMoonlord = false;
+                    Main.NewText("Terraria is fine lmao", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                }
+                else
+                {
+                    NPC.downedMoonlord = true;
+                    Main.NewText("Terraria is scared help", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                }
             }
             else
             {
-                Main.hardMode = true;
-                Main.NewText("The ancient spirits of light and dark have been released.", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                if (Main.hardMode)
+                {
+                    Main.hardMode = false;
+                    MyWorld.awakenedPlateau = false;
+                    Main.NewText("The ancient spirits of light and dark have been sealed away once more...", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                }
+                else
+                {
+                    Main.hardMode = true;
+                    MyWorld.awakenedPlateau = true;
+                    Main.NewText("The ancient spirits of light and dark have been released.", Color.GreenYellow.R, Color.GreenYellow.G, Color.GreenYellow.B);
+                }
             }
             return true;
         }

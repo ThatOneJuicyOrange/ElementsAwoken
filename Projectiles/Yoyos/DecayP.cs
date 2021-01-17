@@ -32,8 +32,8 @@ namespace ElementsAwoken.Projectiles.Yoyos
 Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projectile.height, 62, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f);
             
             int[] array = new int[20];
-            int num428 = 0;
-            float num429 = 300f;
+            int num478 = 0;
+            float num479 = 300f;
             bool flag14 = false;
             for (int num430 = 0; num430 < 200; num430++)
             {
@@ -42,12 +42,12 @@ Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projec
                     float num431 = Main.npc[num430].position.X + (float)(Main.npc[num430].width / 2);
                     float num432 = Main.npc[num430].position.Y + (float)(Main.npc[num430].height / 2);
                     float num433 = Math.Abs(projectile.position.X + (float)(projectile.width / 2) - num431) + Math.Abs(projectile.position.Y + (float)(projectile.height / 2) - num432);
-                    if (num433 < num429 && Collision.CanHit(projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
+                    if (num433 < num479 && Collision.CanHit(projectile.Center, 1, 1, Main.npc[num430].Center, 1, 1))
                     {
-                        if (num428 < 20)
+                        if (num478 < 20)
                         {
-                            array[num428] = num430;
-                            num428++;
+                            array[num478] = num430;
+                            num478++;
                         }
                         flag14 = true;
                     }
@@ -55,7 +55,7 @@ Dust.NewDust(projectile.position + projectile.velocity, projectile.width, projec
             }
             if (flag14)
             {
-                int num434 = Main.rand.Next(num428);
+                int num434 = Main.rand.Next(num478);
                 num434 = array[num434];
                 float num435 = Main.npc[num434].position.X + (float)(Main.npc[num434].width / 2);
                 float num436 = Main.npc[num434].position.Y + (float)(Main.npc[num434].height / 2);

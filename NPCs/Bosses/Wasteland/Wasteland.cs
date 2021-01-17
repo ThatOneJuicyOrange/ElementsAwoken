@@ -10,6 +10,7 @@ using Terraria.GameContent.Events;
 using static Terraria.ModLoader.ModContent;
 using ElementsAwoken.Projectiles.NPCProj.Wasteland;
 using ElementsAwoken.Items.Essence;
+using ElementsAwoken.Projectiles.Other;
 
 namespace ElementsAwoken.NPCs.Bosses.Wasteland
 {
@@ -218,6 +219,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                 {
                     Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/Wasteland" + i), npc.scale);
                 }
+                if (Main.netMode != NetmodeID.MultiplayerClient) Projectile.NewProjectile(npc.Center, Vector2.Zero, ProjectileType<AbilityGiver>(), 0, 0, Main.myPlayer);
             }
         }
 
@@ -268,6 +270,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         {
             potionType = ItemID.LesserHealingPotion;
         }
+
         public override int SpawnNPC(int tileX, int tileY)
         {
             npc.TargetClosest(true);
@@ -329,7 +332,10 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                         {
                             dryadNPC.alpha = 255;
                             aiTimer = -720;
-                            Projectile.NewProjectile(dryadNPC.Center, Vector2.Zero, ProjectileType<WastelandDryad>(), 0, 0, Main.myPlayer);
+                            if (Main.netMode != NetmodeID.MultiplayerClient)
+                            {
+                                Projectile.NewProjectile(dryadNPC.Center, Vector2.Zero, ProjectileType<WastelandDryad>(), 0, 0, Main.myPlayer);
+                            }
                         }
                     }
                 }

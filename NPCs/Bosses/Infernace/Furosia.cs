@@ -85,6 +85,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
             npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
+            npc.GetGlobalNPC<VolcanicPlateau.PlateauNPCs>().tomeText = "Furosia is the daughter of Infernace and Cindari, empowered by the God of Inferno and Magma, Volcanox. She protects the remnants of lost civilisations living in the Underworld, guarding the few demons that remain with her life. She can fire bursts of flame and volcanic energy at her foes.";
         }
         public override void SetStaticDefaults()
         {

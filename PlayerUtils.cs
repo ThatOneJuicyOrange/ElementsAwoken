@@ -46,6 +46,8 @@ namespace ElementsAwoken
         public int[] enemiesKilledCD = new int[999];
 
         public int placingAutoDriller = 0;
+
+        public bool hasVanityWings = false;
         public override void ResetEffects()
         {
             playerLight = playerBrightestLight;
@@ -58,6 +60,7 @@ namespace ElementsAwoken
             buysLastMin = 0;
             enemiesKilledLast10Secs = 0;
             enemiesKilledLastMin = 0;
+            hasVanityWings = false;
         }
         public override void PreUpdate()
         {
@@ -117,6 +120,20 @@ namespace ElementsAwoken
             {
                 placingAutoDriller--;
             }
+
+            int maxAccessoryIndex = 18 + player.extraAccessorySlots;
+            for (int i = 13; i < maxAccessoryIndex; i++)
+            {
+                if (player.armor[i].wingSlot > 0)
+                {
+                    hasVanityWings = true;
+                    break;
+                }
+            }
+        }
+        public static bool InTileRange(Player player, Item item)
+        {
+            return player.position.X / 16f - (float)Player.tileRangeX - (float)item.tileBoost <= (float)Player.tileTargetX && (player.position.X + (float)player.width) / 16f + (float)Player.tileRangeX + (float)item.tileBoost - 1f >= (float)Player.tileTargetX && player.position.Y / 16f - (float)Player.tileRangeY - (float)item.tileBoost <= (float)Player.tileTargetY && (player.position.Y + (float)player.height) / 16f + (float)Player.tileRangeY + (float)item.tileBoost - 2f >= (float)Player.tileTargetY;
         }
         public override void PostUpdateMiscEffects()
         {
@@ -220,6 +237,10 @@ namespace ElementsAwoken
             {
                 return false;
             }
+        }
+        public static bool OnScreen(Vector2 position)
+        {
+            return MathHelper.Distance(position.X, Main.LocalPlayer.Center.X) <= Main.screenWidth / 2 && MathHelper.Distance(position.Y, Main.LocalPlayer.Center.Y) <= Main.screenHeight / 2;
         }
 
         public override void PostSellItem(NPC vendor, Item[] shopInventory, Item item)

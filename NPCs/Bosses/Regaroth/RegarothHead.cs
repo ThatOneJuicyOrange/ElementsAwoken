@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles.Other;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -398,6 +399,13 @@ namespace ElementsAwoken.NPCs.Bosses.Regaroth
                 npc.position.Y = npc.position.Y - (float)(npc.height / 2);
             }
             return false;
+        }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient) Projectile.NewProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<AbilityGiver>(), 0, 0, Main.myPlayer,1);
+            }
         }
         public override bool CheckActive()
         {

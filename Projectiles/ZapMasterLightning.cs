@@ -85,8 +85,13 @@ namespace ElementsAwoken.Projectiles
                     dust.noGravity = true;
                 }
             }
-            if (velocity == Vector2.Zero) velocity = projectile.velocity;
-             projectile.velocity = velocity.RotatedByRandom(.75);
+            if (projectile.localAI[0] % 3 == 0)
+            {
+                if (velocity == Vector2.Zero) velocity = projectile.velocity;
+                float amount = 30;
+                float rotBy = Main.rand.NextBool() ? Main.rand.NextFloat(-amount, -amount /2) : Main.rand.NextFloat(amount / 2, amount);
+                projectile.velocity = velocity.RotatedBy(MathHelper.ToRadians(rotBy));
+            }
            
         }
         private bool CheckForNearbyLessHitNPCs(NPC currentNPC) // the worst name

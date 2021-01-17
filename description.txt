@@ -1,23 +1,143 @@
-Elements Awoken aims to add to the experience playing Terraria.
+Elements Awoken is a large content mod aiming to add lots of new items, enemies, bosses and features to Terraria.
 ----ADDITIONS----
-[i:2018]30+ new enemy NPCs and banners to collect
-[i:1]900+ new items
-[i:43]2 pre-hardmode Bosses, 7 hardmode bosses, 4 post moonlord boss
-[i:1857]3 minibosses and 1 event miniboss
-[i:573]Unique music tracks for each and every boss and event in the mod!
-[i:267]2 new town NPCs
-[i:1958]1 new post moonlord event
+[i:2018][c/edb34e:A huge amount of new enemy NPCs and]
+[c/edb34e:banners to collect]
+[i:1][c/9ceb6e:1000+ new items]
+[i:43][c/fe2468:13 new bosses: 2 pre-hardmode bosses,]
+[c/fe2468:7 hardmode bosses, 4 post moonlord bosses]
+[i:174][c/fc6500:An entirely new large hell biome consisting of]
+[c/fc6500:multiple sub-biomes within]
+[i:1857][c/77e6bb:3 minibosses]
+[i:361][c/faf884:2 new events containing their own minibosses]
+[i:573][c/c477e6:Unique music tracks for every boss and event]
+[c/c477e6:in the mod by downloading Elements Awoken Music!]
+[i:267][c/6c4dab:2 new town NPCs]
+[i:1958][c/a3daf0:1 new post moonlord event]
+[i:1422][c/f0412e:Multiple unique cinematic cutscenes throughout]
+[c/f0412e:the game]
+[i:1845][c/af2eff:A brand new quest system!]
 
-Do you have an idea for the mod? Want to contribute somehow? Come join our discord!
+Do you have an idea for the mod? Want to contribute somehow? Just chat? Come join our discord!
 
 Be sure to download the 'Elements Awoken Music' pack if you want the mods music or alternatively download 'EA Retro Music' for the old music
 
-Donations are on the forum allowing you to get your own custom weapon, accessory or armor set with your name on it!
+Donations information is on the discord allowing donators to get their own dedicated items!
 
 Hope you enjoy playing my mod :)
 
 ----CHANGELOG----
-1.3.13.1
+[c/f04b2e:1.4 - Hell or High Water Update]
+- Other
+  - Changed and cleaned up lots of hotkey code, so if any hotkeys dont work please report
+- Additions
+  - Volcanic Plateaus - A hellish landscape that spawns on the right side of the world
+    - A quiet safe place during pre hardmode, but becomes much more dangerous during hardmode
+    - Containing multiple mini biomes making it up
+       - Lava Lake
+       - Plateaus
+       - Toxipot Ant Nest & Toxic Sands
+    - Small structures that generate within the plateaus
+    - A library where knowledge of every enemy within the plateau can be gained by talking to a familiar ghost
+    - Tonnes of new enemies
+       - Cinder Slimes - Small Pre-Hardmode slimes that will hover in the air after jumping 
+       - Ruined Caldera - Large sentient volcanos that launch deadly fireballs into the air and smash themselves downwards on the player
+       - Insidious Scorchfin - A nimble swordfish that spawns in the lava lake
+       - Charred Cod - Cute little fish that swim in packs
+       - Sparkeye - Small lone fish that jumps out of the lake at objects above
+       - Forgotten Wisp - A weak flaming ball of obsidian that loves to play! And incinerate purple foes with a little fireblast
+       - The Viper - ...
+       - Toxipot - 
+    - A mysterious 'infection' is among the plateau's inhabitants, known as the Voidbroken. Remnants from the attack by the Void Leviathan
+       - 1/25 chance for some enemies to spawn as Voidbroken
+       - Enemies designated as 'Hunter' enemies will attack these Voidbroken enemies
+    - A new type of soul; Soul of Bright
+       - Along with that, a new biome mimic with its own unique drops
+    - A multitude of new mini bosses
+       - Erius - The sulfuric weaver mother
+       - Abandoned Automatron - An ancient drilling unit
+       - The Keeper - The wisp that lies in the Sea of Bones
+  - Three new mini-events that occur inside of the Volcanic Plateaus
+    - Eruption
+       - The lake rumbles violently, releasing bursts of lava and fire and creating a strong upwards gust making everything fall slowly
+       - Gravitron Boots or Weighted Boots can be used to properly move during this, as well as sinking quickly while in liquids
+    - Sulfuric Storm
+       - Sulphur fills the air 
+       - A Gas Mask is required in order to survive longer periods of time during this event
+    - The Rifting
+       - The remnants of the Void Leviathan attack upon the hell races
+       - Only the voidbroken enemies spawn during this event, making it a dangerous time to be in the biome
+  - Abilities- Special powers that are obtianed by beating bosses, replacing some items like the Sandstorm Stone, Hourglass of Eternity and Rain Sigil and making them more controlled and fun to use
+    - Sandstorm - from Wasteland
+    - Time - From Regaroth
+    - Rain - From Aqueous
+    - Wisp - From Volcanox
+  - A new quest system with multiple quest chains!
+    - Open your quest book with the default key, X and can be rebound in controls
+    - See all the details of quests in the quest book, including progress
+    - Get useful rewards for completing quests
+  - A mysterious cult with two quest chains associated; The Order of the Shadowed
+  - Drakonite Goggles and X-Ray Goggles for seeing under lava 
+  - Infernal Fisherman's Potion to allow the player to fish in lava with any fishing rod
+  - New Tiles!
+    - Active Igneous Rock
+    - Igneous Rock
+    - Malignant Flesh
+    - Sulphuric Sediment
+    - Sulphuric Slate
+    - Sulfuric Bricks
+    - Obsidian Glass
+    - Sulfuric Glass
+    - Aurene Glass
+    - Pyroclastic Rock
+    - Sulfuric Quicksand
+    - Ebon Quicksand
+    - Pearl Quicksand
+    - Crimson Quicksand
+    - Sulfuric Pots
+    - Igneous Pots
+    - Tiles for the bars in the mod
+  - New Explosive- Acid Flask- crafted with Acid Drops and a bottle or obtained from pots in the Sulfuric Sands
+  - New Items!
+    -
+  - 2 new ores/materials
+    - Scarletite / Scarlet Steel
+    - Eruption Crystals
+  - New Furniture!
+    - Sulfuric Pillar
+  - New Potions & Potion changes
+    - Drakonite Skin Potion
+    - Flask of Radiance
+    - Fixed Chaosporidic Brew & reimplemented it
+  - Some custom death messages for debuffs
+  - Attachable Wings
+     - Elemental Boots no longer have wings attached, you have to attach them yourself with the new UI
+     - Save yourself an accessory slot while allowing customisable wings
+     - The boots give bonuses to equipped wings
+     - Wings Clip- replaces wings in the Skyline Whirlwind recipe
+  - Added the Radiant Rain enemies and drops onto the Boss Checklist Menu
+- Changes
+  - Renamed Fire Core to Charred Ring
+  - Encounter Fog now changes speed according to player velocity making the fog seem like its not moving with the player
+  - Removed the Armor Ability hotkey and replaced it with double tapping down
+  - Neovirtuo key is now the Special Ability key
+  - Renamed Fire Blaster to Cindari's Sorrow
+  - Renamed Inferno Heart to Furious Soul
+  - Elemental Essence is now unobtainable for now
+  - Toy Slimes only spawn in forest biomes
+  - Removed Bottle from Energized Gel recipe
+  - Elemental Capsule no longer kills the player during a boss fight
+  - Improved Infinity Crystal dropping animation and Crystal Cracker
+  - Changed multiple cinematic code bits and adjusted credits
+- Bug Fixes
+  - Hivefish no longer gives potion sickness
+  - Arid hat correctly adds 40 mana instead of life now
+  - Radiant Rain no longer happens in the ocean to prevent locking the world in rain when Calamity's acid rain is active
+  - The large Toy Slimes now despawn
+  - Fixed the inability to jump with Climbing Claws/Shoe Spikes
+  - Wastelands Eggs now create their gores when killed
+  - Fixed frost mine spawning projectiles at the wrong location
+  - Nerfed (was a bug) and fixed the Ballet Shoes
+[c/f04b2e:1.3.13.1]
 - Important
   - Made Planter Box's count as a platform: this could come with side effects, please report any
 - Additions
@@ -67,6 +187,7 @@ Hope you enjoy playing my mod :)
   - Renamed Scorpion Blade to Protector's Edge
   - Renamed Chitin Staff to Mother's Magic
   - Renamed Pincer to Defender's Recurve
+  - Moved Blightfire to Post Volcanox
 - Bug Fixes
   - Permafrost now treats planterboxes like platforms
   - Putrid Armor no longer poisons town npcs
@@ -78,7 +199,7 @@ Hope you enjoy playing my mod :)
   - Exliture eyes now despawn
   - Azana doesnt get stuck in her dash state anymore
   - Fixed Great Lens not drawing
-1.3.13- The Radiant Frost Update
+[c/f04b2e:1.3.13- The Radiant Frost Update]
 -Other
   - Some adjustments and clean up of multiple sections of code, please report any bugs that may have come with this
 -Additions
@@ -156,11 +277,11 @@ Hope you enjoy playing my mod :)
   - Fixed the Infection Heart being racist and not accepting vanilla ores in other languages
   - Deimos is now crafted at the ancient manipulator
   - Slime boosters trail now appears at the feet when gravity is flipped
-1.3.12.2
+[c/f04b2e:1.3.12.2]
 -Bug Fixes
   - Dragon Warrior Sprite
   - Fixed some tooltips spontaneously not working 
-1.3.12.1
+[c/f04b2e:1.3.12.1]
 -Additions
   - Fargos Mutant Mod support :D
   - Laser Refraction Matrix- Energy Tier 8 item (post Azana)
@@ -182,7 +303,7 @@ Hope you enjoy playing my mod :)
   - Nightfall
   - Crystal Amalgamate
   - Ancient Shard
-1.3.12
+[c/f04b2e:1.3.12]
 -Additions
   - Wasteland lore quotes from the Dryad
   - Firebrick
@@ -236,13 +357,13 @@ Hope you enjoy playing my mod :)
   - Elder Shade Wyrm
   - Mortemite
   - More
-1.3.11.1
+[c/f04b2e:1.3.11.1]
 -Bug Fixes
    - Blightfire is now able to be made again
    - Fixed a bug with mods that increase the max buffs
    - Improved worm pets
    - Fixed Calamity Banner
-1.3.11
+[c/f04b2e:1.3.11]
 -Additions
    - Spawnrate Banners made with the spawnrate potions with a less potent effect
    - Toy Slime Mask

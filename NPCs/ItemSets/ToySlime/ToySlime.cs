@@ -13,7 +13,6 @@ using ElementsAwoken.Projectiles.NPCProj.ToySlime;
 
 namespace ElementsAwoken.NPCs.ItemSets.ToySlime
 {
-    [AutoloadBossHead]
     public class ToySlime : ModNPC
     {
         // all the npc.ais are used in slime ai
@@ -63,7 +62,6 @@ namespace ElementsAwoken.NPCs.ItemSets.ToySlime
 
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath1;
-            music = MusicID.Boss1;
 
             npc.GetGlobalNPC<AwakenedModeNPC>().dontExtraScale = true;
         }
@@ -94,14 +92,18 @@ namespace ElementsAwoken.NPCs.ItemSets.ToySlime
           //SpawnCondition.OverworldDaySlime.Chance * 0.9f;
 
             return (spawnInfo.spawnTileY < Main.worldSurface) 
-                && NPC.downedBoss3 
+                && NPC.downedBoss3
                 && !spawnInfo.playerInTown
-                && !spawnInfo.invasion
+                && !spawnInfo.invasion && !Main.snowMoon && !Main.pumpkinMoon
+                && !spawnInfo.player.ZoneTowerStardust && !spawnInfo.player.ZoneTowerSolar && !spawnInfo.player.ZoneTowerVortex && !spawnInfo.player.ZoneTowerNebula
+                && !spawnInfo.player.ZoneSnow
+                && !spawnInfo.player.ZoneCorrupt
+                && !spawnInfo.player.ZoneCrimson
+                && !spawnInfo.player.ZoneSnow
+                && !spawnInfo.player.ZoneDungeon
                 && !NPC.AnyNPCs(NPCType<ToySlime>())
                 ? spawnchance : 0f;
         }
-
-
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
         {
@@ -110,11 +112,6 @@ namespace ElementsAwoken.NPCs.ItemSets.ToySlime
             Color color = drawColor;
             spriteBatch.Draw(mod.GetTexture("NPCs/ItemSets/ToySlime/ToySlimeArmor"), npc.Center - Main.screenPosition + new Vector2(0, npc.gfxOffY), npc.frame, color, npc.rotation, origin, npc.scale * 0.9f, spriteEffects, 0);
             return true;
-        }
-
-        public override bool CheckActive()
-        {
-            return false;
         }
 
         public override void NPCLoot()

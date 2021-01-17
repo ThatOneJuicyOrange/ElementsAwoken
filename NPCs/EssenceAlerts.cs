@@ -1,4 +1,5 @@
-﻿using ElementsAwoken.UI;
+﻿using ElementsAwoken.Projectiles.Other;
+using ElementsAwoken.UI;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -11,20 +12,25 @@ namespace ElementsAwoken.NPCs
     {
         public override bool PreNPCLoot(NPC npc)
         {
-            if (npc.type == NPCID.EyeofCthulhu)
+            if (npc.type == NPCID.WallofFlesh)
             {
-                if (!NPC.downedBoss1)
+                if (!Main.hardMode)
                 {
-                    /*string text = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes. These can be disabled in the EA Config.";
-                    if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.IndianRed);
-                    else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.IndianRed);*/
-                    PromptInfoUI.Visible = true;
+                    if (Main.netMode == NetmodeID.SinglePlayer)
+                    {
+                        Projectile.NewProjectile(Main.LocalPlayer.Center.X, Main.LocalPlayer.Center.Y, 0f, 0f, ModContent.ProjectileType<PlateauCinematicStarter>(), 0, 0, Main.myPlayer, 0f, 0f);
+                    }
+                    else
+                    {
+                        NetMessage.BroadcastChatMessage(NetworkText.FromLiteral("The Volcanic Plateau awakens"), Color.OrangeRed);
+                    }
                 }
             }
             if (npc.type == NPCID.EyeofCthulhu)
             {
                 if (!NPC.downedBoss1)
                 {
+                    PromptInfoUI.Visible = true;
                     string text = "The desert sands shift...";
                     if (Main.netMode == NetmodeID.SinglePlayer) Main.NewText(text, Color.Yellow);
                     else NetMessage.BroadcastChatMessage(NetworkText.FromLiteral(text), Color.Yellow);

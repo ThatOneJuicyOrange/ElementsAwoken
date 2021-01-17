@@ -18,6 +18,7 @@ namespace ElementsAwoken.Items.Testing
             item.rare = 11;
 
             item.maxStack = 1;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
 
         public override void SetStaticDefaults()

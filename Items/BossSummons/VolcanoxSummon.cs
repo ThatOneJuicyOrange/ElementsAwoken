@@ -14,13 +14,13 @@ namespace ElementsAwoken.Items.BossSummons
     {
         public override void SetDefaults()
         {
-            item.width = 28;
-            item.height = 18;
+            item.width = 32;
+            item.height = 32;
             item.maxStack = 20;
             item.rare = 10;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = 4;
+            //item.useAnimation = 45;
+            //item.useTime = 45;
+            //item.useStyle = 4;
             item.UseSound = SoundID.Item44;
             item.consumable = true;
         }
@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.BossSummons
             DisplayName.SetDefault("Charred Core");
             Tooltip.SetDefault("It's eternal blaze burns your eyes\nSummons Volcanox on use");
         }
-        public override bool CanUseItem(Player player)
+        /*public override bool CanUseItem(Player player)
         {
             return 
             player.ZoneUnderworldHeight && 
@@ -42,7 +42,7 @@ namespace ElementsAwoken.Items.BossSummons
             else NetMessage.SendData(MessageID.SpawnBoss, -1, -1, null, player.whoAmI, mod.NPCType("Volcanox"), 0f, 0f, 0, 0, 0); 
             Main.PlaySound(SoundID.Roar, player.position, 0);
             return true;
-        }
+        }*/
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);

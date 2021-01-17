@@ -58,6 +58,14 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
                 Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/WastelandEgg2"), npc.scale);
             }
         }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/WastelandEgg"), npc.scale);
+                Gore.NewGore(npc.position, npc.velocity, mod.GetGoreSlot("Gores/WastelandEgg2"), npc.scale);
+            }
+        }
         public override void FindFrame(int frameHeight)
         {
             npc.frameCounter += 1f;

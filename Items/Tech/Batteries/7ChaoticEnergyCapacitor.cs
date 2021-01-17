@@ -21,7 +21,7 @@ namespace ElementsAwoken.Items.Tech.Batteries
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chaotic Energy Capacitor");
+            DisplayName.SetDefault("Chaotron Energy Capacitor");
             Tooltip.SetDefault("Increases the players maximum energy by 1750");
         }
         public override void UpdateInventory(Player player)
