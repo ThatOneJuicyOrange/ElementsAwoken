@@ -55,7 +55,6 @@ namespace ElementsAwoken.Items.BossSummons
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.Gel, 30);
             recipe.AddIngredient(ItemID.PinkGel, 5);
-            recipe.AddIngredient(ItemID.Bottle, 1);
             recipe.AddTile(TileID.WorkBenches);
             recipe.SetResult(this);
             recipe.AddRecipe();

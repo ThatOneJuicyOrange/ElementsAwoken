@@ -30,7 +30,7 @@ namespace ElementsAwoken.Items.Elements.Desert
         {
             player.magicCrit += 3;
             player.magicDamage *= 1.04f;
-            player.statLifeMax2 += 40;
+            player.statManaMax2 += 40;
         }
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {

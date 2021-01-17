@@ -26,7 +26,7 @@ namespace ElementsAwoken.Items.Elements.Fire
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Fire Treads");
-            Tooltip.SetDefault("Cool speed!\nGrants immunity to fire blocks\nTemporary immunity to lava");
+            Tooltip.SetDefault("Reach speeds of up to 45mph\nGrants immunity to fire blocks\nTemporary immunity to lava\nAllows flight");
         }
 
         public override bool CanEquipAccessory(Player player, int slot)

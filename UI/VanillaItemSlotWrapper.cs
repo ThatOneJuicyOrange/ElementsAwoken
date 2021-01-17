@@ -4,6 +4,7 @@ using System;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.UI;
+using Terraria.UI.Chat;
 
 namespace ElementsAwoken.UI
 {
@@ -18,33 +19,53 @@ namespace ElementsAwoken.UI
 		internal Item Item;
 		private readonly int _context;
 		private readonly float _scale;
-		internal Func<Item, bool> ValidItemFunc;
-
-		public VanillaItemSlotWrapper(int context = ItemSlot.Context.BankItem, float scale = 1f) {
+        private readonly string _hoverText = ""; // added by EA
+        private readonly Texture2D iconTexture;
+        internal Func<Item, bool> ValidItemFunc;
+        public bool draw;
+        public bool noItemInsert;
+        public VanillaItemSlotWrapper(int context = ItemSlot.Context.BankItem, float scale = 1f, string hoverText = "", Texture2D icon = null) {
 			_context = context;
 			_scale = scale;
 			Item = new Item();
 			Item.SetDefaults(0);
-
-			Width.Set(Main.inventoryBack9Texture.Width * scale, 0f);
+            _hoverText = hoverText;
+            draw = true;
+            noItemInsert = false;
+            iconTexture = icon;
+            Width.Set(Main.inventoryBack9Texture.Width * scale, 0f);
 			Height.Set(Main.inventoryBack9Texture.Height * scale, 0f);
 		}
 
 		protected override void DrawSelf(SpriteBatch spriteBatch) {
-			float oldScale = Main.inventoryScale;
-			Main.inventoryScale = _scale;
-			Rectangle rectangle = GetDimensions().ToRectangle();
+            if (draw)
+            {
+                float oldScale = Main.inventoryScale;
+                Main.inventoryScale = _scale;
+                Rectangle rectangle = GetDimensions().ToRectangle();
 
-			if (ContainsPoint(Main.MouseScreen) && !PlayerInput.IgnoreMouseInterface) {
-				Main.LocalPlayer.mouseInterface = true;
-				if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem)) {
-					// Handle handles all the click and hover actions based on the context.
-					ItemSlot.Handle(ref Item, _context);
-				}
-			}
-			// Draw draws the slot itself and Item. Depending on context, the color will change, as will drawing other things like stack counts.
-			ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());
-			Main.inventoryScale = oldScale;
+                if (ContainsPoint(Main.MouseScreen) && !PlayerInput.IgnoreMouseInterface)
+                {
+                    Main.LocalPlayer.mouseInterface = true;
+                    if ((ValidItemFunc == null || ValidItemFunc(Main.mouseItem)) && (!noItemInsert || !Item.IsAir))
+                    {
+                        // Handle handles all the click and hover actions based on the context.
+                        ItemSlot.Handle(ref Item, _context);
+                    }
+                }
+                // Draw draws the slot itself and Item. Depending on context, the color will change, as will drawing other things like stack counts.
+                ItemSlot.Draw(spriteBatch, ref Item, _context, rectangle.TopLeft());
+                if (iconTexture != null && Item.IsAir)
+                {
+                    spriteBatch.Draw(iconTexture, rectangle.Center(), null, Color.White * 0.35f, 0, iconTexture.Size() / 2, Main.inventoryScale, SpriteEffects.None, 0f);
+                }
+                if (_hoverText != "" && IsMouseHovering)
+                {
+                    Main.hoverItemName = _hoverText;
+                    //ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, _hoverText, new Vector2(Main.mouseX + 17, Main.mouseY + 17), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+                }
+                Main.inventoryScale = oldScale;
+            }
 		}
 	}
 }

@@ -102,6 +102,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             npc.buffImmune[BuffID.Frozen] = true;
             npc.buffImmune[mod.BuffType("IceBound")] = true;
             npc.buffImmune[mod.BuffType("EndlessTears")] = true;
+            npc.GetGlobalNPC<VolcanicPlateau.PlateauNPCs>().tomeText = "Infernace is a legendary guardian of the Underworld’s creatures, granted his power by Volcanox, the deific ruler of the Underworld. With the Void Leviathan’s incursions into the Plateau, Infernace was badly injured and sapped of his energy, weakening him to the point where a powerful adventurer could defeat him. He is guarded by a cult of flameburst demons calling themselves the Flamewilled and wielding powerful magic.";
         }
         public override void SetStaticDefaults()
         {
@@ -361,6 +362,7 @@ namespace ElementsAwoken.NPCs.Bosses.Infernace
             }
             else
             {
+                if (tpAlphaChangeTimer <= 0) npc.alpha = 0;
                 #region despawning
                 if (!P.active || P.dead || !P.ZoneUnderworldHeight)
                 {

@@ -24,16 +24,17 @@ namespace ElementsAwoken.Items.Accessories
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ballet Shoes");
-            Tooltip.SetDefault("Jump speed increased by 40%\nWhen the player jumps they get a speed boost");
+            Tooltip.SetDefault("Jump speed increased by 40%\nWhen the player jumps they get a speed boost in the direction they are moving");
         }
 
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.jumpSpeedBoost += 1.4f;
-            if(player.controlJump && player.velocity.Y == 0 && player.velocity.X < player.direction * 15f)
+            float speed = 8f;
+            if(player.controlJump && player.releaseJump && player.velocity.Y == 0&& player.velocity.X != 0 && Math.Abs(player.velocity.X) < speed)
             {
-                player.velocity.X = player.direction * 15f;
+                player.velocity.X = player.direction * speed;
             }
         }
         public override void AddRecipes()

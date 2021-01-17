@@ -21,8 +21,8 @@ namespace ElementsAwoken.Events.RadiantRain.Enemies
         }
         public override void SetDefaults()
         {
-            npc.width = 32;
-            npc.height = 26;
+            npc.width = 34;
+            npc.height = 32;
 
             npc.aiStyle = 44;
             npc.lifeMax = 7600;

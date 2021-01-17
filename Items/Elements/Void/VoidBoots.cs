@@ -8,11 +8,10 @@ using ElementsAwoken.Items.Elements.Frost;
 using ElementsAwoken.Items.Elements.Sky;
 using ElementsAwoken.Items.Elements.Water;
 using static Terraria.ModLoader.ModContent;
-using Microsoft.Xna.Framework;
 
 namespace ElementsAwoken.Items.Elements.Void
 {
-    [AutoloadEquip(EquipType.Wings)]
+    //[AutoloadEquip(EquipType.Wings)]
     public class VoidBoots : ModItem
     {
         public override void SetDefaults()
@@ -22,12 +21,14 @@ namespace ElementsAwoken.Items.Elements.Void
             item.value = Item.sellPrice(0, 25, 0, 0);
             item.rare = 11;
             item.accessory = true;
+
+            item.GetGlobalItem<EATooltip>().flyingBoots = true;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Boots of the Void");
-            Tooltip.SetDefault("Insane speed!\nGreater mobility on ice\nWater and lava walking\nInfinite immunity to lava\nAllows flight and slow fall\nAllows the ability to climb walls and dash\nGives a chance to dodge attacks");
+            Tooltip.SetDefault("Reach speeds of up to 65mph\nGreater mobility on ice\nWater and lava walking\nInfinite immunity to lava\nAllows the ability to climb walls and dash\nGives a chance to dodge attacks\n35% increased wingtime\n35% increased wing speed");
         }
         public override bool CanEquipAccessory(Player player, int slot)
         {
@@ -57,6 +58,7 @@ namespace ElementsAwoken.Items.Elements.Void
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            modPlayer.flyingBoots = true;
             modPlayer.eaDash = 1;
 
             player.accRunSpeed = 12.75f;
@@ -68,26 +70,31 @@ namespace ElementsAwoken.Items.Elements.Void
             player.noFallDmg = true;
             player.blackBelt = true;
 
+            modPlayer.wingTimeMult *= 1.35f;
+            modPlayer.wingAccXMult *= 1.35f;
+            modPlayer.wingSpdXMult *= 1.35f;
+            modPlayer.wingAccYMult *= 1.35f;
+            modPlayer.wingSpdYMult *= 1.35f;
+
             player.spikedBoots = 2;
 
-            player.wingTimeMax = 220;
             modPlayer.voidBoots = !hideVisual;
         }
 
         public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising,
             ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
         {
-            ascentWhenFalling = 0.65f;
+           /* ascentWhenFalling = 0.65f;
             ascentWhenRising = 0.10f;
             //maxCanAscendMultiplier = 1f;
             maxAscentMultiplier = 2f;
-            constantAscend = 0.135f;
+            constantAscend = 0.135f;*/
         }
 
         public override void HorizontalWingSpeeds(Player player, ref float speed, ref float acceleration)
         {
-            speed = 12f;
-            acceleration *= 3f;
+            /*speed = 12f;
+            acceleration *= 3f;*/
         }
 
         public override bool WingUpdate(Player player, bool inUse)
@@ -96,7 +103,7 @@ namespace ElementsAwoken.Items.Elements.Void
 
             if (inUse && modPlayer.voidBoots)
             {
-                int dust = Dust.NewDust(player.position, player.width, player.height, 127, 0, 0, 0, default(Color));
+                int dust = Dust.NewDust(player.position, player.width, player.height, 127, 0, 0, 0, default);
                 Main.dust[dust].scale *= 1.5f;
             }
             base.WingUpdate(player, inUse);

@@ -27,7 +27,7 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Inferno Heart");
+            DisplayName.SetDefault("Furious Soul");
             Tooltip.SetDefault("Ignites nearby enemies\nBlows up nearby lesser enemies that are on low health\nLights up the area");
         }
         public override void UpdateAccessory(Player player, bool hideVisual)

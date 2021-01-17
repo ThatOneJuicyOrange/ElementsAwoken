@@ -8,10 +8,11 @@ using ElementsAwoken.Items.Elements.Frost;
 using ElementsAwoken.Items.Elements.Void;
 using ElementsAwoken.Items.Elements.Water;
 using static Terraria.ModLoader.ModContent;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace ElementsAwoken.Items.Elements.Sky
 {
-    [AutoloadEquip(EquipType.Wings)]
     public class SkylineWhirlwind : ModItem
     {
         public override void SetDefaults()
@@ -21,14 +22,15 @@ namespace ElementsAwoken.Items.Elements.Sky
             item.value = Item.sellPrice(0, 12, 0, 0);
             item.rare = 6;
             item.accessory = true;
+
+            item.GetGlobalItem<EATooltip>().flyingBoots = true;
         }
 
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Skyline Whirlwind");
-            Tooltip.SetDefault("Crazy speed!\nGrants immunity to fire blocks\nTemporary immunity to lava\nAllows flight and slow fall");
+            Tooltip.SetDefault("Reach speeds of up to 50mph\nGrants immunity to fire blocks\nTemporary immunity to lava\n10% increased wingtime\n10% increased wing speed\nDisable visuals to have normal wings");
         }
-
         public override bool CanEquipAccessory(Player player, int slot)
         {
             if (slot < 10)
@@ -56,24 +58,38 @@ namespace ElementsAwoken.Items.Elements.Sky
         }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            modPlayer.flyingBoots = true;
             player.accRunSpeed = 9.8f;
 
             player.lavaMax += 420;
-            player.wingTimeMax = 160;
-
             player.noFallDmg = true;
             player.fireWalk = true;
+
+            modPlayer.wingTimeMult *= 1.1f;
+            modPlayer.wingAccXMult *= 1.1f;
+            modPlayer.wingSpdXMult *= 1.1f;
+            modPlayer.wingAccYMult *= 1.1f;
+            modPlayer.wingSpdYMult *= 1.1f;
+
+            bool hasWings = false;
+            if (UI.BootWingsUI.itemSlot.Item.type != 0) hasWings = true;
+            if (hasWings) player.wingTimeMax = (int)(player.wingTimeMax * 1.1f);
+            if (player.velocity.Y != 0 && !hideVisual && !player.GetModPlayer<PlayerUtils>().hasVanityWings && hasWings) player.GetModPlayer<MyPlayer>().skylineFlying = true;
         }
-        public override void UpdateVanity(Player player, EquipType type)
+        public override void HorizontalWingSpeeds(Player player, ref float speed, ref float acceleration)
         {
-            if (player.controlJump) player.GetModPlayer<MyPlayer>().skylineFlying = true;
-            base.UpdateVanity(player, type);
+            Main.NewText(speed);
+        }
+        public override void VerticalWingSpeeds(Player player, ref float ascentWhenFalling, ref float ascentWhenRising, ref float maxCanAscendMultiplier, ref float maxAscentMultiplier, ref float constantAscend)
+        {
+            base.VerticalWingSpeeds(player, ref ascentWhenFalling, ref ascentWhenRising, ref maxCanAscendMultiplier, ref maxAscentMultiplier, ref constantAscend);
         }
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("ElementsAwoken:WingGroup");
-            recipe.AddIngredient(ItemID.LuckyHorseshoe, 1);
+            ModRecipe recipe = new ModRecipe(mod); 
+            recipe.AddIngredient(ItemType<Materials.WingsClip>());
+            recipe.AddIngredient(ItemID.LuckyHorseshoe);
             recipe.AddIngredient(null, "FireTreads", 1);
             recipe.AddIngredient(null, "SkyEssence", 6);
             recipe.AddIngredient(ItemID.Cloud, 25);
@@ -82,8 +98,8 @@ namespace ElementsAwoken.Items.Elements.Sky
             recipe.SetResult(this);
             recipe.AddRecipe();
             recipe = new ModRecipe(mod);
-            recipe.AddRecipeGroup("ElementsAwoken:WingGroup");
-            recipe.AddIngredient(ItemID.ObsidianHorseshoe, 1);
+            recipe.AddIngredient(ItemType<Materials.WingsClip>());
+            recipe.AddIngredient(ItemID.ObsidianHorseshoe);
             recipe.AddIngredient(null, "FireTreads", 1);
             recipe.AddIngredient(null, "SkyEssence", 6);
             recipe.AddIngredient(ItemID.Cloud, 25);

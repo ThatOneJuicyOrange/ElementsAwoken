@@ -291,7 +291,10 @@ namespace BaseMod
                     NetMessage.SendTileSquare(-1, x + (int)(size * 0.5F), y + (int)(size * 0.5F), size + 1);
                 }
             }
-            catch (Exception e) { ErrorLogger.Log("TILEGEN ERROR: " + e.Message); ErrorLogger.Log(e.StackTrace); ErrorLogger.Log("--------"); }
+            catch (Exception e)
+            {
+                //ErrorLogger.Log("TILEGEN ERROR: " + e.Message); ErrorLogger.Log(e.StackTrace); ErrorLogger.Log("--------");
+            }
         }
 
         #region worldgen

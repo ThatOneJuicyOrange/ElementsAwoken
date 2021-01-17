@@ -38,8 +38,8 @@ namespace ElementsAwoken.Effects.Fog
 		
 		public override bool PreDrawCloseBackground(SpriteBatch spriteBatch)
 		{
-            fog.Update(mod.GetTexture("Effects/Fog/Fog"));
-            fog.Draw(mod.GetTexture("Effects/Fog/Fog"), true, new Color(120, 120, 200));
+            fog.Update(mod.GetTexture("Effects/Fog/Fog"), -1, ElementsAwoken.encounter == 2);
+            fog.Draw(mod.GetTexture("Effects/Fog/Fog"), -1, new Color(120, 120, 200));
 			return true;
 		}
     }

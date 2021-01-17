@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.NPCs.MovingPlatforms;
+using ElementsAwoken.Projectiles.NPCProj.Obsidious;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,72 +15,81 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.NPCs.Bosses.Obsidious
 {
     [AutoloadBossHead]
     public class Obsidious : ModNPC
     {
-        private float spinAI = 0f;
-        private float shootCooldown = 0; // for a multiple burst
-
-        private int projectileBaseDamage = 50;
-        private float despawnTimer
+        private float aiTimer3 = 0;
+        private float aiTimer4 = 0;
+        private float platformTimer = 0;
+        private List<int> arenaBlocks = new List<int> { TileType<Tiles.ObsidiousArenaManager>(), TileType<Tiles.ObsidiousTempBlock>(), TileType<Tiles.ObsidiousBrick>(), TileType<Tiles.ObsidiousArenaManager>() };
+        private Vector2 arenaCenter = Vector2.Zero;
+        private float flipGrav
         {
             get => npc.ai[0];
             set => npc.ai[0] = value;
         }
-        private float phase
+        private float aiState
         {
             get => npc.ai[1];
             set => npc.ai[1] = value;
         }
-        private float shootTimer
+        private float aiTimer
         {
             get => npc.ai[2];
             set => npc.ai[2] = value;
         }
-        private float aiTimer
+        private float aiTimer2
         {
             get => npc.ai[3];
             set => npc.ai[3] = value;
         }
-        public override void SendExtraAI(BinaryWriter writer)
+        public enum ObsidiousPhase : int 
         {
-            writer.Write(spinAI);
-            writer.Write(shootCooldown);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
+            Spawn = 0,
+            Vibe = 1,
+            Intro = 2,
+            Slide = 3,
+            Fireballs = 4,
+            Slam = 5,
+            FirePillars = 6,
+            Voidballs = 7,
+            Dropper = 8,
+            Deathray = 9
+        };
+        public override void SetStaticDefaults()
         {
-            spinAI = reader.ReadSingle();
-            shootCooldown = reader.ReadSingle();
+            DisplayName.SetDefault("Obsidious");
+            Main.npcFrameCount[npc.type] = 2;
         }
         public override void SetDefaults()
         {
-            npc.width = 222;
-            npc.height = 254;
+            npc.width = 148;
+            npc.height = 148;
 
+            npc.scale *= 1.22f;
             npc.aiStyle = -1;
 
             npc.lifeMax = 75000;
             npc.damage = 75;
             npc.defense = 55;
             npc.knockBackResist = 0f;
+            npc.alpha = 255;
 
             npc.boss = true;
             npc.lavaImmune = true;
             npc.noGravity = true;
-            npc.noTileCollide = true;
+            npc.noTileCollide = false;
             npc.netAlways = true;
-
-            //npc.scale = 1.2f;
+            npc.gfxOffY = -4;
 
             npc.HitSound = SoundID.NPCHit4;
             npc.DeathSound = SoundID.NPCDeath14;
 
             npc.value = Item.buyPrice(0, 20, 0, 0);
-            music = MusicID.Plantera;
             //music = mod.GetSoundSlot(SoundType.Music, "Sounds/Music/ObsidiousTheme");
 
             npc.buffImmune[BuffID.Poisoned] = true;
@@ -93,11 +104,6 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
 
             bossBag = mod.ItemType("ObsidiousBag");
         }
-        public override void SetStaticDefaults()
-        {
-            Main.npcFrameCount[npc.type] = 4;
-            DisplayName.SetDefault("Obsidious");
-        }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
             npc.damage = 90;
@@ -109,427 +115,842 @@ namespace ElementsAwoken.NPCs.Bosses.Obsidious
                 npc.defense = 65;
             }
         }
-
-        public override void FindFrame(int frameHeight)
-        {
-            if (phase != 4)
-            {
-                if (phase == 0)
-                {
-                    npc.frame.Y = 0 * frameHeight;
-                }
-                if (phase == 1)
-                {
-                    npc.frame.Y = 1 * frameHeight;
-                }
-                if (phase == 2)
-                {
-                    npc.frame.Y = 2 * frameHeight;
-                }
-                if (phase == 3)
-                {
-                    npc.frame.Y = 3 * frameHeight;
-                }
-            }
-            else
-            {
-                npc.frameCounter++;
-                if (npc.frameCounter > 6)
-                {
-                    npc.frame.Y = npc.frame.Y + frameHeight;
-                    npc.frameCounter = 0.0;
-                }
-                if (npc.frame.Y > frameHeight * 3)
-                {
-                    npc.frame.Y = 0 * frameHeight;
-                }
-
-            }
-        }
-
-
         public override void NPCLoot()
         {
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ObsidiousTrophy"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("CrystallineCluster"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ObsidiousWings"));
-            }
-            if (Main.rand.Next(10) == 0)
-            {
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ObsidiousMask"));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ObsidiousRobes"));
-                Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("ObsidiousPants"));
-            }
-            if (Main.expertMode)
-            {
-                npc.DropBossBags();
-            }
-            else
-            {
-                int choice = Main.rand.Next(4);
-                if (choice == 0)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Magmarox"));
-                }
-                else if (choice == 1)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("TerreneScepter"));
-                }
-                else if(choice == 2)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("Ultramarine"));
-                }
-                else if(choice == 3)
-                {
-                    Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("VioletEdge"));
-                }
-            }
-            Main.NewText("Ah, my crystal... crumbling... You still arent... strong enough for him", new Color(188, 58, 49));
-            MyWorld.downedObsidious = true;
-            if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
+            RemoveTempBlocks();
+            GravityPlayer gravPlayer = Main.LocalPlayer.GetModPlayer<GravityPlayer>();
+            gravPlayer.forceGrav = 1;
         }
         public override void BossLoot(ref string name, ref int potionType)
         {
             potionType = ItemID.GreaterHealingPotion;
         }
-        private void Despawn(Player P)
+        public override void FindFrame(int frameHeight)
         {
-            if (!P.active || P.dead)
-            {
-                npc.TargetClosest(true);
-                if (!P.active || P.dead)
-                {
-                    despawnTimer++;
-                    if (despawnTimer >= 300)
-                    {
-                        if (phase == 4)
-                        {
-                            Main.NewText("You put up a good fight, but alas, it had to be this way.", new Color(188, 58, 49));
-                        }
-                        else
-                        {
-                            Main.NewText("You forced me to do this.", new Color(188, 58, 49));
-                        }
-                        npc.active = false;
-                    }
-                }
-                else if (!Main.dayTime)
-                    despawnTimer = 0;
-            }
-            if (Main.dayTime)
-            {
-                despawnTimer++;
-                if (despawnTimer >= 300) npc.active = false;
-            }
+            if (npc.life < npc.lifeMax * 0.5f) npc.frame.Y = frameHeight;
+        }
+        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+        {
+            Texture2D texture = mod.GetTexture("NPCs/Bosses/Obsidious/" + GetType().Name + "_Glow");
+            Rectangle frame = new Rectangle(0, npc.frame.Y, texture.Width, texture.Height / Main.npcFrameCount[npc.type]);
+            Vector2 origin = new Vector2(texture.Width * 0.5f, (texture.Height / Main.npcFrameCount[npc.type]) * 0.5f);
+            SpriteEffects effects = npc.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            spriteBatch.Draw(texture, npc.Center - Main.screenPosition + new Vector2(0, npc.gfxOffY) + new Vector2(0, 4), frame, Color.White * (1 - ((float)npc.alpha / 255)), npc.rotation, origin, npc.scale, effects, 0.0f);
         }
         public override void AI()
         {
-            Lighting.AddLight(npc.Center, 0.5f, 0.5f, 0.5f);
-            Player P = Main.player[npc.target];
-            Despawn(P);
-
-            if (npc.localAI[1] == 0)
+            if (arenaCenter == Vector2.Zero) arenaCenter = npc.Center;
+            npc.TargetClosest(false);
+            Player player = Main.player[npc.target];
+            Point playerWorld = (player.Center / 16).ToPoint();
+            //Despawn(player);
+            Rectangle arena = new Rectangle(EAWorldGen.obsidiousTempleLoc.X + 33, EAWorldGen.obsidiousTempleLoc.Y + 2, 83, 65); // not fixed for flipping
+            Rectangle arenaJustAir = new Rectangle(EAWorldGen.obsidiousTempleLoc.X + 35, EAWorldGen.obsidiousTempleLoc.Y + 5, 79, 61); // not fixed for flipping
+            /*for (int i = 0; i < 160; i++)
             {
-                npc.localAI[1]++;
-                //phase = 1;
-                //Main.NewText("At last, I am free!", new Color(93, 25, 43, 200));
-                if (!ModContent.GetInstance<Config>().lowDust)
+                Dust dust = Main.dust[Dust.NewDust(arenaJustAir.TopLeft() * 16, arenaJustAir.Width * 16, arenaJustAir.Height * 16, 6)];
+                dust.noGravity = true;
+                dust.scale *= 1.6f;
+                dust.velocity *= 0;
+            }*/
+            if (npc.life < npc.lifeMax / 2)
+            {
+                platformTimer++;
+                if (platformTimer >= 1200)
                 {
-                    for (int k = 0; k < 50; k++)
+                    List<int> ids = new List<int>();
+                    for (int p = 0; p < Main.maxNPCs; p++)
                     {
-                        int dust = Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, 6, npc.oldVelocity.X * 0.5f, npc.oldVelocity.Y * 0.5f, 100, default(Color), 2f);
-                        Main.dust[dust].noGravity = true;
-                        Main.dust[dust].scale = 1f + Main.rand.Next(10) * 0.1f;
-                        int dust1 = Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, 75, npc.oldVelocity.X * 0.5f, npc.oldVelocity.Y * 0.5f, 100, default(Color), 2f);
-                        Main.dust[dust1].noGravity = true;
-                        Main.dust[dust1].scale = 1f + Main.rand.Next(10) * 0.1f;
-                        int dust2 = Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, 135, npc.oldVelocity.X * 0.5f, npc.oldVelocity.Y * 0.5f, 100, default(Color), 2f);
-                        Main.dust[dust2].noGravity = true;
-                        Main.dust[dust2].scale = 1f + Main.rand.Next(10) * 0.1f;
-                        int dust3 = Dust.NewDust(npc.position + npc.velocity, npc.width, npc.height, DustID.PinkFlame, npc.oldVelocity.X * 0.5f, npc.oldVelocity.Y * 0.5f, 100, default(Color), 2f);
-                        Main.dust[dust3].noGravity = true;
-                        Main.dust[dust3].scale = 1f + Main.rand.Next(10) * 0.1f;
-                    }
-                }
-                npc.netUpdate = true;
-            }
-            if (npc.life <= npc.lifeMax * 0.75f && npc.localAI[1] == 0)
-            {
-                Main.NewText("You put up a good fight for a mere Terrarian", new Color(188, 58, 49));
-                npc.localAI[1]++;
-                npc.netUpdate = true;
-            }
-            if (npc.life <= npc.lifeMax * 0.25f && npc.localAI[1] == 1)
-            {
-                Main.NewText("I didnt sacrifice my life for nothing, the core will be mine!", new Color(188, 58, 49));
-                phase = 4;
-                npc.localAI[1]++;
-                npc.netUpdate = true;
-            }
-            if (npc.life <= npc.lifeMax * 0.1f && npc.localAI[1] == 2)
-            {
-                Main.NewText("No... my crystal is too powerful! I can't die... It's impossible...", new Color(188, 58, 49));
-                npc.localAI[1]++;
-                npc.netUpdate = true;
-            }
-            if (npc.life <= npc.lifeMax * 0.50f && phase != 4)
-            {
-                if (!ModContent.GetInstance<Config>().lowDust)
-                {
-                    int dustType = 6;
-                    switch ((int)phase)
-                    {
-                        case 0:
-                            dustType = 6;
-                            break;
-                        case 1:
-                            dustType = 75;
-                            break;
-                        case 2:
-                            dustType = 135;
-                            break;
-                        case 3:
-                            dustType = DustID.PinkFlame;
-                            break;
-                        default: break;
-                    }
-                    Vector2 leftEye = new Vector2(npc.Center.X - 14, npc.Center.Y - 96);
-                    Vector2 rightEye = new Vector2(npc.Center.X + 14, npc.Center.Y - 96);
-                    int dust = Dust.NewDust(leftEye, 6, 6, dustType, npc.velocity.X * 0.5f, 12f, 100, default(Color), 2f);
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].scale = 1f + Main.rand.Next(10) * 0.1f;
-                    dust = Dust.NewDust(rightEye, 6, 6, dustType, npc.velocity.X * 0.5f, 12f, 100, default(Color), 2f);
-                    Main.dust[dust].noGravity = true;
-                    Main.dust[dust].scale = 1f + Main.rand.Next(10) * 0.1f;
-                }
-            } 
-            shootTimer--;
-            shootCooldown--;
-            if (shootCooldown <= 0)
-            {
-                shootCooldown = 80;
-            }
-            aiTimer++;
-            //fire
-            if (phase == 0)
-            {
-                if (aiTimer <= 120)
-                {
-                    npc.velocity = Vector2.Zero;
-                    if (aiTimer == 100)
-                    {
-                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y + 60, 0, 0, mod.ProjectileType("ObsidiousFirePortal"), projectileBaseDamage, 1, Main.myPlayer);
-                    }
-                }
-                else
-                {
-                    Move(P, 4f);
-                    if (npc.life <= npc.lifeMax * 0.5f)
-                    {
-                        if (shootTimer == 150 && Main.netMode != NetmodeID.MultiplayerClient)
+                        NPC other = Main.npc[p];
+                        if (other.active && other.type == NPCType<ObsidiousPlatform>())
                         {
-                            Projectile.NewProjectile(P.Center.X, P.Center.Y, 0, 0, mod.ProjectileType("ObsidiousTargetCrystalCenter"), 0, 0, Main.myPlayer, 0f, P.whoAmI); // lonng name
+                            ids.Add(other.whoAmI);
                         }
-                        if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                    }
+                    int num = Main.expertMode ? MyWorld.awakenedMode ? 3 : 2 : 1;
+                    for (int p = 0; p < num; p++)
+                    {
+                        int chosen = Main.rand.Next(ids);
+                        Main.npc[chosen].ai[3] = 3;
+                        ids.Remove(chosen);
+                    }
+                    platformTimer = 0;
+                }
+                for (int p = 0; p < Main.maxNPCs; p++)
+                {
+                    NPC other = Main.npc[p];
+                    if (other.active && other.type == NPCType<ObsidiousPlatform>())
+                    {
+                        if (other.ai[3] != 1) break;
+                        other.ai[3] = 2; 
+                    }
+                }
+            }
+            float slideSpeed = 20;
+            float gravFlipTimerMax = 180;
+            float acceleration = MathHelper.Lerp(0.4f, 0.2f, MathHelper.Clamp((float)npc.life / (float)npc.lifeMax, 0, 1)) * (Main.expertMode ? MyWorld.awakenedMode ? 1.5f : 1.2f : 1f);
+            if (arena.Contains(playerWorld) && !NPC.downedPlantBoss && !GetInstance<Config>().debugMode)
+            {
+                aiState = 9999;
+            }
+            if (aiState >= 3)
+            {
+                if (!arena.Contains(playerWorld))
+                {
+                    npc.alpha += 10;
+                    if (npc.alpha >= 255)
+                    {
+                        npc.active = false;
+                        RemoveTempBlocks();
+                    }
+                }
+                if (aiState > 3 && arena.Contains(npc.Center.ToTileCoordinates())) // break blocks when not in slide phase
+                {
+                    Rectangle breakBlocks = new Rectangle((int)npc.position.X / 16 - 1, (int)npc.position.Y / 16 - 1, npc.width / 16 + 2, npc.height / 16 + 2);
+                    for (int i = breakBlocks.X; i < breakBlocks.X + breakBlocks.Width; i++)
+                    {
+                        for (int j = breakBlocks.Y; j < breakBlocks.Y + breakBlocks.Height; j++)
                         {
-                            for (int k = 0; k < Main.maxProjectiles; k++)
+                            Tile t = Framing.GetTileSafely(i, j);
+                            if (!arenaBlocks.Contains(t.type))
                             {
-                                Projectile other = Main.projectile[k];
-                                if (other.type == mod.ProjectileType("ObsidiousTargetCrystalCenter") && other.active)
-                                {
-                                    int numberProjectiles = 8 + Main.rand.Next(0,4);
-                                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 12);
-                                    float rotation = (float)Math.Atan2(npc.Center.Y - other.Center.Y, npc.Center.X - other.Center.X);
-                                    for (int i = 0; i < numberProjectiles; i++)
-                                    {
-                                        Vector2 perturbedSpeed = new Vector2((float)((Math.Cos(rotation) * 12f) * -1), (float)((Math.Sin(rotation) * 12f) * -1)).RotatedByRandom(MathHelper.ToRadians(10));
-                                        Projectile.NewProjectile(npc.Center.X, npc.Center.Y, perturbedSpeed.X, perturbedSpeed.Y, mod.ProjectileType("ObsidiousFireBeam"), projectileBaseDamage + 30, 0f, Main.myPlayer, 0f, 0f);
-                                    }
-                                }
+                                WorldGen.KillTile(i, j);
                             }
-                            shootTimer = 300;
                         }
                     }
                 }
-                if (aiTimer >= 900)
-                {
-                    phase++;
-                    aiTimer = 0;
-                }
             }
-            //earth
-            if (phase == 1)
+            if (aiState == (int)ObsidiousPhase.Spawn) // spawn
             {
-                Move(P, 4f);
-                if (aiTimer == 10)
-                {
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, mod.ProjectileType("ObsidiousRockEffect"), projectileBaseDamage, 1, Main.myPlayer);
-                }
-                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 69);
-                    float speed = 8f;
-                    float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousRockLarge"), projectileBaseDamage + 20, 0f, Main.myPlayer);
-                    shootTimer = Main.rand.Next(20, 60);
-                }
-                int rand = npc.life <= npc.lifeMax * 0.5f ? 12 : 14;
-                if (Main.rand.Next(rand) == 0)
-                {
-                    int damage = 30;
-                    float posX = npc.Center.X + Main.rand.Next(5000) - 3000;
-                    float posY = npc.Center.Y + 1000;
-                    Projectile.NewProjectile(posX, posY, 0f, -10f, mod.ProjectileType("ObsidiousRockNoCollide"), damage, 0f, Main.myPlayer);
-                }
-                if (aiTimer >= 900)
-                {
-                    phase++;
-                    aiTimer = 0;
-                }
-            }
-            //ice
-            if (phase == 2)
-            {
-                Move(P, 4f);
-                if (shootTimer <= 0 && shootCooldown <= 24 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    float speed = 6f;
-                    int type = mod.ProjectileType("ObsidiousIceLaser");
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 33);
+                npc.boss = false;
+                music = MusicID.Plantera;
+                npc.GivenName = " ";
+                int toRoof = 478;
+                int toWall = 620;
+                int apart = 200;
 
-                    float rotation = (float)Math.Atan2(npc.Center.Y - 92 - P.Center.Y, npc.Center.X - 12 - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X - 12, npc.Center.Y - 92, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), type, projectileBaseDamage, 0f, Main.myPlayer);
+                int centerID = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousArenaCrystal>());
+                NPC center = Main.npc[centerID];
+                center.ai[0] = npc.whoAmI;
+                center.Center = npc.Center;
 
-                    float rotation2 = (float)Math.Atan2(npc.Center.Y - 92 - P.Center.Y, npc.Center.X + 12 - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X + 12, npc.Center.Y - 92, (float)((Math.Cos(rotation2) * speed) * -1), (float)((Math.Sin(rotation2) * speed) * -1), type, projectileBaseDamage, 0f, Main.myPlayer);
-                    shootTimer = 6;
-                }
-                if (aiTimer >= 900)
-                {
-                    phase++;
-                    aiTimer = 0;
-                }
+                CreateCrystal(new Vector2(apart, toRoof), 0, centerID);
+                CreateCrystal(new Vector2(-apart, toRoof), 0, centerID);
+
+                CreateCrystal(new Vector2(apart, -toRoof), 3.14f, centerID);
+                CreateCrystal(new Vector2(-apart, -toRoof), 3.14f, centerID);
+
+                CreateCrystal(new Vector2(toWall, apart), 4.71f, centerID);
+                CreateCrystal(new Vector2(toWall, -apart), 4.71f, centerID);
+
+                CreateCrystal(new Vector2(-toWall, apart), 1.57f, centerID);
+                CreateCrystal(new Vector2(-toWall, -apart), 1.57f, centerID);
+                aiState = 1;
             }
-            //shadowflame
-            if (phase == 3)
+            else if (aiState == (int)ObsidiousPhase.Vibe)
             {
-                Move(P, 4f);
-                if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 103);
-                    float speed = 5f;
-                    float rotation = (float)Math.Atan2(npc.Center.Y - P.Center.Y, npc.Center.X - P.Center.X);
-                    Projectile.NewProjectile(npc.Center.X, npc.Center.Y - 80, (float)((Math.Cos(rotation) * speed) * -1), (float)((Math.Sin(rotation) * speed) * -1), mod.ProjectileType("ObsidiousHomingBall"), projectileBaseDamage + 20, 0f, Main.myPlayer);
-                    shootTimer = Main.rand.Next(8, 40);
-                    npc.netUpdate = true;
-                }
-                if (aiTimer >= 900)
-                {
-                    phase = 0;
-                    aiTimer = 0;
-                }
-            }
-            // all/beams
-            if (phase == 4)
-            {
-                npc.velocity.X = 0f;
-                npc.velocity.Y = 0f;
-                if (aiTimer <= 300)
-                {
-                    npc.immortal = true;
-                    npc.dontTakeDamage = true;
-                    
-                    Vector2 offset = new Vector2(400, 0);
-                    spinAI += 0.01f;
-                    if (shootTimer <= 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                    {
-                        int numProj = 4;
-                        for (int i = 0; i < numProj; i++)
-                        {
-                            int damage = aiTimer <= 60 ? 0 : projectileBaseDamage;
-                            float projOffset = 360 / numProj;
-                            Vector2 shootTarget1 = npc.Center + offset.RotatedBy(spinAI + (projOffset * i) * (Math.PI * 2 / 8));
-                            float rotation = (float)Math.Atan2(npc.Center.Y - shootTarget1.Y, npc.Center.X - shootTarget1.X);
-                            int proj = Projectile.NewProjectile(npc.Center.X, npc.Center.Y, (float)((Math.Cos(rotation) * 10f) * -1), (float)((Math.Sin(rotation) * 10f) * -1), mod.ProjectileType("ObsidiousBeam"), damage, 0f, Main.myPlayer, 0, i);
-                            Main.projectile[proj].timeLeft = (int)aiTimer;
-                        }
-                        shootTimer = 4;
-                    }
-                }
-                else
+                npc.immortal = true;
+                npc.dontTakeDamage = true;
+                if (!NPC.AnyNPCs(NPCType<ObsidiousWallCrystal>()))
                 {
                     npc.immortal = false;
                     npc.dontTakeDamage = false;
+                    npc.boss = true;
+                    float orbitalcount = 16;
+                    for (int l = 0; l < orbitalcount; l++)
+                    {
+                        float distance = 360f / orbitalcount;
+                        NPC plat = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousPlatform>(), npc.whoAmI, l * distance)];
+                        ObsidiousPlatform obbyPlat = (ObsidiousPlatform)plat.modNPC;
+                        obbyPlat.arenaMiddle = new Vector2(npc.Center.X, npc.Center.Y);
+                    }
+                    Main.PlaySound(SoundLoader.customSoundType, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/ObsidiousIntro"));
+                    aiState = 2;
+                    ReconstructArena();
                 }
-                if (aiTimer >= (npc.life <= npc.lifeMax * 0.1f ? 400 : 600))
+            }
+            else if (aiState == (int)ObsidiousPhase.Intro)
+            {
+                npc.GivenName = "";
+                if (npc.alpha > 0) npc.alpha -= 10;
+                if (Main.netMode == NetmodeID.SinglePlayer)
+                {
+                    aiTimer2++;
+                    if (aiTimer2 > 180)
+                    {
+                        aiTimer++;
+                        if (aiTimer > 5 && Math.Abs(npc.velocity.Y) < 0.3f)
+                        {
+                            Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                            Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                            aiTimer = 0;
+                            aiTimer2 = 0;
+                            aiState++;
+                            aiState = (int)ObsidiousPhase.Dropper;
+                        }
+                        if (npc.velocity.Y < slideSpeed) npc.velocity.Y += 0.2f;
+                    }
+                }
+                else
+                {
+                    aiTimer++;
+                    if (aiTimer > 5 && Math.Abs(npc.velocity.Y) < 0.3f)
+                    {
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                        aiTimer = 0;
+                        aiState++;
+                    }
+                    if (npc.velocity.Y < slideSpeed) npc.velocity.Y += 0.2f;
+                }
+            }
+            else if (aiState == (int)ObsidiousPhase.Slide)
+            {
+                PushPlayer(npc);
+                if (aiTimer2 == 0 || aiTimer2 == 4)
+                {
+                    Slide(new Vector2(-slideSpeed, 0), arenaJustAir, acceleration);
+                }
+                else if (aiTimer2 == 1 || aiTimer2 == 5)
+                {
+                    Slide(new Vector2(0, -slideSpeed), arenaJustAir, acceleration);
+                }
+                else if (aiTimer2 == 2 || aiTimer2 == 6)
+                {
+                    Slide(new Vector2(slideSpeed, 0), arenaJustAir, acceleration);
+                }
+                else if (aiTimer2 == 3 || aiTimer2 == 7 || aiTimer2 == -1)
+                {
+                    Slide(new Vector2(0, slideSpeed), arenaJustAir,acceleration);
+                }
+            }
+            else if (aiState == (int)ObsidiousPhase.Fireballs)
+            {
+                aiTimer2++;
+                Vector2 toTarget = new Vector2(player.Center.X - npc.Center.X - 300, player.Center.Y - npc.Center.Y);
+                toTarget.Normalize();
+                npc.velocity = toTarget * 4;
+                if (aiTimer == 0)
+                {
+                    Main.PlaySound(SoundID.DD2_BetsyWindAttack, npc.position);
+                    float orbitalcount = 8;
+                    for (int l = 0; l < orbitalcount; l++)
+                    {
+                        float distance = 360f / orbitalcount;
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center.X, npc.Center.Y, 0, 0, ProjectileType<ObsidiousFireball>(), npc.damage / 2, 1, Main.myPlayer, npc.whoAmI, l * distance)];
+                    }
+                }
+                aiTimer++;
+                if (aiTimer > 300) aiTimer = 0;
+                if (aiTimer2 > 900)
                 {
                     aiTimer = 0;
+                    aiTimer2 = 0;
+                    aiTimer3 = 0;
+                    aiTimer4 = 0;
+                    aiState++;
                 }
             }
-            if (npc.localAI[0] == 0 && Main.netMode != NetmodeID.MultiplayerClient)
+            else if (aiState == (int)ObsidiousPhase.Slam) // slam from above
             {
-                npc.TargetClosest(true);
-                npc.localAI[0]++;
-                int num = NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("ObsidiousHand"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
-                Main.npc[num].ai[0] = -1f;
-                Main.npc[num].ai[1] = (float)npc.whoAmI;
-                Main.npc[num].target = npc.target;
-                Main.npc[num].netUpdate = true;
-                num = NPC.NewNPC((int)(npc.position.X + (float)(npc.width / 2)), (int)npc.position.Y + npc.height / 2, mod.NPCType("ObsidiousHand"), npc.whoAmI, 0f, 0f, 0f, 0f, 255);
-                Main.npc[num].ai[0] = 1f;
-                Main.npc[num].ai[1] = (float)npc.whoAmI;
-                Main.npc[num].ai[3] = 150f; // ai timer offset so they arent exactly the same
-                Main.npc[num].target = npc.target;
-                Main.npc[num].netUpdate = true;
-                npc.netUpdate = true;
-            }
-        }
-        private void Move(Player P, float moveSpeed)
-        {
-            Vector2 toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget = new Vector2(P.Center.X - npc.Center.X, P.Center.Y - npc.Center.Y);
-            toTarget.Normalize();
-            if (Vector2.Distance(P.Center, npc.Center) >= 30)
-            {
-                npc.velocity = toTarget * moveSpeed;
-            }
-        }
-        public override bool CheckActive()
-        {
-            return false;
-        }
+                aiTimer4++;
+                if (aiTimer == 0)
+                {
+                    aiTimer2 = player.Center.X;
+                    aiTimer = 1;
+                }
+                else if (aiTimer == 1)
+                {
+                    aiTimer3++;
+                    if (aiTimer2 == 0) aiTimer = 0;
+                    Vector2 abovePlayer = new Vector2(aiTimer2, player.Center.Y - 500);
+                    Vector2 toTarget = new Vector2(abovePlayer.X - npc.Center.X, abovePlayer.Y - npc.Center.Y);
+                    toTarget.Normalize();
+                    npc.velocity.X = toTarget.X * 13;
+                    npc.velocity.Y = toTarget.Y * 13 * MathHelper.Clamp(MathHelper.Distance(abovePlayer.Y, npc.Center.Y) / 500, 1, 2);
 
-        public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
-        {
-            if (aiTimer <= 300 && phase == 4)
-            {
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullNone);
+                    bool cantReach = (Collision.SolidCollision(abovePlayer - npc.Size / 2, npc.width, npc.height) || !arena.Contains(abovePlayer.ToTileCoordinates())) && Collision.SolidCollision(npc.position - Vector2.One * 10, npc.width + 20, npc.height + 20) && aiTimer3 > 40;
+                    if (Vector2.Distance(npc.Center, abovePlayer) < 50 || cantReach)
+                    {
+                        aiTimer = 2;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        npc.velocity = Vector2.Zero;
+                    }
+                }
+                else if (aiTimer == 2)
+                {
+                    aiTimer2++;
+                    if (aiTimer2 > 10 && Math.Abs(npc.velocity.Y) < 0.3f)
+                    {
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 8;
+                        aiTimer2 = 0;
+                        aiTimer = 0;
+                    }
+                    float accel = Main.expertMode ? MyWorld.awakenedMode ? 0.8f : 0.6f : 0.4f;
+                    if (npc.velocity.Y < slideSpeed) npc.velocity.Y += accel;
+                }
+                if (aiTimer4 > 600)
+                {
+                    aiTimer = 0;
+                    aiTimer2 = 0;
+                    aiTimer3 = 0;
+                    aiTimer4 = 0;
+                    aiState++;
 
-                var center = npc.Center - Main.screenPosition;
-                float intensity = 0f;
-                //if (npc.ai[3] > 0f && npc.ai[3] <= 30f)
-                //{
-                //    intensity = 1f - npc.ai[3] / 30f;
-                //}
-                //Filters.Scene["Nebula"].GetShader().UseIntensity(1f + intensity).UseProgress(0f);
-                DrawData drawData = new DrawData(TextureManager.Load("Images/Misc/Perlin"), center - new Vector2(0, 10), new Rectangle(0, 0, 500, 500), Color.White, npc.rotation, new Vector2(250f, 250f), npc.scale * (1f + intensity * 0.05f), SpriteEffects.None, 0);
-                GameShaders.Misc["ForceField"].UseColor(new Vector3(1f + intensity * 0.5f));
-                GameShaders.Misc["ForceField"].Apply(drawData);
-                drawData.Draw(Main.spriteBatch);
-                Main.spriteBatch.End();
-                Main.spriteBatch.Begin();
-                return;
+                }
             }
-            Filters.Scene["Nebula"].GetShader().UseIntensity(0f).UseProgress(0f); // why is this here
+            else if (aiState == (int)ObsidiousPhase.FirePillars)
+            {
+                if (aiTimer == 0)
+                {
+                    aiTimer2 = player.Center.X;
+                    aiTimer = 1;
+                }
+                else if (aiTimer == 1)
+                {
+                    aiTimer3++;
+                    if (aiTimer2 == 0) aiTimer = 0;
+                    Vector2 toTarget = new Vector2(arenaCenter.X - npc.Center.X, arenaCenter.Y - npc.Center.Y);
+                    toTarget.Normalize();
+                    npc.velocity = toTarget * 13;
+
+                    if (Vector2.Distance(npc.Center, arenaCenter) < 20)
+                    {
+                        aiTimer = 2;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        npc.velocity = Vector2.Zero;
+                    }
+                }
+                else if (aiTimer == 2)
+                {
+                    aiTimer2++;
+                    if (aiTimer2 > 10 && Math.Abs(npc.velocity.Y) < 0.3f)
+                    {
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                        npc.velocity = Vector2.Zero;
+                        aiTimer = 3;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        for (int j = 0; j < 60; j++)
+                        {
+                            Dust dust = Main.dust[Dust.NewDust(npc.BottomLeft, npc.width, 2, 6)];
+                            dust.velocity.X = dust.position.X > npc.Center.X ? 16 : -16;
+                            dust.velocity.X *= Main.rand.NextFloat(0.4f, 1f);
+                            dust.velocity.Y = Main.rand.NextFloat(-4f, 0f);
+                            dust.noGravity = true;
+                            dust.fadeIn = 1f;
+                            dust.scale *= 3f;
+                        }
+                    }
+                    float accel = Main.expertMode ? MyWorld.awakenedMode ? 0.8f : 0.6f : 0.4f;
+                    if (npc.velocity.Y < slideSpeed) npc.velocity.Y += accel;
+                }
+                else if (aiTimer == 3)
+                {
+                    aiTimer2++;
+                    int numSpikes = Main.expertMode ? MyWorld.awakenedMode ? 12 : 10 : 8;
+                    float distance = 580f / (float)(numSpikes / 2);
+                    if (aiTimer3 * 2 >= numSpikes)
+                    {
+                        aiTimer = 4;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                    }
+
+                    int height = 45;
+                    if (npc.life < npc.lifeMax * 0.5f)
+                        height = 21;
+                    if (aiTimer2 == 1 && aiTimer3 == 0)
+                    {
+                        if (npc.life < npc.lifeMax * 0.5f)
+                        {
+                            Projectile proj2 = Main.projectile[Projectile.NewProjectile(npc.Center.X, (arena.Y + 3) * 16, 0, 0, ProjectileType<ObsidiousPillarSpawner2>(), npc.damage / 2, 1, Main.myPlayer, 0, 1)];
+                            proj2.localAI[1] = height;
+                        }
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Bottom.X, npc.Bottom.Y, 0, 0, ProjectileType<ObsidiousPillarSpawner>(), npc.damage / 2, 1, Main.myPlayer, 0)];
+                        proj.localAI[1] = height;
+
+                    }
+                    if (aiTimer2 >= 60 / (numSpikes / 2))
+                    {
+                        aiTimer2 = 0;
+                        aiTimer3++;
+                        for (int l = -1; l <= 1; l += 2)
+                        {
+                            float xPos = npc.Center.X + aiTimer3 * (float)l * (float)distance;
+                            if (npc.life < npc.lifeMax * 0.5f)
+                            {
+                                Projectile proj2 = Main.projectile[Projectile.NewProjectile(xPos, (arena.Y + 3) * 16, 0, 0, ProjectileType<ObsidiousPillarSpawner2>(), npc.damage / 2, 1, Main.myPlayer, 0, 1)];
+                                proj2.localAI[1] = height;
+                            }
+                            Projectile proj = Main.projectile[Projectile.NewProjectile(xPos, npc.Bottom.Y, 0, 0, ProjectileType<ObsidiousPillarSpawner>(), npc.damage / 2, 1, Main.myPlayer, 0)];
+                            proj.Bottom = new Vector2(xPos, npc.Bottom.Y + 10);
+                            proj.localAI[1] = height;
+                        }
+                    }
+                }
+                else if (aiTimer == 4)
+                {
+                    if (npc.velocity.Y > -slideSpeed) npc.velocity.Y -= 0.2f;
+                    aiTimer2++;
+                    if (npc.Center.Y < arenaCenter.Y || aiTimer2 > 300)
+                    {
+                        aiTimer = 0;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        aiState++;
+                    }
+
+                }
+            }
+            else if (aiState == (int)ObsidiousPhase.Voidballs)
+            {
+                if (aiTimer2 == 0)
+                {
+                    Vector2 toTarget = new Vector2(player.Center.X - npc.Center.X, player.Center.Y - npc.Center.Y);
+                    toTarget.Normalize();
+                    npc.velocity = toTarget * 4;
+
+                    aiTimer++;
+                    if (aiTimer % 60 == 0)
+                    {
+                        Vector2 speed = new Vector2(6, 0).RotatedByRandom(MathHelper.ToRadians(360));
+                        float projSpeed = Main.expertMode ? MyWorld.awakenedMode ? 20 : 16 : 10;
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center, speed, ProjectileType<ObsidiousFireballVoid>(), npc.damage / 2, 1, Main.myPlayer, npc.whoAmI, projSpeed)];
+                        Main.PlaySound(SoundID.DD2_GhastlyGlaiveImpactGhost, npc.position);
+                    }
+                    if (aiTimer > 600)
+                    {
+                        aiTimer2 = 1;
+                        aiTimer = 0;
+                        npc.velocity = Vector2.Zero;
+                    }
+                }
+                else if (aiTimer2 == 1)
+                {
+                    aiTimer++;
+                    if (aiTimer > 10 && Math.Abs(npc.velocity.X) < 0.3f)
+                    {
+                        aiTimer2 = 2;
+                        aiTimer = 0;
+
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                    }
+                    if (npc.velocity.X < slideSpeed) npc.velocity.X += 0.6f;
+                }
+                else if (aiTimer2 == 2)
+                {
+                    aiTimer++;
+                    if (aiTimer > 10 && Math.Abs(npc.velocity.X) < 0.3f)
+                    {
+                        aiTimer2 = 0;
+                        aiTimer = 0;
+                        aiState++;
+
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                    }
+                    if (aiTimer % 10 == 0)
+                    {
+                        Vector2 speed = new Vector2(6, 0).RotatedByRandom(MathHelper.ToRadians(360));
+                        float projSpeed = Main.expertMode ? MyWorld.awakenedMode ? 12 : 10 : 6;
+                        Projectile proj = Main.projectile[Projectile.NewProjectile(npc.Center, speed, ProjectileType<ObsidiousFireballVoid>(), npc.damage / 2, 1, Main.myPlayer, npc.whoAmI, projSpeed)];
+                        Main.PlaySound(SoundID.DD2_GhastlyGlaiveImpactGhost, npc.position);
+                    }
+                    if (npc.velocity.X > -slideSpeed) npc.velocity.X -= 0.2f;
+                }
+            }
+            else if (aiState == (int)ObsidiousPhase.Dropper)
+            {
+                if (aiTimer == 0)
+                {
+                    if (flipGrav > 0) flipGrav = -gravFlipTimerMax;
+                    else flipGrav = gravFlipTimerMax;
+                    aiTimer = 1;
+                }
+                else if (aiTimer == 1)
+                {
+                    aiTimer2++;
+                    if (aiTimer2 >= 120)
+                    {
+                        int num = Main.expertMode ? MyWorld.awakenedMode ? 6 : 5 : 3;
+                        for (int i = 0; i < num; i++)
+                        {
+                            for (int l = -1; l <= 1; l += 2)
+                            {
+                                Projectile.NewProjectile(arenaCenter, new Vector2(l * i * (38f / num), 0), ProjectileType<ObsidiousHoverRock>(), npc.damage / 2, 1, Main.myPlayer, Math.Sign(flipGrav));
+                            }
+                        }
+                        aiTimer = 2;
+                        aiTimer2 = 0;
+                    }
+                }
+                else if (aiTimer == 2)
+                {
+                    aiTimer2++;
+                    if (aiTimer2 > 300)
+                    {
+                        aiTimer = 0;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        aiTimer4 = 0;
+                        aiState = 3;
+                        aiState = (int)ObsidiousPhase.Dropper;
+                    }
+                }
+                if (aiState == 8) // to make it not do it after the ai has been switched
+                {
+                    aiTimer4++;
+                    if (aiTimer4 > 30 && Math.Abs(npc.velocity.Y) < 0.1f)
+                    {
+                        Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                        Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                        aiTimer4 = 0;
+                        aiTimer3++;
+                        if (aiTimer3 > 1) aiTimer3 = 0;
+                    }
+                    if (npc.velocity.Y < slideSpeed && aiTimer3 == 0) npc.velocity.Y += acceleration;
+                    if (npc.velocity.Y > -slideSpeed && aiTimer3 == 1) npc.velocity.Y -= acceleration;
+                }
+            }
+            else if (aiState == (int)ObsidiousPhase.Deathray)
+            {
+            }
+            else if (aiState == 10)
+            {
+
+            }
+            else if (aiState == 11)
+            {
+            }
+            if (flipGrav > 1)
+            {
+                if (flipGrav == gravFlipTimerMax) Projectile.NewProjectile((arena.X + 41) * 16 + 8, (arena.Y + 64) * 16, 0, 0, ProjectileType<ObsidiousGravitySwitcher>(), 0, 0, Main.myPlayer);
+                if (flipGrav == 2)
+                {
+                    if (arena.Contains(Main.LocalPlayer.Center.ToTileCoordinates()))
+                    {
+                        GravityPlayer gravPlayer = Main.LocalPlayer.GetModPlayer<GravityPlayer>();
+                        gravPlayer.forceGrav = -1;
+                        if (aiState == 8)
+                        {
+                            player.wingTime = 0;
+                            player.wingTimeMax = 0;
+                            player.velocity.Y = -1f;
+                            gravPlayer.noWings = true;
+                        }
+                    }
+                }
+                flipGrav--;
+            }
+            else if (flipGrav < -1)
+            {
+                if (flipGrav == -gravFlipTimerMax) Projectile.NewProjectile((arena.X + 41) * 16 + 8, (arena.Y + 3) * 16, 0, 0, ProjectileType<ObsidiousGravitySwitcher>(), 0, 0, Main.myPlayer, 0, 1);
+                if (flipGrav == -2)
+                {
+                    if (arena.Contains(Main.LocalPlayer.Center.ToTileCoordinates()))
+                    {
+                        GravityPlayer gravPlayer = Main.LocalPlayer.GetModPlayer<GravityPlayer>();
+                        gravPlayer.forceGrav = 1;
+                        if (aiState == 8)
+                        {
+                            player.wingTime = 0;
+                            player.wingTimeMax = 0;
+                            player.velocity.Y = 1f;
+                        }
+                    }
+                }
+                flipGrav++;
+            } 
+            if (Main.mouseRight && Main.mouseRightRelease && false)
+            {
+                if (flipGrav >= 0) flipGrav = -gravFlipTimerMax;
+                else flipGrav = gravFlipTimerMax;
+            }
+            if (aiState == 999) // just smashed crystal
+            {
+                npc.velocity *= 0.97f;
+                if (Vector2.Distance(npc.velocity, Vector2.Zero) < 0.3f)
+                {
+                    npc.velocity = Vector2.Zero;
+                    aiTimer = 0;
+                    aiTimer2 = 0;
+                    aiState = 4;
+                }
+            }
+            else if (aiState == 5000) // spared
+            {
+                npc.damage = 0;
+                aiTimer++;
+                npc.velocity.X *= 0.96f;
+                if (aiTimer2 > 10 && Math.Abs(npc.velocity.Y) < 0.3f)
+                {
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                    Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 8;
+
+                    Gore.NewGore(npc.position, new Vector2(-1,-1), mod.GetGoreSlot("Gores/Obsidious0"), npc.scale);
+                    Gore.NewGore(npc.position, new Vector2(1, -1), mod.GetGoreSlot("Gores/Obsidious1"), npc.scale);
+                }
+                npc.velocity.Y += 0.16f;
+            }
+            else if (aiState == 9999) // entering before they are supposed to
+            {
+                npc.alpha = 0;
+                if (!player.dead)
+                {
+                    Vector2 toTarget = new Vector2(player.Center.X - npc.Center.X, player.Center.Y - npc.Center.Y);
+                    toTarget.Normalize();
+                    npc.velocity = toTarget * 30;
+                }
+            }
+        }
+        public override void OnHitPlayer(Player target, int damage, bool crit)
+        {
+            if (aiState == 9999)
+            {
+                Main.PlaySound(SoundLoader.customSoundType, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/GetDunkedOn"));
+                target.KillMe(PlayerDeathReason.ByCustomReason(target.name + "  was crushed by Obsidious, the absolute unit."), 99999, 0);
+                CombatText.NewText(npc.getRect(), Color.Red, "thwomped", true, false);
+            }
+        }
+        private void CreateCrystal(Vector2 offset, float rot, int parent)
+        {
+            NPC chris = Main.npc[NPC.NewNPC((int)(npc.Center.X + offset.X), (int)(npc.Center.Y + offset.Y), NPCType<ObsidiousWallCrystal>())];
+            chris.rotation = rot;
+            chris.ai[0] = parent;
+            chris.Center = npc.Center + offset;
+        }
+        private void ReconstructArena()
+        {
+            int width = 89;
+            int height = 71;
+            int x = EAWorldGen.obsidiousTempleLoc.X + 30;
+            int y = EAWorldGen.obsidiousTempleLoc.Y;
+            Rectangle arenaMiddle = new Rectangle(x + 5, y + 5, width - 10, height - 10);
+
+            for (int i = x; i < x + width; i++)
+            {
+                for (int j = y; j < y + height; j++)
+                {
+                    if (arenaMiddle.Contains(new Point(i, j)))
+                    {
+                        WorldGen.KillTile(i, j);
+                    }
+                    else
+                    {
+                        Tile t = Framing.GetTileSafely(i, j);
+                        if (!t.active() || t.type != TileType<Tiles.ObsidiousBrick>() && t.type != TileType<Tiles.ObsidiousArenaManager>())
+                        {
+                            WorldGen.KillTile(i, j);
+                            WorldGen.PlaceTile(i, j, TileType<Tiles.ObsidiousTempBlock>());
+                        }
+                    }
+                }
+            }
+        }
+        private static void RemoveTempBlocks()
+        {
+            int width = 89;
+            int height = 71;
+            int x = EAWorldGen.obsidiousTempleLoc.X + 30;
+            int y = EAWorldGen.obsidiousTempleLoc.Y;
+
+            for (int i = x; i < x + width; i++)
+            {
+                for (int j = y; j < y + height; j++)
+                {
+                    Tile t = Framing.GetTileSafely(i, j);
+                    if (t.type == TileType<Tiles.ObsidiousTempBlock>())
+                    {
+                        WorldGen.KillTile(i, j);
+                    }
+                }
+            }
+        }
+    
+        public static void PushPlayer(NPC npc)
+        {
+            Player player = Main.LocalPlayer;
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            if (!Collision.SolidCollision(player.position, player.width, player.height))
+            {
+                int width = (int)Math.Abs(player.velocity.X) + 8;
+                Rectangle playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height);
+                Rectangle npcRectLeft = new Rectangle((int)npc.position.X + (int)npc.velocity.X, (int)npc.position.Y + 4, width, npc.height - 4);
+                Rectangle npcRectRight = new Rectangle((int)npc.Right.X + (int)npc.velocity.X - width, (int)npc.position.Y + 4, width, npc.height - 4);
+
+                /*for (int j = 0; j < 10; j++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(npcRectLeft.TopLeft(), npcRectLeft.Width, npcRectLeft.Height, DustID.PinkFlame)];
+                    dust.velocity = Vector2.Zero;
+                    dust.noGravity = true;
+                    Dust dust2 = Main.dust[Dust.NewDust(npcRectRight.TopLeft(), npcRectRight.Width, npcRectRight.Height, 6)];
+                    dust2.velocity = Vector2.Zero;
+                    dust2.noGravity = true;
+                }*/
+
+                if (playerRect.Intersects(npcRectLeft))
+                {
+                    //if (player.velocity.X >= 0 || npc.velocity.X > player.velocity.X)
+                    {
+                        if (player.velocity.X >= 0) player.velocity.X = 0;
+                        player.position.X = npc.position.X - player.width;
+                        player.position.X += npc.position.X - npc.oldPosition.X;
+                        player.dashDelay = 0;
+                        player.dashTime = 0;
+                        modPlayer.eaDashDelay = 0;
+                        modPlayer.eaDashTime = 0;
+                    }
+                }
+                if (playerRect.Intersects(npcRectRight))
+                {
+                    //if (player.velocity.X <= 0 || npc.velocity.X < player.velocity.X)
+                    {
+                        if (player.velocity.X <= 0) player.velocity.X = 0;
+                        player.position.X = npc.Right.X;
+                        player.position.X += npc.position.X - npc.oldPosition.X;
+                        player.dashDelay = 0;
+                        player.dashTime = 0;
+                        modPlayer.eaDashDelay = 0;
+                        modPlayer.eaDashTime = 0;
+                    }
+                }
+            }
+        }
+        private void Slide(Vector2 speed, Rectangle arenaAir, float acceleration = 0.02f)
+        {
+            // to stop the absolute CRETIN clipping into the walls becuase normal collision just DOESNT WORK?
+            npc.noTileCollide = true;
+            if (Collision.SolidCollision(npc.position, npc.width, npc.height))
+            {
+                int trials = 0;
+                while (Collision.SolidCollision(npc.position, npc.width, npc.height) && trials < 20)
+                {
+                    trials++;
+                    Vector2 push = Vector2.Zero;
+                    if (npc.position.Y < arenaAir.Y * 16) push.Y += 2; // top
+                    else if (npc.Bottom.Y > (arenaAir.Y + arenaAir.Height) * 16) push.Y -= 2; // bottom
+                    if (npc.position.X < arenaAir.X * 16) push.X += 2; // left
+                    else if (npc.Right.X  > (arenaAir.X + arenaAir.Width) * 16) push.X -= 2; // right
+
+                    npc.velocity = Vector2.Zero;
+                    Vector2 fix = push; // -speed
+                    fix.Normalize();
+                    npc.position += fix;
+                }
+                //ElementsAwoken.DebugModeText("stuck in wall- fixing");
+            }
+            else
+            {
+                aiTimer++;
+                if (npc.soundDelay == 0)
+                {
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/StoneSlide"));
+                    npc.soundDelay = 999;
+                }
+                if (aiTimer > 55 && (Math.Abs(npc.velocity.X) < 0.3f && speed.X != 0 || Math.Abs(npc.velocity.Y) < 0.3f && speed.Y != 0))
+                {
+                    if (aiTimer2 == 0)
+                    {
+                        if (aiTimer3 == 0)
+                        {
+                            int illusionType = Main.rand.Next(2);
+                            if (npc.life < npc.lifeMax * 0.5f)
+                            {
+                                NPC illusion = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousIllusion>())];
+                                illusion.ai[0] = npc.whoAmI;
+                                illusion.TopRight = npc.BottomLeft + new Vector2(1264, -976);
+                                illusion.ai[2] = illusionType;
+                                illusion.ai[1] = 0;
+
+                                NPC illusion2 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousIllusion>())];
+                                illusion2.ai[0] = npc.whoAmI;
+                                illusion2.TopLeft = npc.BottomLeft + new Vector2(0, -976);
+                                illusion2.ai[2] = illusionType;
+                                illusion2.ai[1] = 1;
+
+                                NPC illusion3 = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousIllusion>())];
+                                illusion3.ai[0] = npc.whoAmI;
+                                illusion3.BottomRight = npc.BottomLeft + new Vector2(1264, 0);
+                                illusion3.ai[2] = illusionType;
+                                illusion3.ai[1] = 2;
+                            }
+                            else if (npc.life < npc.lifeMax * 0.75f)
+                            {
+                                NPC illusion = Main.npc[NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, NPCType<ObsidiousIllusion>())];
+                                illusion.ai[0] = npc.whoAmI;
+                                illusion.TopRight = npc.BottomLeft + new Vector2(1264, -976);
+                                illusion.ai[2] = illusionType;
+                                illusion.ai[1] = 0;
+                            }
+                            aiTimer3++;
+                        }
+                    }
+                    aiTimer2++;
+
+                    Main.PlaySound(2, (int)npc.position.X, (int)npc.position.Y, 70, pitchOffset: -0.5f);
+                    Main.LocalPlayer.GetModPlayer<MyPlayer>().screenshakeAmount = 4;
+                    if (aiTimer2 > 7)
+                    {
+                        aiTimer = 0;
+                        aiTimer2 = 0;
+                        aiTimer3 = 0;
+                        aiState = 4;
+                        npc.noTileCollide = false;
+                    }
+                    aiTimer = 0;
+                    npc.soundDelay = 20;
+                }
+                int delay = (int)MathHelper.Lerp(5, 20, MathHelper.Clamp((float)npc.life / (float)npc.lifeMax, 0, 1));
+                if (aiTimer > delay)
+                {
+                    if (Math.Abs(npc.velocity.Y) <= 0.2f && speed.X != 0) npc.velocity.Y = 0;
+                    Vector2 dir = speed;
+                    dir.Normalize();
+                    if ((speed.X != 0 && Math.Abs(npc.velocity.X) < Math.Abs(speed.X)) || (speed.Y != 0 && Math.Abs(npc.velocity.Y) < Math.Abs(speed.Y)))
+                        npc.velocity += dir * acceleration;
+
+                    int numDust = (int)Math.Abs(npc.velocity.X + npc.velocity.Y);
+                    for (int i = 0; i < numDust; i++)
+                    {
+                        Vector2 add = Vector2.Zero;
+                        float rand = Main.rand.NextFloat(0.3f, 1f);
+                        Dust dust = null;
+                        if (speed.X > 0)
+                        {
+                            dust = Main.dust[Dust.NewDust(npc.position, npc.width, 2, 6)];
+                            dust.velocity = new Vector2(0, 1 * rand);
+                        }
+                        else if (speed.X < 0)
+                        {
+                            dust = Main.dust[Dust.NewDust(npc.BottomLeft, npc.width, 2, 6)];
+                            dust.velocity = new Vector2(0, -1 * rand);
+                        }
+                        else if (speed.Y > 0)
+                        {
+                            dust = Main.dust[Dust.NewDust(npc.TopRight, 2, npc.height, 6)];
+                            dust.velocity = new Vector2(-1 * rand, 0);
+                        }
+                        else if (speed.Y < 0)
+                        {
+                            dust = Main.dust[Dust.NewDust(npc.TopLeft, 2, npc.height, 6)];
+                            dust.velocity = new Vector2(1 * rand, 0);
+                        }
+                        if (dust != null)
+                        {
+                            dust.noGravity = true;
+                            dust.velocity *= Math.Abs(npc.velocity.X + npc.velocity.Y);
+                            //dust.velocity += npc.velocity * 1f;
+                            dust.scale *= 1.6f;
+                        }
+                    }
+                }
+            }
         }
     }
 }

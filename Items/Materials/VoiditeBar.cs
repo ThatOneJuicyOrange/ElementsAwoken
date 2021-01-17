@@ -15,6 +15,11 @@ namespace ElementsAwoken.Items.Materials
 
             item.rare = 11;
             item.GetGlobalItem<EARarity>().rare = 12;
+
+            item.useAnimation = 15;
+            item.useTime = 15;
+            item.useStyle = 1;
+            item.createTile = ModContent.TileType<Tiles.Objects.VoiditeBarPlaced>();
         }
 
         public override void SetStaticDefaults()

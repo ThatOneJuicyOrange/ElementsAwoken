@@ -23,10 +23,12 @@ namespace ElementsAwoken.Projectiles.Other
         }
         public override void AI()
         {
+            MyPlayer modPlayer = Main.LocalPlayer.GetModPlayer<MyPlayer>();
+
             projectile.ai[0]++;
             if (projectile.ai[0] > 120)
             {
-                MyWorld.credits = true;
+                modPlayer.creditsTimer = 0;
                 projectile.Kill();
             }
         }      

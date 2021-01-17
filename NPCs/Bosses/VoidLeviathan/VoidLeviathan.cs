@@ -118,7 +118,7 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
             }
             if (MyWorld.voidLeviathanKills < 3)
             {
-                MyWorld.genVoidite = true;
+                EAWorldGen.genVoidite = true;
             }
             MyWorld.voidLeviathanKills++;
             MyWorld.downedVoidLeviathan = true;
@@ -144,7 +144,6 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
 
         private float attackCounter;
         private float strikeCircleTimer;
-        private float roarTimer;
         private float despawnTimer = 0;
         public float orbTimer = 0;
         private int spawnNPCs = 0;
@@ -152,7 +151,6 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
         {
             writer.Write(attackCounter);
             writer.Write(strikeCircleTimer);
-            writer.Write(roarTimer);
             writer.Write(despawnTimer);
             writer.Write(orbTimer);
             writer.Write(spawnNPCs);
@@ -162,7 +160,6 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
         {
             attackCounter = reader.ReadSingle();
             strikeCircleTimer = reader.ReadSingle();
-            roarTimer = reader.ReadSingle();
             despawnTimer = reader.ReadSingle();
             orbTimer = reader.ReadSingle();
             spawnNPCs = reader.ReadInt32();
@@ -181,11 +178,11 @@ namespace ElementsAwoken.NPCs.Bosses.VoidLeviathan
                     npc.active = false;
                 }
             }
-            roarTimer--;
-            if (roarTimer <= 0)
+            if (npc.soundDelay <= 0)
             {
-                Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 10);
-                roarTimer = 300 + Main.rand.Next(1, 400);
+                //Main.PlaySound(4, (int)npc.position.X, (int)npc.position.Y, 10);
+                Main.PlaySound(SoundLoader.customSoundType, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.Custom, "Sounds/NPC/VoidLeviathanRoar"));
+                npc.soundDelay = 300 + Main.rand.Next(1, 400);
             }
             int maxDist = 3000;
             if (Main.netMode == 0)

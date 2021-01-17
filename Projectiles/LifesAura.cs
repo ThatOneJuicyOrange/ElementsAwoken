@@ -82,7 +82,7 @@ namespace ElementsAwoken.Projectiles
                     float dist = Vector2.Distance(projectile.Center, nPC.Center);
                     if (dist < maxDist)
                     {
-                        if (projectile.ai[0] % 10 == 0 && nPC.life < nPC.life)
+                        if (projectile.ai[0] % 10 == 0 && nPC.life < nPC.lifeMax)
                         {
                             int amount = Main.rand.Next(3, 9);
                             nPC.life += amount;

@@ -25,6 +25,7 @@ namespace ElementsAwoken.Items.Elements.Water
             item.useStyle = 4;
             item.UseSound = SoundID.Item66;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().unobtainable = true;
         }
 
         public override void SetStaticDefaults()
@@ -106,7 +107,7 @@ namespace ElementsAwoken.Items.Elements.Water
             }
             return true;
         }
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "WaterEssence", 8);
@@ -114,6 +115,6 @@ namespace ElementsAwoken.Items.Elements.Water
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

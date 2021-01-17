@@ -34,10 +34,11 @@ namespace ElementsAwoken.NPCs
             
 
         }
-        public override bool PreAI(NPC npc)
+    
+         public override bool PreAI(NPC npc)
         {
             // needs to be done after setdefaults because worms real life is only done after setdefaults
-            if (MyWorld.awakenedMode && !hasAssignedElite)
+            if (MyWorld.awakenedMode && !hasAssignedElite && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 hasAssignedElite = true;
                 if (NPC.CountNPCS(npc.type) > 5 && !cantElite && !npc.friendly && npc.damage != 0 && !npc.townNPC && npc.realLife == -1 && !npc.boss)
@@ -59,6 +60,15 @@ namespace ElementsAwoken.NPCs
                         {
                             if (Main.rand.NextBool(3)) elite = Main.rand.Next(1, 6);
                         }
+                    }
+                    // soncing ;)
+                    if (Main.netMode == 2)
+                    {
+                        var packet = mod.GetPacket();
+                        packet.Write((byte)ElementsAwokenMessageType.EliteSync);
+                        packet.Write(npc.whoAmI);
+                        packet.Write(elite);
+                        packet.Send();
                     }
                 }
                 ChangeName(npc);

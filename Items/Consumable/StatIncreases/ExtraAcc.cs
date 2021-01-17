@@ -42,7 +42,6 @@ namespace ElementsAwoken.Items.Consumable.StatIncreases
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.DemonHeart, 1);
             recipe.AddIngredient(null, "DiscordantBar", 25);
             recipe.AddIngredient(null, "VoidAshes", 12);
             recipe.AddIngredient(null, "VoidEssence", 15);

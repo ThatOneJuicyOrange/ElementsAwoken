@@ -28,7 +28,7 @@ namespace ElementsAwoken.Items.BossSummons
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Core");
+            DisplayName.SetDefault("Charred Ring");
             Tooltip.SetDefault("It radiates a burning heat\nSummons Infernace on use");
         }
 

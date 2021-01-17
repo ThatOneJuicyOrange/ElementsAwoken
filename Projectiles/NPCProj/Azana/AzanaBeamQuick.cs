@@ -58,7 +58,7 @@ namespace ElementsAwoken.Projectiles.NPCProj.Azana
                 sampledLength += sampleArray[i];
             }
             sampledLength /= sampleArray.Length;
-            float amount = 0.75f; // last prism is 0.75 rather than 0.5?
+            //float amount = 0.75f; // last prism is 0.75 rather than 0.5?
             //LaserLength = MathHelper.Lerp(LaserLength, sampledLength, amount);
             LaserLength = LaserLengthMax;
             #region Dusts

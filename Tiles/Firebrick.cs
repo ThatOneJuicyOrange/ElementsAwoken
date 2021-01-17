@@ -1,10 +1,6 @@
-﻿using System;
-using System.IO;
-using ElementsAwoken.Items.Placeable;
+﻿using ElementsAwoken.Items.Placeable.Tiles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ElementsAwoken.Tiles
@@ -13,21 +9,15 @@ namespace ElementsAwoken.Tiles
     {
         public override void SetDefaults()
         {
-            //AddToArray(ref TileID.Sets.Conversion.Stone);
-            //TileID.Sets.Conversion.Stone[Type]=true;
             Main.tileSolid[Type] = true;
             Main.tileMergeDirt[Type] = true;
-            Main.tileBlockLight[Type] = true;  //true for block to emit light
+            Main.tileBlockLight[Type] = true; 
             Main.tileLighted[Type] = true;
-
-            Main.tileSpelunker[Type] = true;
-            TileID.Sets.Ore[Type] = true;
-            Main.tileValue[Type] = 1500;
 
             drop = ModContent.ItemType<FirebrickItem>();
             ModTranslation name = CreateMapEntryName();
-            name.SetDefault("Voidite");
-            AddMapEntry(new Color(255, 127, 227), name);
+            name.SetDefault("Fire Brick");
+            AddMapEntry(new Color(255, 136, 0), name);
             soundType = 21;
             soundStyle = 6;
         }

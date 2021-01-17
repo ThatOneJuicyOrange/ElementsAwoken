@@ -24,10 +24,11 @@ namespace ElementsAwoken.Items.Testing
             item.useStyle = 4;
             item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Hailstormer");
+            DisplayName.SetDefault("ui test");
             Tooltip.SetDefault("'boss prompts bad' - everyone");
         }
 

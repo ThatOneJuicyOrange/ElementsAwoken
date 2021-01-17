@@ -37,7 +37,7 @@ namespace ElementsAwoken.Items.BossDrops.Infernace
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Fire Blaster");
+            DisplayName.SetDefault("Cindari's Sorrow");
         }
 
         public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)

@@ -45,7 +45,7 @@ namespace ElementsAwoken.NPCs.Bosses.Wasteland
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Wasteland");
-            Main.npcFrameCount[npc.type] = 5;
+            Main.npcFrameCount[npc.type] = 6;
         }
         public override bool CheckActive()
         {

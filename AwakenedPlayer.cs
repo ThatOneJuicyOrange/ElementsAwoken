@@ -44,6 +44,8 @@ namespace ElementsAwoken
         public List<int> sanityRegens = new List<int>();
         public List<string> sanityRegensName = new List<string>();
 
+        public List<string> sanityEffects = new List<string>();
+
         public int bossIncreaseSanityCD = 0;
 
         public int mineTileCooldown = 0;
@@ -51,6 +53,8 @@ namespace ElementsAwoken
         public int miningCounter = 0;
 
         public int nurseCooldown = 0;
+
+        public int effectState = 0;
 
         public int aleCD = 0;
         public override void ResetEffects()
@@ -63,6 +67,8 @@ namespace ElementsAwoken
             sanityDrainsName = new List<string>();
             sanityRegens = new List<int>();
             sanityRegensName = new List<string>();
+
+            sanityEffects = new List<string>();
         }
         public override void PostUpdateMiscEffects()
         {
@@ -77,222 +83,238 @@ namespace ElementsAwoken
             sanityMax = sanityIncreaser;
             craftWeaponCooldown--;
             aleCD--;
-            // decreases
             if (MyWorld.awakenedMode)
             {
-                // if (sanity > 0)
+                // decreases
+                // low life
+                if (player.statLife < player.statLifeMax2 * 0.25f)
                 {
-                    // low life
-                    if (player.statLife < player.statLifeMax2 * 0.25f)
-                    {
-                        int sanityRegenLoss = (int)Math.Round(MathHelper.Lerp(4, 1, player.statLife / (player.statLifeMax2 * 0.25f)));
-                        //ElementsAwoken.DebugModeText(sanityRegenLoss);
-                        sanityRegen -= sanityRegenLoss;
+                    int sanityRegenLoss = (int)Math.Round(MathHelper.Lerp(4, 1, player.statLife / (player.statLifeMax2 * 0.25f)));
+                    //ElementsAwoken.DebugModeText(sanityRegenLoss);
+                    sanityRegen -= sanityRegenLoss;
 
-                        AddSanityDrain(sanityRegenLoss, "Low Health");
-                    }
-                    // in the dark
-                    if (playerUtils.playerLight < 0.2)
-                    {
-                        int sanityRegenLoss = (int)Math.Round(MathHelper.Lerp(3, 1, playerUtils.playerLight / 0.2f));
-                        //ElementsAwoken.DebugModeText(playerUtils.playerLight);
-                        sanityRegen -= sanityRegenLoss;
+                    AddSanityDrain(sanityRegenLoss, "Low Health");
+                }
+                // in the dark
+                if (playerUtils.playerLight < 0.2)
+                {
+                    int sanityRegenLoss = (int)Math.Round(MathHelper.Lerp(3, 1, playerUtils.playerLight / 0.2f));
+                    //ElementsAwoken.DebugModeText(playerUtils.playerLight);
+                    sanityRegen -= sanityRegenLoss;
 
-                        AddSanityDrain(sanityRegenLoss, "Darkness");
-                    }
-                    // events
-                    if (Main.bloodMoon)
+                    AddSanityDrain(sanityRegenLoss, "Darkness");
+                }
+                // events
+                if (Main.bloodMoon)
+                {
+                    sanityRegen--;
+                    AddSanityDrain(1, "Blood Moon");
+                }
+                if (MyWorld.darkMoon)
+                {
+                    sanityRegen -= 2;
+                    AddSanityDrain(2, "Dark Moon");
+                }
+                if (MyWorld.voidInvasionUp && Main.time >= 16220 && !Main.dayTime)
+                {
+                    sanityRegen -= 3;
+                    AddSanityDrain(2, "Dawn of the Void");
+                }
+                if (player.ZoneUnderworldHeight)
+                {
+                    sanityRegen -= 2;
+                    AddSanityDrain(2, "In Hell");
+                }
+                if (player.ZoneSkyHeight && !modPlayer.cosmicalusArmor)
+                {
+                    sanityRegen -= 1;
+                    AddSanityDrain(1, "In Space");
+                }
+                if (miningCounter > 3600 * 10)
+                {
+                    if (mineTileCooldown > mineTileCooldownMax - 300)
                     {
-                        sanityRegen--;
-                        AddSanityDrain(1, "Blood Moon");
-                    }
-                    if (MyWorld.darkMoon)
-                    {
-                        sanityRegen -= 2;
-                        AddSanityDrain(2, "Dark Moon");
-                    }
-                    if (MyWorld.voidInvasionUp && Main.time >= 16220 && !Main.dayTime)
-                    {
-                        sanityRegen -= 3;
-                        AddSanityDrain(2, "Dawn of the Void");
-                    }
-                    if (player.ZoneUnderworldHeight)
-                    {
-                        sanityRegen -= 2;
-                        AddSanityDrain(2, "In Hell");
-                    }
-                    if (player.ZoneSkyHeight && !modPlayer.cosmicalusArmor)
-                    {
-                        sanityRegen -= 1;
-                        AddSanityDrain(1, "In Space");
-                    }
-                    if (miningCounter > 3600 * 10)
-                    {
-                        if (mineTileCooldown > mineTileCooldownMax - 300)
-                        {
-                            sanityRegen -= 3;// first 5 seconds after mining a tile reduces sanity
-                            AddSanityDrain(3, "Mining For Too Long");
-                        }
-                    }
-                    if (NPC.AnyNPCs(NPCID.MoonLordCore))
-                    {
-                        player.AddBuff(mod.BuffType("EldritchHorror"), 2);
+                        sanityRegen -= 3;// first 5 seconds after mining a tile reduces sanity
+                        AddSanityDrain(3, "Mining For Too Long");
                     }
                 }
+                if (NPC.AnyNPCs(NPCID.MoonLordCore))
+                {
+                    player.AddBuff(mod.BuffType("EldritchHorror"), 2);
+                }
+
 
                 // increases
-                //if (sanity < sanityMax)
+                for (int i = 0; i < Player.MaxBuffs; i++)
                 {
-                    for (int i = 0; i < 22; i++)
+                    if (Main.vanityPet[player.buffType[i]])
                     {
-                        if (Main.vanityPet[player.buffType[i]])
-                        {
-                            sanityRegen++;
-                            AddSanityRegen(1, "Pet");
-                            //if (Main.time % 100 == 0) ElementsAwoken.DebugModeText("has pet");
-                            break;
-                        }
+                        sanityRegen++;
+                        AddSanityRegen(1, "Pet");
+                        break;
                     }
-                    #region flowers and campfires nearby
-                    int distance = 15 * 16;
-                    Point topLeft = ((player.position - new Vector2(distance, distance)) / 16).ToPoint();
-                    Point bottomRight = ((player.BottomRight + new Vector2(distance, distance)) / 16).ToPoint();
+                }
+                #region flowers and campfires nearby
+                int distance = 15 * 16;
+                Point topLeft = ((player.position - new Vector2(distance, distance)) / 16).ToPoint();
+                Point bottomRight = ((player.BottomRight + new Vector2(distance, distance)) / 16).ToPoint();
 
-                    Tile closest = null;
-                    Vector2 closestPos = new Vector2();
-                    Tile closestVoidite = null;
-                    Vector2 voiditePos = new Vector2();
-                    for (int i = topLeft.X; i <= bottomRight.X; i++)
+                Tile closest = null;
+                Vector2 closestPos = new Vector2();
+                Tile closestVoidite = null;
+                Vector2 voiditePos = new Vector2();
+                for (int i = topLeft.X; i <= bottomRight.X; i++)
+                {
+                    for (int j = topLeft.Y; j <= bottomRight.Y; j++)
                     {
-                        for (int j = topLeft.Y; j <= bottomRight.Y; j++)
+                        Tile t = Framing.GetTileSafely(i, j);
+                        if (CheckValidSanityTile(t))
                         {
-                            Tile t = Framing.GetTileSafely(i, j);
-                            if (CheckValidSanityTile(t))
+                            Vector2 tileCenter = new Vector2(i * 16, j * 16);
+                            if (closest != null)
                             {
-                                Vector2 tileCenter = new Vector2(i * 16, j * 16);
-                                if (closest != null)
-                                {
-                                    if (Vector2.Distance(tileCenter, player.Center) < Vector2.Distance(closestPos, player.Center))
-                                    {
-                                        closest = t;
-                                        closestPos = new Vector2(i * 16, j * 16);
-                                    }
-                                }
-                                else
+                                if (Vector2.Distance(tileCenter, player.Center) < Vector2.Distance(closestPos, player.Center))
                                 {
                                     closest = t;
                                     closestPos = new Vector2(i * 16, j * 16);
                                 }
-
                             }
-                            if (t.type == mod.TileType("Voidite"))
+                            else
                             {
-                                Vector2 tileCenter = new Vector2(i * 16, j * 16);
-                                if (closestVoidite != null)
-                                {
-                                    if (Vector2.Distance(tileCenter, player.Center) < Vector2.Distance(voiditePos, player.Center))
-                                    {
-                                        closestVoidite = t;
-                                        voiditePos = new Vector2(i * 16, j * 16);
-                                    }
-                                }
-                                else
+                                closest = t;
+                                closestPos = new Vector2(i * 16, j * 16);
+                            }
+
+                        }
+                        if (t.type == mod.TileType("Voidite"))
+                        {
+                            Vector2 tileCenter = new Vector2(i * 16, j * 16);
+                            if (closestVoidite != null)
+                            {
+                                if (Vector2.Distance(tileCenter, player.Center) < Vector2.Distance(voiditePos, player.Center))
                                 {
                                     closestVoidite = t;
                                     voiditePos = new Vector2(i * 16, j * 16);
                                 }
                             }
-                        }
-                    }
-                    if (Vector2.Distance(closestPos, player.Center) < distance && CheckValidSanityTile(closest))
-                    {
-                        int amount = (int)Math.Round(MathHelper.Lerp(3, 1, Vector2.Distance(closestPos, player.Center) / distance));
-                        sanityRegen += amount;
-                        string type = "Nice Object";
-                        if (closest.type == TileID.Campfire)
-                        {
-                            type = "Campfire";
-                        }
-                        if (closest.type == TileID.Fireplace)
-                        {
-                            type = "Fireplace";
-                        }
-                        if (closest.type == TileID.FireflyinaBottle)
-                        {
-                            type = "Firefly in a Bottle";
-                        }
-                        if (closest.type == TileID.Sunflower)
-                        {
-                            type = "Sunflower";
-                        }
-                        if (closest.type == TileID.PlanterBox)
-                        {
-                            type = "Planter Box";
-                        }
-                        AddSanityRegen(amount, "Nearby " + type);
-                    }
-                    if (Vector2.Distance(voiditePos, player.Center) < distance && closestVoidite != null)
-                    {
-                        int amount = (int)Math.Round(MathHelper.Lerp(5, 1, Vector2.Distance(voiditePos, player.Center) / distance));
-                        sanityRegen -= amount;
-                        AddSanityDrain(amount, "Voidite");
-                    }
-                    #endregion
-
-                    int townSanityRegen = 0;
-                    int numNPCs = CountNearbyTownNPCs();
-                    if (numNPCs > 5) townSanityRegen++;
-                    if (numNPCs > 10) townSanityRegen++;
-                    if (numNPCs > 15) townSanityRegen++;
-                    if (numNPCs > 20) townSanityRegen++;
-                    if (numNPCs > 25) townSanityRegen++;
-                    if (townSanityRegen > 0)
-                    {
-                        sanityRegen += townSanityRegen;
-                        AddSanityRegen(townSanityRegen, "In a Town");
-                    }
-
-                    if (miningCounter < 3600 * 10)
-                    {
-                        if (mineTileCooldown > mineTileCooldownMax - 300)
-                        {
-                            sanityRegen += 3; // first 5 seconds after mining a tile gives sanity
-                            AddSanityRegen(3, "Mining");
+                            else
+                            {
+                                closestVoidite = t;
+                                voiditePos = new Vector2(i * 16, j * 16);
+                            }
                         }
                     }
                 }
-
-                if (sanity < sanityMax * 0.25f && sanity > sanityMax * 0.1f)
+                if (Vector2.Distance(closestPos, player.Center) < distance && CheckValidSanityTile(closest))
                 {
-                    player.allDamage *= 0.9f;
+                    int amount = (int)Math.Round(MathHelper.Lerp(3, 1, Vector2.Distance(closestPos, player.Center) / distance));
+                    sanityRegen += amount;
+                    string type = "Nice Object";
+                    if (closest.type == TileID.Campfire)
+                    {
+                        type = "Campfire";
+                    }
+                    if (closest.type == TileID.Fireplace)
+                    {
+                        type = "Fireplace";
+                    }
+                    if (closest.type == TileID.FireflyinaBottle)
+                    {
+                        type = "Firefly in a Bottle";
+                    }
+                    if (closest.type == TileID.Sunflower)
+                    {
+                        type = "Sunflower";
+                    }
+                    if (closest.type == TileID.PlanterBox)
+                    {
+                        type = "Planter Box";
+                    }
+                    AddSanityRegen(amount, "Nearby " + type);
+                }
+                if (Vector2.Distance(voiditePos, player.Center) < distance && closestVoidite != null)
+                {
+                    int amount = (int)Math.Round(MathHelper.Lerp(5, 1, Vector2.Distance(voiditePos, player.Center) / distance));
+                    sanityRegen -= amount;
+                    AddSanityDrain(amount, "Voidite");
+                }
+                #endregion
+
+                int townSanityRegen = 0;
+                int numNPCs = CountNearbyTownNPCs();
+                if (numNPCs > 5) townSanityRegen++;
+                if (numNPCs > 10) townSanityRegen++;
+                if (numNPCs > 15) townSanityRegen++;
+                if (numNPCs > 20) townSanityRegen++;
+                if (numNPCs > 25) townSanityRegen++;
+                if (townSanityRegen > 0)
+                {
+                    sanityRegen += townSanityRegen;
+                    AddSanityRegen(townSanityRegen, "In a Town");
+                }
+
+                if (miningCounter < 3600 * 10)
+                {
+                    if (mineTileCooldown > mineTileCooldownMax - 300)
+                    {
+                        sanityRegen += 3; // first 5 seconds after mining a tile gives sanity
+                        AddSanityRegen(3, "Mining");
+                    }
+                }
+            
+                // sanity effects
+                if (sanity > sanityMax - 5)
+                {
+                    sanityEffects.Add("- Night Vision");
+                    Lighting.brightness *= MathHelper.Lerp(1f,1.2f, (float)(sanity - (sanityMax - 5)) / 5);
+                }
+                if (sanity > sanityMax * 0.9f)
+                {
+                    sanityEffects.Add("- 10% increased movement speed");
+                    sanityEffects.Add("- 10% increased critical strike chance");
+                    player.moveSpeed *= 1.1f;
+                    player.accRunSpeed *= 1.1f;
+
+                    player.magicCrit += 10;
+                    player.meleeCrit += 10;
+                    player.rangedCrit += 10;
+                    player.thrownCrit += 10;
+                }
+                if (sanity < sanityMax * 0.6f)
+                {
+                    sanityEffects.Add("- Eyes appear in the darkness");
+                }
+                if (sanity < sanityMax * 0.35f)
+                {
+
+                }
+                float sanityDamMult = 1;
+                if (sanity < sanityMax * 0.25f)
+                {
+                    sanityEffects.Add("- Your vision begins to blur");
+                    sanityDamMult = 0.9f;
                 }
                 if (sanity < sanityMax * 0.1f)
                 {
-                    modPlayer.screenshakeAmount = 2f;
-                    if (sanity != 0)
-                    {
-                        player.allDamage *= 0.75f;
-                    }
-                    else
-                    {
-                        player.allDamage *= 0.5f;
-                    }
+                    sanityEffects.Add("- Randomly become confused or blind");
+                    modPlayer.screenshakeAmount = MathHelper.Lerp(2, 0, sanity / (sanityMax * 0.1f)); 
+                    sanityDamMult = 0.75f;
+                    
                     if (Main.rand.Next(1200) == 0)
                     {
                         int choice = Main.rand.Next(2);
-                        if (choice == 0)
-                        {
-                            player.AddBuff(BuffID.Darkness, 600);
-                        }
-                        else if (choice == 1)
-                        {
-                            player.AddBuff(BuffID.Confused, 120);
-                        }
+                        if (choice == 0) player.AddBuff(BuffID.Darkness, 600);
+                        else if (choice == 1) player.AddBuff(BuffID.Confused, 120);
                     }
                 }
-
+                if (sanity == 0)
+                {
+                    sanityDamMult = 0.5f;
+                }
+                if (sanityDamMult != 1) sanityEffects.Add("- " + (int)((1 -sanityDamMult) * 100) + "% reduced damage");
+                player.allDamage *= sanityDamMult;
                 // sanity regen logic
-                if (!MyWorld.credits)
+                if (modPlayer.creditsTimer < 0)
                 {
                     sanityRegenCount = Math.Abs(sanityRegen);
                     sanityRegenTime -= sanityRegenCount;
@@ -357,6 +379,36 @@ namespace ElementsAwoken
                     sanityArrowFrame = 0;
                 }
                 #endregion
+            }
+            if (sanity < sanityMax * 0.5f && MyWorld.awakenedMode)
+            {
+                // desaturation
+                float sub = MathHelper.Lerp(10, 0, (float)(sanity) / (sanityMax * 0.5f));
+                float amount = MathHelper.Lerp(1, 0, MathHelper.Clamp((float)(sanity - sub) / (sanityMax * 0.5f), 0, 1));
+                if (!Filters.Scene["ElementsAwoken:DesaturateScreen"].IsActive()) Filters.Scene.Activate("ElementsAwoken:DesaturateScreen").GetShader().UseIntensity(amount);
+                Filters.Scene["ElementsAwoken:DesaturateScreen"].GetShader().UseIntensity(amount);
+            }
+            else if (Filters.Scene["ElementsAwoken:DesaturateScreen"].IsActive())
+            {
+                Filters.Scene["ElementsAwoken:DesaturateScreen"].Deactivate();
+            }
+            if (sanity < sanityMax * 0.25f && !ModContent.GetInstance<Config>().sanityDistortionOff && MyWorld.awakenedMode)
+            {
+                // pulsating outside
+                effectState++;
+                float distortStrength = MathHelper.Lerp(100, 30, sanity / (sanityMax * 0.25f));
+                float value = MathHelper.Lerp(6, 12, (1 + (float)Math.Sin((float)effectState / 30)) / 2);
+                if (!Filters.Scene["ElementsAwoken:InsanityWave"].IsActive()) Filters.Scene.Activate("ElementsAwoken:InsanityWave", player.Center);
+                Filters.Scene["ElementsAwoken:InsanityWave"].GetShader().UseColor(2, 3, 1).UseTargetPosition(player.Center).UseProgress(value).UseOpacity(distortStrength);
+                float value2 = MathHelper.Lerp(1, 4, 1 - (1 + (float)Math.Sin((float)(effectState) / 60)) / 2);
+                if (!Filters.Scene["ElementsAwoken:InsanityWave2"].IsActive()) Filters.Scene.Activate("ElementsAwoken:InsanityWave2", player.Center);
+                Filters.Scene["ElementsAwoken:InsanityWave2"].GetShader().UseColor(2, 3, 1).UseTargetPosition(player.Center).UseProgress(value2).UseOpacity(distortStrength);
+            }
+            else if (effectState != 0)
+            {
+                Filters.Scene["ElementsAwoken:InsanityWave"].Deactivate();
+                Filters.Scene["ElementsAwoken:InsanityWave2"].Deactivate();
+                effectState = 0;
             }
         }
         private bool CheckValidSanityTile(Tile t)

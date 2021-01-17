@@ -316,7 +316,7 @@ namespace ElementsAwoken.Structures
                             }
                             if (FurnitureArray[j, i] == 5) // Locker
                             {
-                                MyWorld.PlaceLabLocker(xPosO + FurnitureArray.GetLength(1) - i - 1, yPosO + j, 177);
+                                EAWorldGen.PlaceLabLocker(xPosO + FurnitureArray.GetLength(1) - i - 1, yPosO + j, 177);
                             }
                             if (FurnitureArray[j, i] == 6) // Desk
                             {
@@ -360,7 +360,7 @@ namespace ElementsAwoken.Structures
                             }
                             if (FurnitureArray[j, i] == 5) // Locker
                             {
-                                MyWorld.PlaceLabLocker(xPosO + i, yPosO + j, 177);
+                                EAWorldGen.PlaceLabLocker(xPosO + i, yPosO + j, 177);
                             }
                             if (FurnitureArray[j, i] == 6) // Desk
                             {

@@ -23,9 +23,24 @@ namespace ElementsAwoken.Items.Developer
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Neovirtuo");
-            Tooltip.SetDefault("Press Z to summon a portal at the cursor\nOccasionally fires homing projectiles from the player\nThe lower your health the less damage you take\nMana increased by 100\nMagic damage increased by 15%\n16% increased movement speed\nImmunity to most debuffs\nCreates a swirling galaxy\n12 defence\nAsterox effects\nRanipla's developer item");
+            Tooltip.SetDefault("");
         }
+        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        {
+            string hotkey;
+            var list = ElementsAwoken.specialAbility.GetAssignedKeys();
+            if (list.Count > 0) hotkey = list[0];
+            else hotkey = "<Special Ability Unbound>";
 
+            string baseTooltip = "Press the special ability key (" + hotkey + ") to summon a portal at the cursor\nOccasionally fires homing projectiles from the player\nThe lower your health the less damage you take\nMana increased by 100\nMagic damage increased by 15%\n16% increased movement speed\nImmunity to most debuffs\nCreates a swirling galaxy\n12 defence\nAsterox effects\nRanipla's developer item";
+            foreach (TooltipLine line2 in tooltips)
+            {
+                if (line2.mod == "Terraria" && line2.Name.StartsWith("Tooltip"))
+                {
+                    line2.text = baseTooltip;
+                }
+            }
+        }
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();

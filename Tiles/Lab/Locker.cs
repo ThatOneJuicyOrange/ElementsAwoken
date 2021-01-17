@@ -63,7 +63,11 @@ namespace ElementsAwoken.Tiles.Lab
                 top--;
             }
             int chest = Chest.FindChest(left, top);
-            if (Main.chest[chest].name == "")
+            if (chest < 0)
+            {
+                return Language.GetTextValue("LegacyChestType.0");
+            }
+            else if (Main.chest[chest].name == "")
             {
                 return name;
             }

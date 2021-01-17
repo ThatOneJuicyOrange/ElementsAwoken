@@ -19,14 +19,14 @@ namespace ElementsAwoken.Items.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Concentrated Pyroplasm");
-            Tooltip.SetDefault("Used to craft Blightfire");
-            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 8));
+            Tooltip.SetDefault("Used to craft Blightfire by throwing it in lava with putrid ore");
+            Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(8, 4));
         }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(null, "Pyroplasm", 2);
-            recipe.AddIngredient(ItemID.LunarOre, 1);
+            recipe.AddIngredient(ModContent.ItemType<Pyroplasm>(), 2);
+            recipe.AddIngredient(ModContent.ItemType<BossDrops.Volcanox.VolcanicStone>(), 1);
             recipe.SetResult(this);
             recipe.AddRecipe();
         }

@@ -13,8 +13,6 @@ using static Terraria.ModLoader.ModContent;
 
 namespace ElementsAwoken.UI
 {
-    // ExampleUIs visibility is toggled by typing "/coin" in chat. (See CoinCommand.cs)
-    // ExampleUI is a simple UI example showing how to use UIPanel, UIImageButton, and even a custom UIElement.
     internal class PromptInfoUI : UIState
     {
         public DragableUIPanel BackPanel;
@@ -55,23 +53,11 @@ namespace ElementsAwoken.UI
             Append(BackPanel);
         }
 
-
         private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
             Main.PlaySound(SoundID.MenuClose);
             Visible = false;
         }
-        /*protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            float uiX = BackPanel.Left.Pixels;
-            float uiY = BackPanel.Top.Pixels;
-
-            string message = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes after defeating a boss. These can be disabled in the EA Config (Settings > Mod Configurations > Elements Awoken)";
-            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, message, new Vector2(uiX, uiY), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
-            Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText, message, uiX, uiY, Color.White, Color.Black, new Vector2(0.3f), 1f);
-
-            spriteBatch.Draw(GetTexture("ElementsAwoken/Buffs/Prompts/ScorpionBreakout"), new Vector2(uiX, uiY), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0f);
-        }*/
     }
     public class UIDisplay : UIElement
     {
@@ -123,103 +109,3 @@ namespace ElementsAwoken.UI
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Linq;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.UI;
-using Terraria.UI.Chat;
-using static Terraria.ModLoader.ModContent;
-
-namespace ElementsAwoken.UI
-{
-    // ExampleUIs visibility is toggled by typing "/coin" in chat. (See CoinCommand.cs)
-    // ExampleUI is a simple UI example showing how to use UIPanel, UIImageButton, and even a custom UIElement.
-    internal class PromptInfoUI : UIState
-    {
-        public DragableUIPanel BackPanel;
-        public UIHoverImageButton CloseButton;
-        public static bool Visible;
-
-        // In OnInitialize, we place various UIElements onto our UIState (this class).
-        // UIState classes have width and height equal to the full screen, because of this, usually we first define a UIElement that will act as the container for our UI.
-        // We then place various other UIElement onto that container UIElement positioned relative to the container UIElement.
-        public override void OnInitialize()
-        {
-            /*BackPanel = new DragableUIPanel();
-            BackPanel.SetPadding(0);
-
-
-            float width = 300;
-            float height = 500;
-            BackPanel.Width.Set(300f, 0f);
-            BackPanel.Height.Set(500f, 0f);
-
-            //BackPanel.Left.Set(Main.screenWidth / 2 - width / 2, 0f);
-            //BackPanel.Top.Set(Main.screenHeight / 2 - height / 2, 0f);
-
-            BackPanel.Left.Set(400, 0f);
-            BackPanel.Top.Set(100, 0f);
-            BackPanel.BackgroundColor = new Color(73, 94, 171);
-
-
-            BackPanel = new DragableUIPanel();
-            BackPanel.SetPadding(0);
-            // We need to place this UIElement in relation to its Parent. Later we will be calling `base.Append(BackPanel);`. 
-            // This means that this class, ExampleUI, will be our Parent. Since ExampleUI is a UIState, the Left and Top are relative to the top left of the screen.
-            BackPanel.Left.Set(400f, 0f);
-            BackPanel.Top.Set(100f, 0f);
-            BackPanel.Width.Set(170f, 0f);
-            BackPanel.Height.Set(70f, 0f);
-            BackPanel.BackgroundColor = new Color(73, 94, 171);
-
-
-            UIHoverImageButton closeButton = new UIHoverImageButton(GetTexture("ElementsAwoken/Extra/ButtonClose"), "Close");
-            closeButton.Left.Set(10, 0f);
-            closeButton.Top.Set(10, 0f);
-            closeButton.Width.Set(22, 0f);
-            closeButton.Height.Set(22, 0f);
-            closeButton.OnClick += new MouseEvent(CloseButtonClicked);
-            BackPanel.Append(closeButton)       
-        }
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            //string message = "You have activated a boss prompt! Boss prompts cause effects on your world after 30 minutes after defeating a boss. These can be disabled in the EA Config (Settings > Mod Configurations > Elements Awoken)";
-            //ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, message, new Vector2(20, 46), new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
-            CalculatedStyle innerDimensions = GetInnerDimensions();
-            //Vector2 drawPos = new Vector2(innerDimensions.X + 5f, innerDimensions.Y + 30f);
-
-            float shopx = innerDimensions.X;
-            float shopy = innerDimensions.Y;
-
-           
-            Utils.DrawBorderStringFourWay(spriteBatch, Main.fontMouseText ?? Main.fontItemStack, "CPM", shopx + (float)(24 * 4), shopy + 25f, Color.White, Color.Black, new Vector2(0.3f), 0.75f);
-        }
-        private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
-        {
-            Main.PlaySound(SoundID.MenuClose);
-            Visible = false;
-        }
-    }
-}
-*/

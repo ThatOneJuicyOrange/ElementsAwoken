@@ -23,6 +23,7 @@ namespace ElementsAwoken.Items.Testing
             item.useStyle = 4;
             item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
@@ -30,16 +31,16 @@ namespace ElementsAwoken.Items.Testing
         }
         public override bool UseItem(Player player)
         {
-            if (MyWorld.credits)
+            MyPlayer modPlayer = player.GetModPlayer<MyPlayer>();
+            if (modPlayer.creditsTimer >= 0)
             {
-                MyWorld.credits = false;               
+                modPlayer.creditsTimer = -1;               
                 Main.NewText("credits off", Color.Purple.R, Color.Purple.G, Color.Purple.B);
             }
             else
             {
-                MyWorld.credits = true;
-                MyWorld.creditsCounter = 1200;
-                // MyWorld.creditsCounter = player.GetModPlayer<MyPlayer>().screenDuration * 10 - 30;
+                modPlayer.creditsTimer = 0;
+                modPlayer.creditsTimer = player.GetModPlayer<MyPlayer>().screenDuration * 5 - 30;
                 Main.NewText("credits on", Color.Purple.R, Color.Purple.G, Color.Purple.B);
             }
             return true;

@@ -23,6 +23,7 @@ namespace ElementsAwoken.Items.Elements.Sky
             item.useStyle = 4;
             item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().unobtainable = true;
         }
 
         public override void SetStaticDefaults()
@@ -53,7 +54,7 @@ namespace ElementsAwoken.Items.Elements.Sky
             }
             return true;
         }
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "SkyEssence", 6);
@@ -62,6 +63,6 @@ namespace ElementsAwoken.Items.Elements.Sky
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

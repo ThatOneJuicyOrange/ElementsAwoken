@@ -23,6 +23,7 @@ namespace ElementsAwoken.Items.Testing
             item.useStyle = 4;
             item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
@@ -30,7 +31,7 @@ namespace ElementsAwoken.Items.Testing
         }
         public override bool UseItem(Player player)
         {
-            MyWorld.RandomisePotions();
+            EAWorldGen.RandomisePotions();
             return true;
         }
     }

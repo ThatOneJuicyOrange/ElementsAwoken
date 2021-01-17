@@ -86,27 +86,7 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         public override void AI()
         {
-            if (projectile.velocity.Y == 0f && projectile.ai[0] == 0f)
-            {
-                projectile.ai[0] = 1f;
-                projectile.ai[1] = 0f;
-                projectile.netUpdate = true;
-                return;
-            }
-            if (projectile.ai[0] == 1f)
-            {
-                projectile.velocity = Vector2.Zero;
-                projectile.position = projectile.oldPosition;
-                float[] var_9_49F8F_cp_0 = projectile.ai;
-                int var_9_49F8F_cp_1 = 1;
-                float num244 = var_9_49F8F_cp_0[var_9_49F8F_cp_1];
-                var_9_49F8F_cp_0[var_9_49F8F_cp_1] = num244 + 1f;
-                if (projectile.ai[1] >= 5f)
-                {
-                    projectile.active = false;
-                }
-                return;
-            }
+           
             // gravity 
             projectile.velocity.Y = projectile.velocity.Y + 0.2f;
             if (projectile.velocity.Y > 12f)
@@ -136,21 +116,24 @@ namespace ElementsAwoken.Projectiles.NPCProj
         }
         private void CreateDust()
         {
-            int num1491 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 90, default(Color), 2.5f);
-            Main.dust[num1491].noGravity = true;
-            Dust dust = Main.dust[num1491];
-            dust.velocity *= 0.2f;
-            Main.dust[num1491].fadeIn = 1f;
-            if (Main.rand.Next(6) == 0)
+            if (projectile.ai[0] == 0)
             {
-                dust = Main.dust[num1491];
-                dust.velocity *= 10f; // normally 30 but wtf vanilla
-                Main.dust[num1491].noGravity = false;
-                Main.dust[num1491].noLight = true;
-            }
-            else
-            {
-                Main.dust[num1491].velocity = projectile.DirectionFrom(Main.dust[num1491].position) * Main.dust[num1491].velocity.Length();
+                int num1491 = Dust.NewDust(projectile.position, projectile.width, projectile.height, 6, projectile.velocity.X * 0.5f, projectile.velocity.Y * 0.5f, 90, default(Color), 2.5f);
+                Main.dust[num1491].noGravity = true;
+                Dust dust = Main.dust[num1491];
+                dust.velocity *= 0.2f;
+                Main.dust[num1491].fadeIn = 1f;
+                if (Main.rand.Next(6) == 0)
+                {
+                    dust = Main.dust[num1491];
+                    dust.velocity *= 10f; // normally 30 but wtf vanilla
+                    Main.dust[num1491].noGravity = false;
+                    Main.dust[num1491].noLight = true;
+                }
+                else
+                {
+                    Main.dust[num1491].velocity = projectile.DirectionFrom(Main.dust[num1491].position) * Main.dust[num1491].velocity.Length();
+                }
             }
         }
     }

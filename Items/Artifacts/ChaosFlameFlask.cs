@@ -25,7 +25,7 @@ namespace ElementsAwoken.Items.Artifacts
         }
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Chaos Flame Flask");
+            DisplayName.SetDefault("Infernal Flame Flask");
             Tooltip.SetDefault("Inflicts fire damage on attack\nGrants immunity to fire blocks\nJump speed increased by 200%\nCrit chance increased by 5%");
             Main.RegisterItemAnimation(item.type, new DrawAnimationVertical(9, 6));
         }

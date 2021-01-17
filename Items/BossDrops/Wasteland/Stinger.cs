@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,7 +30,7 @@ namespace ElementsAwoken.Items.BossDrops.Wasteland
             item.value = Item.buyPrice(0, 5, 0, 0);
             item.rare = 2;
 
-            item.shoot = mod.ProjectileType("WastelandStingerFriendly");
+            item.shoot = ModContent.ProjectileType<WastelandStingerFriendly>();
             item.shootSpeed = 12f;
         }
 

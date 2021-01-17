@@ -42,7 +42,7 @@ namespace ElementsAwoken.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(mod.BuffType("Corroding"), 300, false);
-            Main.PlaySound(2, -1, -1, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/AcidHiss"));
+            Main.PlaySound(2, (int)projectile.position.X, (int)projectile.position.Y, mod.GetSoundSlot(SoundType.Item, "Sounds/Item/AcidHiss"));
         }
     }
 }

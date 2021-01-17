@@ -17,6 +17,7 @@ namespace ElementsAwoken.Items.Testing
             item.width = 26;
             item.height = 22;
             item.accessory = true;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
 
         public override void SetStaticDefaults()

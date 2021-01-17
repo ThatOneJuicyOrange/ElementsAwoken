@@ -90,7 +90,7 @@ namespace ElementsAwoken.Items.Weapons.Procedural
                     line2.text = desc;
                     if (ModContent.GetInstance<Config>().debugMode)
                     {
-                        line2.text += "\npotionNum:" + potionNum + "\ncolor:" + MyWorld.mysteriousPotionColours[potionNum];
+                        line2.text += "\npotionNum:" + potionNum + "\ncolor:" + EAWorldGen.mysteriousPotionColours[potionNum];
                     }
                 }*/
                 if (line2.mod == "Terraria" && line2.Name.Contains("ItemName"))

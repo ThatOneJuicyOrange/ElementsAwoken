@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ElementsAwoken.Projectiles.Other;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -162,6 +163,13 @@ namespace ElementsAwoken.NPCs.Bosses.Volcanox
 
             MyWorld.downedVolcanox = true;
             if (Main.netMode == NetmodeID.Server) NetMessage.SendData(MessageID.WorldData); // Immediately inform clients of new world state.
+        }
+        public override void HitEffect(int hitDirection, double damage)
+        {
+            if (npc.life <= 0)
+            {
+                if (Main.netMode != NetmodeID.MultiplayerClient) Projectile.NewProjectile(npc.Center, Vector2.Zero, ModContent.ProjectileType<AbilityGiver>(), 0, 0, Main.myPlayer,3);
+            }
         }
         public override void BossLoot(ref string name, ref int potionType)
         {

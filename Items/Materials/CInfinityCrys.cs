@@ -18,10 +18,10 @@ namespace ElementsAwoken.Items.Materials
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cracked Infinity Crystal");
-            Tooltip.SetDefault("Unimaginable power surges from this very crystal in your hands\nIt is up to you to decide what to do with it...");
+            Tooltip.SetDefault("Crafted at a Crystal Cracker\nUnimaginable power surges from this very crystal in your hands\nIt is up to you to decide what to do with it...");
         }
 
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "InfinityCrys", 1);
@@ -29,6 +29,6 @@ namespace ElementsAwoken.Items.Materials
             recipe.AddTile(null, "CrystalCracker");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

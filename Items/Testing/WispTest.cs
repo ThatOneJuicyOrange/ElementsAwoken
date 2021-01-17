@@ -24,6 +24,7 @@ namespace ElementsAwoken.Items.Testing
             item.UseSound = SoundID.Item79;
             item.noMelee = true;
             item.mountType = mod.MountType("WispForm");
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
 
         public override void SetStaticDefaults()

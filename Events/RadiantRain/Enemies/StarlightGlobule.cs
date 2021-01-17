@@ -42,6 +42,7 @@ namespace ElementsAwoken.Events.RadiantRain.Enemies
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Starlight Globule");
+            Main.npcFrameCount[npc.type] = 4;
         }
         public override void ScaleExpertStats(int numPlayers, float bossLifeScale)
         {
@@ -54,6 +55,17 @@ namespace ElementsAwoken.Events.RadiantRain.Enemies
                 npc.damage = 200;
                 npc.defense = 65;
             }
+        }
+        public override void FindFrame(int frameHeight)
+        {
+            npc.spriteDirection = npc.direction;
+            npc.frameCounter++;
+            if (npc.frameCounter > 8)
+            {
+                npc.frame.Y = npc.frame.Y + frameHeight;
+                npc.frameCounter = 0.0;
+            }
+            if (npc.frame.Y > frameHeight * 3) npc.frame.Y = 0;
         }
         public override bool PreNPCLoot()
         {

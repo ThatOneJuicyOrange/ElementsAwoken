@@ -18,19 +18,40 @@ namespace ElementsAwoken.Items.Testing
             item.width = 20;
             item.height = 20;
             item.maxStack = 1;
-            item.useAnimation = 20;
-            item.useTime = 20;
+
+            item.useAnimation = 2;
+            item.useTime = 2;
+
             item.useStyle = 4;
-            item.UseSound = SoundID.Item60;
             item.consumable = false;
+            item.autoReuse = true;
+            item.GetGlobalItem<EATooltip>().testing = true;
         }
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Blower");
-            Tooltip.SetDefault("TESTING ITEM\ndoes nothing cuz idk how wind works");
+            Tooltip.SetDefault("what is the maximum wind speed");
+        }
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
         }
         public override bool UseItem(Player player)
         {
+            float num = 0.005f;
+            if (player.altFunctionUse == 2)
+            {
+                Main.windSpeedSet -= num;
+                Main.windSpeed -= num;
+                if (Main.windSpeedSet < -2) Main.windSpeedSet = -2;
+            }
+            else
+            {
+                Main.windSpeedSet += num;
+                Main.windSpeed += num;
+                if (Main.windSpeedSet > 2) Main.windSpeedSet = 2;
+            }
+            //if (MathHelper.Distance(Main.windSpeedSet, Main.windSpeed) > 0.2f) Main.windSpeed = Main.windSpeedSet;
             return true;
         }
     }

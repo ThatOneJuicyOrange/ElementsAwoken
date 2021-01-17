@@ -31,6 +31,10 @@ namespace ElementsAwoken.Items.Tech.Generators
             num *= Main.essScale;
             Lighting.AddLight((int)((item.position.X + (float)(item.width / 2)) / 16f), (int)((item.position.Y + (float)(item.height / 2)) / 16f), 0.1f * num, 0.5f * num, 0.2f * num);
         }
+        public override bool ItemSpace(Player player)
+        {
+            return true;
+        }
         public override bool OnPickup(Player player)
         {
             int amount = 5;

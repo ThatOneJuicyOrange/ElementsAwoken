@@ -23,7 +23,6 @@ namespace ElementsAwoken.Items.ItemSets.HiveCrate
             item.UseSound = SoundID.Item3;
 
             item.consumable = true;
-            item.potion = true;
             item.useTurn = true;
 
             item.healMana = 120;

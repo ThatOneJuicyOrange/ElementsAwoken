@@ -22,9 +22,10 @@ namespace ElementsAwoken.Items.Elements.Desert
             item.useStyle = 4;
             item.UseSound = SoundID.Item66;
             item.consumable = false;
+            item.GetGlobalItem<EATooltip>().unobtainable = true;
         }
 
-    public override void SetStaticDefaults()
+        public override void SetStaticDefaults()
     {
       DisplayName.SetDefault("Sandstorm Stone");
       Tooltip.SetDefault("Toggles the sandstorm\nOnly usable inside of the desert");
@@ -68,7 +69,7 @@ namespace ElementsAwoken.Items.Elements.Desert
                 return;
             //NetMessage.SendData(7, -1, -1, "", 0, 0.0f, 0.0f, 0.0f, 0, 0, 0);
         }
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(null, "DesertEssence", 4);
@@ -77,6 +78,6 @@ namespace ElementsAwoken.Items.Elements.Desert
             recipe.AddTile(null, "ElementalForge");
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

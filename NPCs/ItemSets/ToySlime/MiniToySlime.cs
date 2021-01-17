@@ -100,7 +100,13 @@ namespace ElementsAwoken.NPCs.ItemSets.ToySlime
             return (spawnInfo.spawnTileY < Main.worldSurface)
                 && NPC.downedBoss3
                 && !spawnInfo.playerInTown
-                && !spawnInfo.invasion
+                && !spawnInfo.invasion && !Main.snowMoon && !Main.pumpkinMoon
+                && !spawnInfo.player.ZoneTowerStardust && !spawnInfo.player.ZoneTowerSolar && !spawnInfo.player.ZoneTowerVortex && !spawnInfo.player.ZoneTowerNebula
+                && !spawnInfo.player.ZoneSnow
+                && !spawnInfo.player.ZoneCorrupt
+                && !spawnInfo.player.ZoneCrimson
+                && !spawnInfo.player.ZoneSnow
+                && !spawnInfo.player.ZoneDungeon
                 ? spawnchance : 0f;
         }
         public override void AI()

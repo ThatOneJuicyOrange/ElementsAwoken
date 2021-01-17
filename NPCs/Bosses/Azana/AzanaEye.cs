@@ -277,7 +277,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                     if (aiState == 0f) // sideways movement
                     {
                         npc.TargetClosest(true);
-                        float num424 = 12f;
+                        float num474 = 12f;
                         float speed = 0.1f;
                         int side = 1;
                         if (npc.position.X + (float)(npc.width / 2) < Main.player[npc.target].position.X + (float)Main.player[npc.target].width)
@@ -288,7 +288,7 @@ namespace ElementsAwoken.NPCs.Bosses.Azana
                         float targetX = Main.player[npc.target].position.X + (float)(Main.player[npc.target].width / 2) + (float)(side * 400) - vector44.X;
                         float targetY = Main.player[npc.target].position.Y + (float)(Main.player[npc.target].height / 2) - vector44.Y;
                         float targetPos = (float)Math.Sqrt((double)(targetX * targetX + targetY * targetY));
-                        targetPos = num424 / targetPos;
+                        targetPos = num474 / targetPos;
                         targetX *= targetPos;
                         targetY *= targetPos;
                         if (npc.velocity.X < targetX)

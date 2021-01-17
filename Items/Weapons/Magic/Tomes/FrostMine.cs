@@ -33,7 +33,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
             item.rare = 6;
 
             item.UseSound = SoundID.Item20;
-            item.shoot = mod.ProjectileType("FrostMine");
+            item.shoot = ModContent.ProjectileType<Projectiles.FrostMine>();
             item.shootSpeed = 1f;
         }
 
@@ -48,7 +48,7 @@ namespace ElementsAwoken.Items.Weapons.Magic.Tomes
             int numberProjectiles = 2;
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Projectile.NewProjectile(player.Center.X + Main.rand.Next(-360, 360), player.Center.X + Main.rand.Next(-360, 360), 0, 0, mod.ProjectileType("FrostMine"), damage, knockBack, player.whoAmI, 0f, 0f);
+                Projectile.NewProjectile(player.Center.X + Main.rand.Next(-360, 360), player.Center.Y + Main.rand.Next(-360, 360), 0, 0, type, damage, knockBack, player.whoAmI, 0f, 0f);
             }
             return false;
         }
